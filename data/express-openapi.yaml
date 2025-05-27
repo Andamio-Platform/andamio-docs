@@ -1,0 +1,1544 @@
+openapi: 3.0.0
+info:
+  title: Andamio API
+  version: 1.0.0
+  description: Andamio API Docs
+servers:
+  - url: https://indexer-preprod-507341199760.us-central1.run.app
+  - url: https://mainnet-andamio-express-api-507341199760.us-central1.run.app
+  - url: https://dev.andamio.io
+  - url: http://localhost:3000
+components:
+  schemas:
+    UtxoWithSlot:
+      type: object
+      description: https://github.com/maestro-org/typescript-sdk/blob/2505e3968be02a919a92b770468a4d06b0af559a/src/api/type.ts#L3990
+tags:
+  - name: Aggregate
+    x-displayName: Aggregate
+    description: Aggregate information.
+  - name: Global State
+    x-displayName: Global State
+    description: Global state information.
+  - name: Index Validator
+    x-displayName: Index Validator
+    description: Index Validator information.
+  - name: Instance Validator
+    x-displayName: Instance Validator
+    description: Instance Validator information.
+  - name: Governance Validator
+    x-displayName: Governance Validator
+    description: Governance Validator information.
+  - name: Course State
+    x-displayName: Course State
+    description: Course State information.
+  - name: Assignment Validator
+    x-displayName: Assignment Validator
+    description: Assignment Validator information.
+  - name: Module Ref Validator
+    x-displayName: Module Ref Validator
+    description: Module Ref Validator information.
+x-tagGroups:
+  - name: Network
+    tags:
+      - Aggregate
+      - Global State
+      - Index Validator
+      - Instance Validator
+      - Governance Validator
+  - name: Course
+    tags:
+      - Course State
+      - Assignment Validator
+      - Module Ref Validator
+  - name: Project
+    tags:
+      - Treasury
+      - Contributor State
+      - Escrow
+  - name: Transactions
+    tags:
+      - General Actions
+      - Admin Actions
+      - Course Creator Actions
+      - Student Actions
+      - Project Creator Actions
+      - Contributor Actions
+paths:
+  /aggregate/user-info:
+    get:
+      tags:
+        - Aggregate
+      summary: User Info
+      parameters:
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User Info
+  /assignment-validator/utxos:
+    get:
+      tags:
+        - Assignment Validator
+      summary: Assignment Validator UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /assignment-validator/decoded-datum:
+    get:
+      tags:
+        - Assignment Validator
+      summary: Assignment Validator Decoded Datums
+      parameters:
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of Decoded Datum
+  /contributor-state/utxos:
+    get:
+      tags:
+        - Contributor State
+      summary: Contributor State UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /contributor-state/policies:
+    get:
+      tags:
+        - Contributor State
+      summary: Contributor State Policies
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of Policies
+  /course-state/utxos:
+    get:
+      tags:
+        - Course State
+      summary: Course State UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /course-state/decoded-datum:
+    get:
+      tags:
+        - Course State
+      summary: Course State Decoded Datum
+      parameters:
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course State Decoded Datum
+  /course-state/info:
+    get:
+      tags:
+        - Course State
+      summary: Course Info
+      parameters:
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Course Info
+  /escrow/utxos:
+    get:
+      tags:
+        - Escrow
+      summary: Escrow UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /escrow/decoded-datum:
+    get:
+      tags:
+        - Escrow
+      summary: Escrow Decoded Datum
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Decoded Escrow Datum
+  /global-state/utxos:
+    get:
+      tags:
+        - Global State
+      summary: Global State UTxOs
+      parameters:
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /global-state/decoded-datum:
+    get:
+      tags:
+        - Global State
+      summary: Global State Decoded Datum
+      parameters:
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Decoded Global State Datum
+  /governance-validator/utxos:
+    get:
+      tags:
+        - Governance Validator
+      summary: Governance Validator UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Course/Project NFT Policy
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /governance-validator/course-creator/courses:
+    get:
+      tags:
+        - Governance Validator
+      summary: Courses by Creator
+      parameters:
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of Course NFT Policies
+  /index-validator/utxos:
+    get:
+      tags:
+        - Index Validator
+      summary: Index Validator UTxOs
+      parameters:
+        - name: new_alias
+          in: query
+          description: New Access Token Alias
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /index-validator/alias-availability:
+    get:
+      tags:
+        - Index Validator
+      summary: Is Alias Available
+      parameters:
+        - name: alias
+          in: query
+          description: Access Token Alias
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: isAvailable (boolean)
+  /instance-validator/utxos:
+    get:
+      tags:
+        - Instance Validator
+      summary: Instance Validator UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Course / Project NFT Policy
+          required: false
+          schema:
+            type: string
+        - name: filter
+          in: query
+          description: Filter the UTxOs by script type.
+          required: false
+          schema:
+            type: string
+            enum:
+              - ModuleScripts
+              - CourseStateScripts
+              - AssignmentValidator
+              - TreasuryScripts
+              - TreasuryToken
+              - Escrow1
+              - ContributorStateScripts
+      responses:
+        "200":
+          description: List of UTxOs
+  /module-ref-validator/utxos:
+    get:
+      tags:
+        - Module Ref Validator
+      summary: Module Ref Validator UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: token_name
+          in: query
+          description: Module Token Name
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /module-ref-validator/decoded-datums:
+    get:
+      tags:
+        - Module Ref Validator
+      summary: Module Ref Decoded Datums
+      parameters:
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of Module Ref Decoded Datums
+  /tx/access-token/mint:
+    get:
+      tags:
+        - General Actions
+      summary: Mint Access Token
+      parameters:
+        - name: user_address
+          in: query
+          description: User's Address
+          required: true
+          schema:
+            type: string
+        - name: new_alias
+          in: query
+          description: New Access Token Alias
+          required: true
+          schema:
+            type: string
+        - name: user_info
+          in: query
+          description: On-chain User's Info
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of UTxOs
+  /tx/admin/init-course:
+    get:
+      tags:
+        - Admin Actions
+      summary: Init Course
+      parameters:
+        - name: aliases
+          in: query
+          description: List of the Access Token Aliases to be made creator
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: multisig_native_script_cbor
+          in: query
+          description: Multisig Native Script CBOR
+          required: false
+          schema:
+            type: string
+        - name: multisig_initiator_address
+          in: query
+          description: Multisig Initiator Address
+          required: false
+          schema:
+            type: string
+        - name: is_self_service
+          in: query
+          description: Self Service or not
+          required: false
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courseNftPolicyId:
+                    type: string
+                  unsignedTxCBOR:
+                    type: string
+  /tx/admin/add-course-creators:
+    get:
+      tags:
+        - Admin Actions
+      summary: Add Course Creators
+      parameters:
+        - name: aliases
+          in: query
+          description: List of the Access Token Aliases to be made creator
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: multisig_native_script_cbor
+          in: query
+          description: Multisig Native Script CBOR
+          required: false
+          schema:
+            type: string
+        - name: multisig_initiator_address
+          in: query
+          description: Multisig Initiator Address
+          required: false
+          schema:
+            type: string
+        - name: is_self_service
+          in: query
+          description: Self Service or not
+          required: false
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/admin/rm-course-creators:
+    get:
+      tags:
+        - Admin Actions
+      summary: Remove Course Creators
+      parameters:
+        - name: aliases
+          in: query
+          description: List of the Access Token Aliases to be made creator
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: multisig_native_script_cbor
+          in: query
+          description: Multisig Native Script CBOR
+          required: false
+          schema:
+            type: string
+        - name: multisig_initiator_address
+          in: query
+          description: Multisig Initiator Address
+          required: false
+          schema:
+            type: string
+        - name: is_self_service
+          in: query
+          description: Self Service or not
+          required: false
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/admin/init-project-step-1:
+    get:
+      tags:
+        - Admin Actions
+      summary: Init Project Step 1
+      parameters:
+        - name: aliases
+          in: query
+          description: List of the Access Token Aliases to be made project manager
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: multisig_native_script_cbor
+          in: query
+          description: Multisig Native Script CBOR
+          required: false
+          schema:
+            type: string
+        - name: multisig_initiator_address
+          in: query
+          description: Multisig Initiator Address
+          required: false
+          schema:
+            type: string
+        - name: is_self_service
+          in: query
+          description: Self Service or not
+          required: false
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectNftPolicyId:
+                    type: string
+                  unsignedTxCBOR:
+                    type: string
+  /tx/admin/init-project-step-2:
+    get:
+      tags:
+        - Admin Actions
+      summary: Init Project Step 2
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: prerequisite
+          in: query
+          description: Prerequisite
+          required: false
+          schema:
+            type: string
+        - name: multisig_native_script_cbor
+          in: query
+          description: Multisig Native Script CBOR
+          required: false
+          schema:
+            type: string
+        - name: multisig_initiator_address
+          in: query
+          description: Multisig Initiator Address
+          required: false
+          schema:
+            type: string
+        - name: is_self_service
+          in: query
+          description: Self Service or not
+          required: false
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectNftPolicyId:
+                    type: string
+                  unsignedTxCBOR:
+                    type: string
+  /tx/admin/add-project-creators:
+    get:
+      tags:
+        - Admin Actions
+      summary: Add Project Creators
+      parameters:
+        - name: aliases
+          in: query
+          description: List of the Access Token Aliases to be made creator
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: multisig_native_script_cbor
+          in: query
+          description: Multisig Native Script CBOR
+          required: false
+          schema:
+            type: string
+        - name: multisig_initiator_address
+          in: query
+          description: Multisig Initiator Address
+          required: false
+          schema:
+            type: string
+        - name: is_self_service
+          in: query
+          description: Self Service or not
+          required: false
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/admin/rm-project-creators:
+    get:
+      tags:
+        - Admin Actions
+      summary: Remove Project Creators
+      parameters:
+        - name: aliases
+          in: query
+          description: List of the Access Token Aliases to be made creator
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: multisig_native_script_cbor
+          in: query
+          description: Multisig Native Script CBOR
+          required: false
+          schema:
+            type: string
+        - name: multisig_initiator_address
+          in: query
+          description: Multisig Initiator Address
+          required: false
+          schema:
+            type: string
+        - name: is_self_service
+          in: query
+          description: Self Service or not
+          required: false
+          schema:
+            type: string
+            enum:
+              - "true"
+              - "false"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/contributor/mint-project-state:
+    get:
+      tags:
+        - Contributor Actions
+      summary: Mint Project State
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: prerequisite
+          in: query
+          description: Pre-requisite
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/contributor/commit-project:
+    get:
+      tags:
+        - Contributor Actions
+      summary: Commit To Project
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: project
+          in: query
+          description: Project
+          required: true
+          schema:
+            type: string
+        - name: info
+          in: query
+          description: Project info
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/contributor/add-info:
+    get:
+      tags:
+        - Contributor Actions
+      summary: Submit Info
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: info
+          in: query
+          description: Project info
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/contributor/burn-contributor-state:
+    get:
+      tags:
+        - Contributor Actions
+      summary: Burn Contributor State
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/contributor/get-rewards:
+    get:
+      tags:
+        - Contributor Actions
+      summary: Get Rewards
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/contributor/unlock-project:
+    get:
+      tags:
+        - Contributor Actions
+      summary: Unlock Project
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/course-creator/accept-assignment:
+    get:
+      tags:
+        - Course Creator Actions
+      summary: Accept Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: student_alias
+          in: query
+          description: Student's Access Token Alias
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/course-creator/deny-assignment:
+    get:
+      tags:
+        - Course Creator Actions
+      summary: Deny Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: student_alias
+          in: query
+          description: Student's Access Token Alias
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/course-creator/mint-module-tokens:
+    get:
+      tags:
+        - Course Creator Actions
+      summary: Mint Module Tokens
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: module_infos
+          in: query
+          description: List of modules (See example here
+            https://github.com/Andamio-Platform/andamio-dev/tree/main/packages/mesh-txs/src/course-management/MintModulesExample.md)
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/project-creator/mint-treasury-token:
+    get:
+      tags:
+        - Project Creator Actions
+      summary: Mint Treasury Token
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: allowed_contributors
+          in: query
+          description: Allowed Contributors
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: projects
+          in: query
+          description: Projects
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: ADA Amount to be funded to the treasury
+          required: false
+          schema:
+            type: string
+        - name: tokens
+          in: query
+          description: Tokens Amount to be funded to the treasury
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/project-creator/accept-project:
+    get:
+      tags:
+        - Project Creator Actions
+      summary: Accept Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: contributor_alias
+          in: query
+          description: Contributor's Access Token Alias
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/project-creator/deny-project:
+    get:
+      tags:
+        - Project Creator Actions
+      summary: Deny Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: contributor_alias
+          in: query
+          description: Contributor's Access Token Alias
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/project-creator/refuse-project:
+    get:
+      tags:
+        - Project Creator Actions
+      summary: Refuse Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: contributor_alias
+          in: query
+          description: Contributor's Access Token Alias
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/project-creator/manage-treasury-token:
+    get:
+      tags:
+        - Project Creator Actions
+      summary: Manage Treasury Token
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: allowed_contributors
+          in: query
+          description: Allowed Contributors
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - name: projects
+          in: query
+          description: Projects
+          required: false
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: ADA Amount to be funded to the treasury
+          required: false
+          schema:
+            type: string
+        - name: tokens
+          in: query
+          description: Tokens Amount to be funded to the treasury
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/student/mint-local-state:
+    get:
+      tags:
+        - Student Actions
+      summary: Mint Local State
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/student/burn-local-state:
+    get:
+      tags:
+        - Student Actions
+      summary: Burn Local State
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/student/commit-to-assignment:
+    get:
+      tags:
+        - Student Actions
+      summary: Commit To Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: assignment_code
+          in: query
+          description: Assignment Code
+          required: true
+          schema:
+            type: string
+        - name: assignment_info
+          in: query
+          description: Assignment Info
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/student/update-assignment:
+    get:
+      tags:
+        - Student Actions
+      summary: Update Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: assignment_info
+          in: query
+          description: Assignment Info
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/student/leave-assignment:
+    get:
+      tags:
+        - Student Actions
+      summary: Leave Assignment
+      parameters:
+        - name: user_access_token
+          in: query
+          description: User's Access Token (Policy Id + Token Name)
+          required: true
+          schema:
+            type: string
+        - name: policy
+          in: query
+          description: Course NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /tx/treasury/add-funds:
+    get:
+      tags:
+        - General Actions
+      summary: Add Funds
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: user_address
+          in: query
+          description: Depositor's Address
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: ADA Amount to be added to the treasury
+          required: true
+          schema:
+            type: string
+        - name: tokens
+          in: query
+          description: Tokens Amount to be added to the treasury
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unsignedTxCBOR:
+                    type: string
+  /treasury/utxos:
+    get:
+      tags:
+        - Treasury
+      summary: Treasury UTxOs
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+        - name: project_hash
+          in: query
+          description: Project Data Hash
+          required: false
+          schema:
+            type: string
+        - name: escrow_hash
+          in: query
+          description: Escrow Hash
+          required: false
+          schema:
+            type: string
+        - name: filter
+          in: query
+          description: Filter the UTxOs by type.
+          required: false
+          schema:
+            type: string
+            enum:
+              - Fund
+              - ProjectToken
+      responses:
+        "200":
+          description: List of UTxOs
+  /treasury/info:
+    get:
+      tags:
+        - Treasury
+      summary: Treasury Info
+      parameters:
+        - name: policy
+          in: query
+          description: Project NFT Policy
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Treasury Info
