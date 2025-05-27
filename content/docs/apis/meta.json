@@ -1,0 +1,9 @@
+{
+    "title": "Andamio APIs",
+    "icon": "Network",
+    "pages": [
+        "getting-started", 
+        "..."
+    ],
+    "defaultOpen": false
+}

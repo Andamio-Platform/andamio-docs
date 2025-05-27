@@ -1,0 +1,9 @@
+{
+    "title": "Andamio Protocol",
+    "icon": "Workflow",
+    "pages": [
+        "global-state",
+        "..."
+    ],
+    "defaultOpen": false
+}

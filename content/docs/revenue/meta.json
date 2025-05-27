@@ -1,0 +1,9 @@
+{
+    "title": "Andamio Revenue",
+    "icon": "HandCoins",
+    "pages": [
+        "getting-started", 
+        "..."
+    ],
+    "defaultOpen": false
+}

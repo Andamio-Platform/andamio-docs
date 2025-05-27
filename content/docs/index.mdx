@@ -1,13 +1,17 @@
 ---
-title: Hello World
-description: Your first document
+title: Andamio Documentation
+icon: House
 ---
+
+import { House, Code, BookText, Workflow, Coins } from "lucide-react";
 
 Welcome to the docs! You can start writing documents in `/content/docs`.
 
 ## What is Next?
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.vercel.app" />
+  <Card title="Read the Andamio Whitepaper" href="/docs/whitepaper" icon={<BookText />} />
+  <Card title="Learn more about Andamio Tokenomics" href="/docs/tokenomics" icon={<Coins />} />
+  <Card title="Learn more about Andamio Protocol" href="/docs/protocol" icon={<Workflow />} />
+  <Card title="Build with Andamio APIs" href="/docs/apis" icon={<Code />} />
 </Cards>

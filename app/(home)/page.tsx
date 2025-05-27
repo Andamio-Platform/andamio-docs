@@ -1,18 +1,20 @@
-import Link from 'next/link';
+import Link from "next/link";
+import Image from "next/image";
 
 export default function HomePage() {
   return (
-    <main className="flex flex-1 flex-col justify-center text-center">
-      <h1 className="mb-4 text-2xl font-bold">Hello World</h1>
+    <main className="flex flex-1 flex-col items-center justify-center text-center space-y-12">
+      <Image src="/andamio.png" width={150} height={150} alt="Andamio Logo" />
+      <h1 className="text-4xl font-bold">Andamio Documentation</h1>
       <p className="text-fd-muted-foreground">
-        You can open{' '}
+        Open{" "}
         <Link
           href="/docs"
           className="text-fd-foreground font-semibold underline"
         >
           /docs
-        </Link>{' '}
-        and see the documentation.
+        </Link>{" "}
+        to see the documentation.
       </p>
     </main>
   );

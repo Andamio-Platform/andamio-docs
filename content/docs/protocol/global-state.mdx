@@ -1,0 +1,60 @@
+---
+title: Global State
+description: Global State
+---
+
+## Global State Validator
+
+The Andamio Protocol is built on an Andamio Access token that becomes the holder's credential to access contribution and governance opportunities.
+
+### Global State Validator Contract
+
+The Global State Validator is a smart contract that validates the global state of the Andamio Protocol.
+
+Let's look at a diagram
+
+
+
+<Mermaid
+  chart="
+graph TD
+    %% Main flow
+    Index[Index] --> CIP68((CIP68))
+    CIP68 --> GlobalState[Global State]
+    
+    %% State token relationships
+    StateToken((State Token)) --> GlobalState
+    StateToken --> LocalStates
+    
+    %% Registration flow
+    GlobalState -.-> InstanceRegistration[Instance Registration]
+    LocalStates --> GlobalState
+
+    
+    %% Governance relationships
+    Governance[Governance] --> InstanceRegistration
+
+    InstanceRegistration --> LocalStates
+    
+    subgraph LocalStates
+        LocalStatesTitle[Local States]:::labelStyle
+        CourseInstance[Course Instance]
+        ProjectInstance[Project Instance]
+    end
+    
+    Governance --> ProjectInstance
+    Governance --> CourseInstance
+    
+    %% Style definitions
+    classDef default rect, fill:#5D5D5D, color:white, stroke:#333, stroke-width:1px
+    classDef token ellipse, fill:#FF3A70, color:white, stroke:#333, stroke-width:1px
+    classDef container rect, fill:white, stroke:#333, stroke-width:1px
+    classDef labelStyle rect, fill:transparent, color:black, stroke:none
+    
+    %% Apply styles
+    class Index,GlobalState,InstanceRegistration,Governance default
+    class CIP68,StateToken,FTs,NFT token
+    class LocalStates container
+    class LocalStatesTitle labelStyle
+"
+/>

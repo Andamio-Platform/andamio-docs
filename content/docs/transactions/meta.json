@@ -1,0 +1,9 @@
+{
+    "title": "Andamio Transactions",
+    "icon": "ArrowLeftRight",
+    "pages": [
+        "getting-started", 
+        "..."
+    ],
+    "defaultOpen": false
+}
