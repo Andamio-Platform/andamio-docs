@@ -3,6 +3,7 @@
     "icon": "Network",
     "pages": [
         "getting-started", 
+        "reference",
         "..."
     ],
     "defaultOpen": false
