@@ -5,4 +5,152 @@ description: Andamio Revenue
 
 ### Andamio Revenue
 
-The Andamio Revenue is a set of tools for building Andamio applications.
+See proposal on Notion: 
+
+### Revenue Schema (Draft 1)
+
+```json
+{
+    "global": {
+        "accessToken": {
+            "mint": {
+                "protocolFee": 5000000,
+                "serviceFee": 0,
+            },
+        },
+    },
+    "localStates": [
+        {
+            "title": "course",
+            "admin": {
+                "initCourse": {
+                    "protocolFee": 0,
+                    "serviceFee": 20000000,
+                },
+                "addCourseCreators": {
+                    "protocolFee": 0,
+                    "serviceFee": 5000000,
+                },
+                "rmCourseCreators": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+            },
+            "creator": {
+                "acceptAssignment": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "denyAssignment": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "mintModuleToken": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+            },
+            "student": {
+                "burnLocalState": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "commitToAssignment": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "leaveAssignment": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "mintLocalState": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "updateAssignment": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+            },
+        },
+        {
+            "title": "project",
+            "admin": {
+                "initProjectStep1": {
+                    "protocolFee": 0,
+                    "serviceFee": 20000000,
+                },
+                "initProjectStep2": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "addProjectCreators": {
+                    "protocolFee": 0,
+                    "serviceFee": 5000000,
+                },
+                "rmProjectCreators": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+            },
+            "creator": {
+                "acceptProject": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "denyProject": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "mintTreasuryToken": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "manageTreasuryToken": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "refuseProject": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+            },
+            "treasury": {
+                "addFunds": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+            },
+            "contributor": {
+                "addInfo": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "burnContributorState": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "commitProject": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "getRewards": {
+                    "protocolFee": 0,
+                    "serviceFee": {
+                        "min": 1000000,
+                        "percentage": 0.0125,
+                    },
+                },
+                "mintProjectState": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+                "unlockProject": {
+                    "protocolFee": 0,
+                    "serviceFee": 0,
+                },
+            },
+        },
+    ],
+}
+```
