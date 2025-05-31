@@ -2,7 +2,8 @@
     "title": "Andamio Transactions",
     "icon": "ArrowLeftRight",
     "pages": [
-        "getting-started", 
+        "getting-started",
+        "revenue",
         "..."
     ],
     "defaultOpen": false
