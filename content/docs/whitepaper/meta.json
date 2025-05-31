@@ -1,0 +1,9 @@
+{
+    "title": "Whitepaper",
+    "icon": "BookText",
+    "pages": [
+      "whitepaper",
+      "original-draft"
+    ],
+    "defaultOpen": false
+}

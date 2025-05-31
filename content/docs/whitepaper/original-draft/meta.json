@@ -1,0 +1,15 @@
+{
+    "title": "Original Draft",
+    "icon": "BookText",
+    "pages": [
+      "introduction",
+      "what-is-andamio",
+      "the-organization-problem",
+      "the-oracle-problem",
+      "the-education-problem",
+      "how-are-these-problems-connected",
+      "development-roadmap",
+      "reading-list"
+    ],
+    "defaultOpen": false
+}
