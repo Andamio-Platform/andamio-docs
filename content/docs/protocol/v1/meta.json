@@ -1,0 +1,14 @@
+{
+    "title": "V1",
+    "icon": "Workflow",
+    "pages": [
+        "global-state",
+        "access-token",
+        "index-validator",
+        "instance-validator",
+        "project",
+        "course",
+        "..."
+    ],
+    "defaultOpen": false
+}

@@ -1,9 +1,8 @@
 {
-    "title": "Protocol",
+    "title": "V2",
     "icon": "Workflow",
     "pages": [
-        "v1",
-        "v2",
+        "global-state",
         "..."
     ],
     "defaultOpen": false
