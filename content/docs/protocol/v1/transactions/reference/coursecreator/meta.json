@@ -1,0 +1,10 @@
+{
+  "title": "CourseCreator Transactions",
+  "pages": [
+    "index",
+    "course-creator-accept.assignment",
+    "course-creator-deny-assignment",
+    "course-crestor-mint-module-tokens"
+  ],
+  "defaultOpen": false
+}

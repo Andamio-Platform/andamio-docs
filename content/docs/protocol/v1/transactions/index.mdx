@@ -1,0 +1,105 @@
+---
+title: "Transactions"
+description: "Complete reference for all Andamio protocol transactions"
+---
+
+# Transaction Reference
+
+The Andamio protocol supports transactions for different user roles. Each transaction type has specific requirements, fees, and outputs.
+
+## Transaction Overview
+
+The protocol currently supports **29** transaction types across **6** user roles:
+
+### [Student Transactions](./reference/student/)
+
+6 transactions available for Student users.
+
+- **StudentMintLocalState** - Student mints local state token for course participation
+- **StudentBurnLocalState** - Student burns local state token and moves to global state
+- **StudentUpdateAssignment** - Student updates their assignment submission or information
+- ... and 3 more
+
+### [CourseCreator Transactions](./reference/coursecreator/)
+
+3 transactions available for CourseCreator users.
+
+- **CourseCreatorMintModuleTokens** - Course creator mints module tokens for course content
+- **CourseCreatorDenyAssignment** - Course creator denies a student's assignment submission
+- **CourseCreatorAcceptAssignment** - Course creator accepts and approves a student's assignment submission
+
+### [ProjectCreator Transactions](./reference/projectcreator/)
+
+6 transactions available for ProjectCreator users.
+
+- **ProjectCreatorManageTreasury** - Project creator manages treasury funds and distribution
+- **TreasuryAddFunds** - Project creator adds additional funds to project treasury
+- **ProjectCreatorRefuseProject** - Project creator refuses a project proposal with detailed reason
+- ... and 3 more
+
+### [Contributor Transactions](./reference/contributor/)
+
+6 transactions available for Contributor users.
+
+- **ContributorAddInfo** - Contributor adds or updates their profile information
+- **ContributorBurnContributorInfo** - Contributor burns their contributor info token
+- **ContributorMintProjectState** - Contributor mints project state token to track participation
+- ... and 3 more
+
+### [InstanceAdmin Transactions](./reference/instanceadmin/)
+
+7 transactions available for InstanceAdmin users.
+
+- **AdminInitCourse** - Instance admin initializes a new course in the platform
+- **AdminInitProjectStep1** - Instance admin initializes a new project (step 1 of 2)
+- **AdminRmCourseCreators** - Instance admin removes course creators from the platform
+- ... and 4 more
+
+### [General Transactions](./reference/general/)
+
+1 transactions available for General users.
+
+- **AccessTokenMint** - User mints access tokens (100at, 222at) for protocol participation
+
+## Quick Reference
+
+### By Fee Range
+
+#### Low Cost (1.5-2.0 ADA)
+Profile updates, state transitions, basic operations.
+
+#### Medium Cost (2.5-3.5 ADA)
+Token minting, role-based operations, project interactions.
+
+#### High Cost (4.0+ ADA)
+Admin operations, multi-signature transactions, treasury management.
+
+### By Authorization Level
+
+#### Single Signature
+Most user transactions require only the user's signature.
+
+#### Multi-Signature
+Admin and treasury operations require multiple authorized signatures.
+
+## Getting Started
+
+1. [Set up your development environment](./getting-started.mdx)
+2. [Choose your transaction type](#transaction-overview)
+3. [Review the specific transaction documentation](./reference/)
+4. [Implement using our SDKs](../apis/)
+
+## Visual Documentation
+
+All transactions include visual diagrams showing the complete UTxO flow:
+
+![Sample Transaction Diagram](/diagrams/protocol/sample.png)
+
+## API Integration
+
+All transactions are available through our REST API and SDKs:
+
+- [REST API Documentation](../apis/reference/)
+- [JavaScript/TypeScript SDK](../apis/sdks/javascript/)
+- [Python SDK](../apis/sdks/python/)
+

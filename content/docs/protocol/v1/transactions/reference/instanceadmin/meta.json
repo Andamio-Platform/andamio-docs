@@ -1,0 +1,14 @@
+{
+  "title": "InstanceAdmin Transactions",
+  "pages": [
+    "index",
+    "admin-add-course-creators",
+    "admin-add-project-creators",
+    "admin-init-course",
+    "admin-init-project-step-1",
+    "admin-init-project-step-2",
+    "admin-rm-course-creators",
+    "admin-rm-project-creators"
+  ],
+  "defaultOpen": false
+}

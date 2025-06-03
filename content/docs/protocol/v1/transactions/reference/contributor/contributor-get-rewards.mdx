@@ -1,0 +1,130 @@
+---
+title: "ContributorGetRewards"
+description: "Contributor claims rewards for completed project work"
+---
+
+# ContributorGetRewards
+
+Contributor claims rewards for completed project work
+
+## Overview
+
+This transaction is performed by **Contributor** users and falls under the **Reward Management** category.
+
+## Prerequisites
+
+### Required Tokens
+The following tokens are required to execute this transaction:
+
+- **100at**
+- **contributorNFT**
+- **projectCompletionToken**
+
+## Transaction Details
+
+### Estimated Fee
+**2.5 ADA**
+
+### Transaction Type
+- **Role:** Contributor
+- **Category:** Reward Management
+- **Multi-Signature:** No
+
+## Transaction Structure
+
+This transaction includes:
+
+### Inputs
+The transaction consumes the following UTxOs:
+- User wallet UTxO
+- Protocol state UTxOs
+- Authorization tokens
+
+### Reference Inputs
+The transaction references:
+- Parameter reference scripts
+- Instance reference data
+- Global state information
+
+### Outputs
+The transaction produces:
+- Updated state UTxOs
+- Modified user wallet
+- Any newly minted tokens
+
+### Transaction Flow
+
+![Transaction Diagram](/diagrams/protocol/contributor-get-rewards.png)
+
+## API Reference
+
+### Endpoint
+```
+POST /tx/v0/contributor/get-rewards
+```
+
+### Request Example
+```json
+{
+  "userAlias": "string",
+  "additionalParams": {
+    // Transaction-specific parameters
+  }
+}
+```
+
+### Response Example
+```json
+{
+  "success": true,
+  "transactionId": "tx_hash",
+  "fee": "2.5 ADA"
+}
+```
+
+## Code Examples
+
+### JavaScript/TypeScript
+```typescript
+import { AndamioAPI } from '@andamio/api';
+
+const api = new AndamioAPI();
+
+const result = await api.transactions.contributorGetRewards({
+  userAlias: "your-alias",
+  // Additional parameters
+});
+```
+
+### Python
+```python
+from andamio_api import AndamioAPI
+
+api = AndamioAPI()
+
+result = api.transactions.contributor_get_rewards(
+    user_alias="your-alias",
+    # Additional parameters
+)
+```
+
+## Error Handling
+
+Common errors that may occur:
+
+| Error Code | Description | Solution |
+|------------|-------------|----------|
+| `INSUFFICIENT_TOKENS` | Required tokens not available | Ensure wallet contains required tokens |
+| `INVALID_SIGNATURE` | Signature validation failed | Check signing process and permissions |
+| `TRANSACTION_FAILED` | Transaction execution failed | Review transaction parameters and retry |
+
+## Related Transactions
+
+No directly related transactions found.
+
+## See Also
+
+- [All Contributor Transactions](../index.mdx#contributor-transactions)
+- [Transaction Overview](../../index.mdx)
+- [API Documentation](../../apis/reference/)
+- [Getting Started Guide](../../getting-started.mdx)

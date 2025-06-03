@@ -1,0 +1,13 @@
+{
+  "title": "Contributor Transactions",
+  "pages": [
+    "index",
+    "contributor-add-info",
+    "contributor-burn-contributor-info",
+    "contributor-commit-project",
+    "contributor-get-rewards",
+    "contributor-mint-project-state",
+    "contributor-unlock-project"
+  ],
+  "defaultOpen": false
+}

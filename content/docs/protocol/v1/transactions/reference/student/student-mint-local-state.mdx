@@ -1,0 +1,108 @@
+---
+title: "StudentMintLocalState"
+description: "Student mints local state token for course participation"
+---
+
+# StudentMintLocalState
+
+Student mints local state token for course participation
+
+## Overview
+
+This transaction is performed by **Student** users and falls under the **State Management** category.
+
+## Prerequisites
+
+### Required Tokens
+The following tokens are required to execute this transaction:
+
+- **100at**
+- **222at**
+
+## Transaction Details
+
+### Estimated Fee
+**2.0 ADA**
+
+### Transaction Type
+- **Role:** Student
+- **Category:** State Management
+- **Multi-Signature:** No
+
+## Transaction Structure
+
+⚠️ **Note:** This transaction is currently defined with metadata only. The complete transaction structure is not yet implemented.
+
+## API Reference
+
+### Endpoint
+```
+POST /tx/v0/student/mint-local-state
+```
+
+### Request Example
+```json
+{
+  "userAlias": "string",
+  "additionalParams": {
+    // Transaction-specific parameters
+  }
+}
+```
+
+### Response Example
+```json
+{
+  "success": true,
+  "transactionId": "tx_hash",
+  "fee": "2.0 ADA"
+}
+```
+
+## Code Examples
+
+### JavaScript/TypeScript
+```typescript
+import { AndamioAPI } from '@andamio/api';
+
+const api = new AndamioAPI();
+
+const result = await api.transactions.studentMintLocalState({
+  userAlias: "your-alias",
+  // Additional parameters
+});
+```
+
+### Python
+```python
+from andamio_api import AndamioAPI
+
+api = AndamioAPI()
+
+result = api.transactions.student_mint_local_state(
+    user_alias="your-alias",
+    # Additional parameters
+)
+```
+
+## Error Handling
+
+Common errors that may occur:
+
+| Error Code | Description | Solution |
+|------------|-------------|----------|
+| `INSUFFICIENT_TOKENS` | Required tokens not available | Ensure wallet contains required tokens |
+| `INVALID_SIGNATURE` | Signature validation failed | Check signing process and permissions |
+| `TRANSACTION_FAILED` | Transaction execution failed | Review transaction parameters and retry |
+
+## Related Transactions
+
+- [StudentBurnLocalState](./student-burn-local-state.mdx)
+- [MintLocalState](./mint-local-state.mdx)
+
+## See Also
+
+- [All Student Transactions](../index.mdx#student-transactions)
+- [Transaction Overview](../../index.mdx)
+- [API Documentation](../../apis/reference/)
+- [Getting Started Guide](../../getting-started.mdx)
