@@ -3,9 +3,9 @@
   "pages": [
     "general",
     "admin", 
+    "project-creator",
     "contributor",
     "course-creator",
-    "project-creator",
     "student"
   ]
 }
