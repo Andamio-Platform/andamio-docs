@@ -1,0 +1,24 @@
+---
+title: "Treasury Add Funds"
+description: "Project creator adds additional funds to project treasury"
+---
+
+# Treasury Add Funds Transaction
+
+![Treasury Add Funds Transaction](/diagrams/transactions/treasury-add-funds.png)
+
+## Overview
+
+This transaction allows a project creator to add additional funds to an existing project treasury, increasing the available budget for contributor rewards.
+
+## Transaction Metadata
+
+- **Role**: ProjectCreator
+- **Category**: treasury_management
+- **Required Tokens**: 100at, projectCreatorNFT, treasuryToken
+- **Estimated Fee**: 2.0 ADA
+- **Multi-signature**: No
+
+## Protocol Description
+
+The transaction increases the treasury balance by transferring additional ADA from the creator's wallet to the treasury UTxO. The funding history is updated to track the additional investment, maintaining a complete record of treasury funding sources.

@@ -1,0 +1,24 @@
+---
+title: "Add Project Creators"
+description: "Instance admin adds new project creators to the platform"
+---
+
+# Add Project Creators Transaction
+
+![Add Project Creators Transaction](/diagrams/transactions/admin-add-project-creators.png)
+
+## Overview
+
+This transaction allows an instance admin to add new project creators to the platform. It requires multi-signature approval from both the instance admin and global admin.
+
+## Transaction Metadata
+
+- **Role**: InstanceAdmin
+- **Category**: access_management
+- **Required Tokens**: instanceAdminNFT
+- **Estimated Fee**: 3.0 ADA
+- **Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+## Protocol Description
+
+The transaction updates the global state to include new project creators in the authorized creator list. The admin state UTxO is consumed and recreated to maintain the admin's permissions, while the global data UTxO is updated with the new creator list.

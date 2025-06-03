@@ -1,0 +1,96 @@
+name: AdminInitCourseTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "InstanceAdmin"
+  category: "course_management"
+  requires_tokens: ["instanceAdminNFT"]
+  estimated_fee: "4.0 ADA"
+  description: "Instance admin initializes a new course in the platform"
+  multi_signature: true
+  required_signatures: ["instanceAdmin", "globalAdmin"]
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_admin_wallet
+    title: "Admin Wallet"
+    values:
+      - "ada balance"
+
+  - id: input_course_state
+    title: "Course State UTxO"
+    values:
+      - "course token"
+    datum:
+      course_id: "string"
+      status: "pending"
+      creator_list: "[]"
+    redeemer:
+      id: course_state_redeemer
+      title: "Init Course"
+      params:
+        - "course_config"
+
+# Reference Input UTxOs (read-only, at bottom of input column)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 reference token"
+    datum:
+      admin_config: "configuration data"
+      course_settings: "settings"
+
+# Transaction
+transaction:
+  id: main_operation
+  title: "init course\nadmin operation"
+    
+# Output UTxOs
+outputs:
+  - id: output_course_state
+    title: "Initialized Course State"
+    values:
+      - "course token"
+    datum:
+      course_id: "string"
+      status: "active"
+      creator_list: "[]"
+
+  - id: output_admin_wallet
+    title: "Admin Wallet"
+    values:
+      - "remaining ada"
+
+# Explicit connections for complex flow
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_course_state  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_course_state
+    attrs: {dir: "none", style: "dashed"}

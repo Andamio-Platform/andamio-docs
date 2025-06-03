@@ -1,0 +1,135 @@
+name: CourseCreatorAcceptAssignmentTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "CourseCreator"
+  category: "assignment_management"
+  requires_tokens: ["courseCreatorNFT", "100at"]
+  estimated_fee: "2.5 ADA"
+  description: "Course creator accepts and approves a student's assignment submission"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_creator_wallet
+    title: "Course Creator Wallet"
+    values:
+      - "1 courseCreatorNFT"
+      - "100at token"
+      - "5.0 ADA"
+
+  - id: input_assignment_state
+    title: "Assignment State UTxO"
+    values:
+      - "1 assignmentToken"
+    datum:
+      student_alias: "student_identifier"
+      assignment_data: "submission_content"
+      status: "submitted"
+      module_index: "module_id"
+    redeemer:
+      id: assignment_redeemer
+      title: "Accept Assignment"
+      params:
+        - "grade"
+        - "feedback"
+        - "approval_signature"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      courseInstance: "(irt, course_instance)[]"
+      coursePolicy: "(prt, course_policy)[]"
+
+  - id: input_course_instance
+    title: "CourseInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      course_nft_cs: "course_nft_cs"
+      modules: "module_list[]"
+      creator_policy: "course_creator_policy"
+
+  - id: input_module_ref
+    title: "Module Reference UTxO"
+    values:
+      - "1 moduleToken"
+    datum:
+      module_info: "module_specifications"
+      grading_criteria: "criteria_list[]"
+      creator_requirements: "creator_policy"
+
+# Transaction
+transaction:
+  id: accept_assignment_operation
+  title: "accept\nassignment"
+    
+# Output UTxOs
+outputs:
+  - id: output_assignment_state
+    title: "Approved Assignment"
+    values:
+      - "1 assignmentToken"
+    datum:
+      student_alias: "student_identifier"
+      assignment_data: "submission_content"
+      status: "approved"
+      grade: "final_grade"
+      feedback: "creator_feedback"
+      module_index: "module_id"
+
+  - id: output_completion_token
+    title: "Module Completion Token"
+    values:
+      - "1 moduleCompletionToken"
+    datum:
+      student: "student_alias"
+      module: "module_identifier"
+      completion_date: "timestamp"
+    mint:
+      id: completion_token_mint
+      title: "ModuleCompletionMint"
+
+  - id: output_creator_wallet
+    title: "Course Creator Wallet"
+    values:
+      - "1 courseCreatorNFT"
+      - "100at token"
+      - "2.5 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_course_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_assignment_state
+    attrs: {dir: "none", style: "dashed"}

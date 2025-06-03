@@ -1,0 +1,10 @@
+name: ContributorMintProjectStateTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Contributor"
+  category: "state_management"
+  requires_tokens: ["100at", "contributorNFT"]
+  estimated_fee: "2.5 ADA"
+  description: "Contributor mints project state token to track participation"
+  multi_signature: false

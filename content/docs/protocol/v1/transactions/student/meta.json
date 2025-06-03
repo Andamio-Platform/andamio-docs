@@ -1,0 +1,10 @@
+{
+  "title": "Student",
+  "pages": [
+    "mint-local-state",
+    "commit-to-assignment",
+    "update-assignment",
+    "leave-assignment",
+    "burn-local-state"
+  ]
+}

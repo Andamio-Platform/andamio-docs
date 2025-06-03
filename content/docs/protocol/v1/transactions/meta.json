@@ -1,15 +1,11 @@
 {
   "title": "Transactions",
-  "icon": "GitBranch",
   "pages": [
-    "index",
-    "getting-started",
-    "reference/student",
-    "reference/coursecreator",
-    "reference/projectcreator",
-    "reference/contributor",
-    "reference/instanceadmin",
-    "reference/general"
-  ],
-  "defaultOpen": true
+    "general",
+    "admin", 
+    "contributor",
+    "course-creator",
+    "project-creator",
+    "student"
+  ]
 }

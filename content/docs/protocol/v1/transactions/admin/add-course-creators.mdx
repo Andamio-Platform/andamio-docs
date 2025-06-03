@@ -1,0 +1,24 @@
+---
+title: "Add Course Creators"
+description: "Instance admin adds new course creators to the platform"
+---
+
+# Add Course Creators Transaction
+
+![Add Course Creators Transaction](/diagrams/transactions/admin-add-course-creators.png)
+
+## Overview
+
+This transaction allows an instance admin to add new course creators to the platform. It requires multi-signature approval from both the instance admin and global admin.
+
+## Transaction Metadata
+
+- **Role**: InstanceAdmin
+- **Category**: access_management
+- **Required Tokens**: instanceAdminNFT
+- **Estimated Fee**: 3.0 ADA
+- **Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+## Protocol Description
+
+The transaction updates the global state to include new course creators in the authorized creator list. The admin state UTxO is consumed and recreated to maintain the admin's permissions, while the global data UTxO is updated with the new creator list.

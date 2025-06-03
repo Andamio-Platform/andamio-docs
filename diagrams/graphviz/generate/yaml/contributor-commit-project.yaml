@@ -1,0 +1,146 @@
+name: ContributorCommitProjectTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Contributor"
+  category: "project_management"
+  requires_tokens: ["100at", "contributorNFT"]
+  estimated_fee: "3.0 ADA"
+  description: "Contributor commits to working on a specific project"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_contributor_wallet
+    title: "Contributor Wallet"
+    values:
+      - "100at token"
+      - "1 contributorNFT"
+      - "5.0 ADA"
+
+  - id: input_project_state
+    title: "Project State UTxO"
+    values:
+      - "1 projectStateToken"
+    datum:
+      project_id: "project_identifier"
+      contributors: "contributor_list[]"
+      treasury_policy: "treasury_policy_id"
+      status: "open_for_contributors"
+    redeemer:
+      id: project_state_redeemer
+      title: "Commit Project"
+      params:
+        - "contributorAlias"
+        - "commitmentLevel"
+        - "estimatedHours"
+
+  - id: input_contributor_info
+    title: "Contributor Info UTxO"
+    values:
+      - "1 contributorToken"
+    datum:
+      alias: "contributor_alias"
+      active_projects: "project_list[]"
+      reputation_score: "score"
+    redeemer:
+      id: contributor_info_redeemer
+      title: "Add Project"
+      params:
+        - "projectId"
+        - "role"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      projectInstance: "(irt, project_instance)[]"
+      projectPolicy: "(prt, project_policy)[]"
+      contributorPolicy: "contributor_policy_id"
+
+  - id: input_project_instance
+    title: "ProjectInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      project_state_cs: "projectStateTokens[]"
+      treasury_config: "treasury_config"
+      creator_policy: "project_creator_policy"
+
+  - id: input_treasury_ref
+    title: "Treasury Reference UTxO"
+    values:
+      - "1 treasuryRefToken"
+    datum:
+      reward_structure: "reward_config"
+      payment_schedule: "schedule_data"
+      total_budget: "budget_amount"
+
+# Transaction
+transaction:
+  id: commit_project_operation
+  title: "commit to\nproject"
+    
+# Output UTxOs
+outputs:
+  - id: output_project_state
+    title: "Updated Project State"
+    values:
+      - "1 projectStateToken"
+    datum:
+      project_id: "project_identifier"
+      contributors: "updated_contributor_list[]"
+      treasury_policy: "treasury_policy_id"
+      status: "active_with_contributors"
+
+  - id: output_contributor_info
+    title: "Updated Contributor Info"
+    values:
+      - "1 contributorToken"
+    datum:
+      alias: "contributor_alias"
+      active_projects: "updated_project_list[]"
+      reputation_score: "updated_score"
+
+  - id: output_contributor_wallet
+    title: "Contributor Wallet"
+    values:
+      - "100at token"
+      - "1 contributorNFT"
+      - "2.0 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_project_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_project_state
+    attrs: {dir: "none", style: "dashed"}

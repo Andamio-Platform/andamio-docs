@@ -1,0 +1,57 @@
+name: SimpleTransaction
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.3
+  ranksep: 0.3
+
+# Node style definitions
+styles:
+  default_node: 'shape=box, style="filled", fillcolor="#ffffff", color="#4CAF50", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"'
+  validator_node: 'shape=box, style="filled", fillcolor="#ffffff", color="#cc7000", fontname="Arial", fontsize=10, penwidth=2'
+  operation_node: 'height=6, width=2, fillcolor="#ffffff", color="#00796b", style="filled", penwidth=2.5, fontsize=14'
+
+# Input UTxOs
+inputs:
+  - id: input_wallet_001
+    title: "User's wallet"
+    values:
+      - "100 ADA"
+
+# Transaction
+transaction:
+  id: simple_tx
+  title: "Simple Tx"
+  style: operation_node
+    
+# Output UTxOs
+outputs:
+  - id: output_wallet_001
+    title: "User's wallet"
+    values:
+      - "50 ADA"
+      
+  - id: output_wallet_002
+    title: "User's wallet"
+    values:
+      - "50 ADA"
+    datum:
+      UserCs: "string"
+      UserName: "string"
+      TokenInfos:
+        LsCs: "string"
+        AssignmentList: "string[]"
+        Minted: "boolean"
+      UserInfo: "string"
+
+# Connections between nodes (now empty since all connections are implied)
+connections: []
+
+# Layout constraints
+ranks:
+  - type: same
+    nodes: [input_wallet_001]
+  - type: same  
+    nodes: [output_wallet_001, output_wallet_002]

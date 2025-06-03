@@ -1,0 +1,10 @@
+name: ProjectCreatorRefuseProjectTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "ProjectCreator"
+  category: "project_management"
+  requires_tokens: ["100at", "projectCreatorNFT"]
+  estimated_fee: "1.5 ADA"
+  description: "Project creator refuses a project proposal with detailed reason"
+  multi_signature: false

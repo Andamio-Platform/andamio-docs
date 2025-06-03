@@ -1,0 +1,103 @@
+name: AdminAddProjectCreatorsTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "InstanceAdmin"
+  category: "access_management"
+  requires_tokens: ["instanceAdminNFT"]
+  estimated_fee: "3.0 ADA"
+  description: "Instance admin adds new project creators to the platform"
+  multi_signature: true
+  required_signatures: ["instanceAdmin", "globalAdmin"]
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_admin_state
+    title: "Admin State UTxO"
+    values:
+      - "admin token"
+    datum:
+      admin_info: "string"
+      permissions: "permission_list[]"
+    redeemer:
+      id: admin_state_redeemer
+      title: "Admin Action"
+      params:
+        - "add_project_creators"
+        - "creator_list[]"
+
+  - id: input_admin_wallet
+    title: "Admin Wallet"
+    values:
+      - "ada balance"
+
+# Reference Input UTxOs (read-only, at bottom of input column)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 reference token"
+    datum:
+      project_creators: "creator_list[]"
+      admin_config: "configuration data"
+
+# Transaction
+transaction:
+  id: add_project_creators_operation
+  title: "add project\ncreators"
+    
+# Output UTxOs
+outputs:
+  - id: output_global_state
+    title: "Updated Global State"
+    values:
+      - "1 reference token"
+    datum:
+      project_creators: "updated_creator_list[]"
+      admin_config: "configuration data"
+
+  - id: output_admin_state
+    title: "Admin State UTxO"
+    values:
+      - "admin token"
+    datum:
+      admin_info: "string"
+      permissions: "permission_list[]"
+
+  - id: output_admin_wallet
+    title: "Admin Wallet"
+    values:
+      - "remaining ada"
+
+# Explicit connections for complex flow
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_admin_state  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_admin_state
+    attrs: {dir: "none", style: "dashed"}

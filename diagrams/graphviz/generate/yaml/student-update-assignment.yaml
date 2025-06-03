@@ -1,0 +1,108 @@
+name: StudentUpdateAssignmentTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Student"
+  category: "assignment_management"
+  requires_tokens: ["localStateToken", "222at"]
+  estimated_fee: "1.5 ADA"
+  description: "Student updates their assignment submission or information"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_student_wallet
+    title: "Student Wallet"
+    values:
+      - "222at token"
+      - "3.0 ADA"
+
+  - id: input_assignment_state
+    title: "Assignment State UTxO"
+    values:
+      - "1 assignmentToken"
+    datum:
+      student_alias: "student_identifier"
+      assignment_data: "current_submission"
+      status: "in_progress"
+      last_updated: "timestamp"
+    redeemer:
+      id: assignment_redeemer
+      title: "Update Assignment"
+      params:
+        - "updated_content"
+        - "progress_notes"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      courseInstance: "(irt, course_instance)[]"
+      coursePolicy: "(prt, course_policy)[]"
+
+  - id: input_course_instance
+    title: "CourseInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      course_nft_cs: "course_nft_cs"
+      modules: "module_list[]"
+
+# Transaction
+transaction:
+  id: update_assignment_operation
+  title: "update\nassignment"
+    
+# Output UTxOs
+outputs:
+  - id: output_assignment_state
+    title: "Updated Assignment"
+    values:
+      - "1 assignmentToken"
+    datum:
+      student_alias: "student_identifier"
+      assignment_data: "updated_submission"
+      status: "updated"
+      last_updated: "new_timestamp"
+
+  - id: output_student_wallet
+    title: "Student Wallet"
+    values:
+      - "222at token"
+      - "1.5 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_course_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_assignment_state
+    attrs: {dir: "none", style: "dashed"}

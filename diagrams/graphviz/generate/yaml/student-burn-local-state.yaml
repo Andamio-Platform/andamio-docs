@@ -1,0 +1,106 @@
+name: StudentBurnLocalStateTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Student"
+  category: "state_management"
+  requires_tokens: ["localStateToken", "222at"]
+  estimated_fee: "2.0 ADA"
+  description: "Student burns local state token and moves to global state"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_student_wallet
+    title: "Student Wallet"
+    values:
+      - "222at token"
+      - "3.0 ADA"
+
+  - id: input_local_state
+    title: "Local State UTxO"
+    values:
+      - "1 localStateToken"
+    datum:
+      assignments: "completed_assignment_list[]"
+      ls_cs: "local_state_cs"
+      at_cs: "access_token_cs"
+      alias: "student_alias"
+    redeemer:
+      id: local_state_redeemer
+      title: "Burn Local State"
+      params:
+        - "final_grades"
+        - "completion_status"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      courseInstance: "(irt, course_instance)[]"
+      coursePolicy: "(prt, course_policy)[]"
+
+  - id: input_course_instance
+    title: "CourseInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      ls_cs: "localStateTokens[]"
+      course_nft_cs: "course_nft_cs"
+
+# Transaction
+transaction:
+  id: burn_local_state_operation
+  title: "burn local state\nand move to global"
+    
+# Output UTxOs
+outputs:
+  - id: output_global_state
+    title: "Updated Global State"
+    values:
+      - "1 globalStateToken"
+    datum:
+      student_records: "updated_student_list[]"
+      completion_data: "course_completion_data"
+
+  - id: output_student_wallet
+    title: "Student Wallet"
+    values:
+      - "222at token"
+      - "1.0 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_course_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_local_state
+    attrs: {dir: "none", style: "dashed"}

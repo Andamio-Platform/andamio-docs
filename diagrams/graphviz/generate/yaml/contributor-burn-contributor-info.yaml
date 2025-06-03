@@ -1,0 +1,10 @@
+name: ContributorBurnContributorInfoTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Contributor"
+  category: "profile_management"
+  requires_tokens: ["contributorInfoToken", "contributorNFT"]
+  estimated_fee: "1.5 ADA"
+  description: "Contributor burns their contributor info token"
+  multi_signature: false

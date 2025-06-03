@@ -1,0 +1,48 @@
+---
+title: "Student Transactions"
+description: "Course enrollment and assignment workflow transactions"
+---
+
+# Student Transactions
+
+Students participate in courses and complete assignments through these transactions that manage their enrollment, assignment work, and course completion.
+
+## Available Transactions
+
+### Course Enrollment
+
+#### [Mint Local State](/docs/protocol/v1/transactions/student/mint-local-state)
+**Description**: Student mints local state token for course participation  
+**Required Tokens**: 100at, 222at  
+**Estimated Fee**: 2.0 ADA  
+**Multi-signature**: No
+
+#### [Burn Local State](/docs/protocol/v1/transactions/student/burn-local-state)
+**Description**: Student burns local state token and moves to global state  
+**Required Tokens**: localStateToken, 222at  
+**Estimated Fee**: 2.0 ADA  
+**Multi-signature**: No
+
+### Assignment Management
+
+#### [Commit to Assignment](/docs/protocol/v1/transactions/student/commit-to-assignment)
+**Description**: Student commits to working on a specific module assignment  
+**Required Tokens**: 100at, 222at  
+**Estimated Fee**: 2.5 ADA  
+**Multi-signature**: No
+
+#### [Update Assignment](/docs/protocol/v1/transactions/student/update-assignment)
+**Description**: Student updates their assignment submission or information  
+**Required Tokens**: localStateToken, 222at  
+**Estimated Fee**: 1.5 ADA  
+**Multi-signature**: No
+
+#### [Leave Assignment](/docs/protocol/v1/transactions/student/leave-assignment)
+**Description**: Student leaves an assignment they previously committed to  
+**Required Tokens**: localStateToken, 222at  
+**Estimated Fee**: 1.5 ADA  
+**Multi-signature**: No
+
+---
+
+The student workflow follows a clear progression: course enrollment through local state minting → assignment commitment → iterative assignment updates → completion or withdrawal → course completion through local state burning. The local state token tracks all student progress throughout their course participation.

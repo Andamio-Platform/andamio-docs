@@ -1,0 +1,127 @@
+name: ProjectCreatorMintTreasuryTokenTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "ProjectCreator"
+  category: "treasury_management"
+  requires_tokens: ["100at", "projectCreatorNFT"]
+  estimated_fee: "3.5 ADA"
+  description: "Project creator mints treasury token to initialize project treasury"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "10.0 ADA"
+
+  - id: input_project_state
+    title: "Project State UTxO"
+    values:
+      - "1 projectStateToken"
+    datum:
+      project_id: "project_identifier"
+      status: "approved"
+      treasury_status: "uninitialized"
+      creator_policy: "project_creator_policy"
+    redeemer:
+      id: project_state_redeemer
+      title: "Initialize Treasury"
+      params:
+        - "treasuryConfig"
+        - "initialBudget"
+        - "rewardStructure"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      projectInstance: "(irt, project_instance)[]"
+      projectPolicy: "(prt, project_policy)[]"
+      treasuryPolicy: "treasury_policy_config"
+
+  - id: input_project_instance
+    title: "ProjectInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      project_state_cs: "projectStateTokens[]"
+      treasury_config: "default_treasury_config"
+      creator_policy: "project_creator_policy"
+
+# Transaction
+transaction:
+  id: mint_treasury_operation
+  title: "mint treasury\ntoken"
+    
+# Output UTxOs
+outputs:
+  - id: output_treasury_utxo
+    title: "Treasury UTxO"
+    values:
+      - "1 treasuryToken"
+      - "1000.0 ADA"
+    datum:
+      project_id: "project_identifier"
+      total_funds: "initial_treasury_balance"
+      reward_pool: "reward_allocation"
+      payment_schedule: "schedule_config"
+    mint:
+      id: treasury_token_mint
+      title: "TreasuryTokenMint"
+
+  - id: output_project_state
+    title: "Updated Project State"
+    values:
+      - "1 projectStateToken"
+    datum:
+      project_id: "project_identifier"
+      status: "treasury_initialized"
+      treasury_status: "active"
+      creator_policy: "project_creator_policy"
+
+  - id: output_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "6.5 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_project_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_project_state
+    attrs: {dir: "none", style: "dashed"}

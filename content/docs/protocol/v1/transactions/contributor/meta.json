@@ -1,0 +1,11 @@
+{
+  "title": "Contributor",
+  "pages": [
+    "add-info",
+    "mint-project-state",
+    "commit-project",
+    "unlock-project",
+    "get-rewards",
+    "burn-contributor-info"
+  ]
+}

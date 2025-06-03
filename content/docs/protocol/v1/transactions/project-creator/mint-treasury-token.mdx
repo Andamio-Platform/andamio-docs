@@ -1,0 +1,24 @@
+---
+title: "Mint Treasury Token"
+description: "Project creator mints treasury token to initialize project treasury"
+---
+
+# Mint Treasury Token Transaction
+
+![Mint Treasury Token Transaction](/diagrams/transactions/project-creator-mint-treasury-token.png)
+
+## Overview
+
+This transaction allows a project creator to mint a treasury token that initializes the project treasury with initial funding and reward structure.
+
+## Transaction Metadata
+
+- **Role**: ProjectCreator
+- **Category**: treasury_management
+- **Required Tokens**: 100at, projectCreatorNFT
+- **Estimated Fee**: 3.5 ADA
+- **Multi-signature**: No
+
+## Protocol Description
+
+The transaction creates a new treasury UTxO with initial funding and establishes the reward structure for the project. The project state transitions from "approved" to "treasury_initialized", making it ready for contributor participation and reward distribution.

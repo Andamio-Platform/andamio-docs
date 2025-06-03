@@ -1,0 +1,12 @@
+{
+  "title": "Instance Admin",
+  "pages": [
+    "init-course",
+    "init-project-step-1", 
+    "init-project-step-2",
+    "add-course-creators",
+    "add-project-creators",
+    "remove-course-creators",
+    "remove-project-creators"
+  ]
+}

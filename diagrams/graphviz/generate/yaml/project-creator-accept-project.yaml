@@ -1,0 +1,116 @@
+name: ProjectCreatorAcceptProjectTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "ProjectCreator"
+  category: "project_management"
+  requires_tokens: ["100at", "projectCreatorNFT"]
+  estimated_fee: "3.0 ADA"
+  description: "Project creator accepts a contributor's project proposal or application"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "5.0 ADA"
+
+  - id: input_project_proposal
+    title: "Project Proposal UTxO"
+    values:
+      - "1 proposalToken"
+    datum:
+      contributor_alias: "contributor_identifier"
+      proposal_data: "project_proposal_content"
+      status: "submitted"
+      estimated_timeline: "timeline_data"
+    redeemer:
+      id: proposal_redeemer
+      title: "Accept Project"
+      params:
+        - "acceptance_terms"
+        - "payment_structure"
+        - "milestone_schedule"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      projectInstance: "(irt, project_instance)[]"
+      projectPolicy: "(prt, project_policy)[]"
+
+  - id: input_project_instance
+    title: "ProjectInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      treasury_config: "treasury_parameters"
+      creator_policy: "project_creator_policy"
+      contributor_requirements: "requirements_list[]"
+
+# Transaction
+transaction:
+  id: accept_project_operation
+  title: "accept project\nproposal"
+    
+# Output UTxOs
+outputs:
+  - id: output_active_project
+    title: "Active Project UTxO"
+    values:
+      - "1 activeProjectToken"
+    datum:
+      contributor_alias: "contributor_identifier"
+      project_data: "accepted_project_content"
+      status: "active"
+      payment_terms: "accepted_payment_structure"
+      milestones: "milestone_schedule"
+    mint:
+      id: active_project_mint
+      title: "ActiveProjectMint"
+
+  - id: output_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "2.0 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_project_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_project_proposal
+    attrs: {dir: "none", style: "dashed"}

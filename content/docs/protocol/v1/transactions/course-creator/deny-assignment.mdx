@@ -1,0 +1,24 @@
+---
+title: "Deny Assignment"
+description: "Course creator denies a student's assignment submission"
+---
+
+# Deny Assignment Transaction
+
+![Deny Assignment Transaction](/diagrams/transactions/course-creator-deny-assignment.png)
+
+## Overview
+
+This transaction allows a course creator to deny a student's assignment submission, providing feedback and indicating whether resubmission is allowed.
+
+## Transaction Metadata
+
+- **Role**: CourseCreator
+- **Category**: assignment_management
+- **Required Tokens**: courseCreatorNFT, 100at
+- **Estimated Fee**: 2.0 ADA
+- **Multi-signature**: No
+
+## Protocol Description
+
+The transaction transitions the assignment state from "submitted" to "denied" and includes detailed feedback explaining the denial reason. The transaction can specify whether the student is allowed to resubmit the assignment.

@@ -37,3 +37,8 @@ resources:
   features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 - [Fumadocs](https://fumadocs.vercel.app) - learn about Fumadocs
+
+
+## Diagram Generation
+
+See [diagrams/README.md](diagrams/README.md) for details on how to generate diagrams. A set of transaction descriptions are found in [diagrams/graphviz/generate/yaml](diagrams/graphviz/generate/yaml). (Note: these are a first draft and auto generated - need to be cleaned up and verified)

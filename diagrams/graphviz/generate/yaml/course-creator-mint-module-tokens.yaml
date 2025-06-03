@@ -1,0 +1,126 @@
+name: CourseCreatorMintModuleTokensTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "CourseCreator"
+  category: "course_management"
+  requires_tokens: ["100at", "courseCreatorNFT"]
+  estimated_fee: "3.5 ADA"
+  description: "Course creator mints module tokens for course content"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_creator_wallet
+    title: "Course Creator Wallet"
+    values:
+      - "100at token"
+      - "1 courseCreatorNFT"
+      - "10.0 ADA"
+
+  - id: input_course_state
+    title: "Course State UTxO"
+    values:
+      - "1 courseStateToken"
+    datum:
+      course_id: "course_identifier"
+      modules: "existing_module_list[]"
+      creator_policy: "course_creator_policy"
+      status: "active"
+    redeemer:
+      id: course_state_redeemer
+      title: "Add Modules"
+      params:
+        - "moduleList"
+        - "moduleContent"
+        - "assignmentStructure"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      courseInstance: "(irt, course_instance)[]"
+      coursePolicy: "(prt, course_policy)[]"
+
+  - id: input_course_instance
+    title: "CourseInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      course_nft_cs: "course_nft_cs"
+      creator_policy: "course_creator_policy"
+      module_token_policy: "module_minting_policy"
+
+# Transaction
+transaction:
+  id: mint_modules_operation
+  title: "mint module\ntokens"
+    
+# Output UTxOs
+outputs:
+  - id: output_module_tokens
+    title: "Module Tokens"
+    values:
+      - "5 moduleToken_1"
+      - "5 moduleToken_2"
+      - "5 moduleToken_3"
+    datum:
+      module_info: "module_specifications[]"
+      creator: "course_creator_alias"
+      course_id: "course_identifier"
+    mint:
+      id: module_token_mint
+      title: "ModuleTokenMint"
+
+  - id: output_course_state
+    title: "Updated Course State"
+    values:
+      - "1 courseStateToken"
+    datum:
+      course_id: "course_identifier"
+      modules: "updated_module_list[]"
+      creator_policy: "course_creator_policy"
+      status: "modules_available"
+
+  - id: output_creator_wallet
+    title: "Course Creator Wallet"
+    values:
+      - "100at token"
+      - "1 courseCreatorNFT"
+      - "6.5 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_course_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_course_state
+    attrs: {dir: "none", style: "dashed"}

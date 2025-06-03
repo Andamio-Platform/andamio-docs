@@ -1,0 +1,10 @@
+name: StudentMintLocalStateTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Student"
+  category: "state_management"
+  requires_tokens: ["100at", "222at"]
+  estimated_fee: "2.0 ADA"
+  description: "Student mints local state token for course participation"
+  multi_signature: false

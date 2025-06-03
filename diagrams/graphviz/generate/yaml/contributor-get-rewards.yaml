@@ -1,0 +1,128 @@
+name: ContributorGetRewardsTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Contributor"
+  category: "reward_management"
+  requires_tokens: ["100at", "contributorNFT", "projectCompletionToken"]
+  estimated_fee: "2.5 ADA"
+  description: "Contributor claims rewards for completed project work"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_contributor_wallet
+    title: "Contributor Wallet"
+    values:
+      - "100at token"
+      - "1 contributorNFT"
+      - "1 projectCompletionToken"
+      - "5.0 ADA"
+
+  - id: input_treasury_utxo
+    title: "Treasury UTxO"
+    values:
+      - "1 treasuryToken"
+      - "1000.0 ADA"
+      - "500 rewardTokens"
+    datum:
+      project_id: "project_identifier"
+      total_funds: "treasury_balance"
+      pending_rewards: "reward_queue[]"
+      payment_schedule: "schedule_data"
+    redeemer:
+      id: treasury_redeemer
+      title: "Distribute Rewards"
+      params:
+        - "contributorAlias"
+        - "completionProof"
+        - "rewardAmount"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      projectInstance: "(irt, project_instance)[]"
+      rewardPolicy: "reward_distribution_policy"
+
+  - id: input_project_instance
+    title: "ProjectInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      treasury_config: "treasury_parameters"
+      reward_structure: "reward_config"
+      completion_criteria: "criteria_list[]"
+
+  - id: input_completion_proof
+    title: "Completion Proof UTxO"
+    values:
+      - "1 proofToken"
+    datum:
+      contributor: "contributor_alias"
+      project_id: "project_identifier"
+      work_completed: "completion_evidence"
+      verification_status: "verified"
+
+# Transaction
+transaction:
+  id: claim_rewards_operation
+  title: "claim project\nrewards"
+    
+# Output UTxOs
+outputs:
+  - id: output_treasury_utxo
+    title: "Updated Treasury UTxO"
+    values:
+      - "1 treasuryToken"
+      - "900.0 ADA"
+      - "450 rewardTokens"
+    datum:
+      project_id: "project_identifier"
+      total_funds: "updated_treasury_balance"
+      pending_rewards: "updated_reward_queue[]"
+      payment_schedule: "schedule_data"
+
+  - id: output_contributor_wallet
+    title: "Contributor Wallet"
+    values:
+      - "100at token"
+      - "1 contributorNFT"
+      - "50 rewardTokens"
+      - "102.5 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_project_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_treasury_utxo
+    attrs: {dir: "none", style: "dashed"}

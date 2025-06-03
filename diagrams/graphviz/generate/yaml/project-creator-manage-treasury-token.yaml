@@ -1,0 +1,160 @@
+name: ProjectCreatorManageTreasuryTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "ProjectCreator"
+  category: "treasury_management"
+  requires_tokens: ["100at", "projectCreatorNFT", "treasuryToken"]
+  estimated_fee: "4.5 ADA"
+  description: "Project creator manages treasury funds and distribution"
+  multi_signature: true
+  required_signatures: ["projectCreator", "instanceAdmin"]
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "10.0 ADA"
+
+  - id: input_treasury_utxo
+    title: "Treasury UTxO"
+    values:
+      - "1 treasuryToken"
+      - "1000.0 ADA"
+      - "500 rewardTokens"
+    datum:
+      project_id: "project_identifier"
+      total_funds: "treasury_balance"
+      allocated_rewards: "reward_allocation[]"
+      payment_schedule: "schedule_data"
+    redeemer:
+      id: treasury_redeemer
+      title: "Manage Treasury"
+      params:
+        - "operation_type"
+        - "amount"
+        - "recipient_list[]"
+
+  - id: input_admin_signature
+    title: "Instance Admin UTxO"
+    values:
+      - "1 instanceAdminNFT"
+    datum:
+      admin_permissions: "permission_list[]"
+      instance_config: "config_data"
+    redeemer:
+      id: admin_approval_redeemer
+      title: "Admin Approval"
+      params:
+        - "approve_treasury_op"
+        - "operation_hash"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      treasuryPolicy: "treasury_policy_config"
+      projectInstance: "(irt, project_instance)[]"
+      adminConfig: "admin_requirements"
+
+  - id: input_project_instance
+    title: "ProjectInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      treasury_config: "treasury_parameters"
+      creator_policy: "project_creator_policy"
+      reward_structure: "reward_config"
+
+  - id: input_fee_config
+    title: "Fee Configuration UTxO"
+    values:
+      - "1 feeConfigToken"
+    datum:
+      treasury_fee_rate: "fee_percentage"
+      min_transaction_fee: "min_fee"
+      admin_fee_share: "admin_percentage"
+
+# Transaction
+transaction:
+  id: manage_treasury_operation
+  title: "manage treasury\nfunds"
+    
+# Output UTxOs
+outputs:
+  - id: output_treasury_utxo
+    title: "Updated Treasury UTxO"
+    values:
+      - "1 treasuryToken"
+      - "950.0 ADA"
+      - "450 rewardTokens"
+    datum:
+      project_id: "project_identifier"
+      total_funds: "updated_treasury_balance"
+      allocated_rewards: "updated_reward_allocation[]"
+      payment_schedule: "updated_schedule_data"
+
+  - id: output_reward_payments
+    title: "Contributor Rewards"
+    values:
+      - "50 rewardTokens"
+      - "50.0 ADA"
+    datum:
+      recipients: "contributor_list[]"
+      payment_round: "payment_cycle_id"
+      project_phase: "completion_milestone"
+
+  - id: output_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "5.5 ADA"
+
+  - id: output_admin_utxo
+    title: "Instance Admin UTxO"
+    values:
+      - "1 instanceAdminNFT"
+    datum:
+      admin_permissions: "permission_list[]"
+      instance_config: "config_data"
+      last_approval: "treasury_operation_hash"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_project_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_treasury_utxo
+    attrs: {dir: "none", style: "dashed"}

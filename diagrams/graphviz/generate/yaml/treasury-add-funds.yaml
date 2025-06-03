@@ -1,0 +1,110 @@
+name: TreasuryAddFundsTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "ProjectCreator"
+  category: "treasury_management"
+  requires_tokens: ["100at", "projectCreatorNFT", "treasuryToken"]
+  estimated_fee: "2.0 ADA"
+  description: "Project creator adds additional funds to project treasury"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "500.0 ADA"
+
+  - id: input_treasury_utxo
+    title: "Treasury UTxO"
+    values:
+      - "1 treasuryToken"
+      - "1000.0 ADA"
+    datum:
+      project_id: "project_identifier"
+      total_funds: "current_treasury_balance"
+      funding_history: "funding_record[]"
+    redeemer:
+      id: treasury_redeemer
+      title: "Add Funds"
+      params:
+        - "additional_amount"
+        - "funding_source"
+
+# Reference Input UTxOs (read-only)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 prt"
+    datum:
+      treasuryPolicy: "treasury_policy_config"
+      projectInstance: "(irt, project_instance)[]"
+
+  - id: input_project_instance
+    title: "ProjectInstance UTxO"
+    values:
+      - "1 irt"
+    datum:
+      treasury_config: "treasury_parameters"
+      creator_policy: "project_creator_policy"
+
+# Transaction
+transaction:
+  id: add_funds_operation
+  title: "add funds to\ntreasury"
+    
+# Output UTxOs
+outputs:
+  - id: output_treasury_utxo
+    title: "Updated Treasury UTxO"
+    values:
+      - "1 treasuryToken"
+      - "1400.0 ADA"
+    datum:
+      project_id: "project_identifier"
+      total_funds: "updated_treasury_balance"
+      funding_history: "updated_funding_record[]"
+
+  - id: output_creator_wallet
+    title: "Project Creator Wallet"
+    values:
+      - "100at token"
+      - "1 projectCreatorNFT"
+      - "98.0 ADA"
+
+# Automatic connections based on structure
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_project_instance  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_treasury_utxo
+    attrs: {dir: "none", style: "dashed"}

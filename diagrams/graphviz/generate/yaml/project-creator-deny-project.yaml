@@ -1,0 +1,10 @@
+name: ProjectCreatorDenyProjectTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "ProjectCreator"
+  category: "project_management"
+  requires_tokens: ["100at", "projectCreatorNFT"]
+  estimated_fee: "2.0 ADA"
+  description: "Project creator denies a contributor's project proposal"
+  multi_signature: false

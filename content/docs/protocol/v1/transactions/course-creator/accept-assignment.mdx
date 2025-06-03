@@ -1,0 +1,24 @@
+---
+title: "Accept Assignment"
+description: "Course creator accepts and approves a student's assignment submission"
+---
+
+# Accept Assignment Transaction
+
+![Accept Assignment Transaction](/diagrams/transactions/course-creator-accept.assignment.png)
+
+## Overview
+
+This transaction allows a course creator to accept and approve a student's assignment submission. Upon acceptance, a module completion token is minted for the student.
+
+## Transaction Metadata
+
+- **Role**: CourseCreator
+- **Category**: assignment_management
+- **Required Tokens**: courseCreatorNFT, 100at
+- **Estimated Fee**: 2.5 ADA
+- **Multi-signature**: No
+
+## Protocol Description
+
+The transaction transitions the assignment state from "submitted" to "approved" and includes grading and feedback. A module completion token is minted to certify the student's successful completion of the module requirements.

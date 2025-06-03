@@ -1,0 +1,11 @@
+{
+  "title": "Project Creator",
+  "pages": [
+    "mint-treasury-token",
+    "treasury-add-funds",
+    "accept-project",
+    "deny-project", 
+    "refuse-project",
+    "manage-treasury-token"
+  ]
+}

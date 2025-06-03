@@ -1,0 +1,96 @@
+name: AdminInitProjectStep1Transaction
+
+# Metadata about this transaction type
+metadata:
+  role: "InstanceAdmin"
+  category: "instance_management"
+  requires_tokens: ["instanceAdminNFT"]
+  estimated_fee: "3.5 ADA"
+  description: "Instance admin initializes a new project (step 1 of 2)"
+  multi_signature: true
+  required_signatures: ["instanceAdmin", "globalAdmin"]
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: instance_ref  
+    title: "instance ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_admin_wallet
+    title: "Admin Wallet"
+    values:
+      - "ada balance"
+
+  - id: input_project_state
+    title: "Project State UTxO"
+    values:
+      - "project token"
+    datum:
+      project_id: "string"
+      status: "pending"
+      step: "1"
+    redeemer:
+      id: project_state_redeemer
+      title: "Init Project Step 1"
+      params:
+        - "project_config"
+
+# Reference Input UTxOs (read-only, at bottom of input column)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 reference token"
+    datum:
+      admin_config: "configuration data"
+      project_settings: "settings"
+
+# Transaction
+transaction:
+  id: main_operation
+  title: "init project step 1\nadmin operation"
+    
+# Output UTxOs
+outputs:
+  - id: output_project_state
+    title: "Project State Step 1"
+    values:
+      - "project token"
+    datum:
+      project_id: "string"
+      status: "step1_complete"
+      step: "1"
+
+  - id: output_admin_wallet
+    title: "Admin Wallet"
+    values:
+      - "remaining ada"
+
+# Explicit connections for complex flow
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_project_state  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_project_state
+    attrs: {dir: "none", style: "dashed"}

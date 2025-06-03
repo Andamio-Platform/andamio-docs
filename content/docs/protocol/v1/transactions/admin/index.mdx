@@ -1,0 +1,60 @@
+---
+title: "Instance Admin Transactions"
+description: "System initialization and access management transactions"
+---
+
+# Instance Admin Transactions
+
+Instance administrators manage system initialization, access control, and platform governance through these multi-signature transactions that require both instance admin and global admin approval.
+
+## Available Transactions
+
+### System Initialization
+
+#### [Initialize Course](/docs/protocol/v1/transactions/admin/init-course)
+**Description**: Instance admin initializes a new course in the platform  
+**Required Tokens**: instanceAdminNFT  
+**Estimated Fee**: 4.0 ADA  
+**Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+#### [Initialize Project Step 1](/docs/protocol/v1/transactions/admin/init-project-step-1)
+**Description**: Instance admin initializes a new project (step 1 of 2)  
+**Required Tokens**: instanceAdminNFT  
+**Estimated Fee**: 3.5 ADA  
+**Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+#### [Initialize Project Step 2](/docs/protocol/v1/transactions/admin/init-project-step-2)
+**Description**: Instance admin completes project initialization (step 2 of 2)  
+**Required Tokens**: instanceAdminNFT  
+**Estimated Fee**: 4.0 ADA  
+**Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+### Access Management
+
+#### [Add Course Creators](/docs/protocol/v1/transactions/admin/add-course-creators)
+**Description**: Instance admin adds new course creators to the platform  
+**Required Tokens**: instanceAdminNFT  
+**Estimated Fee**: 3.0 ADA  
+**Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+#### [Add Project Creators](/docs/protocol/v1/transactions/admin/add-project-creators)
+**Description**: Instance admin adds new project creators to the platform  
+**Required Tokens**: instanceAdminNFT  
+**Estimated Fee**: 3.0 ADA  
+**Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+#### [Remove Course Creators](/docs/protocol/v1/transactions/admin/remove-course-creators)
+**Description**: Instance admin removes course creators from the platform  
+**Required Tokens**: instanceAdminNFT  
+**Estimated Fee**: 3.0 ADA  
+**Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+#### [Remove Project Creators](/docs/protocol/v1/transactions/admin/remove-project-creators)
+**Description**: Instance admin removes project creators from the platform  
+**Required Tokens**: instanceAdminNFT  
+**Estimated Fee**: 3.0 ADA  
+**Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+---
+
+All instance admin transactions require multi-signature approval to ensure proper governance and prevent unauthorized system changes. These operations form the foundation of platform management and access control.

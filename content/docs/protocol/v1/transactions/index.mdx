@@ -1,105 +1,64 @@
 ---
 title: "Transactions"
-description: "Complete reference for all Andamio protocol transactions"
+description: "Protocol v1 transaction reference organized by actor type"
 ---
 
-# Transaction Reference
+# Protocol v1 Transactions
 
-The Andamio protocol supports transactions for different user roles. Each transaction type has specific requirements, fees, and outputs.
+This section provides comprehensive documentation for all Andamio protocol v1 transactions, organized by the type of actor who can initiate them.
+
+## Transaction Categories
+
+### [General](/docs/protocol/v1/transactions/general)
+Universal transactions available to all users:
+- [Access Token Mint](/docs/protocol/v1/transactions/general/access-token-mint) - Mint access tokens for protocol participation
+
+### [Instance Admin](/docs/protocol/v1/transactions/admin)
+System initialization and access management (7 transactions):
+- [Initialize Course](/docs/protocol/v1/transactions/admin/init-course) - Initialize a new course
+- [Initialize Project Step 1](/docs/protocol/v1/transactions/admin/init-project-step-1) - Begin project initialization
+- [Initialize Project Step 2](/docs/protocol/v1/transactions/admin/init-project-step-2) - Complete project initialization
+- [Add Course Creators](/docs/protocol/v1/transactions/admin/add-course-creators) - Grant course creation permissions
+- [Add Project Creators](/docs/protocol/v1/transactions/admin/add-project-creators) - Grant project creation permissions
+- [Remove Course Creators](/docs/protocol/v1/transactions/admin/remove-course-creators) - Revoke course creation permissions
+- [Remove Project Creators](/docs/protocol/v1/transactions/admin/remove-project-creators) - Revoke project creation permissions
+
+### [Contributor](/docs/protocol/v1/transactions/contributor)
+Project participation lifecycle (6 transactions):
+- [Add Info](/docs/protocol/v1/transactions/contributor/add-info) - Create or update contributor profile
+- [Mint Project State](/docs/protocol/v1/transactions/contributor/mint-project-state) - Create project participation token
+- [Commit Project](/docs/protocol/v1/transactions/contributor/commit-project) - Join a project as contributor
+- [Unlock Project](/docs/protocol/v1/transactions/contributor/unlock-project) - Leave a project
+- [Get Rewards](/docs/protocol/v1/transactions/contributor/get-rewards) - Claim project completion rewards
+- [Burn Contributor Info](/docs/protocol/v1/transactions/contributor/burn-contributor-info) - Remove contributor profile
+
+### [Course Creator](/docs/protocol/v1/transactions/course-creator)
+Course content and assignment management (3 transactions):
+- [Mint Module Tokens](/docs/protocol/v1/transactions/course-creator/mint-module-tokens) - Create course modules
+- [Accept Assignment](/docs/protocol/v1/transactions/course-creator/accept-assignment) - Approve student submissions
+- [Deny Assignment](/docs/protocol/v1/transactions/course-creator/deny-assignment) - Reject student submissions
+
+### [Project Creator](/docs/protocol/v1/transactions/project-creator)
+Project and treasury management (6 transactions):
+- [Mint Treasury Token](/docs/protocol/v1/transactions/project-creator/mint-treasury-token) - Initialize project treasury
+- [Treasury Add Funds](/docs/protocol/v1/transactions/project-creator/treasury-add-funds) - Add funds to treasury
+- [Accept Project](/docs/protocol/v1/transactions/project-creator/accept-project) - Approve contributor applications
+- [Deny Project](/docs/protocol/v1/transactions/project-creator/deny-project) - Reject contributor applications
+- [Refuse Project](/docs/protocol/v1/transactions/project-creator/refuse-project) - Decline project proposals
+- [Manage Treasury Token](/docs/protocol/v1/transactions/project-creator/manage-treasury-token) - Distribute treasury funds
+
+### [Student](/docs/protocol/v1/transactions/student)
+Course enrollment and assignment workflow (5 transactions):
+- [Mint Local State](/docs/protocol/v1/transactions/student/mint-local-state) - Enroll in a course
+- [Commit to Assignment](/docs/protocol/v1/transactions/student/commit-to-assignment) - Start working on assignment
+- [Update Assignment](/docs/protocol/v1/transactions/student/update-assignment) - Submit assignment updates
+- [Leave Assignment](/docs/protocol/v1/transactions/student/leave-assignment) - Withdraw from assignment
+- [Burn Local State](/docs/protocol/v1/transactions/student/burn-local-state) - Complete course and move to global state
+
+---
 
 ## Transaction Overview
 
-The protocol currently supports **29** transaction types across **6** user roles:
+The Andamio protocol uses a role-based transaction system where different types of users (actors) can perform specific operations. Each transaction type includes detailed metadata about required tokens, estimated fees, and whether multi-signature approval is needed.
 
-### [Student Transactions](./reference/student/)
-
-6 transactions available for Student users.
-
-- **StudentMintLocalState** - Student mints local state token for course participation
-- **StudentBurnLocalState** - Student burns local state token and moves to global state
-- **StudentUpdateAssignment** - Student updates their assignment submission or information
-- ... and 3 more
-
-### [CourseCreator Transactions](./reference/coursecreator/)
-
-3 transactions available for CourseCreator users.
-
-- **CourseCreatorMintModuleTokens** - Course creator mints module tokens for course content
-- **CourseCreatorDenyAssignment** - Course creator denies a student's assignment submission
-- **CourseCreatorAcceptAssignment** - Course creator accepts and approves a student's assignment submission
-
-### [ProjectCreator Transactions](./reference/projectcreator/)
-
-6 transactions available for ProjectCreator users.
-
-- **ProjectCreatorManageTreasury** - Project creator manages treasury funds and distribution
-- **TreasuryAddFunds** - Project creator adds additional funds to project treasury
-- **ProjectCreatorRefuseProject** - Project creator refuses a project proposal with detailed reason
-- ... and 3 more
-
-### [Contributor Transactions](./reference/contributor/)
-
-6 transactions available for Contributor users.
-
-- **ContributorAddInfo** - Contributor adds or updates their profile information
-- **ContributorBurnContributorInfo** - Contributor burns their contributor info token
-- **ContributorMintProjectState** - Contributor mints project state token to track participation
-- ... and 3 more
-
-### [InstanceAdmin Transactions](./reference/instanceadmin/)
-
-7 transactions available for InstanceAdmin users.
-
-- **AdminInitCourse** - Instance admin initializes a new course in the platform
-- **AdminInitProjectStep1** - Instance admin initializes a new project (step 1 of 2)
-- **AdminRmCourseCreators** - Instance admin removes course creators from the platform
-- ... and 4 more
-
-### [General Transactions](./reference/general/)
-
-1 transactions available for General users.
-
-- **AccessTokenMint** - User mints access tokens (100at, 222at) for protocol participation
-
-## Quick Reference
-
-### By Fee Range
-
-#### Low Cost (1.5-2.0 ADA)
-Profile updates, state transitions, basic operations.
-
-#### Medium Cost (2.5-3.5 ADA)
-Token minting, role-based operations, project interactions.
-
-#### High Cost (4.0+ ADA)
-Admin operations, multi-signature transactions, treasury management.
-
-### By Authorization Level
-
-#### Single Signature
-Most user transactions require only the user's signature.
-
-#### Multi-Signature
-Admin and treasury operations require multiple authorized signatures.
-
-## Getting Started
-
-1. [Set up your development environment](./getting-started.mdx)
-2. [Choose your transaction type](#transaction-overview)
-3. [Review the specific transaction documentation](./reference/)
-4. [Implement using our SDKs](../apis/)
-
-## Visual Documentation
-
-All transactions include visual diagrams showing the complete UTxO flow:
-
-![Sample Transaction Diagram](/diagrams/protocol/sample.png)
-
-## API Integration
-
-All transactions are available through our REST API and SDKs:
-
-- [REST API Documentation](../apis/reference/)
-- [JavaScript/TypeScript SDK](../apis/sdks/javascript/)
-- [Python SDK](../apis/sdks/python/)
-
+All transactions operate on UTxO-based state management and include comprehensive validation logic to ensure protocol integrity and proper state transitions.

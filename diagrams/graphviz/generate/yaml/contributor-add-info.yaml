@@ -1,0 +1,10 @@
+name: ContributorAddInfoTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Contributor"
+  category: "profile_management"
+  requires_tokens: ["100at", "contributorNFT"]
+  estimated_fee: "1.5 ADA"
+  description: "Contributor adds or updates their profile information"
+  multi_signature: false

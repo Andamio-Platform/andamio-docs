@@ -1,0 +1,24 @@
+---
+title: "Initialize Project Step 2"
+description: "Instance admin completes project initialization (step 2 of 2)"
+---
+
+# Initialize Project Step 2 Transaction
+
+![Initialize Project Step 2 Transaction](/diagrams/transactions/admin-init-project-step-2.png)
+
+## Overview
+
+This transaction completes the project initialization process. The instance admin finalizes the project setup, transitioning the project state from step 1 complete to active.
+
+## Transaction Metadata
+
+- **Role**: InstanceAdmin
+- **Category**: instance_management
+- **Required Tokens**: instanceAdminNFT
+- **Estimated Fee**: 4.0 ADA
+- **Multi-signature**: Yes (instanceAdmin + globalAdmin)
+
+## Protocol Description
+
+The transaction consumes a project state UTxO with step1_complete status and outputs it with active status. This completes the two-step initialization process, making the project fully operational and available for use.

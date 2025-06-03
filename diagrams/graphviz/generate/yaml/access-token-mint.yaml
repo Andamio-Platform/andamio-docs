@@ -1,0 +1,121 @@
+name: AccessTokenMintTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "General"
+  category: "access_management"
+  requires_tokens: ["userStateToken"]
+  estimated_fee: "2.5 ADA"
+  description: "User mints access tokens (100at, 222at) for protocol participation"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# Reference inputs (gray boxes on left)
+references:
+  - id: params_ref
+    title: "params ref"
+  
+  - id: index_ref  
+    title: "index ref"
+    
+  - id: global_state_ref
+    title: "global state"
+
+# Input UTxOs
+inputs:
+  - id: input_user_state
+    title: "UserState UTxO"
+    values:
+      - "placeholder token"
+    datum:
+      user_info: "string"
+      access_level: "string"
+    redeemer:
+      id: user_state_redeemer
+      title: "User State Action"
+      params:
+        - "action_param"
+
+  - id: input_user_wallet
+    title: "User Wallet"
+    values:
+      - "5000000 lovelace"
+    redeemer:
+      id: mint_access_token_redeemer
+      title: "Mint Access Token"
+      params:
+        - "alias"
+        - "userInfo"
+
+# Reference Input UTxOs (read-only, at bottom of input column)
+reference_inputs:
+  - id: input_global_data
+    title: "Global Data UTxO"
+    values:
+      - "1 reference token"
+    datum:
+      global_config: "configuration data"
+    plutus_script: "access policy ref script"
+
+  - id: input_index
+    title: "Index UTxO"
+    values:
+      - "1 reference token"
+    datum:
+      indexData: "index"
+      treasuryAddr: "string"
+      treasuryDatum: "string"
+      feeValue: "string[]"
+    plutus_script: "index validator ref script"
+
+# Transaction
+transaction:
+  id: mint_operation
+  title: "mint access\ntoken"
+    
+# Output UTxOs
+outputs:
+  - id: output_access_token
+    title: "Access Token"
+    values:
+      - "1 access_token"
+    datum:
+      access_level: "string"
+      expiry: "timestamp"
+    mint:
+      id: access_token_mint
+      title: "AccessTokenMint"
+
+  - id: output_user_state
+    title: "UserState UTxO"
+    values:
+      - "updated user state"
+    datum:
+      user_info: "string"
+      access_tokens: "token_list[]"
+
+  - id: output_user_wallet
+    title: "User Wallet"
+    values:
+      - "remaining ada"
+
+# Explicit connections for complex flow
+connections:
+  # Reference connections (no arrows)
+  - from: params_ref
+    to: input_global_data
+    attrs: {dir: "none", style: "dashed"}
+  
+  - from: instance_ref
+    to: input_user_state  
+    attrs: {dir: "none", style: "dashed"}
+    
+  - from: global_state_ref
+    to: input_user_state
+    attrs: {dir: "none", style: "dashed"}

@@ -1,0 +1,10 @@
+name: ContributorUnlockProjectTransaction
+
+# Metadata about this transaction type
+metadata:
+  role: "Contributor"
+  category: "project_management"
+  requires_tokens: ["100at", "contributorNFT", "projectStateToken"]
+  estimated_fee: "2.0 ADA"
+  description: "Contributor unlocks and leaves a project"
+  multi_signature: false
