@@ -25,7 +25,7 @@ Working proposal on Notion: [Initial Implementation of Andamio Protocol Service 
             "admin": {
                 "initCourse": {
                     "protocolFee": 0,
-                    "serviceFee": 20000000,
+                    "serviceFee": 25000000,
                 },
                 "addCourseCreators": {
                     "protocolFee": 0,
@@ -78,7 +78,7 @@ Working proposal on Notion: [Initial Implementation of Andamio Protocol Service 
             "admin": {
                 "initProjectStep1": {
                     "protocolFee": 0,
-                    "serviceFee": 20000000,
+                    "serviceFee": 25000000,
                 },
                 "initProjectStep2": {
                     "protocolFee": 0,
@@ -138,7 +138,24 @@ Working proposal on Notion: [Initial Implementation of Andamio Protocol Service 
                     "protocolFee": 0,
                     "serviceFee": {
                         "min": 1000000,
-                        "percentage": 0.0125,
+                        "percentage": [
+                            {
+                                "tier": "free",
+                                "fee": 0.03
+                            }, 
+                            {
+                                "tier": "premium",
+                                "fee": 0.015,
+                            }, 
+                            {
+                                "tier": "partner",
+                                "fee": 0.0125,
+                            }, 
+                            {
+                                "tier": "enterprise",
+                                "fee": 0.01,
+                            }
+                        ],
                     },
                 },
                 "mintProjectState": {
