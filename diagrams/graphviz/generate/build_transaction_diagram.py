@@ -648,7 +648,7 @@ def main():
     parser = argparse.ArgumentParser(description='Build transaction diagrams from YAML configuration')
     parser.add_argument('config_file', help='YAML configuration file')
     parser.add_argument('-o', '--output', help='Output DOT file (default: stdout)')
-    parser.add_argument('--yaml-dir', default='./yaml', help='Directory containing YAML files (default: ./yaml)')
+    parser.add_argument('--yaml-dir', default='./yaml/transactions', help='Directory containing transaction YAML files (default: ./yaml/transactions)')
     parser.add_argument('--output-dir', default='../../output', help='Output directory for DOT files (default: ../../output)')
     
     args = parser.parse_args()

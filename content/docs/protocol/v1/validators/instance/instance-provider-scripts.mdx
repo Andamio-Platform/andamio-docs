@@ -1,0 +1,27 @@
+---
+title: "Instance Provider Scripts"
+description: "Validator managing instance providers and instance lifecycle"
+---
+
+# Instance Provider Scripts
+
+The Instance Provider Scripts validator manages instance providers and handles the lifecycle of instances within the Andamio protocol. This validator is part of the instance blueprint and controls instance provider operations.
+
+## Validator Diagram
+
+![Instance Provider Scripts](/diagrams/validators/instance-provider-scripts.png)
+
+## Blueprint Source
+
+This validator is defined in the **instance.plutus** blueprint.
+
+## Redeemers
+
+### InstanceProviderAction
+- `MintInstances` - Create new instance tokens
+- `BurnInstance` - Remove instance tokens from circulation
+- `UpdateInstanceProvider` - Update instance provider information
+
+## Purpose
+
+This validator manages the providers of instances within the Andamio protocol, handling the minting and burning of instance tokens and maintaining provider information. It ensures proper instance lifecycle management and provider authorization.

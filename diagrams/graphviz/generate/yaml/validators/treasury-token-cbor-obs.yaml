@@ -1,0 +1,4 @@
+validator_name: "Treasury_Token_Cbor_Obs"
+blueprint_source: "project.plutus"
+redeemers:
+  - "bytes (observer for Treasury_Token initialization)"

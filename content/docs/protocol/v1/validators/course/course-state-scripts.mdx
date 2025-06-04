@@ -1,0 +1,28 @@
+---
+title: "Course State Scripts"
+description: "Validator managing local course states and student interactions"
+---
+
+# Course State Scripts
+
+The Course State Scripts validator manages local course states and handles student interactions within courses. This validator is part of the course blueprint and controls the core course state management functionality.
+
+## Validator Diagram
+
+![Course State Scripts](/diagrams/validators/course-state-scripts.png)
+
+## Blueprint Source
+
+This validator is defined in the **course.plutus** blueprint.
+
+## Redeemers
+
+### CourseStateAction
+- `AddStudent` - Add a new student to the course
+- `AddModule` - Add a new module to the course
+- `BurnModule` - Remove a module from the course
+- `UpdateCourseInfo` - Update course information and metadata
+
+## Purpose
+
+This validator manages the state of course instances, handling student enrollment, module management, and course information updates. It serves as the central authority for course-related state transitions.

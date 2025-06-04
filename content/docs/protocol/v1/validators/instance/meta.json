@@ -1,0 +1,11 @@
+{
+    "title": "Instance Validators",
+    "description": "Validators from the instance.plutus blueprint managing instance operations and governance",
+    "icon": "Server",
+    "pages": [
+        "instance-governance-scripts",
+        "instance-provider-scripts",
+        "instance-scripts"
+    ],
+    "defaultOpen": false
+}

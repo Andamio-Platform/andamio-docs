@@ -1,0 +1,11 @@
+{
+    "title": "Global Validators",
+    "description": "Validators from the global.plutus blueprint managing global states and system-wide operations",
+    "icon": "Globe",
+    "pages": [
+        "global-ref",
+        "global-state",
+        "init-global-state-observer"
+    ],
+    "defaultOpen": false
+}

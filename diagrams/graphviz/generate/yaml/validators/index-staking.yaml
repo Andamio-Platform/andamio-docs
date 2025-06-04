@@ -1,0 +1,4 @@
+validator_name: "Index_Staking"
+blueprint_source: "index.plutus"
+redeemers:
+  - "bytes (token presence validation)"

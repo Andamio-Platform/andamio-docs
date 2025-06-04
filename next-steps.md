@@ -4,10 +4,7 @@
 3. Implement observers inside of Tx Rect
 4. Add address placeholder to every YAML
 5. Add address to UTxO Rects
-6. Play with color coding addresses and token names
-7. Allow Address to be a pointer
-7. Show refScript in ref utxos
-8. In diagram, change redeemer params to "redeemer"
+7. In diagram, change redeemer params to "redeemer"
 
 # New observers field
 ```
@@ -26,6 +23,13 @@ observers:
 # Validator
 1. Follow Miro diagrams that already exist
 2. Try to use Blueprints only to generate the YAML code!
+3. Set up registry.yaml
+4. Use the registry.yaml to populate address fields in transactions
+5. Allow Address to be a pointer
+6. Play with color coding addresses and token names
 
+# Clean Up
+1. Show refScript in ref utxos
+2. 
 
 # Then back to tokenomics work - by 4pm

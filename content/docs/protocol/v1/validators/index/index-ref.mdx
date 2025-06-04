@@ -1,0 +1,24 @@
+---
+title: "Index Reference"
+description: "Reference script storage validator for Index_Scripts with fee data in datum"
+---
+
+# Index Reference
+
+The Index Reference validator stores reference scripts for Index_Scripts and maintains fee data and other information in its datum. This validator is part of the index blueprint and serves as a reference point for index operations.
+
+## Validator Diagram
+
+![Index Reference](/diagrams/validators/index-ref.png)
+
+## Blueprint Source
+
+This validator is defined in the **index.plutus** blueprint.
+
+## Redeemers
+
+- `bytes` - Reference script storage for Index_Scripts
+
+## Purpose
+
+This validator serves as a reference script storage mechanism for index validators, providing secure storage for index scripts and maintaining fee structures and configuration data in the datum.

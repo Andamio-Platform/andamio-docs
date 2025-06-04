@@ -1,0 +1,8 @@
+validator_name: "Module_Scripts"
+blueprint_source: "course.plutus"
+redeemers:
+  ModuleAction:
+    - "MintModules"
+    - "BurnModule"
+    - "UpdateModule"
+    - "UpdateModuleInfo"

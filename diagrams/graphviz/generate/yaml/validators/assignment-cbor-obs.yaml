@@ -1,0 +1,4 @@
+validator_name: "Assignment_Cbor_Obs"
+blueprint_source: "course.plutus"
+redeemers:
+  - "bytes (observer for Assignment_Validator initialization)"

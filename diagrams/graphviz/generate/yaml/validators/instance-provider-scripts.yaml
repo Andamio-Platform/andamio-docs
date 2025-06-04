@@ -1,0 +1,7 @@
+validator_name: "Instance_Provider_Scripts"
+blueprint_source: "instance.plutus"
+redeemers:
+  InstanceProviderAction:
+    - "MintInstances"
+    - "BurnInstance"
+    - "UpdateInstanceProvider"

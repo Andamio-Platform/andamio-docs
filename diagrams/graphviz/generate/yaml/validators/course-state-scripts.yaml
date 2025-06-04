@@ -1,0 +1,8 @@
+validator_name: "Course_State_Scripts"
+blueprint_source: "course.plutus"
+redeemers:
+  CourseStateAction:
+    - "AddStudent"
+    - "AddModule"
+    - "BurnModule"
+    - "UpdateCourseInfo"

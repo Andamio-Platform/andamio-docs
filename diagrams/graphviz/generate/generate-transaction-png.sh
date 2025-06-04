@@ -10,8 +10,8 @@ if [ $# -eq 0 ]; then
 fi
 
 # Define directories
-YAML_DIR="./yaml"
-OUTPUT_DIR="../../output"
+YAML_DIR="./yaml/transactions"
+OUTPUT_DIR="../../output/transactions"
 
 # Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
@@ -36,7 +36,7 @@ echo "Generating diagram for: $YAML_FILE"
 
 # Step 1: Generate .dot file using the Python script
 echo "Creating $OUTPUT_DIR/$DOT_FILE..."
-if ! python3 build_diagram.py "$1" --yaml-dir="$YAML_DIR" --output-dir="$OUTPUT_DIR" -o "$DOT_FILE"; then
+if ! python3 build_transaction_diagram.py "$1" --yaml-dir="$YAML_DIR" --output-dir="$OUTPUT_DIR" -o "$DOT_FILE"; then
     echo "Error: Failed to generate .dot file"
     exit 1
 fi

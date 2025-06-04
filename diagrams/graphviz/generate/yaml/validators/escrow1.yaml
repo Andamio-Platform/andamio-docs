@@ -1,0 +1,8 @@
+validator_name: "Escrow1"
+blueprint_source: "project.plutus"
+redeemers:
+  ProjectAction:
+    - "AcceptProject"
+    - "DenyProject"
+    - "RefuseProject"
+    - "ManageContributor"

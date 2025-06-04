@@ -1,0 +1,4 @@
+validator_name: "Init_Index_Policy"
+blueprint_source: "index.plutus"
+redeemers:
+  - "bytes (linked list initialization)"

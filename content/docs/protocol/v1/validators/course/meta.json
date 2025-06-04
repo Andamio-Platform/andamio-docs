@@ -1,8 +1,14 @@
 {
-    "title": "Course State Validator",
+    "title": "Course Validators",
+    "description": "Validators from the course.plutus blueprint managing assignments, course states, and modules",
     "icon": "Workflow",
     "pages": [
-        "index"
+        "assignment-cbor-obs",
+        "assignment-validator", 
+        "course-state-cbor-obs",
+        "course-state-scripts",
+        "module-cbor-obs",
+        "module-scripts"
     ],
     "defaultOpen": false
 }

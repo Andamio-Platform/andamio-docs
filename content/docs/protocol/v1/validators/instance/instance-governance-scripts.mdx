@@ -1,0 +1,28 @@
+---
+title: "Instance Governance Scripts"
+description: "Validator managing course governance and creator permissions"
+---
+
+# Instance Governance Scripts
+
+The Instance Governance Scripts validator manages course governance operations and handles course creator permissions. This validator is part of the instance blueprint and controls governance-related functionality.
+
+## Validator Diagram
+
+![Instance Governance Scripts](/diagrams/validators/instance-governance-scripts.png)
+
+## Blueprint Source
+
+This validator is defined in the **instance.plutus** blueprint.
+
+## Redeemers
+
+### CourseGovAction
+- `AddCourseCreator` - Add a single course creator to the instance
+- `AddCourseCreators` - Add multiple course creators to the instance
+- `RemoveCourseCreators` - Remove course creators from the instance
+- `BurnGovernanceToken` - Burn governance tokens from circulation
+
+## Purpose
+
+This validator manages the governance structure of course instances, handling the addition and removal of course creators and managing governance tokens. It ensures proper authorization and control over course creation and management permissions.

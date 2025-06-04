@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Script to generate .dot and .png files for all YAML transaction diagrams
-# Usage: ./generate-all-diagrams.sh
+# Script to generate .dot and .png files for all YAML validator diagrams
+# Usage: ./generate-all-validator-diagrams.sh
 
 set -e  # Exit on any error
 
@@ -13,19 +13,18 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Directories
-YAML_DIR="./yaml"
-OUTPUT_DIR="../../output"
-SCRIPT_NAME="./generate-png.sh"
+YAML_DIR="./yaml/validators"
+OUTPUT_DIR="../../output/validators"
+SCRIPT_NAME="./generate-validator-png.sh"
 
 # Counters
 total_files=0
 successful_files=0
 failed_files=0
 skipped_files=0
-metadata_only_files=0
 
-echo -e "${BLUE}🔄 Andamio Protocol Diagram Generator${NC}"
-echo -e "${BLUE}=====================================${NC}"
+echo -e "${BLUE}🔄 Andamio Validator Diagram Generator${NC}"
+echo -e "${BLUE}====================================${NC}"
 echo
 
 # Check if directories exist
@@ -47,7 +46,7 @@ mkdir -p "$OUTPUT_DIR"
 
 # Count total YAML files
 total_files=$(find "$YAML_DIR" -name "*.yaml" | wc -l | tr -d ' ')
-echo -e "${BLUE}📁 Found $total_files YAML files in $YAML_DIR${NC}"
+echo -e "${BLUE}📁 Found $total_files validator YAML files in $YAML_DIR${NC}"
 echo
 
 # Check and activate virtual environment
@@ -73,12 +72,7 @@ for yaml_file in "$YAML_DIR"/*.yaml; do
     # Extract filename without path and extension
     filename=$(basename "$yaml_file" .yaml)
     
-    echo -e "${BLUE}🔧 Processing: ${NC}$filename.yaml"
-    
-    # Check if YAML file has transaction structure or just metadata
-    if ! grep -q "^inputs:" "$yaml_file" && ! grep -q "^transaction:" "$yaml_file"; then
-        echo -e "   ${YELLOW}📋 Metadata-only file (no transaction structure)${NC}"
-    fi
+    echo -e "${BLUE}🔧 Processing validator: ${NC}$filename.yaml"
     
     # Check if output files already exist
     dot_file="$OUTPUT_DIR/${filename}.dot"
@@ -108,25 +102,18 @@ for yaml_file in "$YAML_DIR"/*.yaml; do
     echo
 done
 
-# Count metadata-only files
-metadata_only_files=$(find "$YAML_DIR" -name "*.yaml" -exec sh -c 'if ! grep -q "^inputs:" "$1" && ! grep -q "^transaction:" "$1"; then echo "$1"; fi' _ {} \; | wc -l | tr -d ' ')
-
 # Summary
-echo -e "${BLUE}📊 Generation Summary${NC}"
-echo -e "${BLUE}===================${NC}"
+echo -e "${BLUE}📊 Validator Generation Summary${NC}"
+echo -e "${BLUE}==============================${NC}"
 echo -e "${GREEN}✅ Successful: $successful_files${NC}"
 echo -e "${RED}❌ Failed: $failed_files${NC}"
 echo -e "${YELLOW}⏭️  Skipped: $skipped_files${NC}"
-echo -e "${YELLOW}📋 Metadata-only: $metadata_only_files${NC}"
 echo -e "${BLUE}📁 Total: $total_files${NC}"
 echo
 
 if [ $failed_files -eq 0 ]; then
-    echo -e "${GREEN}🎉 All diagrams generated successfully!${NC}"
+    echo -e "${GREEN}🎉 All validator diagrams generated successfully!${NC}"
     echo -e "${BLUE}📂 Output files are in: $OUTPUT_DIR${NC}"
-    if [ $metadata_only_files -gt 0 ]; then
-        echo -e "${YELLOW}📋 Note: $metadata_only_files files contain only metadata (title/footer) without transaction diagrams${NC}"
-    fi
 else
     echo -e "${YELLOW}⚠️  Some files failed to generate. Check the errors above.${NC}"
     exit 1
@@ -134,9 +121,9 @@ fi
 
 # Optional: Show output directory contents
 echo
-echo -e "${BLUE}📋 Generated Files:${NC}"
-echo -e "${BLUE}=================${NC}"
-ls -la "$OUTPUT_DIR"/*.{dot,png} 2>/dev/null | while read -r line; do
+echo -e "${BLUE}📋 Generated Validator Files:${NC}"
+echo -e "${BLUE}=============================${NC}"
+ls -la "$OUTPUT_DIR"/*validator*.{dot,png} 2>/dev/null | while read -r line; do
     echo "   $line"
 done
 

@@ -1,0 +1,8 @@
+validator_name: "Instance_Scripts"
+blueprint_source: "instance.plutus"
+redeemers:
+  InstanceAction:
+    - "AddValidators"
+    - "RemoveValidator"
+    - "BurnInstance"
+    - "UpdateInstance"

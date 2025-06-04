@@ -1,6 +1,6 @@
-# Andamio Protocol Transaction Diagrams
+# Andamio Protocol Diagrams
 
-A tool for generating visual transaction diagrams for the Andamio protocol using GraphViz. This system converts YAML transaction definitions into professional diagrams with enhanced metadata support.
+A comprehensive tool for generating visual diagrams for the Andamio protocol using GraphViz. This system converts YAML definitions into professional diagrams for both transaction flows and validator relationships with enhanced metadata support.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -17,17 +17,19 @@ A tool for generating visual transaction diagrams for the Andamio protocol using
 
 This tool generates visual transaction diagrams showing the flow of UTxOs, operations, and redeemers for the Andamio protocol. It features:
 
-- **29 Andamio transaction types** - Complete protocol coverage
+- **28 Transaction diagrams** - Complete protocol coverage for all transaction types
+- **24 Validator diagrams** - Comprehensive validator and script relationships
 - **Enhanced metadata support** - Role-based transactions with fee estimates
 - **Automatic styling** - Smart node type inference and layout
 - **Batch processing** - Generate all diagrams with one command
 - **5-column layout** - references → inputs → redeemers → transaction → outputs
 
 ### Core Components
-- **YAML configuration files** - Define transaction structure with metadata
-- **Python script** (`build_diagram.py`) - Converts YAML to GraphViz DOT format with enhanced features
-- **Individual generation** (`generate-png.sh`) - Single transaction workflow
-- **Batch generation** (`generate-all-diagrams.sh`) - Process all transactions at once
+- **YAML configuration files** - Define transaction and validator structures with metadata
+- **Python scripts** (`build_transaction_diagram.py`, `build_validator_diagram.py`) - Convert YAML to GraphViz DOT format
+- **Individual generation** (`generate-transaction-png.sh`, `generate-validator-png.sh`) - Single diagram workflow
+- **Batch generation** (`generate-all-transaction-diagrams.sh`, `generate-all-validator-diagrams.sh`) - Process all diagrams
+- **Deployment script** (`deploy-diagrams.sh`) - Deploy generated PNGs to public directories
 
 ## Prerequisites
 
@@ -82,7 +84,9 @@ pip install pyyaml
 ### 3. Make Scripts Executable
 ```bash
 cd diagrams/graphviz/generate
-chmod +x generate-png.sh generate-all-diagrams.sh
+chmod +x generate-transaction-png.sh generate-validator-png.sh
+chmod +x generate-all-transaction-diagrams.sh generate-all-validator-diagrams.sh
+chmod +x deploy-diagrams.sh
 ```
 
 ## YAML Configuration Format
@@ -243,71 +247,133 @@ ranks:
 Generate all Andamio protocol transaction diagrams at once:
 
 ```bash
-cd graphviz-only/generate
-./generate-all-diagrams.sh
+cd diagrams/graphviz/generate
+
+# Generate all transaction diagrams
+./generate-all-transaction-diagrams.sh
+
+# Generate all validator diagrams  
+./generate-all-validator-diagrams.sh
 ```
 
-This processes all 29 YAML files and creates:
+This processes all YAML files and creates:
 - Smart file updates (only regenerates when YAML is newer)
 - Progress tracking with colored output
 - Summary statistics
 - Metadata-only file detection
 
-### Method 2: Individual Transaction
+### Method 2: Individual Diagrams
+
+**For transactions:**
 ```bash
-cd graphviz-only/generate
-./generate-png.sh student-commit-to-assignment.yaml
+cd diagrams/graphviz/generate
+./generate-transaction-png.sh student-commit-to-assignment.yaml
+```
+
+**For validators:**
+```bash
+cd diagrams/graphviz/generate
+./generate-validator-png.sh assignment-validator.yaml
 ```
 
 This creates:
-- `output/student-commit-to-assignment.dot` - GraphViz DOT file
-- `output/student-commit-to-assignment.png` - PNG image with enhanced metadata
+- `output/transactions/student-commit-to-assignment.dot` - GraphViz DOT file
+- `output/transactions/student-commit-to-assignment.png` - PNG image with enhanced metadata
+- `output/validators/assignment-validator.dot` - GraphViz DOT file
+- `output/validators/assignment-validator.png` - PNG image
 
 ### Method 3: Manual Steps
 ```bash
-cd graphviz-only/generate
+cd diagrams/graphviz/generate
 source venv/bin/activate
 
-# Step 1: Generate .dot file
-python3 build_diagram.py yaml/student-commit-to-assignment.yaml -o output/diagram.dot
+# For transaction diagrams:
+python3 build_transaction_diagram.py student-commit-to-assignment.yaml --yaml-dir=yaml/transactions --output-dir=output/transactions -o diagram.dot
+
+# For validator diagrams:
+python3 build_validator_diagram.py assignment-validator.yaml --yaml-dir=yaml/validators --output-dir=output/validators -o diagram.dot
 
 # Step 2: Generate image
-dot -Tpng output/diagram.dot -o output/diagram.png
+dot -Tpng output/transactions/diagram.dot -o output/transactions/diagram.png
+dot -Tpng output/validators/diagram.dot -o output/validators/diagram.png
 
 # Alternative formats:
-dot -Tsvg output/diagram.dot -o output/diagram.svg
-dot -Tpdf output/diagram.dot -o output/diagram.pdf
+dot -Tsvg output/transactions/diagram.dot -o output/transactions/diagram.svg
+dot -Tpdf output/transactions/diagram.dot -o output/transactions/diagram.pdf
 ```
 
 ### Command Line Options
 
-**build_diagram.py:**
+**build_transaction_diagram.py:**
 ```bash
-python3 build_diagram.py <yaml_file> [-o output_file]
+python3 build_transaction_diagram.py <yaml_file> [--yaml-dir=DIR] [--output-dir=DIR] [-o output_file]
 
 Options:
-  yaml_file        Input YAML configuration file (relative to current directory)
-  -o, --output     Output DOT file (default: stdout)
+  yaml_file        Input YAML configuration file (filename only)
+  --yaml-dir       Directory containing YAML files (default: yaml/transactions)
+  --output-dir     Output directory for generated files (default: output/transactions)
+  -o, --output     Output DOT filename (default: stdout)
 ```
 
-**generate-png.sh:**
+**build_validator_diagram.py:**
 ```bash
-./generate-png.sh <yaml_filename>
+python3 build_validator_diagram.py <yaml_file> [--yaml-dir=DIR] [--output-dir=DIR] [-o output_file]
+
+Options:
+  yaml_file        Input YAML configuration file (filename only)
+  --yaml-dir       Directory containing YAML files (default: yaml/validators)
+  --output-dir     Output directory for generated files (default: output/validators)
+  -o, --output     Output DOT filename (default: stdout)
+```
+
+**generate-transaction-png.sh:**
+```bash
+./generate-transaction-png.sh <yaml_filename>
 
 Arguments:
-  yaml_filename    YAML file in the yaml/ directory (filename only)
+  yaml_filename    YAML file in the yaml/transactions/ directory (filename only)
 ```
 
-**generate-all-diagrams.sh:**
+**generate-validator-png.sh:**
 ```bash
-./generate-all-diagrams.sh
+./generate-validator-png.sh <yaml_filename>
+
+Arguments:
+  yaml_filename    YAML file in the yaml/validators/ directory (filename only)
+```
+
+**generate-all-transaction-diagrams.sh:**
+```bash
+./generate-all-transaction-diagrams.sh
 
 Features:
-  - Processes all YAML files in yaml/ directory
+  - Processes all YAML files in yaml/transactions/ directory
   - Automatically activates Python virtual environment
   - Shows progress with colored output
   - Reports metadata-only files
   - Provides generation statistics
+```
+
+**generate-all-validator-diagrams.sh:**
+```bash
+./generate-all-validator-diagrams.sh
+
+Features:
+  - Processes all YAML files in yaml/validators/ directory
+  - Automatically activates Python virtual environment
+  - Shows progress with colored output
+  - Provides generation statistics
+```
+
+**deploy-diagrams.sh:**
+```bash
+./deploy-diagrams.sh
+
+Features:
+  - Copies PNG files from output/transactions/ to public/diagrams/transactions/
+  - Copies PNG files from output/validators/ to public/diagrams/validators/
+  - Archives DOT files with timestamp
+  - Creates public directories automatically
 ```
 
 ## Andamio Protocol Features
@@ -320,12 +386,11 @@ Features:
 - `student-update-assignment` - Student updates assignment submission
 - `student-burn-local-state` - Student burns local state, moves to global
 - `student-mint-local-state` - Student mints local state token
-- `mint-local-state` - General local state minting
 
 **Course Creator Transactions (3):**
 - `course-creator-accept.assignment` - Approve student assignment
 - `course-creator-deny-assignment` - Deny student assignment  
-- `course-crestor-mint-module-tokens` - Create course module tokens
+- `course-creator-mint-module-tokens` - Create course module tokens
 
 **Project Creator Transactions (6):**
 - `project-creator-accept-project` - Accept contributor proposal
@@ -472,16 +537,24 @@ metadata:
 
 ### Generate All Diagrams
 ```bash
-cd graphviz-only/generate
-./generate-all-diagrams.sh
+cd diagrams/graphviz/generate
+
+# Generate all transaction diagrams
+./generate-all-transaction-diagrams.sh
+
+# Generate all validator diagrams
+./generate-all-validator-diagrams.sh
+
+# Deploy all generated diagrams to public directories
+./deploy-diagrams.sh
 ```
 
-**Sample Output:**
+**Sample Output (Transaction Generation):**
 ```
 🔄 Andamio Protocol Diagram Generator
 =====================================
 
-📁 Found 29 YAML files in ./yaml
+📁 Found 28 YAML files in ./yaml/transactions
 🐍 Activating virtual environment...
 
 🔧 Processing: student-commit-to-assignment.yaml
@@ -493,14 +566,14 @@ cd graphviz-only/generate
 
 📊 Generation Summary
 ===================
-✅ Successful: 29
+✅ Successful: 28
 ❌ Failed: 0
 ⏭️  Skipped: 0
 📋 Metadata-only: 7
-📁 Total: 29
+📁 Total: 28
 
 🎉 All diagrams generated successfully!
-📂 Output files are in: ./output
+📂 Output files are in: ../../output/transactions
 📋 Note: 7 files contain only metadata (title/footer) without transaction diagrams
 ```
 
@@ -537,7 +610,7 @@ pip install pyyaml
 
 **"Permission denied" on bash script**
 ```bash
-chmod +x generate_diagram.sh
+chmod +x generate-transaction-png.sh generate-validator-png.sh
 ```
 
 **YAML parsing errors**
@@ -564,7 +637,7 @@ pip install pyyaml
 ### Debugging Output
 ```bash
 # Check if .dot file is generated correctly
-cat enroll-course.dot
+cat student-commit-to-assignment.dot
 
 # Test GraphViz separately
 dot -V  # Check GraphViz version
@@ -574,25 +647,42 @@ dot -Tpng test.dot -o test.png  # Test basic rendering
 ## Repository Structure
 ```
 diagrams/
-├── README.md                           # This file
+├── README.md                               # This file
 ├── graphviz/
 │   └── generate/
-│       ├── build_diagram.py           # Enhanced Python diagram generator
-│       ├── generate-png.sh            # Individual diagram generation
-│       ├── generate-all-diagrams.sh   # Batch processing script
-│       ├── generate_mdx_docs.py       # MDX documentation generator
-│       ├── requirements.txt           # Python dependencies
-│       ├── venv/                      # Python virtual environment
-│       ├── examples/                  # Example files
-│       └── yaml/                      # 29 Andamio transaction definitions
-│           ├── student-commit-to-assignment.yaml
-│           ├── contributor-get-rewards.yaml
-│           ├── project-creator-manage-treasury-token.yaml
-│           ├── admin-init-course.yaml
-│           └── ... (25 more transaction types)
-└── output/                            # Generated diagrams
-    ├── *.dot                          # GraphViz DOT files
-    └── *.png                          # PNG images
+│       ├── build_transaction_diagram.py   # Transaction diagram generator
+│       ├── build_validator_diagram.py     # Validator diagram generator
+│       ├── generate-transaction-png.sh    # Individual transaction generation
+│       ├── generate-validator-png.sh      # Individual validator generation
+│       ├── generate-all-transaction-diagrams.sh  # Batch transaction processing
+│       ├── generate-all-validator-diagrams.sh    # Batch validator processing
+│       ├── deploy-diagrams.sh             # Deploy PNGs to public directories
+│       ├── generate_mdx_docs.py           # MDX documentation generator
+│       ├── requirements.txt               # Python dependencies
+│       ├── venv/                          # Python virtual environment
+│       ├── examples/                      # Example files
+│       └── yaml/                          # YAML diagram definitions
+│           ├── transactions/              # Transaction definitions
+│           │   ├── student-commit-to-assignment.yaml
+│           │   ├── contributor-get-rewards.yaml
+│           │   ├── project-creator-manage-treasury-token.yaml
+│           │   ├── admin-init-course.yaml
+│           │   └── ... (22+ more transaction types)
+│           └── validators/                # Validator definitions
+│               ├── assignment-validator.yaml
+│               ├── course-state-scripts.yaml
+│               ├── treasury-scripts.yaml
+│               └── ... (17+ more validator types)
+└── output/                                # Generated diagrams
+    ├── transactions/                      # Transaction diagram outputs
+    │   ├── *.dot                         # GraphViz DOT files
+    │   └── *.png                         # PNG images
+    ├── validators/                        # Validator diagram outputs
+    │   ├── *.dot                         # GraphViz DOT files
+    │   └── *.png                         # PNG images
+    └── archive_YYYY-MM-DD_HH-MM-SS/      # Archived DOT files
+        ├── transactions/
+        └── validators/
 ```
 
 ## Advanced Features

@@ -1,0 +1,4 @@
+validator_name: "Index_Scripts"
+blueprint_source: "index.plutus"
+redeemers:
+  - "IndexAction (derived from IndexData structure)"

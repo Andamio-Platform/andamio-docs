@@ -1,0 +1,4 @@
+validator_name: "Global_Ref"
+blueprint_source: "global.plutus"
+redeemers:
+  - "bytes (reference script storage)"
