@@ -1,4 +1,5 @@
 validator_name: "Index_Ref"
 blueprint_source: "index.plutus"
+purpose: "spend"
 redeemers:
   - "bytes (reference script storage for Index_Scripts)"

@@ -1,0 +1,210 @@
+# Andamio Registry - Source of Truth for Validators and Redeemers
+# This file serves as the central registry for all validators and their redeemers
+
+# Validator Registry - Organized by Blueprint
+blueprints:
+  course:
+    validators:
+      assignment_validator:
+        file: "validators/assignment-validator.yaml"
+        purpose: "spend"
+        redeemers:
+          AssignmentDecisionAction:
+            - action: "Accept"
+              transaction: "course-creator-accept-assignment"
+            - action: "Reject"
+              transaction: "course-creator-deny-assignment"
+            - action: "Update"
+              transaction: "student-update-assignment"
+
+      assignment_cbor_obs:
+        file: "validators/assignment-cbor-obs.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      course_state_cbor_obs:
+        file: "validators/course-state-cbor-obs.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      course_state_scripts:
+        file: "validators/course-state-scripts.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+      module_cbor_obs:
+        file: "validators/module-cbor-obs.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      module_scripts:
+        file: "validators/module-scripts.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+  contributor:
+    validators:
+      contributor_state_cbor_obs:
+        file: "validators/contributor-state-cbor-obs.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      contributor_state_scripts:
+        file: "validators/contributor-state-scripts.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+  escrow:
+    validators:
+      escrow1_cbor_obs:
+        file: "validators/escrow1-cbor-obs.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      escrow1:
+        file: "validators/escrow1.yaml"
+        purpose: "spend"
+        redeemers: {}
+
+  global:
+    validators:
+      global_ref:
+        file: "validators/global-ref.yaml"
+        purpose: "spend"
+        redeemers: {}
+
+      global_state:
+        file: "validators/global-state.yaml"
+        purpose: "spend"
+        redeemers:
+          GlobalStateAction:
+            - action: "AddTokenInformation"
+              transaction: "access-token-mint"
+            - action: "UpdateTokenInformation"
+              transaction: "admin-init-course"
+            - action: "AddAllowedCsTn"
+              transaction: "admin-add-course-creators"
+            - action: "UpdateGlobalInfo"
+              transaction: "admin-add-project-creators"
+            - action: "ChangeIndexData"
+              transaction: "admin-init-project-step-1"
+
+      init_global_state_observer:
+        file: "validators/init-global-state-observer.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+  index:
+    validators:
+      index_ref:
+        file: "validators/index-ref.yaml"
+        purpose: "spend"
+        redeemers: {}
+
+      index_scripts:
+        file: "validators/index-scripts.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+      index_staking:
+        file: "validators/index-staking.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      init_index_policy:
+        file: "validators/init-index-policy.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+  instance:
+    validators:
+      instance_governance_scripts:
+        file: "validators/instance-governance-scripts.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      instance_provider_scripts:
+        file: "validators/instance-provider-scripts.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+      instance_scripts:
+        file: "validators/instance-scripts.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+  project:
+    validators:
+      treasury_cbor_obs:
+        file: "validators/treasury-cbor-obs.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      treasury_scripts:
+        file: "validators/treasury-scripts.yaml"
+        purpose: "spend"
+        redeemers:
+          TreasuryAction:
+            - action: "AddFunds"
+              transaction: "treasury-add-funds"
+            - action: "CommitProject"
+              transaction: "contributor-commit-project"
+            - action: "GetRewards"
+              transaction: "contributor-get-rewards"
+            - action: "ManageTreasury"
+              transaction: "project-creator-manage-treasury-token"
+
+      treasury_token_cbor_obs:
+        file: "validators/treasury-token-cbor-obs.yaml"
+        purpose: "withdraw"
+        redeemers: {}
+
+      treasury_token:
+        file: "validators/treasury-token.yaml"
+        purpose: "mint"
+        redeemers: {}
+
+# Redeemer Registry
+# Maps redeemer types to their associated validators and transactions
+redeemers:
+  AssignmentDecisionAction:
+    blueprint: "course"
+    validators:
+      - "assignment_validator"
+    actions:
+      - action: "Accept"
+        transaction: "course-creator-accept-assignment"
+      - action: "Reject"
+        transaction: "course-creator-deny-assignment"
+      - action: "Update"
+        transaction: "student-update-assignment"
+
+  GlobalStateAction:
+    blueprint: "global"
+    validators:
+      - "global_state"
+    actions:
+      - action: "AddTokenInformation"
+        transaction: "access-token-mint"
+      - action: "UpdateTokenInformation"
+        transaction: "admin-init-course"
+      - action: "AddAllowedCsTn"
+        transaction: "admin-add-course-creators"
+      - action: "UpdateGlobalInfo"
+        transaction: "admin-add-project-creators"
+      - action: "ChangeIndexData"
+        transaction: "admin-init-project-step-1"
+
+  TreasuryAction:
+    blueprint: "project"
+    validators:
+      - "treasury_scripts"
+    actions:
+      - action: "AddFunds"
+        transaction: "treasury-add-funds"
+      - action: "CommitProject"
+        transaction: "contributor-commit-project"
+      - action: "GetRewards"
+        transaction: "contributor-get-rewards"
+      - action: "ManageTreasury"
+        transaction: "project-creator-manage-treasury-token"

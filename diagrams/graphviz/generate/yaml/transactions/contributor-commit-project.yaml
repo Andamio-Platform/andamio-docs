@@ -39,7 +39,7 @@ inputs:
 
   - id: input_project_state
     title: "Project State UTxO"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 projectStateToken"
     datum:
@@ -49,7 +49,7 @@ inputs:
       status: "open_for_contributors"
     redeemer:
       id: project_state_redeemer
-      title: "Commit Project"
+      title: "TreasuryAction.CommitProject"
       params:
         - "contributorAlias"
         - "commitmentLevel"
@@ -57,7 +57,7 @@ inputs:
 
   - id: input_contributor_info
     title: "Contributor Info UTxO"
-    address: "string"
+    address: "contributor_state_scripts"
     values:
       - "1 contributorToken"
     datum:

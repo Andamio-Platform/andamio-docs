@@ -38,7 +38,7 @@ inputs:
 
   - id: input_course_state
     title: "Course State UTxO"
-    address: "string"
+    address: "course_state_scripts"
     values:
       - "1 localStateToken"
     datum:
@@ -83,7 +83,7 @@ transaction:
 outputs:
   - id: output_course_state
     title: "Updated Course State"
-    address: "string"
+    address: "course_state_scripts"
     values:
       - "1 localStateToken"
     datum:

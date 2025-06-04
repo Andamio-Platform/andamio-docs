@@ -31,7 +31,7 @@ references:
 inputs:
   - id: input_user_state
     title: "UserState UTxO"
-    address: "string"
+    address: "Global_State"
     values:
       - "placeholder token"
     datum:
@@ -39,7 +39,7 @@ inputs:
       access_level: "string"
     redeemer:
       id: user_state_redeemer
-      title: "User State Action"
+      title: "GlobalStateAction.AddTokenInformation"
       params:
         - "action_param"
 
@@ -67,7 +67,7 @@ reference_inputs:
 observers:
   - id: init_global_state_observer
     title: "Init Global State Observer"
-    address: "string"
+    address: "Init_Global_State_Observer"
     redeemer:
       id: init_global_state_zero_withdrawal_redeemer
       title: "(string, user_info)"

@@ -38,7 +38,7 @@ inputs:
 
   - id: input_course_state
     title: "Course State UTxO"
-    address: "string"
+    address: "Global_State"
     values:
       - "course token"
     datum:
@@ -47,7 +47,7 @@ inputs:
       creator_list: "[]"
     redeemer:
       id: course_state_redeemer
-      title: "Init Course"
+      title: "GlobalStateAction.UpdateTokenInformation"
       params:
         - "course_config"
 

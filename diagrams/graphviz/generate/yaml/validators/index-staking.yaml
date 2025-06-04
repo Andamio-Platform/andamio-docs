@@ -1,4 +1,5 @@
 validator_name: "Index_Staking"
 blueprint_source: "index.plutus"
+purpose: "withdraw"
 redeemers:
   - "bytes (token presence validation)"

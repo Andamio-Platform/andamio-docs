@@ -38,7 +38,7 @@ inputs:
 
   - id: input_project_state
     title: "Project State UTxO"
-    address: "string"
+    address: "Global_State"
     values:
       - "project token"
     datum:
@@ -47,7 +47,7 @@ inputs:
       step: "1"
     redeemer:
       id: project_state_redeemer
-      title: "Init Project Step 1"
+      title: "GlobalStateAction.ChangeIndexData"
       params:
         - "project_config"
 

@@ -38,7 +38,7 @@ inputs:
 
   - id: input_course_creators
     title: "Course Creators UTxO"
-    address: "string"
+    address: "global_state"
     values:
       - "course creator tokens"
     datum:
@@ -46,7 +46,7 @@ inputs:
       permissions: "active"
     redeemer:
       id: course_creators_redeemer
-      title: "Remove Course Creators"
+      title: "GlobalStateAction.AddAllowedCsTn"
       params:
         - "creator_addresses"
 
@@ -70,7 +70,7 @@ transaction:
 outputs:
   - id: output_course_creators
     title: "Updated Course Creators"
-    address: "string"
+    address: "global_state"
     values:
       - "course creator tokens"
     datum:

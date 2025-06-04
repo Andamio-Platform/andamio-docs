@@ -39,7 +39,7 @@ inputs:
 
   - id: input_assignment_state
     title: "Assignment State UTxO"
-    address: "string"
+    address: "Assignment_Validator"
     values:
       - "1 assignmentToken"
     datum:
@@ -49,7 +49,7 @@ inputs:
       module_index: "module_id"
     redeemer:
       id: assignment_redeemer
-      title: "Accept Assignment"
+      title: "AssignmentDecisionAction.Accept"
       params:
         - "grade"
         - "feedback"

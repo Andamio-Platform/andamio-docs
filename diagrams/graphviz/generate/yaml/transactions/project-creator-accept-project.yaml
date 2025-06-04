@@ -39,7 +39,7 @@ inputs:
 
   - id: input_project_proposal
     title: "Project Proposal UTxO"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 proposalToken"
     datum:
@@ -49,7 +49,7 @@ inputs:
       estimated_timeline: "timeline_data"
     redeemer:
       id: proposal_redeemer
-      title: "Accept Project"
+      title: "TreasuryAction.ManageTreasury"
       params:
         - "acceptance_terms"
         - "payment_structure"
@@ -99,7 +99,7 @@ mint:
 outputs:
   - id: output_active_project
     title: "Active Project UTxO"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 activeProjectToken"
     datum:

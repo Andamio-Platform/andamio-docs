@@ -1,5 +1,6 @@
 validator_name: "Global_State"
 blueprint_source: "global.plutus"
+purpose: "spend"
 redeemers:
   GlobalStateAction:
     - "AddTokenInformation"

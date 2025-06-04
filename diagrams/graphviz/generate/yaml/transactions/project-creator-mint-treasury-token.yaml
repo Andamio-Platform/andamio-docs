@@ -39,7 +39,7 @@ inputs:
 
   - id: input_project_state
     title: "Project State UTxO"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 projectStateToken"
     datum:
@@ -49,7 +49,7 @@ inputs:
       creator_policy: "project_creator_policy"
     redeemer:
       id: project_state_redeemer
-      title: "Initialize Treasury"
+      title: "TreasuryAction.ManageTreasury"
       params:
         - "treasuryConfig"
         - "initialBudget"
@@ -100,7 +100,7 @@ mint:
 outputs:
   - id: output_treasury_utxo
     title: "Treasury UTxO"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 treasuryToken"
       - "1000.0 ADA"
@@ -112,7 +112,7 @@ outputs:
 
   - id: output_project_state
     title: "Updated Project State"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 projectStateToken"
     datum:

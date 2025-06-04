@@ -38,7 +38,7 @@ inputs:
 
   - id: input_project_creators
     title: "Project Creators UTxO"
-    address: "string"
+    address: "global_state"
     values:
       - "project creator tokens"
     datum:
@@ -46,7 +46,7 @@ inputs:
       permissions: "active"
     redeemer:
       id: project_creators_redeemer
-      title: "Remove Project Creators"
+      title: "GlobalStateAction.UpdateGlobalInfo"
       params:
         - "creator_addresses"
 
@@ -70,7 +70,7 @@ transaction:
 outputs:
   - id: output_project_creators
     title: "Updated Project Creators"
-    address: "string"
+    address: "global_state"
     values:
       - "project creator tokens"
     datum:

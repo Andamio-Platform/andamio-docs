@@ -39,7 +39,7 @@ inputs:
 
   - id: input_course_state
     title: "Course State UTxO"
-    address: "string"
+    address: "course_state_scripts"
     values:
       - "1 courseStateToken"
     datum:
@@ -101,7 +101,7 @@ mint:
 outputs:
   - id: output_module_tokens
     title: "Module Tokens"
-    address: "string"
+    address: "module_scripts"
     values:
       - "5 moduleToken_1"
       - "5 moduleToken_2"
@@ -113,7 +113,7 @@ outputs:
 
   - id: output_course_state
     title: "Updated Course State"
-    address: "string"
+    address: "course_state_scripts"
     values:
       - "1 courseStateToken"
     datum:

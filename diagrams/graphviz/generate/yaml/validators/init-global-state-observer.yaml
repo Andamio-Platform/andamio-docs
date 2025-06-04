@@ -1,4 +1,5 @@
 validator_name: "Init_Global_State_Observer"
 blueprint_source: "global.plutus"
+purpose: "withdraw"
 redeemers:
   - "bytes (global state initialization observer)"

@@ -32,7 +32,7 @@ references:
 inputs:
   - id: input_admin_state
     title: "Admin State UTxO"
-    address: "string"
+    address: "Global_State"
     values:
       - "admin token"
     datum:
@@ -40,7 +40,7 @@ inputs:
       permissions: "permission_list[]"
     redeemer:
       id: admin_state_redeemer
-      title: "Admin Action"
+      title: "GlobalStateAction.AddAllowedCsTn"
       params:
         - "add_creators"
         - "creator_list[]"

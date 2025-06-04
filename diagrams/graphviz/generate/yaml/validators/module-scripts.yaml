@@ -1,5 +1,6 @@
 validator_name: "Module_Scripts"
 blueprint_source: "course.plutus"
+purpose: "mint"
 redeemers:
   ModuleAction:
     - "MintModules"

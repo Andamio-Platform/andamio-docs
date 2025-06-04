@@ -1,4 +1,5 @@
 validator_name: "Contributor_State_Cbor_Obs"
 blueprint_source: "project.plutus"
+purpose: "withdraw"
 redeemers:
   - "bytes (observer for Contributor_State_Scripts initialization)"

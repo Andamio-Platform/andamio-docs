@@ -38,7 +38,7 @@ inputs:
 
   - id: input_assignment_state
     title: "Assignment State UTxO"
-    address: "string"
+    address: "Assignment_Validator"
     values:
       - "1 assignmentToken"
     datum:
@@ -48,7 +48,7 @@ inputs:
       last_updated: "timestamp"
     redeemer:
       id: assignment_redeemer
-      title: "Update Assignment"
+      title: "AssignmentDecisionAction.Update"
       params:
         - "updated_content"
         - "progress_notes"

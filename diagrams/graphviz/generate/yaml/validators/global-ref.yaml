@@ -1,4 +1,5 @@
 validator_name: "Global_Ref"
 blueprint_source: "global.plutus"
+purpose: "spend"
 redeemers:
   - "bytes (reference script storage)"

@@ -1,5 +1,6 @@
 validator_name: "Escrow1"
 blueprint_source: "project.plutus"
+purpose: "spend"
 redeemers:
   ProjectAction:
     - "AcceptProject"

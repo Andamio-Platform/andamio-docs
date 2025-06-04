@@ -1,0 +1,139 @@
+digraph AdminAddProjectCreatorsTransaction {
+    rankdir="LR";
+    bgcolor="#ffffff";
+    splines="ortho";
+    nodesep=0.4;
+    ranksep=0.8;
+
+    // Default node style
+    node [shape=box, style="filled", fillcolor="#ffffff", color="#4CAF50", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"];
+    edge [color="#000000", fontname="Arial", fontsize=9];
+
+    // Input UTxO nodes
+    input_admin_state [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>Admin State UTxO</B></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">Global_State</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">admin token</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Datum:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">admin_info: string</FONT></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">permissions: permission_list[]</FONT></TD></TR>
+        </TABLE>
+    >];
+    input_admin_wallet [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>Admin Wallet</B></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">string</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">ada balance</FONT></TD></TR>
+        </TABLE>
+    >];
+
+    // Reference Input UTxO nodes (read only)
+    input_global_data [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>Global Data UTxO</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT COLOR="#2196F3"><B>read only</B></FONT></TD></TR>
+            <TR><TD HEIGHT="5"></TD></TR>
+            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">string</FONT></TD></TR>
+            <TR><TD HEIGHT="5"></TD></TR>
+            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">1 reference token</FONT></TD></TR>
+            <TR><TD HEIGHT="5"></TD></TR>
+            <TR><TD ALIGN="left"><B>Datum:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">project_creators: creator_list[]</FONT></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">admin_config: configuration data</FONT></TD></TR>
+        </TABLE>
+    >, style="filled", fillcolor="#ffffff", color="#2196F3", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"];
+
+    // Transaction/Operation node
+    add_project_creators_operation [label="add project
+creators", shape=box, style="rounded, filled", fillcolor="#ffffff", color="#00796b", fontsize=12, penwidth=3, width=2, height=4];
+
+    // Output UTxO nodes
+    output_global_state [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>Updated Global State</B></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">string</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">1 reference token</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Datum:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">project_creators: updated_creator_list[]</FONT></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">admin_config: configuration data</FONT></TD></TR>
+        </TABLE>
+    >];
+    output_admin_state [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>Admin State UTxO</B></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">string</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">admin token</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Datum:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">admin_info: string</FONT></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">permissions: permission_list[]</FONT></TD></TR>
+        </TABLE>
+    >];
+    output_admin_wallet [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>Admin Wallet</B></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">string</FONT></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">remaining ada</FONT></TD></TR>
+        </TABLE>
+    >];
+
+    // Redeemer/Validator nodes
+    node [shape=box, style="rounded,filled", fillcolor="#ffffff", color="#cc7000", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"];
+
+    admin_state_redeemer [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>GlobalStateAction.UpdateGlobalInfo</B></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Redeemer:</B></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">add_project_creators</FONT></TD></TR>
+            <TR><TD ALIGN="left"><FONT FACE="Courier New">creator_list[]</FONT></TD></TR>
+        </TABLE>
+    >, shape=box, style="rounded,filled", fillcolor="#ffffff", color="#cc7000", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"];
+
+    // Automatic layout constraints for 4-column layout
+    {rank=min; input_admin_state; input_admin_wallet; input_global_data;}
+    // Maintain input order from YAML (inputs first, then reference inputs)
+    input_admin_state -> input_admin_wallet [style=invis, weight=10];
+    input_admin_wallet -> input_global_data [style=invis, weight=10];
+    {rank=same; admin_state_redeemer;}
+    {rank=same; add_project_creators_operation;}
+    {rank=max; output_global_state; output_admin_state; output_admin_wallet;}
+    // Maintain output order from YAML
+    output_global_state -> output_admin_state [style=invis, weight=10];
+    output_admin_state -> output_admin_wallet [style=invis, weight=10];
+
+    // Connections
+    input_admin_state -> admin_state_redeemer [dir="none"];
+    admin_state_redeemer -> add_project_creators_operation [arrowsize="0.6"];
+    input_admin_wallet -> add_project_creators_operation [arrowsize="0.6"];
+    input_global_data -> add_project_creators_operation [arrowsize="0.6"];
+    add_project_creators_operation -> output_global_state [arrowsize="0.6"];
+    add_project_creators_operation -> output_admin_state [arrowsize="0.6"];
+    add_project_creators_operation -> output_admin_wallet [arrowsize="0.6"];
+
+    // Required tokens footer
+    label="Required Tokens: instanceAdminNFT";
+    labelloc="b";
+    fontsize=10;
+    fontcolor="#666666";
+}

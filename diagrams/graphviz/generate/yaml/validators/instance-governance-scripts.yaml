@@ -1,5 +1,6 @@
 validator_name: "Instance_Governance_Scripts"
 blueprint_source: "instance.plutus"
+purpose: "withdraw"
 redeemers:
   CourseGovAction:
     - "AddCourseCreator"

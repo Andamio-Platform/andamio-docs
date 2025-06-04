@@ -40,7 +40,7 @@ inputs:
 
   - id: input_treasury_utxo
     title: "Treasury UTxO"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 treasuryToken"
       - "1000.0 ADA"
@@ -52,7 +52,7 @@ inputs:
       payment_schedule: "schedule_data"
     redeemer:
       id: treasury_redeemer
-      title: "Manage Treasury"
+      title: "TreasuryAction.ManageTreasury"
       params:
         - "operation_type"
         - "amount"
@@ -60,7 +60,7 @@ inputs:
 
   - id: input_admin_signature
     title: "Instance Admin UTxO"
-    address: "string"
+    address: "instance_scripts"
     values:
       - "1 instanceAdminNFT"
     datum:

@@ -39,7 +39,7 @@ inputs:
 
   - id: input_treasury_utxo
     title: "Treasury UTxO"
-    address: "string"
+    address: "treasury_scripts"
     values:
       - "1 treasuryToken"
       - "1000.0 ADA"
@@ -49,7 +49,7 @@ inputs:
       funding_history: "funding_record[]"
     redeemer:
       id: treasury_redeemer
-      title: "Add Funds"
+      title: "TreasuryAction.AddFunds"
       params:
         - "additional_amount"
         - "funding_source"

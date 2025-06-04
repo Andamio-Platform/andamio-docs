@@ -38,7 +38,7 @@ inputs:
 
   - id: input_project_state
     title: "Project State UTxO"
-    address: "string"
+    address: "global_state"
     values:
       - "project token"
     datum:
@@ -47,7 +47,7 @@ inputs:
       step: "1"
     redeemer:
       id: project_state_redeemer
-      title: "Init Project Step 2"
+      title: "GlobalStateAction.ChangeIndexData"
       params:
         - "project_finalization"
 
@@ -71,7 +71,7 @@ transaction:
 outputs:
   - id: output_project_state
     title: "Initialized Project State"
-    address: "string"
+    address: "global_state"
     values:
       - "project token"
     datum:

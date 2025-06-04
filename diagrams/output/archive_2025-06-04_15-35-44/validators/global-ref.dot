@@ -1,0 +1,30 @@
+digraph Global_Ref {
+    rankdir=LR;
+    bgcolor="white";
+    splines=true;
+    overlap=false;
+    nodesep=1.0;
+    ranksep=2.0;
+
+    // Default styles
+    node [fontname="Arial"];
+    edge [color="#333333", fontname="Arial", fontsize=9];
+
+    // Blueprint source node
+    blueprint_source [label="Global", shape=box, style="rounded,filled", fillcolor="#f5f5f5", color="#666666", fontname="Arial", fontsize=14, penwidth=2, width=2.5, height=1.2, margin="0.2,0.2"];
+
+    // Validator node
+    validator [label="Global_Ref", shape=box, style="rounded,filled", fillcolor="#ffffff", color="#cc7000", fontname="Arial", fontsize=12, penwidth=3, width=3, height=1.5, margin="0.2,0.2"];
+
+    // Simple redeemer nodes
+    redeemer_0 [label="bytes (reference script storage)", shape=box, style="filled", fillcolor="#ffffff", color="#4CAF50", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"];
+
+    // Layout constraints
+    {rank=min; blueprint_source;}
+    {rank=same; validator;}
+    {rank=max; redeemer_0;}
+
+    // Connections
+    blueprint_source -> validator [arrowsize=1.0, penwidth=2.5, color="#666666"];
+    validator -> redeemer_0 [arrowsize=0.8, penwidth=2];
+}
