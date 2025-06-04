@@ -31,6 +31,7 @@ references:
 inputs:
   - id: input_creator_wallet
     title: "Project Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 projectCreatorNFT"
@@ -38,6 +39,7 @@ inputs:
 
   - id: input_project_proposal
     title: "Project Proposal UTxO"
+    address: "string"
     values:
       - "1 proposalToken"
     datum:
@@ -57,6 +59,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 prt"
     datum:
@@ -65,6 +68,7 @@ reference_inputs:
 
   - id: input_project_instance
     title: "ProjectInstance UTxO"
+    address: "string"
     values:
       - "1 irt"
     datum:
@@ -77,10 +81,25 @@ transaction:
   id: accept_project_operation
   title: "accept project\nproposal"
     
+# Mint policies
+mint:
+  - id: active_project_mint
+    title: "ActiveProjectMint"
+    values:
+      - "1 activeProjectToken"
+    redeemer:
+      id: mint_active_project_redeemer
+      title: "Mint Active Project Token"
+      params:
+        - "contributor_alias"
+        - "acceptance_terms"
+        - "project_creator_signature"
+
 # Output UTxOs
 outputs:
   - id: output_active_project
     title: "Active Project UTxO"
+    address: "string"
     values:
       - "1 activeProjectToken"
     datum:
@@ -89,12 +108,10 @@ outputs:
       status: "active"
       payment_terms: "accepted_payment_structure"
       milestones: "milestone_schedule"
-    mint:
-      id: active_project_mint
-      title: "ActiveProjectMint"
 
   - id: output_creator_wallet
     title: "Project Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 projectCreatorNFT"

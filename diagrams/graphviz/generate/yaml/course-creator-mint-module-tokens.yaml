@@ -31,6 +31,7 @@ references:
 inputs:
   - id: input_creator_wallet
     title: "Course Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 courseCreatorNFT"
@@ -38,6 +39,7 @@ inputs:
 
   - id: input_course_state
     title: "Course State UTxO"
+    address: "string"
     values:
       - "1 courseStateToken"
     datum:
@@ -57,6 +59,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 prt"
     datum:
@@ -65,6 +68,7 @@ reference_inputs:
 
   - id: input_course_instance
     title: "CourseInstance UTxO"
+    address: "string"
     values:
       - "1 irt"
     datum:
@@ -77,10 +81,27 @@ transaction:
   id: mint_modules_operation
   title: "mint module\ntokens"
     
+# Mint policies
+mint:
+  - id: module_token_mint
+    title: "ModuleTokenMint"
+    values:
+      - "5 moduleToken_1"
+      - "5 moduleToken_2"
+      - "5 moduleToken_3"
+    redeemer:
+      id: mint_module_tokens_redeemer
+      title: "Mint Module Tokens"
+      params:
+        - "moduleList"
+        - "moduleContent"
+        - "course_creator_signature"
+
 # Output UTxOs
 outputs:
   - id: output_module_tokens
     title: "Module Tokens"
+    address: "string"
     values:
       - "5 moduleToken_1"
       - "5 moduleToken_2"
@@ -89,12 +110,10 @@ outputs:
       module_info: "module_specifications[]"
       creator: "course_creator_alias"
       course_id: "course_identifier"
-    mint:
-      id: module_token_mint
-      title: "ModuleTokenMint"
 
   - id: output_course_state
     title: "Updated Course State"
+    address: "string"
     values:
       - "1 courseStateToken"
     datum:
@@ -105,6 +124,7 @@ outputs:
 
   - id: output_creator_wallet
     title: "Course Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 courseCreatorNFT"

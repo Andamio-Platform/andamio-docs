@@ -31,6 +31,7 @@ references:
 inputs:
   - id: input_creator_wallet
     title: "Project Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 projectCreatorNFT"
@@ -38,6 +39,7 @@ inputs:
 
   - id: input_project_state
     title: "Project State UTxO"
+    address: "string"
     values:
       - "1 projectStateToken"
     datum:
@@ -57,6 +59,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 prt"
     datum:
@@ -66,6 +69,7 @@ reference_inputs:
 
   - id: input_project_instance
     title: "ProjectInstance UTxO"
+    address: "string"
     values:
       - "1 irt"
     datum:
@@ -78,10 +82,25 @@ transaction:
   id: mint_treasury_operation
   title: "mint treasury\ntoken"
     
+# Mint policies
+mint:
+  - id: treasury_token_mint
+    title: "TreasuryTokenMint"
+    values:
+      - "1 treasuryToken"
+    redeemer:
+      id: mint_treasury_token_redeemer
+      title: "Mint Treasury Token"
+      params:
+        - "treasuryConfig"
+        - "initialBudget"
+        - "project_creator_signature"
+
 # Output UTxOs
 outputs:
   - id: output_treasury_utxo
     title: "Treasury UTxO"
+    address: "string"
     values:
       - "1 treasuryToken"
       - "1000.0 ADA"
@@ -90,12 +109,10 @@ outputs:
       total_funds: "initial_treasury_balance"
       reward_pool: "reward_allocation"
       payment_schedule: "schedule_config"
-    mint:
-      id: treasury_token_mint
-      title: "TreasuryTokenMint"
 
   - id: output_project_state
     title: "Updated Project State"
+    address: "string"
     values:
       - "1 projectStateToken"
     datum:
@@ -106,6 +123,7 @@ outputs:
 
   - id: output_creator_wallet
     title: "Project Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 projectCreatorNFT"

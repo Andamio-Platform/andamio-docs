@@ -32,11 +32,13 @@ references:
 inputs:
   - id: input_admin_wallet
     title: "Admin Wallet"
+    address: "string"
     values:
       - "ada balance"
 
   - id: input_project_creators
     title: "Project Creators UTxO"
+    address: "string"
     values:
       - "project creator tokens"
     datum:
@@ -52,6 +54,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 reference token"
     datum:
@@ -67,6 +70,7 @@ transaction:
 outputs:
   - id: output_project_creators
     title: "Updated Project Creators"
+    address: "string"
     values:
       - "project creator tokens"
     datum:
@@ -75,6 +79,7 @@ outputs:
 
   - id: output_admin_wallet
     title: "Admin Wallet"
+    address: "string"
     values:
       - "remaining ada"
 

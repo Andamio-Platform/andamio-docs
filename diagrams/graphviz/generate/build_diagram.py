@@ -49,8 +49,16 @@ class TransactionDiagramBuilder:
         """Generate a reference input UTxO node with READ ONLY label and blue border"""
         node_id = utxo_config['id']
         title = utxo_config['title']
+        address = utxo_config.get('address', '')
         values = utxo_config.get('values', [])
         datum = utxo_config.get('datum', {})
+        
+        # Generate address section
+        address_section = ""
+        if address:
+            address_section = '            <TR><TD HEIGHT="5"></TD></TR>\n'
+            address_section += '            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>\n'
+            address_section += f'            <TR><TD ALIGN="left"><FONT FACE="Courier New">{address}</FONT></TD></TR>\n'
         
         # Generate value section
         value_section = ""
@@ -68,7 +76,7 @@ class TransactionDiagramBuilder:
         <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
             <TR><TD ALIGN="left"><B>{title}</B></TD></TR>
             <TR><TD ALIGN="left"><FONT COLOR="#2196F3"><B>read only</B></FONT></TD></TR>
-            <TR><TD HEIGHT="5"></TD></TR>
+{address_section}            <TR><TD HEIGHT="5"></TD></TR>
             <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
 {value_section}{datum_section}        </TABLE>
     >, style="filled", fillcolor="#ffffff", color="#2196F3", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"];'''
@@ -77,6 +85,7 @@ class TransactionDiagramBuilder:
         """Generate a UTxO node from configuration with automatic style inference"""
         node_id = utxo_config['id']
         title = utxo_config['title']
+        address = utxo_config.get('address', '')
         values = utxo_config.get('values', [])
         datum = utxo_config.get('datum', {})
         
@@ -89,7 +98,13 @@ class TransactionDiagramBuilder:
             # Generate as reference input with special styling
             return self.generate_reference_input_node(utxo_config)
         
-        # Generate standard UTxO node with table layout
+        # Generate address section
+        address_section = ""
+        if address:
+            address_section = '            <TR><TD ALIGN="left"><B>Address:</B></TD></TR>\n'
+            address_section += f'            <TR><TD ALIGN="left"><FONT FACE="Courier New">{address}</FONT></TD></TR>\n'
+        
+        # Generate value section
         value_section = ""
         for value in values:
             value_section += f'            <TR><TD ALIGN="left"><FONT FACE="Courier New">{value}</FONT></TD></TR>\n'
@@ -100,13 +115,18 @@ class TransactionDiagramBuilder:
             datum_section = '            <TR><TD ALIGN="left"><B>Datum:</B></TD></TR>\n'
             datum_section += self._format_datum_recursive(datum, 0)
         
-        # Build the table with conditional datum section
+        # Build the table with conditional sections
         table_content = f'''    {node_id} [label=<
         <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
             <TR><TD ALIGN="left"><B>{title}</B></TD></TR>
-            <TR><TD HEIGHT="3"></TD></TR>
-            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
-{value_section}'''
+            <TR><TD HEIGHT="3"></TD></TR>'''
+        
+        if address_section:
+            table_content += address_section
+            table_content += '            <TR><TD HEIGHT="3"></TD></TR>\n'
+        
+        table_content += '            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>\n'
+        table_content += value_section
         
         if datum_section:
             table_content += f'''            <TR><TD HEIGHT="3"></TD></TR>
@@ -161,6 +181,137 @@ class TransactionDiagramBuilder:
         
         return f'    {node_id} [label="{title}", {style_attrs}];'
     
+    def generate_mint_node(self, mint_config, styles):
+        """Generate a mint policy node with UTxO-style table format"""
+        node_id = mint_config['id']
+        title = mint_config['title']
+        values = mint_config.get('values', [])
+        redeemer = mint_config.get('redeemer')
+        
+        # Use mint_policy_node style
+        style_attrs = styles.get('mint_policy_node', self.default_styles['mint_policy_node'])
+        
+        # Generate value section
+        value_section = ""
+        for value in values:
+            value_section += f'            <TR><TD ALIGN="left"><FONT FACE="Courier New">{value}</FONT></TD></TR>\n'
+        
+        # Generate redeemer section
+        redeemer_section = ""
+        if redeemer:
+            redeemer_title = redeemer.get('title', '')
+            redeemer_params = redeemer.get('params', [])
+            
+            redeemer_section = '            <TR><TD HEIGHT="3"></TD></TR>\n'
+            redeemer_section += '            <TR><TD ALIGN="left"><B>Redeemer:</B></TD></TR>\n'
+            redeemer_section += f'            <TR><TD ALIGN="left"><FONT FACE="Courier New">{redeemer_title}</FONT></TD></TR>\n'
+            
+            if redeemer_params:
+                redeemer_section += '            <TR><TD ALIGN="left"><B>Params:</B></TD></TR>\n'
+                for param in redeemer_params:
+                    redeemer_section += f'            <TR><TD ALIGN="left"><FONT FACE="Courier New">{param}</FONT></TD></TR>\n'
+        
+        # Build the table
+        table_content = f'''    {node_id} [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
+            <TR><TD ALIGN="left"><B>{title}</B></TD></TR>
+            <TR><TD HEIGHT="3"></TD></TR>
+            <TR><TD ALIGN="left"><B>Value:</B></TD></TR>
+{value_section}'''
+        
+        if redeemer_section:
+            table_content += redeemer_section
+        
+        table_content += f'''        </TABLE>
+    >, {style_attrs}];'''
+        
+        return table_content
+
+    def generate_transaction_with_mint_node(self, tx_config, mint_nodes, observers, styles):
+        """Generate a transaction node with embedded mint policy and observer tables"""
+        node_id = tx_config['id']
+        title = tx_config['title']
+        
+        # Use transaction_node style
+        style_attrs = styles.get('transaction_node', self.default_styles['transaction_node'])
+        
+        # Generate mint sections as nested tables
+        embedded_sections = ""
+        
+        # Add mint policies
+        for mint_node in mint_nodes:
+            mint_title = mint_node['title']
+            mint_values = mint_node.get('values', [])
+            mint_redeemer = mint_node.get('redeemer')
+            
+            # Add mint section with inner border
+            embedded_sections += '            <TR><TD HEIGHT="10"></TD></TR>\n'
+            embedded_sections += '            <TR><TD>\n'
+            embedded_sections += '                <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#ffffff" COLOR="#6A5ACD">\n'
+            embedded_sections += f'                    <TR><TD ALIGN="left" BGCOLOR="#f0f0ff"><B>{mint_title}</B></TD></TR>\n'
+            
+            # Add mint values
+            if mint_values:
+                embedded_sections += '                    <TR><TD ALIGN="left"><B>Value:</B></TD></TR>\n'
+                for value in mint_values:
+                    embedded_sections += f'                    <TR><TD ALIGN="left"><FONT FACE="Courier New">{value}</FONT></TD></TR>\n'
+            
+            # Add mint redeemer
+            if mint_redeemer:
+                embedded_sections += '                    <TR><TD ALIGN="left"><B>Redeemer:</B></TD></TR>\n'
+                embedded_sections += f'                    <TR><TD ALIGN="left"><FONT FACE="Courier New">{mint_redeemer.get("title", "")}</FONT></TD></TR>\n'
+                
+                redeemer_params = mint_redeemer.get('params', [])
+                if redeemer_params:
+                    embedded_sections += '                    <TR><TD ALIGN="left"><B>Params:</B></TD></TR>\n'
+                    for param in redeemer_params:
+                        embedded_sections += f'                    <TR><TD ALIGN="left"><FONT FACE="Courier New">{param}</FONT></TD></TR>\n'
+            
+            embedded_sections += '                </TABLE>\n'
+            embedded_sections += '            </TD></TR>\n'
+        
+        # Add observers
+        for observer in observers:
+            observer_title = observer['title']
+            observer_address = observer.get('address', '')
+            observer_redeemer = observer.get('redeemer')
+            
+            # Add observer section with inner border (different color from mint)
+            embedded_sections += '            <TR><TD HEIGHT="10"></TD></TR>\n'
+            embedded_sections += '            <TR><TD>\n'
+            embedded_sections += '                <TABLE BORDER="2" CELLBORDER="0" CELLSPACING="0" CELLPADDING="4" BGCOLOR="#ffffff" COLOR="#FF8C00">\n'
+            embedded_sections += f'                    <TR><TD ALIGN="left" BGCOLOR="#fff0e0"><B>{observer_title}</B></TD></TR>\n'
+            
+            # Add observer address
+            if observer_address:
+                embedded_sections += '                    <TR><TD ALIGN="left"><B>Address:</B></TD></TR>\n'
+                embedded_sections += f'                    <TR><TD ALIGN="left"><FONT FACE="Courier New">{observer_address}</FONT></TD></TR>\n'
+            
+            # Add observer redeemer
+            if observer_redeemer:
+                embedded_sections += '                    <TR><TD ALIGN="left"><B>Redeemer:</B></TD></TR>\n'
+                embedded_sections += f'                    <TR><TD ALIGN="left"><FONT FACE="Courier New">{observer_redeemer.get("title", "")}</FONT></TD></TR>\n'
+                
+                redeemer_params = observer_redeemer.get('params', [])
+                if redeemer_params:
+                    embedded_sections += '                    <TR><TD ALIGN="left"><B>Params:</B></TD></TR>\n'
+                    for param in redeemer_params:
+                        embedded_sections += f'                    <TR><TD ALIGN="left"><FONT FACE="Courier New">{param}</FONT></TD></TR>\n'
+            
+            embedded_sections += '                </TABLE>\n'
+            embedded_sections += '            </TD></TR>\n'
+        
+        # Add final spacing
+        if embedded_sections:
+            embedded_sections += '            <TR><TD HEIGHT="10"></TD></TR>\n'
+        
+        # Generate the outer transaction table
+        return f'''    {node_id} [label=<
+        <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" BGCOLOR="#e8f5e8">
+            <TR><TD ALIGN="center"><B><FONT POINT-SIZE="16">{title}</FONT></B></TD></TR>
+{embedded_sections}        </TABLE>
+    >, shape=box, style="filled", fillcolor="#e8f5e8", color="#00796b", fontname="Arial", fontsize=10, penwidth=3, margin="0.2,0.2"];'''
+
     def generate_redeemer_node(self, redeemer_config, styles):
         """Generate a redeemer/validator node with automatic style inference"""
         node_id = redeemer_config['id']
@@ -187,7 +338,7 @@ class TransactionDiagramBuilder:
         <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" CELLPADDING="2">
             <TR><TD ALIGN="left"><B>{title}</B></TD></TR>
             <TR><TD HEIGHT="3"></TD></TR>
-            <TR><TD ALIGN="left"><B>Params:</B></TD></TR>
+            <TR><TD ALIGN="left"><B>Redeemer:</B></TD></TR>
 {params_section}        </TABLE>
     >, {style_attrs}];'''
         else:
@@ -243,14 +394,21 @@ class TransactionDiagramBuilder:
         transaction_config = config.get('transaction', config.get('operation', {}))
         transaction_id = transaction_config.get('id', 'transaction')
         
-        # Connections from inputs to transaction (directly or via redeemer)
+        # Get mint nodes first
+        mint_nodes = config.get('mint', [])
+        
+        # Connections from inputs to transaction/mint cluster
         all_inputs = config.get('inputs', []) + config.get('reference_inputs', [])
+        
+        # Always connect to transaction node (mint is embedded inside it)
+        target_id = transaction_id
+        
         for input_utxo in all_inputs:
             input_id = input_utxo['id']
             redeemer = input_utxo.get('redeemer')
             
             if redeemer:
-                # Input -> Redeemer (no arrow) -> Transaction
+                # Input -> Redeemer (no arrow) -> Transaction/Mint
                 redeemer_id = redeemer['id']
                 connections.append({
                     'from': input_id,
@@ -259,32 +417,29 @@ class TransactionDiagramBuilder:
                 })
                 connections.append({
                     'from': redeemer_id,
-                    'to': transaction_id,
+                    'to': target_id,
                     'attrs': {'arrowsize': '0.6'}
                 })
             else:
-                # Input -> Transaction
+                # Input -> Transaction/Mint
                 connections.append({
                     'from': input_id,
-                    'to': transaction_id,
+                    'to': target_id,
                     'attrs': {'arrowsize': '0.6'}
                 })
         
-        # Connections from transaction to outputs (with minting if present)
+        # Connections to outputs (always from transaction node)
         for output_utxo in config.get('outputs', []):
             output_id = output_utxo['id']
-            mint_config = output_utxo.get('mint')
             
-            if mint_config:
-                # Transaction -> Mint Policy -> Output (with minted tokens)
-                mint_id = mint_config['id']
+            # Check if this output receives minted tokens
+            output_values = output_utxo.get('values', [])
+            has_minted_tokens = any('access_token' in str(value) for value in output_values)
+            
+            if mint_nodes and has_minted_tokens:
+                # Transaction -> Output (with minted tokens, using purple color to indicate minting)
                 connections.append({
                     'from': transaction_id,
-                    'to': mint_id,
-                    'attrs': {'arrowsize': '0.6', 'color': '#6A5ACD', 'penwidth': '2'}
-                })
-                connections.append({
-                    'from': mint_id,
                     'to': output_id,
                     'attrs': {'arrowsize': '0.6', 'color': '#6A5ACD', 'penwidth': '2'}
                 })
@@ -336,12 +491,7 @@ class TransactionDiagramBuilder:
         lines.append('    edge [color="#000000", fontname="Arial", fontsize=9];')
         lines.append("")
         
-        # Generate reference nodes
-        if 'references' in config and config['references']:
-            lines.append("    // Reference nodes")
-            for ref_node in config['references']:
-                lines.append(self.generate_simple_node(ref_node, styles, 'reference'))
-            lines.append("")
+        # Skip reference nodes - they are no longer needed
         
         # Generate input UTxO nodes
         lines.append("    // Input UTxO nodes")
@@ -357,26 +507,26 @@ class TransactionDiagramBuilder:
                 lines.append(self.generate_utxo_node(ref_input_utxo, 'reference_input'))
             lines.append("")
         
-        # Generate transaction/operation node (support both keys for backwards compatibility)
+        # Generate transaction cluster with embedded mint nodes
         transaction_config = config.get('transaction', config.get('operation'))
+        mint_nodes = config.get('mint', [])
+        
         if transaction_config:
-            lines.append("    // Transaction/Operation node")
-            input_count = len(config.get('inputs', [])) + len(config.get('reference_inputs', []))
-            output_count = len(config.get('outputs', []))
-            lines.append(self.generate_transaction_node(transaction_config, styles, input_count, output_count))
-            lines.append("")
-        
-        # Generate mint policy nodes (from outputs that have mint fields)
-        mint_nodes = []
-        for output_utxo in config.get('outputs', []):
-            if 'mint' in output_utxo:
-                mint_nodes.append(output_utxo['mint'])
-        
-        if mint_nodes:
-            lines.append("    // Mint policy nodes")
-            for mint_node in mint_nodes:
-                lines.append(self.generate_simple_node(mint_node, styles, 'mint'))
-            lines.append("")
+            if mint_nodes:
+                lines.append("    // Transaction node with embedded mint policy")
+                transaction_id = transaction_config['id']
+                transaction_title = transaction_config['title']
+                
+                # Generate a single node that contains transaction title, mint details, and observers
+                observers = config.get('observers', [])
+                lines.append(self.generate_transaction_with_mint_node(transaction_config, mint_nodes, observers, styles))
+                lines.append("")
+            else:
+                lines.append("    // Transaction/Operation node")
+                input_count = len(config.get('inputs', [])) + len(config.get('reference_inputs', []))
+                output_count = len(config.get('outputs', []))
+                lines.append(self.generate_transaction_node(transaction_config, styles, input_count, output_count))
+                lines.append("")
         
         # Generate output UTxO nodes
         lines.append("    // Output UTxO nodes")
@@ -402,23 +552,17 @@ class TransactionDiagramBuilder:
                 lines.append(self.generate_redeemer_node(redeemer, styles))
             lines.append("")
         
-        # Generate automatic layout constraints (create proper 5-column layout)
-        lines.append("    // Automatic layout constraints for 5-column layout")
+        # Generate automatic layout constraints (create proper 4-column layout)
+        lines.append("    // Automatic layout constraints for 4-column layout")
         
-        # Column 1: References (leftmost)
-        reference_nodes = [ref['id'] for ref in config.get('references', [])]
-        if reference_nodes:
-            ref_node_list = "; ".join(reference_nodes)
-            lines.append(f'    {{rank=min; {ref_node_list};}}')
-        
-        # Column 2: Input UTxOs + Reference Input UTxOs - maintain column AND YAML order
+        # Column 1: Input UTxOs + Reference Input UTxOs - maintain column AND YAML order
         input_nodes = [input_utxo['id'] for input_utxo in config.get('inputs', [])]
         reference_input_nodes = [ref_input['id'] for ref_input in config.get('reference_inputs', [])]
         all_input_nodes = input_nodes + reference_input_nodes
         
         if all_input_nodes:
             input_node_list = "; ".join(all_input_nodes)
-            lines.append(f'    {{rank=same; {input_node_list};}}')
+            lines.append(f'    {{rank=min; {input_node_list};}}')
             
             # Add invisible vertical edges to maintain YAML order within column
             if len(all_input_nodes) > 1:
@@ -426,7 +570,7 @@ class TransactionDiagramBuilder:
                 for i in range(len(all_input_nodes) - 1):
                     lines.append(f'    {all_input_nodes[i]} -> {all_input_nodes[i+1]} [style=invis, weight=10];')
         
-        # Column 3: Redeemers (collect from inputs and reference_inputs that have redeemers)
+        # Column 2: Redeemers (collect from inputs and reference_inputs that have redeemers)
         redeemer_nodes = []
         for input_utxo in config.get('inputs', []):
             if 'redeemer' in input_utxo:
@@ -438,22 +582,14 @@ class TransactionDiagramBuilder:
             redeemer_node_list = "; ".join(redeemer_nodes)
             lines.append(f'    {{rank=same; {redeemer_node_list};}}')
         
-        # Column 4: Transaction (center)
+        # Column 3: Transaction (center)
         transaction_config = config.get('transaction', config.get('operation'))
+        
         if transaction_config:
             transaction_id = transaction_config['id']
             lines.append(f'    {{rank=same; {transaction_id};}}')
         
-        # Column 4.5: Mint policies (between transaction and outputs)
-        mint_node_ids = []
-        for output_utxo in config.get('outputs', []):
-            if 'mint' in output_utxo:
-                mint_node_ids.append(output_utxo['mint']['id'])
-        if mint_node_ids:
-            mint_node_list = "; ".join(mint_node_ids)
-            lines.append(f'    {{rank=same; {mint_node_list};}}')
-        
-        # Column 5: Output UTxOs - maintain column AND YAML order
+        # Column 4: Output UTxOs - maintain column AND YAML order
         output_nodes = [output_utxo['id'] for output_utxo in config.get('outputs', [])]
         if output_nodes:
             output_node_list = "; ".join(output_nodes)
@@ -479,9 +615,15 @@ class TransactionDiagramBuilder:
         implied_connections = self.generate_implied_connections(config)
         lines.extend(self.generate_connections(implied_connections))
         
-        # Then add any explicit connections
+        # Then add any explicit connections (but skip reference connections)
         if 'connections' in config and config['connections']:
-            lines.extend(self.generate_connections(config['connections']))
+            # Filter out connections to/from reference nodes (any node ending in _ref)
+            filtered_connections = []
+            for conn in config['connections']:
+                # Skip connections involving ANY reference nodes (nodes ending in _ref)
+                if not (conn['from'].endswith('_ref') or conn['to'].endswith('_ref')):
+                    filtered_connections.append(conn)
+            lines.extend(self.generate_connections(filtered_connections))
         
         # Add footer with required tokens
         if metadata:

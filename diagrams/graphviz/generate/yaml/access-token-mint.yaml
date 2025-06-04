@@ -31,6 +31,7 @@ references:
 inputs:
   - id: input_user_state
     title: "UserState UTxO"
+    address: "string"
     values:
       - "placeholder token"
     datum:
@@ -44,27 +45,15 @@ inputs:
 
   - id: input_user_wallet
     title: "User Wallet"
+    address: "string"
     values:
       - "5000000 lovelace"
-    redeemer:
-      id: mint_access_token_redeemer
-      title: "Mint Access Token"
-      params:
-        - "alias"
-        - "userInfo"
 
 # Reference Input UTxOs (read-only, at bottom of input column)
 reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    values:
-      - "1 reference token"
-    datum:
-      global_config: "configuration data"
-    plutus_script: "access policy ref script"
-
   - id: input_index
     title: "Index UTxO"
+    address: "string"
     values:
       - "1 reference token"
     datum:
@@ -74,26 +63,50 @@ reference_inputs:
       feeValue: "string[]"
     plutus_script: "index validator ref script"
 
+# Observer
+observers:
+  - id: init_global_state_observer
+    title: "Init Global State Observer"
+    address: "string"
+    redeemer:
+      id: init_global_state_zero_withdrawal_redeemer
+      title: "(string, user_info)"
+      params:
+        - "alias"
+        - "userInfo"
+
 # Transaction
 transaction:
   id: mint_operation
   title: "mint access\ntoken"
     
+# Mint policies
+mint:
+  - id: access_token_mint
+    title: "AccessTokenMint"
+    values:
+      - "1 access_token"
+    redeemer:
+      id: mint_access_token_redeemer
+      title: "Mint Access Token"
+      params:
+        - "alias"
+        - "userInfo"
+
 # Output UTxOs
 outputs:
   - id: output_access_token
     title: "Access Token"
+    address: "string"
     values:
       - "1 access_token"
     datum:
       access_level: "string"
       expiry: "timestamp"
-    mint:
-      id: access_token_mint
-      title: "AccessTokenMint"
 
   - id: output_user_state
     title: "UserState UTxO"
+    address: "string"
     values:
       - "updated user state"
     datum:
@@ -102,6 +115,7 @@ outputs:
 
   - id: output_user_wallet
     title: "User Wallet"
+    address: "string"
     values:
       - "remaining ada"
 

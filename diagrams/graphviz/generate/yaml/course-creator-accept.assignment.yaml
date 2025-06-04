@@ -31,6 +31,7 @@ references:
 inputs:
   - id: input_creator_wallet
     title: "Course Creator Wallet"
+    address: "string"
     values:
       - "1 courseCreatorNFT"
       - "100at token"
@@ -38,6 +39,7 @@ inputs:
 
   - id: input_assignment_state
     title: "Assignment State UTxO"
+    address: "string"
     values:
       - "1 assignmentToken"
     datum:
@@ -57,6 +59,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 prt"
     datum:
@@ -65,6 +68,7 @@ reference_inputs:
 
   - id: input_course_instance
     title: "CourseInstance UTxO"
+    address: "string"
     values:
       - "1 irt"
     datum:
@@ -74,6 +78,7 @@ reference_inputs:
 
   - id: input_module_ref
     title: "Module Reference UTxO"
+    address: "string"
     values:
       - "1 moduleToken"
     datum:
@@ -86,10 +91,25 @@ transaction:
   id: accept_assignment_operation
   title: "accept\nassignment"
     
+# Mint policies
+mint:
+  - id: completion_token_mint
+    title: "ModuleCompletionMint"
+    values:
+      - "1 moduleCompletionToken"
+    redeemer:
+      id: mint_completion_token_redeemer
+      title: "Mint Completion Token"
+      params:
+        - "student_alias"
+        - "module_identifier"
+        - "completion_proof"
+
 # Output UTxOs
 outputs:
   - id: output_assignment_state
     title: "Approved Assignment"
+    address: "string"
     values:
       - "1 assignmentToken"
     datum:
@@ -102,18 +122,17 @@ outputs:
 
   - id: output_completion_token
     title: "Module Completion Token"
+    address: "string"
     values:
       - "1 moduleCompletionToken"
     datum:
       student: "student_alias"
       module: "module_identifier"
       completion_date: "timestamp"
-    mint:
-      id: completion_token_mint
-      title: "ModuleCompletionMint"
 
   - id: output_creator_wallet
     title: "Course Creator Wallet"
+    address: "string"
     values:
       - "1 courseCreatorNFT"
       - "100at token"

@@ -31,12 +31,14 @@ references:
 inputs:
   - id: input_student_wallet
     title: "Student Wallet"
+    address: "string"
     values:
       - "222at token"
       - "3.0 ADA"
 
   - id: input_course_state
     title: "Course State UTxO"
+    address: "string"
     values:
       - "1 localStateToken"
     datum:
@@ -55,6 +57,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 prt"
     datum:
@@ -63,6 +66,7 @@ reference_inputs:
 
   - id: input_course_instance
     title: "CourseInstance UTxO"
+    address: "string"
     values:
       - "1 irt"
     datum:
@@ -79,6 +83,7 @@ transaction:
 outputs:
   - id: output_course_state
     title: "Updated Course State"
+    address: "string"
     values:
       - "1 localStateToken"
     datum:
@@ -89,6 +94,7 @@ outputs:
 
   - id: output_student_wallet
     title: "Student Wallet"
+    address: "string"
     values:
       - "222at token"
       - "1.5 ADA"

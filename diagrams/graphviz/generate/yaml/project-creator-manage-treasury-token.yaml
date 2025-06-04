@@ -32,6 +32,7 @@ references:
 inputs:
   - id: input_creator_wallet
     title: "Project Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 projectCreatorNFT"
@@ -39,6 +40,7 @@ inputs:
 
   - id: input_treasury_utxo
     title: "Treasury UTxO"
+    address: "string"
     values:
       - "1 treasuryToken"
       - "1000.0 ADA"
@@ -58,6 +60,7 @@ inputs:
 
   - id: input_admin_signature
     title: "Instance Admin UTxO"
+    address: "string"
     values:
       - "1 instanceAdminNFT"
     datum:
@@ -74,6 +77,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 prt"
     datum:
@@ -83,6 +87,7 @@ reference_inputs:
 
   - id: input_project_instance
     title: "ProjectInstance UTxO"
+    address: "string"
     values:
       - "1 irt"
     datum:
@@ -92,6 +97,7 @@ reference_inputs:
 
   - id: input_fee_config
     title: "Fee Configuration UTxO"
+    address: "string"
     values:
       - "1 feeConfigToken"
     datum:
@@ -108,6 +114,7 @@ transaction:
 outputs:
   - id: output_treasury_utxo
     title: "Updated Treasury UTxO"
+    address: "string"
     values:
       - "1 treasuryToken"
       - "950.0 ADA"
@@ -120,6 +127,7 @@ outputs:
 
   - id: output_reward_payments
     title: "Contributor Rewards"
+    address: "string"
     values:
       - "50 rewardTokens"
       - "50.0 ADA"
@@ -130,6 +138,7 @@ outputs:
 
   - id: output_creator_wallet
     title: "Project Creator Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 projectCreatorNFT"
@@ -137,6 +146,7 @@ outputs:
 
   - id: output_admin_utxo
     title: "Instance Admin UTxO"
+    address: "string"
     values:
       - "1 instanceAdminNFT"
     datum:

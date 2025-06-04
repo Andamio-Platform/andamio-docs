@@ -1,0 +1,20 @@
+digraph ContributorBurnContributorInfoTransaction {
+
+    // Default node style
+    node [shape=box, style="filled", fillcolor="#ffffff", color="#4CAF50", fontname="Arial", fontsize=10, penwidth=2, margin="0.1,0.1"];
+    edge [color="#000000", fontname="Arial", fontsize=9];
+
+    // Input UTxO nodes
+
+    // Output UTxO nodes
+
+    // Automatic layout constraints for 4-column layout
+
+    // Connections
+
+    // Required tokens footer
+    label="Required Tokens: contributorInfoToken, contributorNFT";
+    labelloc="b";
+    fontsize=10;
+    fontcolor="#666666";
+}

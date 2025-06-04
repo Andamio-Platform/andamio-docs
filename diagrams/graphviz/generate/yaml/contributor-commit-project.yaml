@@ -31,6 +31,7 @@ references:
 inputs:
   - id: input_contributor_wallet
     title: "Contributor Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 contributorNFT"
@@ -38,6 +39,7 @@ inputs:
 
   - id: input_project_state
     title: "Project State UTxO"
+    address: "string"
     values:
       - "1 projectStateToken"
     datum:
@@ -55,6 +57,7 @@ inputs:
 
   - id: input_contributor_info
     title: "Contributor Info UTxO"
+    address: "string"
     values:
       - "1 contributorToken"
     datum:
@@ -72,6 +75,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 prt"
     datum:
@@ -81,6 +85,7 @@ reference_inputs:
 
   - id: input_project_instance
     title: "ProjectInstance UTxO"
+    address: "string"
     values:
       - "1 irt"
     datum:
@@ -90,6 +95,7 @@ reference_inputs:
 
   - id: input_treasury_ref
     title: "Treasury Reference UTxO"
+    address: "string"
     values:
       - "1 treasuryRefToken"
     datum:
@@ -106,6 +112,7 @@ transaction:
 outputs:
   - id: output_project_state
     title: "Updated Project State"
+    address: "string"
     values:
       - "1 projectStateToken"
     datum:
@@ -116,6 +123,7 @@ outputs:
 
   - id: output_contributor_info
     title: "Updated Contributor Info"
+    address: "string"
     values:
       - "1 contributorToken"
     datum:
@@ -125,6 +133,7 @@ outputs:
 
   - id: output_contributor_wallet
     title: "Contributor Wallet"
+    address: "string"
     values:
       - "100at token"
       - "1 contributorNFT"

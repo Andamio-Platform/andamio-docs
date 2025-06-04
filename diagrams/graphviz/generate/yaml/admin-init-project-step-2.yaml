@@ -32,11 +32,13 @@ references:
 inputs:
   - id: input_admin_wallet
     title: "Admin Wallet"
+    address: "string"
     values:
       - "ada balance"
 
   - id: input_project_state
     title: "Project State UTxO"
+    address: "string"
     values:
       - "project token"
     datum:
@@ -53,6 +55,7 @@ inputs:
 reference_inputs:
   - id: input_global_data
     title: "Global Data UTxO"
+    address: "string"
     values:
       - "1 reference token"
     datum:
@@ -68,6 +71,7 @@ transaction:
 outputs:
   - id: output_project_state
     title: "Initialized Project State"
+    address: "string"
     values:
       - "project token"
     datum:
@@ -77,6 +81,7 @@ outputs:
 
   - id: output_admin_wallet
     title: "Admin Wallet"
+    address: "string"
     values:
       - "remaining ada"
 
