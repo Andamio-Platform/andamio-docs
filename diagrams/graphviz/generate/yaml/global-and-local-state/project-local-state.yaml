@@ -1,0 +1,50 @@
+local_state_def:
+  name: "Project"
+  admin: "Treasury Owner"
+  contributor: "Project Manager"
+  user: "Contributor"
+  commitment: "Task"
+  admin_mechanism: "Project Token"
+  user_actions:
+    - "Commit"
+    - "Leave"
+  admin_actions:
+    - "Approve"
+    - "Reject"
+    - "Deny"
+    - "Mint Project Token"
+    - "Manage Project Token"
+    - "Burn Project Token"
+  validators:
+    - treasury_cbor_obs:
+        file: "validators/treasury-cbor-obs.yaml"
+        purpose: "withdraw"
+    - treasury_scripts:
+        file: "validators/treasury-scripts.yaml"
+        purpose: "spend"
+        redeemers:
+          TreasuryAction:
+            - "AddFunds"
+            - "CommitProject"
+            - "GetRewards"
+            - "ManageTreasury"
+    - treasury_token_cbor_obs:
+        file: "validators/treasury-token-cbor-obs.yaml"
+        purpose: "withdraw"
+    - treasury_token:
+        file: "validators/treasury-token.yaml"
+        purpose: "mint"
+        redeemers:
+          TreasuryTokenAction:
+            - "MintTreasuryToken"
+            - "BurnTreasuryToken"
+  transactions:
+    - "treasury-add-funds"
+    - "contributor-commit-project"
+    - "contributor-get-rewards"
+    - "project-creator-manage-treasury-token"
+    - "admin-init-project-step-1"
+  global_state_datum:
+    references:
+      - "global_state"
+      - "global_ref"

@@ -1,0 +1,54 @@
+local_state_def:
+  name: "Course"
+  admin: "Creator"
+  contributor: "Contributor"
+  user: "Learner"
+  commitment: "Assignment"
+  admin_mechanism: "Course Module Token"
+  user_actions:
+    - "Commit"
+    - "Add Info"
+  admin_actions:
+    - "Approve"
+    - "Deny"
+    - "Mint Module"
+    - "Burn Module"
+  validators:
+    - assignment_validator:
+        file: "validators/assignment-validator.yaml"
+        purpose: "spend"
+        redeemers:
+          AssignmentDecisionAction:
+            - "Accept"
+            - "Reject"
+            - "Update"
+    - assignment_cbor_obs:
+        file: "validators/assignment-cbor-obs.yaml"
+        purpose: "withdraw"
+    - course_state_cbor_obs:
+        file: "validators/course-state-cbor-obs.yaml"
+        purpose: "withdraw"
+    - course_state_scripts:
+        file: "validators/course-state-scripts.yaml"
+        purpose: "mint"
+        redeemers:
+          CourseStateAction:
+            - "AddStudent"
+            - "AddModule"
+            - "BurnModule"
+            - "UpdateCourseInfo"
+    - module_cbor_obs:
+        file: "validators/module-cbor-obs.yaml"
+        purpose: "withdraw"
+    - module_scripts:
+        file: "validators/module-scripts.yaml"
+        purpose: "mint"
+  transactions:
+    - "course-creator-accept-assignment"
+    - "course-creator-deny-assignment"
+    - "student-update-assignment"
+    - "admin-init-course"
+  global_state_datum:
+    references:
+      - "global_state"
+      - "global_ref"

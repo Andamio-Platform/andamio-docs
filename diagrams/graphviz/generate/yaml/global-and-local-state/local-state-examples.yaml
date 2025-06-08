@@ -1,0 +1,86 @@
+# Todo:
+# - Define on-chain model first
+# - use on-chain model as param in full-platform local state
+# Dispute Resolution:
+# - Potentially new local state
+# - Define incentive models
+# - One example of token utility (long-term, need a package of token utility)
+# - Platform implications. Platform wants to minimize dispute. (real problem)
+# - Success metric (see metrics module in TE Academy): % of tasks disputed
+
+
+local_state_def:
+  name:
+    examples:
+      course: "Course"
+      project: "Project"
+  admin:
+    examples:
+      course: "Creator"
+      project: "Treasury Owner"
+  contributor:
+    examples:
+      course: "Contributor"
+      project: "Project Manager"
+  user:
+    examples:
+      course: "Learner"
+      project: "Contributor"
+  commitment:
+    examples:
+      course: "Assignment"
+      project: "Task"
+  admin_mechanism:
+    examples:
+      course: "Course Module Token"
+      project: "Project Token"
+  user_actions:
+    examples:
+      course:
+        - "Commit"
+        - "Add Info"
+      project:
+        - "Commit"
+        - "Leave"
+  admin_actions:
+    examples:
+      course:
+        - "Approve"
+        - "Deny"
+        - "Mint Module"
+        - "Burn Module"
+      project:
+        - "Approve"
+        - "Reject"
+        - "Deny"
+        - "Mint Project Token"
+        - "Manage Project Token"
+        - "Burn Project Token"
+  validators:
+    examples:
+      course:
+        - "assignment_validator"
+        - "assignment_cbor_obs"
+        - "course_state_cbor_obs"
+        - "course_state_scripts"
+        - "module_cbor_obs"
+        - "module_scripts"
+      project:
+        - "treasury_cbor_obs"
+        - "treasury_scripts"
+        - "treasury_token_cbor_obs"
+        - "treasury_token"
+  transactions:
+    examples:
+      course:
+        - "course-creator-accept-assignment"
+        - "course-creator-deny-assignment"
+        - "student-update-assignment"
+      project:
+        - "treasury-add-funds"
+        - "contributor-commit-project"
+        - "contributor-get-rewards"
+        - "project-creator-manage-treasury-token"
+  global_state_datum:
+  instance_params:
+    prerequisite:
