@@ -17,85 +17,93 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_admin_wallet
-    title: "Admin Wallet"
-    address: "string"
-    values:
-      - "ada balance"
+  - id: instance_admin
+    type: wallet
+    output:
+      address: "instance admin wallet"
+      value: ["1 nft.InstanceAdmin"]
 
-  - id: input_project_state
-    title: "Project State UTxO"
-    address: "Global_State"
-    values:
-      - "project token"
-    datum:
-      project_id: "string"
-      status: "pending"
-      step: "1"
-    redeemer:
-      id: project_state_redeemer
-      title: "GlobalStateAction.ChangeIndexData"
-      params:
-        - "project_config"
-
-# Reference Input UTxOs (read-only, at bottom of input column)
+# reference inputs
 reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 reference token"
-    datum:
-      admin_config: "configuration data"
-      project_settings: "settings"
+  - id: instance_provider_1
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.ProjectNFT"]
+      datum: ["nft_logic1", "nft_logic2", "nft_logic3"]
 
-# Transaction
-transaction:
-  id: main_operation
-  title: "init project step 1\nadmin operation"
-    
-# Output UTxOs
+  - id: instance_provider_2
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.TreasuryToken"]
+      datum: ["treasury_token_logic1", "treasury_token_logic2"]
+      script: "treasury_token_obs"
+
+  - id: instance_provider_3
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.Escrow1"]
+      datum: ["escrow_logic1", "escrow_logic2"]
+      script: "escrow_obs"
+
+# outputs
 outputs:
-  - id: output_project_state
-    title: "Project State Step 1"
-    address: "string"
-    values:
-      - "project token"
-    datum:
-      project_id: "string"
-      status: "step1_complete"
-      step: "1"
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance governance"
+      value: ["1 nft.ProjectNFT"]
+      datum:
+        creators: ["bob", "carol"]
+        policy_id: "nft"
 
-  - id: output_admin_wallet
-    title: "Admin Wallet"
-    address: "string"
-    values:
-      - "remaining ada"
+  - id: instance_1
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.TreasuryToken"]
+      datum: "nft"
+      script: "treasury_token_logic1 + nft + treasury_token_logic2"
 
-# Explicit connections for complex flow
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
+  - id: instance_2
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.Escrow1"]
+      datum: "nft"
+      script: "escrow_logic1 + nft + escrow_logic2"
+
+# minting
+mints:
+  - id: nft
+    redeemer: "()"
+    tokens: ['1 nft.ProjectNFT']
   
-  - from: instance_ref
-    to: input_project_state  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_project_state
-    attrs: {dir: "none", style: "dashed"}
+  - id: instance
+    redeemer:
+      - policy_id: "nft"
+        params: ["nft"]
+        token_name: "TreasuryToken"
+      - policy_id: "nft"
+        params: ["nft"]
+        token_name: "Escrow1"
+    tokens: ["1 instance_provider.TreasuryToken",
+             "1 instance_provider.Escrow1"]
+
+# withdrawing
+withdraws:
+  - id: treasury_token_obs
+    redeemer:
+      string: "tx_id"
+      string: "tx_ix"
+    amount: 0
+
+  - id: escrow_obs
+    redeemer:
+      string: "tx_id"
+      string: "tx_ix"
+    amount: 0

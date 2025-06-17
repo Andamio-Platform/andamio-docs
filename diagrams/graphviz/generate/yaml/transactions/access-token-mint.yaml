@@ -16,120 +16,86 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: index_ref  
-    title: "index ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_user_state
-    title: "UserState UTxO"
-    address: "Global_State"
-    values:
-      - "placeholder token"
-    datum:
-      user_info: "string"
-      access_level: "string"
-    redeemer:
-      id: user_state_redeemer
-      title: "GlobalStateAction.AddTokenInformation"
-      params:
-        - "action_param"
+  - id: user_1
+    type: wallet
+    output: 
+      address: "user"
+      value: ["5000000 lovelace"]
 
-  - id: input_user_wallet
-    title: "User Wallet"
-    address: "string"
-    values:
-      - "5000000 lovelace"
+  - id: index_1
+    type: script
+    redeemer: "()"
+    output: 
+      address: "index"
+      value: ['1 index." "']
+      datum: "(alice, carol)"
 
-# Reference Input UTxOs (read-only, at bottom of input column)
-reference_inputs:
-  - id: input_index
-    title: "Index UTxO"
-    address: "string"
-    values:
-      - "1 reference token"
-    datum:
-      indexData: "index"
-      treasuryAddr: "string"
-      treasuryDatum: "string"
-      feeValue: "string[]"
-    plutus_script: "index validator ref script"
+# reference inputs
+reference-inputs:
+  - id: index_ref_1
+    type: script
+    output:
+      address: "index ref"
+      value: ["nft"]
+      datum:
+        index_data:
+          address: "andamio-treasury"
+          output_datum: "NoDatum"
+          flatten_value: ["5000000 lovelace"]
+          observers: ["index_obs_v1"]
+      script: "index"
 
-# Observer
-observers:
-  - id: init_global_state_observer
-    title: "Init Global State Observer"
-    address: "Init_Global_State_Observer"
-    redeemer:
-      id: init_global_state_zero_withdrawal_redeemer
-      title: "(string, user_info)"
-      params:
-        - "alias"
-        - "userInfo"
-
-# Transaction
-transaction:
-  id: mint_operation
-  title: "mint access\ntoken"
-    
-# Mint policies
-mint:
-  - id: access_token_mint
-    title: "AccessTokenMint"
-    values:
-      - "1 access_token"
-    redeemer:
-      id: mint_access_token_redeemer
-      title: "Mint Access Token"
-      params:
-        - "alias"
-        - "userInfo"
-
-# Output UTxOs
+# outputs
 outputs:
-  - id: output_access_token
-    title: "Access Token"
-    address: "string"
-    values:
-      - "1 access_token"
-    datum:
-      access_level: "string"
-      expiry: "timestamp"
+  - id: index_1
+    type: "script"
+    output:
+      address: "index"
+      value: ['1 index." "']
+      datum: "(alice, bob)"
 
-  - id: output_user_state
-    title: "UserState UTxO"
-    address: "string"
-    values:
-      - "updated user state"
-    datum:
-      user_info: "string"
-      access_tokens: "token_list[]"
+  - id: index_2
+    type: "script"
+    output:
+      address: "index"
+      value: ['1 index." "']
+      datum: '(bob, carol)'
 
-  - id: output_user_wallet
-    title: "User Wallet"
-    address: "string"
-    values:
-      - "remaining ada"
+  - id: global_1
+    type: "script"
+    output:
+      address: "global state"
+      value: ['1 index.100bob']
+      datum: 
+        policy_id: "index"
+        alias: "bob"
+        local_state_information: []
+        info: "()"
 
-# Explicit connections for complex flow
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
-  
-  - from: instance_ref
-    to: input_user_state  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_user_state
-    attrs: {dir: "none", style: "dashed"}
+  - id: user_1
+    type: "wallet"
+    output:
+      address: "user"
+      value: ['1 index.222bob']
+
+  - id: treasury_1
+    type: "wallet"
+    output:
+      address: "andamio-treasury"
+      value: ["5000000 lovelace"]
+
+mints:
+  - id: index
+    redeemer:
+      string: "bob"
+    tokens: ['1 index.222bob',
+             '1 index.100bob',
+             '1 index." "']
+
+# withdrawing
+withdraws:
+  - id: init_index_obs_v1
+    redeemer: "(bob, ())"
+    amount: 0

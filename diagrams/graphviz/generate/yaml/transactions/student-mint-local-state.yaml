@@ -8,3 +8,77 @@ metadata:
   estimated_fee: "2.0 ADA"
   description: "Student mints local state token for course participation"
   multi_signature: false
+
+# inputs
+inputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
+
+  - id: global_state_1
+    type: script
+    redeemer: 
+      policy_id: "nft"
+      string: ["201", "202", "203"]
+      policy_id: "course_state"
+    output:
+      address: "global_state"
+      value: ["1 index.100bob"]
+      datum:
+        policy_id: "global_state"
+        alias: "bob"
+        local_state_information:
+          - policy_id: "nft"
+            string: ["101", "102", "103"]
+            bool: false
+        info: "()"
+
+# reference inputs
+reference-inputs:
+  - id: instance_1
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.CourseStateScripts"]
+      datum: "nft"
+      script: "course_state"
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
+
+  - id: global_state_1
+    type: script
+    output:
+      address: "global_state"
+      value: ["1 index.100bob"]
+      datum:
+        policy_id: "global_state"
+        alias: "bob"
+        local_state_information:
+          - policy_id: "nft"
+            string: ["201", "202", "203", "101", "102", "103"]
+            bool: false
+        info: "()"
+
+  - id: course_state_1
+    type: script
+    redeemer:
+      alias: "bob"
+    output:
+      address: "course_state"
+      value: ["1 course_state.bob"]
+      datum: 
+        string: ["201", "202", "203"]
+
+mints:
+  - id: course_state
+    redeemer:
+      string: "bob"
+    tokens: ["1 course_state.bob"]

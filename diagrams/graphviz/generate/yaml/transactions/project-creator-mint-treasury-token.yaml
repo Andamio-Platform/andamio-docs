@@ -16,130 +16,83 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_creator_wallet
-    title: "Project Creator Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 projectCreatorNFT"
-      - "10.0 ADA"
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
 
-  - id: input_project_state
-    title: "Project State UTxO"
-    address: "treasury_scripts"
-    values:
-      - "1 projectStateToken"
-    datum:
-      project_id: "project_identifier"
-      status: "approved"
-      treasury_status: "uninitialized"
-      creator_policy: "project_creator_policy"
-    redeemer:
-      id: project_state_redeemer
-      title: "TreasuryAction.ManageTreasury"
-      params:
-        - "treasuryConfig"
-        - "initialBudget"
-        - "rewardStructure"
+  - id: instance_governance_1
+    type: script
+    redeemer: "alice"
+    output:
+      address: "instance governance"
+      value: ["1 nft.ProjectNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
 
-# Reference Input UTxOs (read-only)
 reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 prt"
-    datum:
-      projectInstance: "(irt, project_instance)[]"
-      projectPolicy: "(prt, project_policy)[]"
-      treasuryPolicy: "treasury_policy_config"
+  - id: instance_1
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.Escrow1"]
+      datum: "nft"
+      script: "escrow"
 
-  - id: input_project_instance
-    title: "ProjectInstance UTxO"
-    address: "string"
-    values:
-      - "1 irt"
-    datum:
-      project_state_cs: "projectStateTokens[]"
-      treasury_config: "default_treasury_config"
-      creator_policy: "project_creator_policy"
-
-# Transaction
-transaction:
-  id: mint_treasury_operation
-  title: "mint treasury\ntoken"
-    
-# Mint policies
-mint:
-  - id: treasury_token_mint
-    title: "TreasuryTokenMint"
-    values:
-      - "1 treasuryToken"
-    redeemer:
-      id: mint_treasury_token_redeemer
-      title: "Mint Treasury Token"
-      params:
-        - "treasuryConfig"
-        - "initialBudget"
-        - "project_creator_signature"
-
-# Output UTxOs
+  - id: instance_1
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.TreasuryScripts"]
+      datum: "nft"
+      script: "treasury"
+# outputs
 outputs:
-  - id: output_treasury_utxo
-    title: "Treasury UTxO"
-    address: "treasury_scripts"
-    values:
-      - "1 treasuryToken"
-      - "1000.0 ADA"
-    datum:
-      project_id: "project_identifier"
-      total_funds: "initial_treasury_balance"
-      reward_pool: "reward_allocation"
-      payment_schedule: "schedule_config"
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
 
-  - id: output_project_state
-    title: "Updated Project State"
-    address: "treasury_scripts"
-    values:
-      - "1 projectStateToken"
-    datum:
-      project_id: "project_identifier"
-      status: "treasury_initialized"
-      treasury_status: "active"
-      creator_policy: "project_creator_policy"
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance governance"
+      value: ["1 nft.CourseNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
 
-  - id: output_creator_wallet
-    title: "Project Creator Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 projectCreatorNFT"
-      - "6.5 ADA"
+  - id: treasury_1
+    type: script
+    output:
+      address: "treasury"
+      value: ["1 treasury_token.escrow"]
+      datum:
+        projects: ["(project hash 1, 3)", "(project hash 2, 5)"]
+        policy_id: ["contributor_state", "contributor_state3"]
 
-# Automatic connections based on structure
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
-  
-  - from: instance_ref
-    to: input_project_instance  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_project_state
-    attrs: {dir: "none", style: "dashed"}
+mints:
+  - id: treasury_token
+    redeemer:
+      script_hash: "treasury"
+      script_hash: "escrow"
+      policy_id: ["contributor_state", "contributor_state3"]
+      projects:
+        - project_data:
+            project_data: "content hash1"
+            deadline: 16062027
+            lovelace_am: 10000000
+            flatten_value: []
+          int: 3
+        - project_data:
+            project_data: "content hash"
+            deadline: 16062025
+            lovelace_am: 100000000
+            flatten_value: []
+          int: 5
+    tokens: ["1 treasury_token.escrow"]

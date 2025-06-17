@@ -16,139 +16,59 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_creator_wallet
-    title: "Course Creator Wallet"
-    address: "string"
-    values:
-      - "1 courseCreatorNFT"
-      - "100at token"
-      - "5.0 ADA"
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
 
-  - id: input_assignment_state
-    title: "Assignment State UTxO"
-    address: "Assignment_Validator"
-    values:
-      - "1 assignmentToken"
-    datum:
-      student_alias: "student_identifier"
-      assignment_data: "submission_content"
-      status: "submitted"
-      module_index: "module_id"
-    redeemer:
-      id: assignment_redeemer
-      title: "AssignmentDecisionAction.Accept"
-      params:
-        - "grade"
-        - "feedback"
-        - "approval_signature"
+  - id: instance_governance_1
+    type: script
+    redeemer: "alice"
+    output:
+      address: "instance governance"
+      value: ["1 nft.CourseNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
 
-# Reference Input UTxOs (read-only)
-reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 prt"
-    datum:
-      courseInstance: "(irt, course_instance)[]"
-      coursePolicy: "(prt, course_policy)[]"
+  - id: assignment_1
+    type: script
+    redeemer: "Accept"
+    output:
+      address: "assignment"
+      value: ["1 course_state.bob"]
+      datum:
+        string: "101"
+        maybe_string: "Just some"
+        policy_id: "course_state"
+        alias: "bob"
+        address: "course_state"
+        string: []
 
-  - id: input_course_instance
-    title: "CourseInstance UTxO"
-    address: "string"
-    values:
-      - "1 irt"
-    datum:
-      course_nft_cs: "course_nft_cs"
-      modules: "module_list[]"
-      creator_policy: "course_creator_policy"
-
-  - id: input_module_ref
-    title: "Module Reference UTxO"
-    address: "string"
-    values:
-      - "1 moduleToken"
-    datum:
-      module_info: "module_specifications"
-      grading_criteria: "criteria_list[]"
-      creator_requirements: "creator_policy"
-
-# Transaction
-transaction:
-  id: accept_assignment_operation
-  title: "accept\nassignment"
-    
-# Mint policies
-mint:
-  - id: completion_token_mint
-    title: "ModuleCompletionMint"
-    values:
-      - "1 moduleCompletionToken"
-    redeemer:
-      id: mint_completion_token_redeemer
-      title: "Mint Completion Token"
-      params:
-        - "student_alias"
-        - "module_identifier"
-        - "completion_proof"
-
-# Output UTxOs
+# outputs
 outputs:
-  - id: output_assignment_state
-    title: "Approved Assignment"
-    address: "string"
-    values:
-      - "1 assignmentToken"
-    datum:
-      student_alias: "student_identifier"
-      assignment_data: "submission_content"
-      status: "approved"
-      grade: "final_grade"
-      feedback: "creator_feedback"
-      module_index: "module_id"
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
 
-  - id: output_completion_token
-    title: "Module Completion Token"
-    address: "string"
-    values:
-      - "1 moduleCompletionToken"
-    datum:
-      student: "student_alias"
-      module: "module_identifier"
-      completion_date: "timestamp"
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance governance"
+      value: ["1 nft.CourseNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
 
-  - id: output_creator_wallet
-    title: "Course Creator Wallet"
-    address: "string"
-    values:
-      - "1 courseCreatorNFT"
-      - "100at token"
-      - "2.5 ADA"
-
-# Automatic connections based on structure
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
-  
-  - from: instance_ref
-    to: input_course_instance  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_assignment_state
-    attrs: {dir: "none", style: "dashed"}
+  - id: course_state_1
+    type: script
+    output:
+      address: "assignment"
+      value: ["1 course_state.bob"]
+      datum:
+        string: ["101"]

@@ -16,140 +16,98 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_contributor_wallet
-    title: "Contributor Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 contributorNFT"
-      - "5.0 ADA"
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob",
+              "2000000 lovelace"]
 
-  - id: input_project_state
-    title: "Project State UTxO"
-    address: "treasury_scripts"
-    values:
-      - "1 projectStateToken"
-    datum:
-      project_id: "project_identifier"
-      contributors: "contributor_list[]"
-      treasury_policy: "treasury_policy_id"
-      status: "open_for_contributors"
+  - id: contributor_state_1
+    type: script
     redeemer:
-      id: project_state_redeemer
-      title: "TreasuryAction.CommitProject"
-      params:
-        - "contributorAlias"
-        - "commitmentLevel"
-        - "estimatedHours"
-
-  - id: input_contributor_info
-    title: "Contributor Info UTxO"
-    address: "contributor_state_scripts"
-    values:
-      - "1 contributorToken"
-    datum:
-      alias: "contributor_alias"
-      active_projects: "project_list[]"
-      reputation_score: "score"
-    redeemer:
-      id: contributor_info_redeemer
-      title: "Add Project"
-      params:
-        - "projectId"
-        - "role"
-
-# Reference Input UTxOs (read-only)
-reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 prt"
-    datum:
-      projectInstance: "(irt, project_instance)[]"
-      projectPolicy: "(prt, project_policy)[]"
-      contributorPolicy: "contributor_policy_id"
-
-  - id: input_project_instance
-    title: "ProjectInstance UTxO"
-    address: "string"
-    values:
-      - "1 irt"
-    datum:
-      project_state_cs: "projectStateTokens[]"
-      treasury_config: "treasury_config"
-      creator_policy: "project_creator_policy"
-
-  - id: input_treasury_ref
-    title: "Treasury Reference UTxO"
-    address: "string"
-    values:
-      - "1 treasuryRefToken"
-    datum:
-      reward_structure: "reward_config"
-      payment_schedule: "schedule_data"
-      total_budget: "budget_amount"
-
-# Transaction
-transaction:
-  id: commit_project_operation
-  title: "commit to\nproject"
-    
-# Output UTxOs
-outputs:
-  - id: output_project_state
-    title: "Updated Project State"
-    address: "string"
-    values:
-      - "1 projectStateToken"
-    datum:
-      project_id: "project_identifier"
-      contributors: "updated_contributor_list[]"
-      treasury_policy: "treasury_policy_id"
-      status: "active_with_contributors"
-
-  - id: output_contributor_info
-    title: "Updated Contributor Info"
-    address: "string"
-    values:
-      - "1 contributorToken"
-    datum:
-      alias: "contributor_alias"
-      active_projects: "updated_project_list[]"
-      reputation_score: "updated_score"
-
-  - id: output_contributor_wallet
-    title: "Contributor Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 contributorNFT"
-      - "2.0 ADA"
-
-# Automatic connections based on structure
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
+      alias: "bob"
+      script_hash: "escrow"
+    output:
+      address: "contributor_state"
+      value: ["2 contributor_state.bob"]
+      datum: 
+        string: ["project hash 2", "project hash 3"]
   
-  - from: instance_ref
-    to: input_project_instance  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_project_state
-    attrs: {dir: "none", style: "dashed"}
+  - id: treasury_1
+    type: script
+    redeemer:
+      policy_id: "contributor_state"
+      alias: "bob"
+      project_data:
+        project_data: "content hash"
+        deadline: 16062025
+        lovelace_am: 10000000
+        flatten_value: []
+      script_hash: "escrow"
+      maybe_string: "Just some"
+    output:
+      address: "treasury"
+      value: ["1 treasury_token.escrow"]
+      datum:
+        projects: ["(project hash 1, 1)", "(project hash 2, 10)"]
+        policy_id: ["contributor_state", "contributor_state3"]
+
+  - id: treasury_2
+    type: script
+    redeemer: "CommitFund"
+    output:
+      address: "treasury"
+      value: ["15000000 lovelace"]
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
+
+  - id: contributor_state_1
+    type: script
+    output:
+      address: "contributor_state"
+      value: ["1 contributor_state.bob"]
+      datum: 
+        string: ["project hash 2", "project hash 3"]
+
+  - id: treasury_1
+    type: script
+    output:
+      address: "treasury"
+      value: ["1 treasury_token.escrow"]
+      datum:
+        projects: ["(project hash 2, 10)"]
+        policy_id: ["contributor_state", "contributor_state3"]
+
+  - id: treasury_2
+    type: script
+    output:
+      address: "treasury"
+      value: ["5000000 lovelace"]
+  
+  - id:
+    type: script
+    output:
+      address: "escrow"
+      value: ["1 contributor_state.bob",
+              "12000000 lovelace"]
+      datum:
+        project_data:
+          project_data: "content hash"
+          deadline: 16062025
+          lovelace_am: 10000000
+          flatten_value: []
+        script_hash: "treasury"
+        policy_id: "contributor_state"
+        maybe_string: "Nothing"
+
+validity_range:
+  invalide_after: 16062024

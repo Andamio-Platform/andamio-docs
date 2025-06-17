@@ -16,97 +16,76 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_student_wallet
-    title: "Student Wallet"
-    address: "string"
-    values:
-      - "222at token"
-      - "3.0 ADA"
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
 
-  - id: input_local_state
-    title: "Local State UTxO"
-    address: "course_state_scripts"
-    values:
-      - "1 localStateToken"
-    datum:
-      assignments: "completed_assignment_list[]"
-      ls_cs: "local_state_cs"
-      at_cs: "access_token_cs"
-      alias: "student_alias"
+  - id: global_state_1
+    type: script
+    redeemer: 
+      policy_id: "nft"
+      string: ["201", "202", "203"]
+      policy_id: "course_state"
+    output:
+      address: "global_state"
+      value: ["1 index.100bob"]
+      datum:
+        policy_id: "global_state"
+        alias: "bob"
+        local_state_information:
+          - policy_id: "nft"
+            string: ["101", "102", "103"]
+            bool: true
+        info: "()"
+
+  - id: course_state_1
+    type: script
     redeemer:
-      id: local_state_redeemer
-      title: "Burn Local State"
-      params:
-        - "final_grades"
-        - "completion_status"
+      alias: "bob"
+    output:
+      address: "course_state"
+      value: ["1 course_state.bob"]
+      datum: 
+        string: ["201", "202", "203"]
 
-# Reference Input UTxOs (read-only)
-reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 prt"
-    datum:
-      courseInstance: "(irt, course_instance)[]"
-      coursePolicy: "(prt, course_policy)[]"
+# reference inputs
+reference-inputs:
+  - id: instance_1
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.CourseStateScripts"]
+      datum: "nft"
+      script: "course_state"
 
-  - id: input_course_instance
-    title: "CourseInstance UTxO"
-    address: "string"
-    values:
-      - "1 irt"
-    datum:
-      ls_cs: "localStateTokens[]"
-      course_nft_cs: "course_nft_cs"
-
-# Transaction
-transaction:
-  id: burn_local_state_operation
-  title: "burn local state\nand move to global"
-    
-# Output UTxOs
+# outputs
 outputs:
-  - id: output_global_state
-    title: "Updated Global State"
-    address: "global_state"
-    values:
-      - "1 globalStateToken"
-    datum:
-      student_records: "updated_student_list[]"
-      completion_data: "course_completion_data"
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
 
-  - id: output_student_wallet
-    title: "Student Wallet"
-    address: "string"
-    values:
-      - "222at token"
-      - "1.0 ADA"
+  - id: global_state_1
+    type: script
+    output:
+      address: "global_state"
+      value: ["1 index.100bob"]
+      datum:
+        policy_id: "global_state"
+        alias: "bob"
+        local_state_information:
+          - policy_id: "nft"
+            string: ["201", "202", "203", "101", "102", "103"]
+            bool: false
+        info: "()"
 
-# Automatic connections based on structure
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
-  
-  - from: instance_ref
-    to: input_course_instance  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_local_state
-    attrs: {dir: "none", style: "dashed"}
+mints:
+  - id: course_state
+    redeemer:
+      string: "bob"
+    tokens: ["-1 course_state.bob"]

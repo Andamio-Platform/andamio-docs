@@ -8,3 +8,71 @@ metadata:
   estimated_fee: "2.0 ADA"
   description: "Project creator denies a contributor's project proposal"
   multi_signature: false
+
+  # inputs
+inputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
+
+  - id: instance_governance_1
+    type: script
+    redeemer: "alice"
+    output:
+      address: "instance governance"
+      value: ["1 nft.ProjectNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
+
+  - id: escrow_1
+    type: script
+    redeemer: 
+      alias: "bob"
+    output:
+      address: "escrow"
+      value: ["1 contributor_state.bob",
+              "12000000 lovelace"]
+      datum:
+        project_data:
+          project_data: "content hash"
+          deadline: 16062025
+          lovelace_am: 10000000
+          flatten_value: []
+        script_hash: "treasury"
+        policy_id: "contributor_state"
+        maybe_string: "Just some"
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
+
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance governance"
+      value: ["1 nft.CourseNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
+
+  - id: contributor_state_1
+    type: script
+    output:
+      address: "assignment"
+      value: ["1 contributor_state.bob",
+              "2000000 lovelace"]
+      datum:
+        string: ""
+  
+  - id: treasury_2
+    type: script
+    output:
+      address: "treasury"
+      value: ["5000000 lovelace"]

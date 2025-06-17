@@ -17,85 +17,121 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_admin_wallet
-    title: "Admin Wallet"
-    address: "string"
-    values:
-      - "ada balance"
+  - id: instance_admin
+    type: wallet
+    output:
+      address: "instance admin wallet"
+      value: ["1 nft.InstanceAdmin"]
 
-  - id: input_course_state
-    title: "Course State UTxO"
-    address: "Global_State"
-    values:
-      - "course token"
-    datum:
-      course_id: "string"
-      status: "pending"
-      creator_list: "[]"
-    redeemer:
-      id: course_state_redeemer
-      title: "GlobalStateAction.UpdateTokenInformation"
-      params:
-        - "course_config"
-
-# Reference Input UTxOs (read-only, at bottom of input column)
+# reference inputs
 reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 reference token"
-    datum:
-      admin_config: "configuration data"
-      course_settings: "settings"
+  - id: instance_provider_1
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.CourseNFT"]
+      datum: ["nft_logic1", "nft_logic2", "nft_logic3"]
 
-# Transaction
-transaction:
-  id: main_operation
-  title: "init course\nadmin operation"
-    
-# Output UTxOs
+  - id: instance_provider_2
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.AssignmentValidator"]
+      datum: ["assignment_logic1", "assignment_logic2"]
+      script: "assignment_obs"
+
+  - id: instance_provider_3
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.ModuleScripts"]
+      datum: ["module_logic1", "module_logic2"]
+      script: "module_obs"
+
+  - id: instance_provider_4
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.CourseStateScripts"]
+      datum: ["course_state_logic1", "course_state_logic2", "course_state_logic3"]
+      script: "course_state_obs"
+
+# outputs
 outputs:
-  - id: output_course_state
-    title: "Initialized Course State"
-    address: "string"
-    values:
-      - "course token"
-    datum:
-      course_id: "string"
-      status: "active"
-      creator_list: "[]"
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance governance"
+      value: ["1 nft.CourseNFT"]
+      datum:
+        creators: ["bob", "carol"]
+        policy_id: "nft"
 
-  - id: output_admin_wallet
-    title: "Admin Wallet"
-    address: "string"
-    values:
-      - "remaining ada"
+  - id: instance_1
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.AssignmentValidator"]
+      datum: "nft"
+      script: "assignment_logic1 + nft + assignment_logic2"
 
-# Explicit connections for complex flow
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
+  - id: instance_2
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.ModuleScripts"]
+      datum: "nft"
+      script: "module_logic1 + nft + module_logic2"
+
+  - id: instance_3
+    type: script
+    output:
+      address: "instance"
+      value: ["1 instance_provider.CourseStateScripts"]
+      datum: "nft"
+      script: "course_state_logic1 + nft + course_state_logic2 + moudle_policy_id + course_state_logic3"
+
+
+
+# minting
+mints:
+  - id: nft
+    redeemer: "()"
+    tokens: ['1 nft.CourseNFT']
   
-  - from: instance_ref
-    to: input_course_state  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_course_state
-    attrs: {dir: "none", style: "dashed"}
+  - id: instance
+    redeemer:
+      - policy_id: "nft"
+        params: ["nft"]
+        token_name: "AssignmentValidator"
+      - policy_id: "nft"
+        params: ["nft"]
+        token_name: "ModuleScripts"
+      - policy_id: "nft"
+        params: ["nft", "module_policy_id"]
+        token_name: "CourseStateScripts"
+    tokens: ["1 instance_provider.AssignmentValidator",
+             "1 instance_provider.ModuleScripts",
+             "1 instance_provider.CourseStateScripts"]
+
+# withdrawing
+withdraws:
+  - id: assignment_obs
+    redeemer:
+      string: "tx_id"
+      string: "tx_ix"
+    amount: 0
+
+  - id: module_obs
+    redeemer:
+      string: "tx_id"
+      string: "tx_ix"
+    amount: 0
+
+  - id: course_state_obs
+    redeemer:
+      string: "tx_id"
+      string: "tx_ix"
+    amount: 0

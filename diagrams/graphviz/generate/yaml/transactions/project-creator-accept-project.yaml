@@ -16,118 +16,64 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_creator_wallet
-    title: "Project Creator Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 projectCreatorNFT"
-      - "5.0 ADA"
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
 
-  - id: input_project_proposal
-    title: "Project Proposal UTxO"
-    address: "treasury_scripts"
-    values:
-      - "1 proposalToken"
-    datum:
-      contributor_alias: "contributor_identifier"
-      proposal_data: "project_proposal_content"
-      status: "submitted"
-      estimated_timeline: "timeline_data"
-    redeemer:
-      id: proposal_redeemer
-      title: "TreasuryAction.ManageTreasury"
-      params:
-        - "acceptance_terms"
-        - "payment_structure"
-        - "milestone_schedule"
+  - id: instance_governance_1
+    type: script
+    redeemer: "alice"
+    output:
+      address: "instance governance"
+      value: ["1 nft.ProjectNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
 
-# Reference Input UTxOs (read-only)
-reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 prt"
-    datum:
-      projectInstance: "(irt, project_instance)[]"
-      projectPolicy: "(prt, project_policy)[]"
+  - id: escrow_1
+    type: script
+    redeemer: 
+      alias: "bob"
+    output:
+      address: "escrow"
+      value: ["1 contributor_state.bob",
+              "12000000 lovelace"]
+      datum:
+        project_data:
+          project_data: "content hash"
+          deadline: 16062025
+          lovelace_am: 10000000
+          flatten_value: []
+        script_hash: "treasury"
+        policy_id: "contributor_state"
+        maybe_string: "Just some"
 
-  - id: input_project_instance
-    title: "ProjectInstance UTxO"
-    address: "string"
-    values:
-      - "1 irt"
-    datum:
-      treasury_config: "treasury_parameters"
-      creator_policy: "project_creator_policy"
-      contributor_requirements: "requirements_list[]"
-
-# Transaction
-transaction:
-  id: accept_project_operation
-  title: "accept project\nproposal"
-    
-# Mint policies
-mint:
-  - id: active_project_mint
-    title: "ActiveProjectMint"
-    values:
-      - "1 activeProjectToken"
-    redeemer:
-      id: mint_active_project_redeemer
-      title: "Mint Active Project Token"
-      params:
-        - "contributor_alias"
-        - "acceptance_terms"
-        - "project_creator_signature"
-
-# Output UTxOs
+# outputs
 outputs:
-  - id: output_active_project
-    title: "Active Project UTxO"
-    address: "treasury_scripts"
-    values:
-      - "1 activeProjectToken"
-    datum:
-      contributor_alias: "contributor_identifier"
-      project_data: "accepted_project_content"
-      status: "active"
-      payment_terms: "accepted_payment_structure"
-      milestones: "milestone_schedule"
+  - id: user_1
+    type: wallet
+    output:
+      address: "alice"
+      value: ["1 index.222alice"]
 
-  - id: output_creator_wallet
-    title: "Project Creator Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 projectCreatorNFT"
-      - "2.0 ADA"
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance governance"
+      value: ["1 nft.CourseNFT"]
+      datum:
+        creators: ["alice"]
+        policy_id: "nft"
 
-# Automatic connections based on structure
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
-  
-  - from: instance_ref
-    to: input_project_instance  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_project_proposal
-    attrs: {dir: "none", style: "dashed"}
+  - id: contributor_state_1
+    type: script
+    output:
+      address: "assignment"
+      value: ["1 contributor_state.bob",
+              "12000000 lovelace"]
+      datum:
+        string: "project hash 1"

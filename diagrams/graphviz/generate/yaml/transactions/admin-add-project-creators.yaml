@@ -17,93 +17,31 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_admin_state
-    title: "Admin State UTxO"
-    address: "Global_State"
-    values:
-      - "admin token"
-    datum:
-      admin_info: "string"
-      permissions: "permission_list[]"
-    redeemer:
-      id: admin_state_redeemer
-      title: "GlobalStateAction.UpdateGlobalInfo"
-      params:
-        - "add_project_creators"
-        - "creator_list[]"
+  - id: instance_governance_1
+    type: script
+    redeemer: ["alice"]
+    output:
+      address: "instance governance"
+      value: ["1 nft.ProjectNFT"]
+      datum:
+        creators: ["bob", "carol"]
+        policy_id: "nft"
 
-  - id: input_admin_wallet
-    title: "Admin Wallet"
-    address: "string"
-    values:
-      - "ada balance"
+  - id: instance_admin
+    type: wallet
+    output:
+      address: "instance admin wallet"
+      value: ["1 nft.InstanceAdmin"]
 
-# Reference Input UTxOs (read-only, at bottom of input column)
-reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 reference token"
-    datum:
-      project_creators: "creator_list[]"
-      admin_config: "configuration data"
-
-# Transaction
-transaction:
-  id: add_project_creators_operation
-  title: "add project\ncreators"
-    
-# Output UTxOs
+# outputs
 outputs:
-  - id: output_global_state
-    title: "Updated Global State"
-    address: "string"
-    values:
-      - "1 reference token"
-    datum:
-      project_creators: "updated_creator_list[]"
-      admin_config: "configuration data"
-
-  - id: output_admin_state
-    title: "Admin State UTxO"
-    address: "string"
-    values:
-      - "admin token"
-    datum:
-      admin_info: "string"
-      permissions: "permission_list[]"
-
-  - id: output_admin_wallet
-    title: "Admin Wallet"
-    address: "string"
-    values:
-      - "remaining ada"
-
-# Explicit connections for complex flow
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
-  
-  - from: instance_ref
-    to: input_admin_state  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_admin_state
-    attrs: {dir: "none", style: "dashed"}
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance governance"
+      value: ["1 nft.ProjectNFT"]
+      datum:
+        creators: ["alice", "bob", "carol"]
+        policy_id: "nft"

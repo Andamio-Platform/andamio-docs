@@ -16,120 +16,47 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_contributor_wallet
-    title: "Contributor Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 contributorNFT"
-      - "1 projectCompletionToken"
-      - "5.0 ADA"
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
 
-  - id: input_treasury_utxo
-    title: "Treasury UTxO"
-    address: "treasury_scripts"
-    values:
-      - "1 treasuryToken"
-      - "1000.0 ADA"
-      - "500 rewardTokens"
-    datum:
-      project_id: "project_identifier"
-      total_funds: "treasury_balance"
-      pending_rewards: "reward_queue[]"
-      payment_schedule: "schedule_data"
+  - id: contributor_state_1
+    type: script
     redeemer:
-      id: treasury_redeemer
-      title: "TreasuryAction.GetRewards"
-      params:
-        - "contributorAlias"
-        - "completionProof"
-        - "rewardAmount"
+      alias: "bob"
+      string: "project hash 1"
+    output:
+      address: "contributor_state"
+      value: ["1 contributor_state.bob"]
+      datum: 
+        string: ["project hash 2", "project hash 3"]
 
-# Reference Input UTxOs (read-only)
-reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 prt"
-    datum:
-      projectInstance: "(irt, project_instance)[]"
-      rewardPolicy: "reward_distribution_policy"
+  - id: contributor_state_2
+    type: script
+    redeemer:
+      alias: "bob"
+    output:
+      address: "contributor_state"
+      value: ["10000000 lovelace", "1 contributor_state.bob"]
+      datum: 
+        string: "project hash 1"
 
-  - id: input_project_instance
-    title: "ProjectInstance UTxO"
-    address: "string"
-    values:
-      - "1 irt"
-    datum:
-      treasury_config: "treasury_parameters"
-      reward_structure: "reward_config"
-      completion_criteria: "criteria_list[]"
-
-  - id: input_completion_proof
-    title: "Completion Proof UTxO"
-    address: "string"
-    values:
-      - "1 proofToken"
-    datum:
-      contributor: "contributor_alias"
-      project_id: "project_identifier"
-      work_completed: "completion_evidence"
-      verification_status: "verified"
-
-# Transaction
-transaction:
-  id: claim_rewards_operation
-  title: "claim project\nrewards"
-    
-# Output UTxOs
+# outputs
 outputs:
-  - id: output_treasury_utxo
-    title: "Updated Treasury UTxO"
-    address: "string"
-    values:
-      - "1 treasuryToken"
-      - "900.0 ADA"
-      - "450 rewardTokens"
-    datum:
-      project_id: "project_identifier"
-      total_funds: "updated_treasury_balance"
-      pending_rewards: "updated_reward_queue[]"
-      payment_schedule: "schedule_data"
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["10000000 lovelace", "1 index.222bob"]
 
-  - id: output_contributor_wallet
-    title: "Contributor Wallet"
-    address: "string"
-    values:
-      - "100at token"
-      - "1 contributorNFT"
-      - "50 rewardTokens"
-      - "102.5 ADA"
-
-# Automatic connections based on structure
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
-  
-  - from: instance_ref
-    to: input_project_instance  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_treasury_utxo
-    attrs: {dir: "none", style: "dashed"}
+  - id: contributor_state_1
+    type: script
+    output:
+      address: "contributor_state"
+      value: ["2 contributor_state.bob"]
+      datum: 
+        string: ["project hash 1", "project hash 2", "project hash 3"]

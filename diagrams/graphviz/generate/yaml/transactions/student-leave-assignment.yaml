@@ -16,100 +16,41 @@ graph_attrs:
   nodesep: 0.4
   ranksep: 0.8
 
-# Reference inputs (gray boxes on left)
-references:
-  - id: params_ref
-    title: "params ref"
-  
-  - id: instance_ref  
-    title: "instance ref"
-    
-  - id: global_state_ref
-    title: "global state"
-
-# Input UTxOs
+# inputs
 inputs:
-  - id: input_student_wallet
-    title: "Student Wallet"
-    address: "string"
-    values:
-      - "222at token"
-      - "3.0 ADA"
-
-  - id: input_course_state
-    title: "Course State UTxO"
-    address: "course_state_scripts"
-    values:
-      - "1 localStateToken"
-    datum:
-      assignments: "current_assignment_list[]"
-      ls_cs: "course_state_cs"
-      at_cs: "access_token_cs"
-      alias: "student_alias"
-    redeemer:
-      id: course_state_redeemer
-      title: "Leave Assignment"
-      params:
-        - "assignmentIndex"
-        - "reason"
-
-# Reference Input UTxOs (read-only)
-reference_inputs:
-  - id: input_global_data
-    title: "Global Data UTxO"
-    address: "string"
-    values:
-      - "1 prt"
-    datum:
-      courseInstance: "(irt, course_instance)[]"
-      coursePolicy: "(prt, course_policy)[]"
-
-  - id: input_course_instance
-    title: "CourseInstance UTxO"
-    address: "string"
-    values:
-      - "1 irt"
-    datum:
-      ls_cs: "localStateTokens[]"
-      course_nft_cs: "course_nft_cs"
-      modules: "module_list[]"
-
-# Transaction
-transaction:
-  id: leave_assignment_operation
-  title: "leave\nassignment"
-    
-# Output UTxOs
-outputs:
-  - id: output_course_state
-    title: "Updated Course State"
-    address: "course_state_scripts"
-    values:
-      - "1 localStateToken"
-    datum:
-      assignments: "updated_assignment_list[]"
-      ls_cs: "course_state_cs"
-      at_cs: "access_token_cs"
-      alias: "student_alias"
-
-  - id: output_student_wallet
-    title: "Student Wallet"
-    address: "string"
-    values:
-      - "222at token"
-      - "1.5 ADA"
-
-# Automatic connections based on structure
-connections:
-  # Reference connections (no arrows)
-  - from: params_ref
-    to: input_global_data
-    attrs: {dir: "none", style: "dashed"}
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
   
-  - from: instance_ref
-    to: input_course_instance  
-    attrs: {dir: "none", style: "dashed"}
-    
-  - from: global_state_ref
-    to: input_course_state
-    attrs: {dir: "none", style: "dashed"}
+  - id: assignment_1
+    type: script
+    redeemer:
+      maybe_string: "Nothing"
+    output:
+      address: "assignment"
+      value: ["1 course_state.bob"]
+      datum:
+        string: "101"
+        maybe_string: "Just some"
+        policy_id: "course_state"
+        alias: "bob"
+        address: "course_state"
+        string: ["201", "202", "203"]
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: ["1 index.222bob"]
+
+  - id: course_state_1
+    type: script
+    output:
+      address: "course_state"
+      value: ["1 course_state.bob"]
+      datum: 
+        string: ["201", "202", "203"]
