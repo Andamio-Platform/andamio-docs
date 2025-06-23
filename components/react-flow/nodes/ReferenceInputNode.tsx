@@ -30,10 +30,11 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
           <div>
             <p className="font-semibold mr-1">Value:</p>
             <ul className="list-disc pl-4 text-xs">
-              {Array.isArray(data.value) ? 
-                data.value.map((val, idx) => <li key={idx}>{val}</li>) : 
+              {Array.isArray(data.value) ? (
+                data.value.map((val, idx) => <li key={idx}>{val}</li>)
+              ) : (
                 <li>{data.value}</li>
-              }
+              )}
             </ul>
           </div>
         </div>
@@ -58,7 +59,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              {showDetails ? "Hide" : "Show Datum and Script"}
+              {showDetails ? "Hide" : "Show Datum and Redeemer"}
             </button>
           </div>
         )}
@@ -69,21 +70,20 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
               <div className="text-xs px-4">
                 <p className="font-semibold">Datum:</p>
                 <pre className="bg-gray-100 p-1 rounded text-xs">
-                  {typeof data.datum === 'string' ? 
-                    (() => {
-                      try {
-                        const parsed = JSON.parse(data.datum);
-                        return JSON.stringify(parsed, null, 2);
-                      } catch {
-                        return data.datum;
-                      }
-                    })() : 
-                    JSON.stringify(data.datum, null, 2)
-                  }
+                  {typeof data.datum === "string"
+                    ? (() => {
+                        try {
+                          const parsed = JSON.parse(data.datum);
+                          return JSON.stringify(parsed, null, 2);
+                        } catch {
+                          return data.datum;
+                        }
+                      })()
+                    : JSON.stringify(data.datum, null, 2)}
                 </pre>
               </div>
             )}
-            
+
             {data.script && (
               <div className="text-xs px-4 flex items-center">
                 <span className="font-semibold mr-1">Script:</span>{" "}
