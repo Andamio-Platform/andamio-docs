@@ -79,8 +79,8 @@ outputs:
 mints:
   - id: treasury_token
     redeemer:
-      script_hash: "treasury"
-      script_hash: "escrow"
+      treasury: "script_hash"
+      escrow: "script_hash"
       policy_id: ["contributor_state", "contributor_state3"]
       projects:
         - project_data:

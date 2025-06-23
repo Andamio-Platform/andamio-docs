@@ -1,14 +1,15 @@
-import { source } from '@/lib/source';
+import { source } from "@/lib/source";
 import {
   DocsPage,
   DocsBody,
   DocsTitle,
   DocsDescription,
-} from 'fumadocs-ui/page';
-import { notFound } from 'next/navigation';
-import { MDXContent } from '@content-collections/mdx/react';
-import { createRelativeLink } from 'fumadocs-ui/mdx';
-import { getMDXComponents } from '@/mdx-components';
+} from "fumadocs-ui/page";
+import { notFound } from "next/navigation";
+import { MDXContent } from "@content-collections/mdx/react";
+import { createRelativeLink } from "fumadocs-ui/mdx";
+import { getMDXComponents } from "@/mdx-components";
+import TransactionDiagramClient from "@/components/react-flow/TransactionDiagramClient";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -29,6 +30,7 @@ export default async function Page(props: {
             a: createRelativeLink(source, page),
           })}
         />
+        {page.data.tx_file && <TransactionDiagramClient txFilePath={page.data.tx_file} />}
       </DocsBody>
     </DocsPage>
   );

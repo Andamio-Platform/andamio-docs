@@ -1,3 +1,17 @@
 @import 'tailwindcss';
-@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/ocean.css';
 @import 'fumadocs-ui/css/preset.css';
+
+:root {
+  --nd-page-width: 2000px;
+}
+
+/* Make the article element wider */
+article[class*="max-w-"] {
+  max-width: 1800px !important;
+}
+
+/* Ensure the diagram container can use the full width */
+.prose > div {
+  max-width: 100% !important;
+}

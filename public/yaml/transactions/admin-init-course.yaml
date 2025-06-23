@@ -120,18 +120,18 @@ mints:
 withdraws:
   - id: assignment_obs
     redeemer:
-      string: "tx_id"
-      string: "tx_ix"
+      tx_id: "string"
+      tx_ix: "string"
     amount: 0
 
   - id: module_obs
     redeemer:
-      string: "tx_id"
-      string: "tx_ix"
+      tx_id: "string"
+      tx_ix: "string"
     amount: 0
 
   - id: course_state_obs
     redeemer:
-      string: "tx_id"
-      string: "tx_ix"
+      tx_id: "string"
+      tx_ix: "string"
     amount: 0

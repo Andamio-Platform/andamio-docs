@@ -15,35 +15,35 @@ inputs:
     type: wallet
     output:
       address: "user"
-      value: ["1 index.222bob"]
+      value: ["1 index.222<alias>"]
 
   - id: global_state_1
     type: script
     redeemer: 
-      policy_id: "nft"
-      string: ["project hash 4", "project hash 5", "project hash 6"]
-      policy_id: "contributor_state"
+      nft: "policy_id"
+      project_hash_list: "hash[]"
+      contributor_state: "policy_id"
     output:
       address: "global_state"
-      value: ["1 index.100bob"]
+      value: ["1 index.100<alias>"]
       datum:
-        policy_id: "global_state"
-        alias: "bob"
+        global_state: "policy_id"
+        alias: "string"
         local_state_information:
-          - policy_id: "nft"
-            string: ["project hash 1", "project hash 2", "project hash 3"]
+          - nft: "policy_id"
+            project_hash_list: "hash[]"
             bool: true
         info: "()"
 
   - id: contributor_state_1
     type: script
     redeemer:
-      alias: "bob"
+      alias: "string"
     output:
       address: "contributor_state"
-      value: ["2 contributor_state.bob"]
+      value: ["2 contributor_state.<alias>"]
       datum: 
-        string: ["project hash 1", "project hash 2", "project hash 3"]
+        project_hash_list: "hash[]"
 
 # reference inputs
 reference-inputs:
@@ -61,24 +61,24 @@ outputs:
     type: wallet
     output:
       address: "user"
-      value: ["1 index.222bob"]
+      value: ["1 index.222<alias>"]
 
   - id: global_state_1
     type: script
     output:
       address: "global_state"
-      value: ["1 index.100bob"]
+      value: ["1 index.100<alias>"]
       datum:
-        policy_id: "global_state"
-        alias: "bob"
+        global_state: "policy_id"
+        alias: "string"
         local_state_information:
-          - policy_id: "nft"
-            string: ["project hash 1", "project hash 2", "project hash 3", "project hash 4", "project hash 5", "project hash 6"]
+          - nft: "policy_id"
+            project_hash_list: "hash[]"
             bool: false
         info: "()"
 
 mints:
   - id: contributor_state
     redeemer:
-      string: "bob"
-    tokens: ["-2 contributor_state.bob"]
+      alias: "string"
+    tokens: ["-2 contributor_state.<alias>"]

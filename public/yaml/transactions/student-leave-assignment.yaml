@@ -37,7 +37,7 @@ inputs:
         policy_id: "course_state"
         alias: "bob"
         address: "course_state"
-        string: ["201", "202", "203"]
+        assignment_list: ["201", "202", "203"]
 
 # outputs
 outputs:
@@ -53,4 +53,4 @@ outputs:
       address: "course_state"
       value: ["1 course_state.bob"]
       datum: 
-        string: ["201", "202", "203"]
+        assignment_list: ["201", "202", "203"]

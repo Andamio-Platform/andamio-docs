@@ -10,6 +10,7 @@ export const source = loader({
   source: createMDXSource(allDocs, allMetas),
   pageTree: {
     // Adds a badge to each page item in page tree
+    // @ts-expect-error - Type mismatch between fumadocs-openapi and fumadocs-core
     attachFile,
   },
   icon(icon) {

@@ -1,13 +1,20 @@
-name: StudentMintLocalStateTransaction
+name: StudentBurnLocalStateTransaction
 
 # Metadata about this transaction type
 metadata:
   role: "Student"
   category: "state_management"
-  requires_tokens: ["100at", "222at"]
+  requires_tokens: ["localStateToken", "222at"]
   estimated_fee: "2.0 ADA"
-  description: "Student mints local state token for course participation"
+  description: "Student burns local state token and moves to global state"
   multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
 
 # inputs
 inputs:
@@ -20,9 +27,9 @@ inputs:
   - id: global_state_1
     type: script
     redeemer: 
-      policy_id: "nft"
+      nft: "policy_id"
       string: ["201", "202", "203"]
-      policy_id: "course_state"
+      course_state: "policy_id"
     output:
       address: "global_state"
       value: ["1 index.100bob"]
@@ -30,10 +37,20 @@ inputs:
         policy_id: "global_state"
         alias: "bob"
         local_state_information:
-          - policy_id: "nft"
-            string: ["101", "102", "103"]
-            bool: false
+          - nft: "policy_id"
+            assignment_list: ["101", "102", "103"]
+            bool: true
         info: "()"
+
+  - id: course_state_1
+    type: script
+    redeemer:
+      alias: "bob"
+    output:
+      address: "course_state"
+      value: ["1 course_state.bob"]
+      datum: 
+        assignment_list: ["201", "202", "203"]
 
 # reference inputs
 reference-inputs:
@@ -62,23 +79,13 @@ outputs:
         policy_id: "global_state"
         alias: "bob"
         local_state_information:
-          - policy_id: "nft"
-            string: ["201", "202", "203", "101", "102", "103"]
+          - nft: "policy_id"
+            assignment_list: ["201", "202", "203", "101", "102", "103"]
             bool: false
         info: "()"
-
-  - id: course_state_1
-    type: script
-    redeemer:
-      alias: "bob"
-    output:
-      address: "course_state"
-      value: ["1 course_state.bob"]
-      datum: 
-        string: ["201", "202", "203"]
 
 mints:
   - id: course_state
     redeemer:
       string: "bob"
-    tokens: ["1 course_state.bob"]
+    tokens: ["-1 course_state.bob"]

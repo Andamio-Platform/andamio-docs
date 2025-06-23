@@ -1,12 +1,13 @@
-name: StudentCommitToAssignmentTransaction
+name: StudentUpdateAssignmentTransaction
 
 # Metadata about this transaction type
 metadata:
   role: "Student"
   category: "assignment_management"
-  requires_tokens: ["100at", "222at"]
-  estimated_fee: "2.5 ADA"
-  description: "Student commits to working on a specific module assignment"
+  requires_tokens: ["localStateToken", "222at"]
+  estimated_fee: "1.5 ADA"
+  description: "Student updates their assignment submission or information"
+  multi_signature: false
 
 graph_attrs:
   rankdir: LR
@@ -23,31 +24,20 @@ inputs:
       address: "user"
       value: ["1 index.222bob"]
   
-  - id: course_state_1
+  - id: assignment_1
     type: script
     redeemer:
-      alias: "bob"
-      string: "101"
       maybe_string: "Just some"
     output:
-      address: "course_state"
-      value: ["1 course_state.bob"]
-      datum: 
-        string: ["201", "202", "203"]
-
-reference_inputs:
-- id:
-  type: script
-  output:
-    address: "module"
-    value: ["1 module.101"]
-    datum:
-      slts: ["(slt, content)"]
-      maybe_assignment:
-      string: "assignment data hash"
       address: "assignment"
-      policy_id: ["course_state"]
-      required: ["201", "202"]
+      value: ["1 course_state.bob"]
+      datum:
+        string: "101"
+        maybe_string: "Just some"
+        policy_id: "course_state"
+        alias: "bob"
+        address: "course_state"
+        assignment_list: ["201", "202", "203"]
 
 # outputs
 outputs:
@@ -68,4 +58,4 @@ outputs:
         policy_id: "course_state"
         alias: "bob"
         address: "course_state"
-        string: ["201", "202", "203"]
+        assignment_list: ["201", "202", "203"]

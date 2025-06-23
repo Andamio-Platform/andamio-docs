@@ -1,12 +1,12 @@
-name: AdminInitProjectStep1Transaction
+name: AdminInitProjectStep2Transaction
 
 # Metadata about this transaction type
 metadata:
   role: "InstanceAdmin"
   category: "instance_management"
   requires_tokens: ["instanceAdminNFT"]
-  estimated_fee: "3.5 ADA"
-  description: "Instance admin initializes a new project (step 1 of 2)"
+  estimated_fee: "4.0 ADA"
+  description: "Instance admin completes project initialization (step 2 of 2)"
   multi_signature: true
   required_signatures: ["instanceAdmin", "globalAdmin"]
 
@@ -46,12 +46,18 @@ reference_inputs:
     type: script
     output:
       address: "instance_provider"
-      value: ["1 instance_provider.Escrow1"]
-      datum: ["escrow_logic1", "escrow_logic2"]
-      script: "escrow_obs"
+      value: ["1 instance_provider.TreasuryScripts"]
+      datum: ["treasury_scripts_logic1", "treasury_scripts_logic2", "treasury_scripts_logic3"]
+      script: "treasury_scripts_obs"
 
-# outputs
-outputs:
+  - id: instance_provider_4
+    type: script
+    output:
+      address: "instance_provider"
+      value: ["1 instance_provider.ContributorStateScripts"]
+      datum: ["course_state_logic1", "course_state_logic2", "course_state_logic3"]
+      script: "contributor_state_obs"
+
   - id: instance_governance_1
     type: script
     output:
@@ -61,49 +67,48 @@ outputs:
         creators: ["bob", "carol"]
         policy_id: "nft"
 
+# outputs
+outputs:
+
   - id: instance_1
     type: script
     output:
       address: "instance"
-      value: ["1 instance_provider.TreasuryToken"]
+      value: ["1 instance_provider.TreasuryScripts"]
       datum: "nft"
-      script: "treasury_token_logic1 + nft + treasury_token_logic2"
+      script: "treasury_scripts_logic1 + nft + treasury_scripts_logic2 + treasury_token_policy_id + treasury_scripts_logic3"
 
   - id: instance_2
     type: script
     output:
       address: "instance"
-      value: ["1 instance_provider.Escrow1"]
+      value: ["1 instance_provider.ContributorStateScripts"]
       datum: "nft"
-      script: "escrow_logic1 + nft + escrow_logic2"
+      script: "course_state_logic1 + nft + course_state_logic2 + [(instance_nft, [102, 103])] + course_state_logic3"
 
 # minting
 mints:
-  - id: nft
-    redeemer: "()"
-    tokens: ['1 nft.ProjectNFT']
-  
   - id: instance
     redeemer:
       - policy_id: "nft"
-        params: ["nft"]
-        token_name: "TreasuryToken"
+        params: ["nft", "treasury_token_policy_id"]
+        token_name: "TreasuryScripts"
       - policy_id: "nft"
-        params: ["nft"]
-        token_name: "Escrow1"
-    tokens: ["1 instance_provider.TreasuryToken",
-             "1 instance_provider.Escrow1"]
+        params: ["nft", "[(instane_nft, [ls_data])]"]
+        token_name: "ContributorStateScripts"
+    tokens: ["1 instance_provider.TreasuryScripts",
+             "1 instance_provider.ContributorStateScripts"]
 
 # withdrawing
 withdraws:
-  - id: treasury_token_obs
+  - id: treasury_scripts_obs
     redeemer:
-      string: "tx_id"
-      string: "tx_ix"
+      tx_id: "string"
+      tx_ix: "string"
     amount: 0
 
-  - id: escrow_obs
+  - id: contributor_state_obs
     redeemer:
-      string: "tx_id"
-      string: "tx_ix"
+      tx_id: "string"
+      tx_ix: "string"
     amount: 0

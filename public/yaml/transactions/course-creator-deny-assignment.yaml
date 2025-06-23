@@ -46,7 +46,7 @@ inputs:
         policy_id: "course_state"
         alias: "bob"
         address: "course_state"
-        string: []
+        assignment_list: []
 
 # outputs
 outputs:
@@ -76,4 +76,4 @@ outputs:
         policy_id: "course_state"
         alias: "bob"
         address: "course_state"
-        string: []
+        assignment_list: []
