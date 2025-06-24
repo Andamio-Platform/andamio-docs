@@ -1,4 +1,5 @@
 name: ProjectCreatorManageTreasuryTransaction
+id: project-creator-manage-treasury-token
 
 # Metadata about this transaction type
 metadata:

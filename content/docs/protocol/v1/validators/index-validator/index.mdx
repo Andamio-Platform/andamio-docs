@@ -1,6 +1,24 @@
 ---
 title: Index Validator
-description: Index Validator
+description: Validator managing on-chain linked list data structures
 ---
 
-## Index Validator
+# Index Validator
+
+The Index Validator manages on-chain linked list data structures used throughout the Andamio protocol. This validator is part of the index blueprint and handles the core indexing functionality.
+
+## Validator Diagram
+
+![Index Validator](/diagrams/validators/index.png)
+
+## Blueprint Source
+
+This validator is defined in the **index.plutus** blueprint.
+
+## Redeemers
+
+- `IndexAction` - Derived from IndexData structure for linked list operations
+
+## Purpose
+
+This validator manages the on-chain linked list data structures that provide efficient indexing and navigation capabilities across the Andamio protocol. It handles operations on the indexed data and maintains the integrity of the linked list structure.

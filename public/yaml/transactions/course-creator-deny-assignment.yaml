@@ -1,4 +1,5 @@
 name: CourseCreatorDenyAssignmentTransaction
+id: course-creator-deny-assignment
 
 # Metadata about this transaction type
 metadata:

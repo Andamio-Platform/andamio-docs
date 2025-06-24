@@ -1,4 +1,5 @@
 name: AdminAddProjectCreatorsTransaction
+id: admin-add-project-creators
 
 # Metadata about this transaction type
 metadata:

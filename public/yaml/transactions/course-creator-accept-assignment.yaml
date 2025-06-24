@@ -1,4 +1,5 @@
 name: CourseCreatorAcceptAssignmentTransaction
+id: course-creator-accept-assignment
 
 # Metadata about this transaction type
 metadata:

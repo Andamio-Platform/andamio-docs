@@ -1,4 +1,5 @@
 name: ContributorAddInfoTransaction
+id: contributor-add-info
 
 # Metadata about this transaction type
 metadata:

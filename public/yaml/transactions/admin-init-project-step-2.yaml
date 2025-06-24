@@ -1,4 +1,5 @@
 name: AdminInitProjectStep2Transaction
+id: admin-init-project-step-2
 
 # Metadata about this transaction type
 metadata:

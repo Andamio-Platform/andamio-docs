@@ -1,4 +1,5 @@
 validator_name: "Escrow1"
+id: escrow1
 blueprint_source: "project.plutus"
 purpose: "spend"
 redeemers:

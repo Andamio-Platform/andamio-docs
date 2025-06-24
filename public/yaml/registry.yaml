@@ -5,78 +5,145 @@
 blueprints:
   course:
     validators:
-      assignment_validator:
-        file: "validators/assignment-validator.yaml"
+      assignment-validator:
+        name: "Assignment Validator"
+        blueprint: "course.plutus"
+        title: "Assignment_Validator"
         purpose: "spend"
-        redeemers:
-          AssignmentDecisionAction:
-            - action: "Accept"
-              transaction: "course-creator-accept-assignment"
-            - action: "Reject"
-              transaction: "course-creator-deny-assignment"
-            - action: "Update"
-              transaction: "student-update-assignment"
+        redeemer:
+          - type: action
+            AssignmentDecisionAction:
+              - action: "Accept"
+                transaction: "course-creator-accept-assignment"
+              - action: "Reject"
+                transaction: "course-creator-deny-assignment"
+              - action: "Update"
+                transaction: "student-update-assignment"
 
-      assignment_cbor_obs:
-        file: "validators/assignment-cbor-obs.yaml"
+      assignment-cbor-obs:
+        name: "Assignment CBOR Observer"
+        blueprint: "course.plutus"
+        title: "Assignment_Cbor_Obs"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer:
+          - type: bytes
+            transaction: "assignment-cbor-obs"
 
-      course_state_cbor_obs:
-        file: "validators/course-state-cbor-obs.yaml"
+      course-state-cbor-obs:
+        name: "Course State CBOR Observer"
+        blueprint: "course.plutus"
+        title: "Course_State_Cbor_Obs"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer:
+          - type: bytes
+            transaction: "admin-init-course"
 
-      course_state_scripts:
-        file: "validators/course-state-scripts.yaml"
+      course-state-scripts:
+        name: "Course State Scripts"
+        blueprint: "course.plutus"
+        title: "Course_State_Scripts"
+        purpose: "spend"
+        redeemer:
+          - type: 
+            CourseStateAction:
+              - action: "AddModule"
+                transaction: "course-creator-add-module"
+              - action: "BurnModule"
+                transaction: "course-creator-burn-module"
+
+      module-cbor-obs:
+        name: "Module CBOR Observer"
+        blueprint: "course.plutus"
+        purpose: "withdraw"
+        redeemer:
+          - type: bytes
+            transaction: "module-cbor-obs"
+
+      module-scripts:
+        name: "Module Scripts"
+        blueprint: "course.plutus"
         purpose: "mint"
-        redeemers: {}
-
-      module_cbor_obs:
-        file: "validators/module-cbor-obs.yaml"
-        purpose: "withdraw"
-        redeemers: {}
-
-      module_scripts:
-        file: "validators/module-scripts.yaml"
-        purpose: "mint"
-        redeemers: {}
+        redeemer:
+          - type: action
+            ModuleAction:
+              - action: "MintModules"
+                transaction: "course-creator-mint-modules"
+              - action: "BurnModule"
+                transaction: "course-creator-burn-module"
+              - action: "UpdateModule"
+                transaction: "course-creator-update-module"
+              - action: "UpdateModuleInfo"
+                transaction: "course-creator-update-module-info"
 
   contributor:
     validators:
-      contributor_state_cbor_obs:
-        file: "validators/contributor-state-cbor-obs.yaml"
+      contributor-state-cbor-obs:
+        name: "Contributor State CBOR Observer"
+        blueprint: "project.plutus"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer:
+          - type: bytes
+            transaction: "contributor-mint-project-state"
 
-      contributor_state_scripts:
-        file: "validators/contributor-state-scripts.yaml"
-        purpose: "mint"
-        redeemers: {}
+      contributor-state-scripts:
+        name: "Contributor State Scripts"
+        blueprint: "project.plutus"
+        purpose: "spend"
+        redeemer:
+          - type: action
+            ContributorStateAction:
+              - action: "AddContributorInfo"
+                transaction: "contributor-add-contributor-info"
+              - action: "UpdateContributorInfo"
+                transaction: "contributor-update-contributor-info"
+              - action: "BurnContributorInfo"
+                transaction: "contributor-burn-contributor-info"
+              - action: "CommitProject"
+                transaction: "contributor-commit-project"
+              - action: "UnlockProject"
+                transaction: "contributor-unlock-project"
+              - action: "GetRewards"
+                transaction: "contributor-get-rewards"
+              - action: "BurnContributorState"
+                transaction: "contributor-burn-contributor-state"
 
   escrow:
     validators:
-      escrow1_cbor_obs:
-        file: "validators/escrow1-cbor-obs.yaml"
+      escrow1-cbor-obs:
+        name: "Escrow1 CBOR Observer"
+        blueprint: "course.plutus"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer: {}
 
       escrow1:
-        file: "validators/escrow1.yaml"
+        name: "Escrow1"
+        blueprint: "project.plutus"
         purpose: "spend"
-        redeemers: {}
+        redeemer:
+          - type: action
+            ProjectAction:
+              - action: "AcceptProject"
+                transaction: "course-creator-accept-project"
+              - action: "DenyProject"
+                transaction: "course-creator-deny-project"
+              - action: "RefuseProject"
+                transaction: "course-creator-refuse-project"
+              - action: "ManageContributor"
+                transaction: "course-creator-manage-contributor"
 
   global:
     validators:
-      global_ref:
-        file: "validators/global-ref.yaml"
+      global-ref:
+        name: "Global Ref"
+        blueprint: "course.plutus"
         purpose: "spend"
-        redeemers: {}
+        redeemer: {}
 
-      global_state:
-        file: "validators/global-state.yaml"
+      global-state:
+        name: "Global State"
+        blueprint: "course.plutus"
         purpose: "spend"
-        redeemers:
+        redeemer:
           GlobalStateAction:
             - action: "AddTokenInformation"
               transaction: "access-token-mint"
@@ -90,60 +157,70 @@ blueprints:
               transaction: "admin-init-project-step-1"
 
       init_global_state_observer:
-        file: "validators/init-global-state-observer.yaml"
+        name: "Init Global State Observer"
+        blueprint: "course.plutus"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer: {}
 
   index:
     validators:
-      index_ref:
-        file: "validators/index-ref.yaml"
+      index-ref:
+        name: "Index Ref"
+        blueprint: "course.plutus"
         purpose: "spend"
-        redeemers: {}
+        redeemer: {}
 
-      index_scripts:
-        file: "validators/index-scripts.yaml"
+      index-scripts:
+        name: "Index Scripts"
+        blueprint: "course.plutus"
         purpose: "mint"
-        redeemers: {}
+        redeemer: {}
 
-      index_staking:
-        file: "validators/index-staking.yaml"
+      index-staking:
+        name: "Index Staking"
+        blueprint: "course.plutus"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer: {}
 
-      init_index_policy:
-        file: "validators/init-index-policy.yaml"
+      init-index-policy:
+        name: "Init Index Policy"
+        blueprint: "course.plutus"
         purpose: "mint"
-        redeemers: {}
+        redeemer: {}
 
   instance:
     validators:
-      instance_governance_scripts:
-        file: "validators/instance-governance-scripts.yaml"
+      instance-governance-scripts:
+        name: "Instance Governance Scripts"
+        blueprint: "course.plutus"
         purpose: "withdraw"
         redeemers: {}
 
-      instance_provider_scripts:
-        file: "validators/instance-provider-scripts.yaml"
+      instance-provider-scripts:
+        name: "Instance Provider Scripts"
+        blueprint: "course.plutus"
         purpose: "mint"
         redeemers: {}
 
-      instance_scripts:
-        file: "validators/instance-scripts.yaml"
+      instance-scripts:
+        name: "Instance Scripts"
+        blueprint: "course.plutus"
         purpose: "mint"
-        redeemers: {}
+        redeemer: {}
 
   project:
     validators:
-      treasury_cbor_obs:
-        file: "validators/treasury-cbor-obs.yaml"
+      treasury-cbor-obs:
+        name: "Treasury CBOR Observer"
+        blueprint: "course.plutus"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer: {}
 
-      treasury_scripts:
-        file: "validators/treasury-scripts.yaml"
+      treasury-scripts:
+        name: "Treasury Scripts"
+        blueprint: "course.plutus"
         purpose: "spend"
-        redeemers:
+        redeemer:
           TreasuryAction:
             - action: "AddFunds"
               transaction: "treasury-add-funds"
@@ -154,15 +231,17 @@ blueprints:
             - action: "ManageTreasury"
               transaction: "project-creator-manage-treasury-token"
 
-      treasury_token_cbor_obs:
-        file: "validators/treasury-token-cbor-obs.yaml"
+      treasury-token-cbor-obs:
+        name: "Treasury Token CBOR Observer"
+        blueprint: "course.plutus"
         purpose: "withdraw"
-        redeemers: {}
+        redeemer: {}
 
-      treasury_token:
-        file: "validators/treasury-token.yaml"
+      treasury-token:
+        name: "Treasury Token"
+        blueprint: "course.plutus"
         purpose: "mint"
-        redeemers: {}
+        redeemer: {}
 
 # Redeemer Registry
 # Maps redeemer types to their associated validators and transactions
@@ -170,7 +249,7 @@ redeemers:
   AssignmentDecisionAction:
     blueprint: "course"
     validators:
-      - "assignment_validator"
+      - "assignment-validator"
     actions:
       - action: "Accept"
         transaction: "course-creator-accept-assignment"
@@ -182,7 +261,7 @@ redeemers:
   GlobalStateAction:
     blueprint: "global"
     validators:
-      - "global_state"
+      - "global-state"
     actions:
       - action: "AddTokenInformation"
         transaction: "access-token-mint"
@@ -198,7 +277,7 @@ redeemers:
   TreasuryAction:
     blueprint: "project"
     validators:
-      - "treasury_scripts"
+      - "treasury-scripts"
     actions:
       - action: "AddFunds"
         transaction: "treasury-add-funds"

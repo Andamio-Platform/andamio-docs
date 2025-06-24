@@ -15,13 +15,13 @@ import {
   ReactFlowInstance,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { TransactionYaml } from "../../types";
 
 // Custom node components
 import TransactionNode from "./nodes/TransactionNode";
 import InputNode from "./nodes/InputNode";
 import OutputNode from "./nodes/OutputNode";
 import ReferenceInputNode from "./nodes/ReferenceInputNode";
+import { TransactionYaml } from "@/types";
 // Client-side component can't directly use server-side functions
 // We'll need to fetch the data from an API endpoint instead
 
@@ -193,6 +193,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
               id: input.id,
               address: input.output.address,
               value: input.output.value,
+              type: input.type,
               redeemer: input.redeemer
                 ? typeof input.redeemer === "string"
                   ? input.redeemer
@@ -238,6 +239,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
                 id: refInput.id,
                 address: refInput.output.address,
                 value: refInput.output.value,
+                type: refInput.type,
                 datum: refInput.output.datum
                   ? typeof refInput.output.datum === "string"
                     ? refInput.output.datum
@@ -279,6 +281,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
               id: output.id,
               address: output.output.address,
               value: output.output.value,
+              type: output.type,
               datum: output.output.datum
                 ? typeof output.output.datum === "string"
                   ? output.output.datum

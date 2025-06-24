@@ -1,4 +1,5 @@
 name: ContributorGetRewardsTransaction
+id: contributor-get-rewards
 
 # Metadata about this transaction type
 metadata:

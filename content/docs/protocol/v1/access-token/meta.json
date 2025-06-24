@@ -1,6 +1,6 @@
 {
-    "title": "Instance Validator",
-    "icon": "Workflow",
+    "title": "Access Token",
+    "icon": "Coin",
     "pages": [
         "index"
     ],

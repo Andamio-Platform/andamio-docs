@@ -1,4 +1,5 @@
 name: StudentMintLocalStateTransaction
+id: student-mint-local-state
 
 # Metadata about this transaction type
 metadata:

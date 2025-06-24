@@ -1,4 +1,5 @@
 name: ProjectCreatorAcceptProjectTransaction
+id: project-creator-accept-project
 
 # Metadata about this transaction type
 metadata:

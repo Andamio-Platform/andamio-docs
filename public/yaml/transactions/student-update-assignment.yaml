@@ -1,4 +1,5 @@
 name: StudentUpdateAssignmentTransaction
+id: student-update-assignment
 
 # Metadata about this transaction type
 metadata:

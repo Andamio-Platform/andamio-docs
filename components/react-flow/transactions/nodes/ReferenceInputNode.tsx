@@ -2,6 +2,7 @@
 
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
+import Link from "next/link";
 
 interface ReferenceInputNodeData {
   id: string;
@@ -9,6 +10,7 @@ interface ReferenceInputNodeData {
   datum?: string;
   script?: string;
   value: string[];
+  type?: string;
 }
 
 // Export the node type for use in the diagram component
@@ -21,11 +23,25 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
 
   return (
     <div className="py-2 shadow-md rounded-md bg-orange-100 border-2 border-orange-700 text-orange-700">
-      <div className="flex flex-col space-y-3">
-        <div className="flex flex-col px-4">
+      <div className="flex flex-col space-y-3 text-xs">
+        <div className="flex flex-col px-2 space-y-1">
           <div className="font-bold">Ref Input: {data.id}</div>
           <div className="flex">
-            <span className="font-semibold mr-1">Address:</span> {data.address}
+            <span className="font-semibold mr-1">Address:</span>{" "}
+            {data.type === "script" ? (
+              <Link
+                href={data.address}
+                className="text-orange-600 hover:text-orange-800 transition-colors"
+              >
+                {data.address}
+              </Link>
+            ) : (
+              <span className="text-xs">{data.address}</span>
+            )}
+          </div>
+          <div>
+            <span className="font-semibold mr-1">Type:</span>{" "}
+            <span className="text-xs">{data.type || "pubkey"}</span>
           </div>
           <div>
             <p className="font-semibold mr-1">Value:</p>
@@ -59,7 +75,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              {showDetails ? "Hide" : "Show Datum and Redeemer"}
+              {showDetails ? "Hide" : "Show Datum and Script"}
             </button>
           </div>
         )}

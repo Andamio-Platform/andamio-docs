@@ -1,4 +1,5 @@
 name: ContributorUnlockProjectTransaction
+id: contributor-unlock-project
 
 # Metadata about this transaction type
 metadata:

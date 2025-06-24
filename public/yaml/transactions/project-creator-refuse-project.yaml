@@ -1,4 +1,5 @@
 name: ProjectCreatorRefuseProjectTransaction
+id: project-creator-refuse-project
 
 # Metadata about this transaction type
 metadata:

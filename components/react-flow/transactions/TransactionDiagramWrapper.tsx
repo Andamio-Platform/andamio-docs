@@ -2,9 +2,13 @@
 
 import { useEffect, useState } from "react";
 import TxDiagram from "./DiagramTransactionFlow";
-import { TransactionYaml } from "../../types";
+import { TransactionYaml } from "@/types";
 
-export default function TransactionDiagramWrapper({ txFilePath }: { txFilePath: string }) {
+export default function TransactionDiagramWrapper({
+  txFilePath,
+}: {
+  txFilePath: string;
+}) {
   const [txData, setTxData] = useState<TransactionYaml | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -13,12 +17,16 @@ export default function TransactionDiagramWrapper({ txFilePath }: { txFilePath: 
     const fetchTransactionData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`/api/transaction?file=${encodeURIComponent(txFilePath)}`);
-        
+        const response = await fetch(
+          `/api/transaction?file=${encodeURIComponent(txFilePath)}`
+        );
+
         if (!response.ok) {
-          throw new Error(`Failed to fetch transaction data: ${response.status}`);
+          throw new Error(
+            `Failed to fetch transaction data: ${response.status}`
+          );
         }
-        
+
         const data = await response.json();
         setTxData(data);
         setError(null);
@@ -57,7 +65,9 @@ export default function TransactionDiagramWrapper({ txFilePath }: { txFilePath: 
     return (
       <div className="w-full p-4 border border-warning/50 bg-warning/10 rounded-md">
         <h3 className="font-medium mb-2">No transaction data available</h3>
-        <p className="text-sm text-muted-foreground">Could not load the transaction diagram</p>
+        <p className="text-sm text-muted-foreground">
+          Could not load the transaction diagram
+        </p>
       </div>
     );
   }

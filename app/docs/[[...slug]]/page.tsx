@@ -9,7 +9,8 @@ import { notFound } from "next/navigation";
 import { MDXContent } from "@content-collections/mdx/react";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getMDXComponents } from "@/mdx-components";
-import TransactionDiagramClient from "@/components/react-flow/TransactionDiagramClient";
+import TransactionDiagramClient from "@/components/react-flow/transactions/TransactionDiagramClient";
+import ProtocolFlowClient from "@/components/react-flow/protocol/ProtocolFlowClient";
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -30,7 +31,19 @@ export default async function Page(props: {
             a: createRelativeLink(source, page),
           })}
         />
-        {page.data.tx_file && <TransactionDiagramClient txFilePath={page.data.tx_file} />}
+        {page.data.tx_file && (
+          <TransactionDiagramClient txFilePath={page.data.tx_file} />
+        )}
+        {/* Show protocol diagram only on the validators index page */}
+        {/* TODO: Embed diagrams directly in MDX files by creating a custom component */}
+        {params.slug?.join("/") === "protocol/v1/validators" && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-bold mb-4">
+              Andamio Protocol Structure
+            </h2>
+            <ProtocolFlowClient />
+          </div>
+        )}
       </DocsBody>
     </DocsPage>
   );

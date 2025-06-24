@@ -1,4 +1,5 @@
 name: StudentLeaveAssignmentTransaction
+id: student-leave-assignment
 
 # Metadata about this transaction type
 metadata:

@@ -1,4 +1,5 @@
 name: CourseCreatorMintModuleTokensTransaction
+id: course-creator-mint-module-tokens
 
 # Metadata about this transaction type
 metadata:

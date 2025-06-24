@@ -1,4 +1,5 @@
 name: ContributorBurnContributorInfoTransaction
+id: contributor-burn-project-state
 
 # Metadata about this transaction type
 metadata:

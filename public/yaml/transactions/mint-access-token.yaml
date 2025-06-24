@@ -1,4 +1,5 @@
 name: AccessTokenMintTransaction
+id: access-token-mint
 
 # Metadata about this transaction type
 metadata:

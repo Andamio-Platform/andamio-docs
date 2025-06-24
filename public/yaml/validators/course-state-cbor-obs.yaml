@@ -1,5 +1,0 @@
-validator_name: "CourseState_Cbor_Obs"
-blueprint_source: "course.plutus"
-purpose: "withdraw"
-redeemers:
-  - "bytes (observer for Course_State_Scripts initialization)"

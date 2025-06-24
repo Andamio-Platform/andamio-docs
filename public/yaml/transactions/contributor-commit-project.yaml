@@ -1,4 +1,5 @@
 name: ContributorCommitProjectTransaction
+id: contributor-commit-project
 
 # Metadata about this transaction type
 metadata:

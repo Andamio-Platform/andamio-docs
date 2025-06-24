@@ -1,4 +1,5 @@
 name: ProjectCreatorMintTreasuryTokenTransaction
+id: project-creator-mint-treasury-token
 
 # Metadata about this transaction type
 metadata:

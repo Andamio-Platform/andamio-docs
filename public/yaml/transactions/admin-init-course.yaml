@@ -1,4 +1,5 @@
 name: AdminInitCourseTransaction
+id: admin-init-course
 
 # Metadata about this transaction type
 metadata:

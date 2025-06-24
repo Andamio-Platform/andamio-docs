@@ -2,6 +2,7 @@
 
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
+import Link from "next/link";
 
 interface InputNodeData {
   id: string;
@@ -23,27 +24,47 @@ function InputNode({ data }: { data: InputNodeData }) {
   const hasDetails = data.redeemer || data.datum || data.script;
 
   return (
-    <div className="px-4 py-2 shadow-md rounded-md bg-white border-blue-700 text-blue-700">
-      <div className="flex flex-col space-y-3">
-        <div className="flex flex-col">
-          <div className="font-bold">Input: {data.id}</div>
-          <div className="flex">
-            <span className="font-semibold mr-1">Address:</span> {data.address}
-          </div>
-          <div>
-            <p className="font-semibold mr-1">Value:</p>
-            <ul className="list-disc pl-4 text-xs">
-              {Array.isArray(data.value) ? (
-                data.value.map((val, idx) => <li key={idx}>{val}</li>)
-              ) : (
-                <li>{data.value}</li>
-              )}
-            </ul>
+    <div className="py-1 shadow-md rounded-md bg-blue-100 border-2 border-blue-700 text-blue-700">
+      <div className="flex flex-col space-y-3 text-xs">
+        <div className="flex flex-col px-2 space-y-1">
+          <div className="flex flex-row items-center space-x-5">
+            <div>
+              <div className="font-bold">Input: {data.id}</div>
+              <div className="flex">
+                <span className="font-semibold mr-1">Address:</span>{" "}
+                {data.type === "script" ? (
+                  <Link
+                    href={data.address}
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    {data.address}
+                  </Link>
+                ) : (
+                  <span className="text-xs">{data.address}</span>
+                )}
+              </div>
+              <div>
+                <span className="font-semibold mr-1">Type:</span>{" "}
+                <span className="text-xs">{data.type || "pubkey"}</span>
+              </div>
+            </div>
+            <div>
+              <div>
+                <p className="font-semibold mr-1">Value:</p>
+                <ul className="list-disc pl-4 text-xs">
+                  {Array.isArray(data.value) ? (
+                    data.value.map((val, idx) => <li key={idx}>{val}</li>)
+                  ) : (
+                    <li>{data.value}</li>
+                  )}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
         {hasDetails && (
-          <div className="text-xs">
+          <div className="text-xs px-1">
             <button
               onClick={() => setShowDetails(!showDetails)}
               className="flex items-center text-blue-600 hover:text-blue-800 transition-colors"
@@ -62,7 +83,7 @@ function InputNode({ data }: { data: InputNodeData }) {
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              {showDetails ? "Hide details" : "Show details"}
+              {showDetails ? "Hide" : "Show Datum and Redeemer"}
             </button>
           </div>
         )}
@@ -70,7 +91,7 @@ function InputNode({ data }: { data: InputNodeData }) {
         {showDetails && (
           <>
             {data.redeemer && (
-              <div className="text-xs">
+              <div className="text-xs px-4">
                 <p className="font-semibold">Redeemer:</p>
                 <pre className="bg-gray-100 p-1 rounded text-xs">
                   {typeof data.redeemer === "string"
@@ -88,7 +109,7 @@ function InputNode({ data }: { data: InputNodeData }) {
             )}
 
             {data.datum && (
-              <div className="text-xs">
+              <div className="text-xs px-4">
                 <p className="font-semibold">Datum:</p>
                 <pre className="bg-gray-100 p-1 rounded text-xs">
                   {typeof data.datum === "string"
@@ -106,7 +127,7 @@ function InputNode({ data }: { data: InputNodeData }) {
             )}
 
             {data.script && (
-              <div className="text-xs flex items-center">
+              <div className="text-xs px-4 flex items-center">
                 <span className="font-semibold mr-1">Script:</span>{" "}
                 {data.script}
               </div>

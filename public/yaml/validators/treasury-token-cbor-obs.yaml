@@ -1,4 +1,5 @@
 validator_name: "Treasury_Token_Cbor_Obs"
+id: treasury-token-cbor-obs
 blueprint_source: "project.plutus"
 purpose: "withdraw"
 redeemers:

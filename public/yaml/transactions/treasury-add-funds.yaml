@@ -1,0 +1,22 @@
+id: treasury-add-funds
+
+metadata:
+  role: "ProjectCreator"
+  category: "treasury_management"
+  estimated_fee: "0.17 ADA"
+  description: "Project creator adds additional funds to project treasury"
+  multi_signature: false
+
+inputs:
+  - id: user_input
+    type: wallet
+    output:
+      address: "treasury"
+      value: "lovelace to deposit"
+
+outputs:
+  - id: treasury_output
+    type: script
+    output:
+      address: "treasury"
+      value: "lovelace to deposit"

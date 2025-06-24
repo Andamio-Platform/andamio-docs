@@ -1,4 +1,5 @@
 validator_name: "Instance_Scripts"
+id: instance-scripts
 blueprint_source: "instance.plutus"
 purpose: "mint"
 redeemers:

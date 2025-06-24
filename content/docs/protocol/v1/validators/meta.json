@@ -3,10 +3,10 @@
     "description": "Andamio protocol validators organized by blueprint source",
     "icon": "Shield",
     "pages": [
-        "course",
-        "global", 
-        "index",
+        "global",
+        "index-validator",
         "instance",
+        "course",
         "project"
     ],
     "defaultOpen": false

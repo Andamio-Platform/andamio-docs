@@ -1,4 +1,5 @@
 validator_name: "Escrow1_Cbor_Obs"
+id: escrow1-cbor-obs
 blueprint_source: "project.plutus"
 purpose: "withdraw"
 redeemers:

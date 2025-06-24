@@ -1,4 +1,5 @@
 validator_name: "Treasury_Scripts"
+id: treasury-scripts
 blueprint_source: "project.plutus"
 purpose: "spend"
 redeemers:

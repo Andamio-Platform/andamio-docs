@@ -2,6 +2,7 @@
 
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
+import Link from "next/link";
 
 interface OutputNodeData {
   id: string;
@@ -9,6 +10,7 @@ interface OutputNodeData {
   datum?: string;
   script?: string;
   value: string[];
+  type: string;
 }
 
 // Export the node type for use in the diagram component
@@ -22,11 +24,25 @@ function OutputNode({ data }: { data: OutputNodeData }) {
   return (
     <div className="py-2 shadow-md rounded-md bg-green-100 border-2 border-green-700 text-green-700">
       <Handle type="target" position={Position.Left} className="w-3 h-3" />
-      <div className="flex flex-col space-y-3">
-        <div className="flex flex-col px-4">
+      <div className="flex flex-col space-y-3 text-xs">
+        <div className="flex flex-col px-2 space-y-1">
           <div className="font-bold">Output: {data.id}</div>
           <div className="flex">
-            <span className="font-semibold mr-1">Address:</span> {data.address}
+            <span className="font-semibold mr-1">Address:</span>{" "}
+            {data.type === "script" ? (
+              <Link
+                href={data.address}
+                className="text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                {data.address}
+              </Link>
+            ) : (
+              <span className="text-xs">{data.script}</span>
+            )}
+          </div>
+          <div>
+            <span className="font-semibold mr-1">Type:</span>{" "}
+            <span className="text-xs">{data.type}</span>
           </div>
           <div>
             <p className="font-semibold mr-1">Value:</p>
@@ -60,7 +76,7 @@ function OutputNode({ data }: { data: OutputNodeData }) {
                   d="M9 5l7 7-7 7"
                 />
               </svg>
-              {showDetails ? "Hide" : "Show Datum and Redeemer"}
+              {showDetails ? "Hide" : "Show Details"}
             </button>
           </div>
         )}

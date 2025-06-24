@@ -1,4 +1,5 @@
 name: SimpleSpendingTx
+id: simple-spending-tx
 
 metadata:
   role: "General"

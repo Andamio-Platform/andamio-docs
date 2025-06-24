@@ -4,6 +4,7 @@
     "pages": [
         "validators",
         "transactions",
+        "access-token",
         "..."
     ],
     "defaultOpen": false

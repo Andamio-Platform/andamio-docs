@@ -1,8 +1,0 @@
-validator_name: "Assignment_Validator"
-blueprint_source: "course.plutus"
-purpose: "spend"
-redeemers:
-  AssignmentDecisionAction:
-    - "Accept"
-    - "Reject"
-    - "Update"

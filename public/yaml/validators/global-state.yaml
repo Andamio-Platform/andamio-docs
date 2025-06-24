@@ -1,4 +1,5 @@
 validator_name: "Global_State"
+id: global-state
 blueprint_source: "global.plutus"
 purpose: "spend"
 redeemers:

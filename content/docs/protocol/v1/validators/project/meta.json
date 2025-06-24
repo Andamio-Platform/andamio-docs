@@ -3,14 +3,14 @@
     "description": "Validators from the project.plutus blueprint managing contributors, escrow, and treasury operations",
     "icon": "FolderOpen",
     "pages": [
-        "contributor-state-cbor-obs",
         "contributor-state-scripts",
-        "escrow1-cbor-obs",
         "escrow1",
-        "treasury-cbor-obs",
         "treasury-scripts",
+        "treasury-token",
+        "contributor-state-cbor-obs",
         "treasury-token-cbor-obs",
-        "treasury-token"
+        "treasury-cbor-obs",
+        "escrow1-cbor-obs"
     ],
     "defaultOpen": false
 }
