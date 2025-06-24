@@ -66,7 +66,7 @@ outputs:
           required: ["101", "102"]
 
 mints:
-  - id: index
+  - id: course-state-scripts
     redeemer:
       - string: "103"
         slts: ["(slt, content)"]

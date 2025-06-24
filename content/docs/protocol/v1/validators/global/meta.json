@@ -1,5 +1,5 @@
 {
-    "title": "Global Validators",
+    "title": "Global",
     "description": "Validators from the global.plutus blueprint managing global states and system-wide operations",
     "icon": "Globe",
     "pages": [

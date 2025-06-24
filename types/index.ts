@@ -1,3 +1,5 @@
+// No need to import React Flow types here as they're used directly in the component
+
 // Define types for complex structures
 type DatumValue = string | Record<string, unknown> | null;
 type RedeemerValue = string | Record<string, unknown> | null;
@@ -77,4 +79,57 @@ export interface TransactionYaml {
 // Props for the DiagramTransactionWrapper component
 export interface DiagramTransactionWrapperProps {
   yamlPath?: string; // Optional path to the YAML file
+}
+
+// Validator Types
+// Props interface for the component
+export interface DiagramValidatorOverviewProps {
+  system: string;
+  validatorId: string;
+}
+
+// Node type identifiers for validator diagram
+export type ValidatorNodeTypes = {
+  validatorNode: "validatorNode";
+  redeemerNode: "redeemerNode";
+};
+
+// Registry types based on registry.yaml structure
+export interface RedeemerAction {
+  action: string;
+  transaction: string | string[];
+}
+
+// Redeemer can have different structures based on the registry.yaml
+export interface RedeemerType {
+  type?: string;
+  transaction?: string | string[];
+  [key: string]: string | string[] | RedeemerAction[] | unknown; // For action types like AssignmentDecisionAction, CourseStateAction, etc.
+}
+
+export interface Validator {
+  name: string;
+  purpose: string | string[];
+  blueprint?: string;
+  title?: string;
+  redeemer?: RedeemerType | RedeemerType[];
+  [key: string]:
+    | string
+    | string[]
+    | RedeemerType
+    | RedeemerType[]
+    | Record<string, unknown>
+    | undefined;
+}
+
+export interface SystemValidators {
+  validators: {
+    [key: string]: Validator;
+  };
+}
+
+export interface Registry {
+  systems: {
+    [key: string]: SystemValidators;
+  };
 }

@@ -1,7 +1,6 @@
 {
     "title": "Validators",
     "description": "Andamio protocol validators organized by blueprint source",
-    "icon": "Shield",
     "pages": [
         "global",
         "index-validator",

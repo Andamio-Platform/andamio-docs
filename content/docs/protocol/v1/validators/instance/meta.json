@@ -1,5 +1,5 @@
 {
-    "title": "Instance Validators",
+    "title": "Instance",
     "description": "Validators from the instance.plutus blueprint managing instance operations and governance",
     "icon": "Server",
     "pages": [

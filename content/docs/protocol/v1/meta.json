@@ -1,6 +1,5 @@
 {
     "title": "V1",
-    "icon": "Workflow",
     "pages": [
         "validators",
         "transactions",

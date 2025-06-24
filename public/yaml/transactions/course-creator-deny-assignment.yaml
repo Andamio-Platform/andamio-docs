@@ -35,7 +35,7 @@ inputs:
         creators: ["alice"]
         policy_id: "nft"
 
-  - id: assignment_1
+  - id: assignment-validator
     type: script
     redeemer: "Deny"
     output:
@@ -66,7 +66,7 @@ outputs:
         creators: ["alice"]
         policy_id: "nft"
 
-  - id: assignment_1
+  - id: assignment-validator
     type: script
     output:
       address: "assignment"

@@ -12,6 +12,8 @@ const docs = defineCollection({
   schema: (z) => ({
     ...createDocSchema(z),
     tx_file: z.string().optional(),
+    validator_system: z.string().optional(),
+    validator_id: z.union([z.string(), z.array(z.string())]).optional(),
   }),
   transform: transformMDX,
 });
