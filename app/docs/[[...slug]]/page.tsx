@@ -42,11 +42,14 @@ export default async function Page(props: {
   // Cast page data to our extended interface
   const pageData = page.data as ExtendedPageData;
 
+  const docsWidth =
+    pageData.tx_file || pageData.validator_system ? "" : "w-2/3";
+
   return (
     <DocsPage toc={pageData.toc} full={pageData.full}>
       <DocsTitle>{pageData.title}</DocsTitle>
       <DocsDescription>{pageData.description}</DocsDescription>
-      <DocsBody>
+      <DocsBody className={docsWidth}>
         <MDXContent
           code={pageData.body}
           components={getMDXComponents({

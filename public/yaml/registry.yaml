@@ -117,7 +117,7 @@ systems:
           - type: bytes
             transaction: ""
 
-  index-scripts:
+  index-validators:
     validators:
       index-ref:
         name: "Index Ref"

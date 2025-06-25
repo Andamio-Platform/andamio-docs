@@ -3,7 +3,7 @@
     "description": "Andamio protocol validators organized by blueprint source",
     "pages": [
         "global-state",
-        "index-scripts",
+        "index-validators",
         "instance",
         "course",
         "project"
