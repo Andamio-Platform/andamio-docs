@@ -100,12 +100,14 @@ mints:
 # withdrawing
 withdraws:
   - id: treasury_token_obs
+    observer: "project.treasury-token-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"
     amount: 0
 
   - id: escrow_obs
+    observer: "project.escrow-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"

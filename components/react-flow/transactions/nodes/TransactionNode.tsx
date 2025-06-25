@@ -20,6 +20,7 @@ interface TransactionNodeData {
   withdrawals?: {
     id: string;
     amount: number;
+    observer?: string;
     redeemer?: string | object;
   }[];
 }
@@ -30,6 +31,8 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
   // State for toggling mint and withdrawal details
   const [showMintDetails, setShowMintDetails] = useState(false);
   const [showWithdrawalDetails, setShowWithdrawalDetails] = useState(false);
+
+  console.log("txnode", data);
 
   // Helper function to format JSON data
   const formatJSON = (data: unknown) => {
@@ -44,7 +47,6 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
       return String(data);
     }
   };
-
 
   return (
     <div className="px-4 py-4 shadow-md rounded-md bg-gray-100 border border-gray-700 text-gray-700">
@@ -107,20 +109,28 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                     <div className="flex">
                       <span className="font-semibold mr-1">Policy:</span>
                       {(() => {
-                        const hasValidator = mint.policy && mint.policy.includes('.');
-                        const linkUrl = hasValidator 
-                          ? `/docs/protocol/v1/validators/${mint.policy.split('.')[0]}/${mint.policy.split('.')[1]}`
+                        const hasValidator =
+                          mint.policy && mint.policy.includes(".");
+                        const linkUrl = hasValidator
+                          ? (() => {
+                              const parts = mint.policy.split(".");
+                              const validatorName = parts[1];
+                              const isObserver = validatorName.includes("obs");
+                              return isObserver
+                                ? `/docs/protocol/v1/validators/${parts[0]}/observer/${validatorName}`
+                                : `/docs/protocol/v1/validators/${parts[0]}/${validatorName}`;
+                            })()
                           : null;
-                        
+
                         return hasValidator && linkUrl ? (
                           <Link
                             href={linkUrl}
                             className="text-purple-600 hover:text-purple-800 transition-colors"
                           >
-                            {mint.policy.split('.')[1]}
+                            {mint.policy.split(".")[1]}
                           </Link>
                         ) : (
-                          <span>{mint.policy || 'N/A'}</span>
+                          <span>{mint.policy || "N/A"}</span>
                         );
                       })()}
                     </div>
@@ -131,7 +141,9 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                           <div>
                             <span className="font-semibold">Tokens:</span>
                             {mint.tokens.map((token, i) => (
-                              <pre className="pt-1" key={`token-${i}`}>{token}</pre>
+                              <pre className="pt-1" key={`token-${i}`}>
+                                {token}
+                              </pre>
                             ))}
                           </div>
                         )}
@@ -195,6 +207,38 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                       <span className="font-semibold mr-1">Amount:</span>
                       <span>{withdrawal.amount}</span>
                     </div>
+
+                    {withdrawal.observer && (
+                      <div className="flex">
+                        <span className="font-semibold mr-1">Observer:</span>
+                        {(() => {
+                          const hasObserver =
+                            withdrawal.observer &&
+                            withdrawal.observer.includes(".");
+                          const linkUrl = hasObserver
+                            ? (() => {
+                                const parts = withdrawal.observer.split(".");
+                                const observerName = parts[1];
+                                return `/docs/protocol/v1/validators/${parts[0]}/observers/${observerName}`;
+                              })()
+                            : null;
+
+                          console.log("hasObserver", hasObserver);
+                          console.log("linkUrl", linkUrl);
+
+                          return hasObserver && linkUrl ? (
+                            <Link
+                              href={linkUrl}
+                              className="text-cyan-600 hover:text-cyan-800 transition-colors"
+                            >
+                              {withdrawal.observer.split(".")[1]}
+                            </Link>
+                          ) : (
+                            <span>{withdrawal.observer || "N/A"}</span>
+                          );
+                        })()}
+                      </div>
+                    )}
 
                     {showWithdrawalDetails && withdrawal.redeemer && (
                       <div>

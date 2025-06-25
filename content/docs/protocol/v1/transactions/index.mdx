@@ -9,45 +9,45 @@ This section provides comprehensive documentation for all Andamio protocol v1 tr
 
 ## Transaction Categories
 
-### [General](/docs/protocol/v1/transactions/general)
+### General
 Universal transactions available to all users:
 - [Access Token Mint](/docs/protocol/v1/transactions/general/access-token-mint) - Mint access tokens for protocol participation
 
-### [Instance Admin](/docs/protocol/v1/transactions/admin)
+### Instance Admin
 System initialization and access management (7 transactions):
 - [Initialize Course](/docs/protocol/v1/transactions/admin/init-course) - Initialize a new course
+- [Add Course Creators](/docs/protocol/v1/transactions/admin/add-course-creators) - Grant course creation permissions
+- [Remove Course Creators](/docs/protocol/v1/transactions/admin/remove-course-creators) - Revoke course creation permissions
 - [Initialize Project Step 1](/docs/protocol/v1/transactions/admin/init-project-step-1) - Begin project initialization
 - [Initialize Project Step 2](/docs/protocol/v1/transactions/admin/init-project-step-2) - Complete project initialization
-- [Add Course Creators](/docs/protocol/v1/transactions/admin/add-course-creators) - Grant course creation permissions
 - [Add Project Creators](/docs/protocol/v1/transactions/admin/add-project-creators) - Grant project creation permissions
-- [Remove Course Creators](/docs/protocol/v1/transactions/admin/remove-course-creators) - Revoke course creation permissions
 - [Remove Project Creators](/docs/protocol/v1/transactions/admin/remove-project-creators) - Revoke project creation permissions
 
-### [Project Creator](/docs/protocol/v1/transactions/project-creator)
+### Project Creator
 Project and treasury management (6 transactions):
-- [Mint Treasury Token](/docs/protocol/v1/transactions/project-creator/mint-treasury-token) - Initialize project treasury
 - [Treasury Add Funds](/docs/protocol/v1/transactions/project-creator/treasury-add-funds) - Add funds to treasury
+- [Mint Treasury Token](/docs/protocol/v1/transactions/project-creator/mint-treasury-token) - Initialize project treasury
+- [Manage Treasury Token](/docs/protocol/v1/transactions/project-creator/manage-treasury-token) - Distribute treasury funds
 - [Accept Project](/docs/protocol/v1/transactions/project-creator/accept-project) - Approve contributor applications
 - [Deny Project](/docs/protocol/v1/transactions/project-creator/deny-project) - Reject contributor applications
 - [Refuse Project](/docs/protocol/v1/transactions/project-creator/refuse-project) - Decline project proposals
-- [Manage Treasury Token](/docs/protocol/v1/transactions/project-creator/manage-treasury-token) - Distribute treasury funds
 
-### [Contributor](/docs/protocol/v1/transactions/contributor)
+### Contributor
 Project participation lifecycle (6 transactions):
-- [Add Info](/docs/protocol/v1/transactions/contributor/add-info) - Create or update contributor profile
 - [Mint Project State](/docs/protocol/v1/transactions/contributor/mint-project-state) - Create project participation token
 - [Commit Project](/docs/protocol/v1/transactions/contributor/commit-project) - Join a project as contributor
-- [Unlock Project](/docs/protocol/v1/transactions/contributor/unlock-project) - Leave a project
+- [Add Info](/docs/protocol/v1/transactions/contributor/add-info) - Create or update contributor profile
 - [Get Rewards](/docs/protocol/v1/transactions/contributor/get-rewards) - Claim project completion rewards
-- [Burn Contributor Info](/docs/protocol/v1/transactions/contributor/burn-contributor-info) - Remove contributor profile
+- [Unlock Project](/docs/protocol/v1/transactions/contributor/unlock-project) - Leave a project
+- [Burn Project State](/docs/protocol/v1/transactions/contributor/burn-project-state) - Remove project participation token
 
-### [Course Creator](/docs/protocol/v1/transactions/course-creator)
+### Course Creator
 Course content and assignment management (3 transactions):
 - [Mint Module Tokens](/docs/protocol/v1/transactions/course-creator/mint-module-tokens) - Create course modules
 - [Accept Assignment](/docs/protocol/v1/transactions/course-creator/accept-assignment) - Approve student submissions
 - [Deny Assignment](/docs/protocol/v1/transactions/course-creator/deny-assignment) - Reject student submissions
 
-### [Student](/docs/protocol/v1/transactions/student)
+### Student
 Course enrollment and assignment workflow (5 transactions):
 - [Mint Local State](/docs/protocol/v1/transactions/student/mint-local-state) - Enroll in a course
 - [Commit to Assignment](/docs/protocol/v1/transactions/student/commit-to-assignment) - Start working on assignment

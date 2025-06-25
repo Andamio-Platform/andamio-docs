@@ -89,6 +89,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
           txData.withdraws?.map((withdraw) => ({
             id: withdraw.id,
             amount: withdraw.amount,
+            observer: withdraw.observer,
             redeemer: withdraw.redeemer,
           })) || [];
 

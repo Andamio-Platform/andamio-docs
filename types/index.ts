@@ -56,6 +56,7 @@ interface Withdraw {
   id: string;
   redeemer?: RedeemerValue;
   amount?: number;
+  observer?: string;
 }
 
 // Main transaction YAML structure

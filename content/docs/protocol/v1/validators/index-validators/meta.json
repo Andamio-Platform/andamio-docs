@@ -1,12 +1,13 @@
 {
     "title": "Index Validators",
     "description": "Validators from the index.plutus blueprint managing on-chain linked lists and indexing",
+    "icon": "List",
     "pages": [
-        "index",
         "index-scripts",
         "index-ref",
         "index-staking",
-        "init-index-policy"
+        "init-index-policy", 
+        "..."
     ],
     "defaultOpen": false
 }

@@ -122,18 +122,21 @@ mints:
 # withdrawing
 withdraws:
   - id: assignment-cbor-obs
+    observer: "course.assignment-cbor-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"
     amount: 0
 
   - id: module-cbor-obs
+    observer: "course.module-cbor-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"
     amount: 0
 
   - id: course-state-cbor-obs
+    observer: "course.course-state-cbor-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"

@@ -1,0 +1,57 @@
+---
+title: "Course State Scripts"
+description: "Policy managing local course states and student interactions"
+validator_system: "course"
+---
+
+# Spending: Course State Validator
+
+The Course State Validator manages local course states and handles student interactions within courses. This validator is part of the course blueprint and controls the core course state management functionality.
+
+<ValidatorDiagram
+  system="course"
+  validator="course-state-validator"
+  description="abcdefg!"
+/>
+
+## Blueprint Source
+
+This validator is defined in the **course.plutus** blueprint.
+
+## Redeemers
+
+### CourseStateAction
+- `AddStudent` - Add a new student to the course
+- `AddModule` - Add a new module to the course
+- `BurnModule` - Remove a module from the course
+- `UpdateCourseInfo` - Update course information and metadata
+
+## Purpose
+
+This validator manages the state of course instances, handling student enrollment, module management, and course information updates. It serves as the central authority for course-related state transitions.
+
+# Minting: Course State Policy
+
+<ValidatorDiagram
+  system="course"
+  validator="course-state-policy"
+  description="xyz!"
+/>
+
+The Course State Policy manages local course states and handles student interactions within courses. This validator is part of the course blueprint and controls the core course state management functionality.
+
+## Blueprint Source
+
+This validator is defined in the **course.plutus** blueprint.
+
+## Redeemers
+
+### CourseStateAction
+- `AddStudent` - Add a new student to the course
+- `AddModule` - Add a new module to the course
+- `BurnModule` - Remove a module from the course
+- `UpdateCourseInfo` - Update course information and metadata
+
+## Purpose
+
+This validator manages the state of course instances, handling student enrollment, module management, and course information updates. It serves as the central authority for course-related state transitions.

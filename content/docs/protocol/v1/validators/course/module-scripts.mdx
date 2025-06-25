@@ -1,0 +1,52 @@
+---
+title: "Module Scripts"
+description: "Policy managing course modules and module tokens"
+validator_system: "course"
+validator_id: ["module-policy", "module-ref-validator"]
+---
+
+The Module Scripts validators manage course modules and handle module token operations. These validators are part of the course blueprint and control module lifecycle management within courses.
+
+## Blueprint Source
+
+This validator is defined in the **course.plutus** blueprint.
+
+# Spending: Module Reference Validator
+
+<ValidatorDiagram
+  system="course"
+  validator="module-ref-validator"
+/>
+
+The Module Reference Validator manages course modules and handles module token operations. This validator is part of the course blueprint and controls module lifecycle management within courses.
+
+## Redeemers
+
+### ModuleAction
+- `MintModules` - Create new course module tokens
+- `BurnModule` - Remove module tokens from circulation
+- `UpdateModule` - Update existing module information
+- `UpdateModuleInfo` - Update module metadata and details
+
+## Purpose
+
+This validator manages the lifecycle of course modules, including token minting, burning, and metadata updates. It ensures proper module token management and controls access to module-related operations.
+
+# Minting: Module Policy
+
+<ValidatorDiagram
+  system="course"
+  validator="module-policy"
+/>
+
+## Redeemers
+
+### ModuleAction
+- `MintModules` - Create new course module tokens
+- `BurnModule` - Remove module tokens from circulation
+- `UpdateModule` - Update existing module information
+- `UpdateModuleInfo` - Update module metadata and details
+
+## Purpose
+
+This validator manages the lifecycle of course modules, including token minting, burning, and metadata updates. It ensures proper module token management and controls access to module-related operations.

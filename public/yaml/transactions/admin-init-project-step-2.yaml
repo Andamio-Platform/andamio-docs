@@ -104,12 +104,14 @@ mints:
 # withdrawing
 withdraws:
   - id: treasury_scripts_obs
+    observer: "project.treasury-scripts-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"
     amount: 0
 
   - id: contributor_state_obs
+    observer: "project.contributor-state-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"

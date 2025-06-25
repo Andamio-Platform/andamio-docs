@@ -3,10 +3,10 @@
     "description": "Validators from the project.plutus blueprint managing contributors, escrow, and treasury operations",
     "icon": "FolderOpen",
     "pages": [
-        "contributor-state-scripts",
-        "escrow1",
         "treasury-scripts",
         "treasury-token",
+        "contributor-state-scripts",
+        "escrow1",
         "..."
     ],
     "defaultOpen": false

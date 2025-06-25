@@ -29,7 +29,7 @@ inputs:
     type: script
     redeemer: "()"
     output: 
-      address: "index-scripts.index-scripts"
+      address: "index-validators.index-scripts"
       value: ['1 index." "']
       datum: "(alice, carol)"
 
@@ -38,7 +38,7 @@ reference_inputs:
   - id: index_ref_1
     type: script
     output:
-      address: "index-scripts.index-ref"
+      address: "index-validators.index-ref"
       value: ["nft"]
       datum:
         index_data:
@@ -59,14 +59,14 @@ outputs:
   - id: index_1
     type: "script"
     output:
-      address: "index-scripts.index-scripts"
+      address: "index-validators.index-scripts"
       value: ['1 index." "']
       datum: "(alice, bob)"
 
   - id: index_2
     type: "script"
     output:
-      address: "index-scripts.index-scripts"
+      address: "index-validators.index-scripts"
       value: ['1 index." "']
       datum: '(bob, carol)'
   
@@ -89,7 +89,7 @@ outputs:
 
 mints:
   - id: index
-    policy: "index-scripts.index-scripts"
+    policy: "index-validators.index-scripts"
     redeemer:
       string: "bob"
     tokens: ['1 index.222bob',
@@ -99,5 +99,6 @@ mints:
 # withdrawing
 withdraws:
   - id: init_index_obs_v1
+    observer: "index-validators.init-index-observer"
     redeemer: "(bob, ())"
     amount: 0

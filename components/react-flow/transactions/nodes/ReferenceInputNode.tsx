@@ -23,7 +23,14 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
 
   const hasValidator = data.address.includes('.');
   const linkUrl = hasValidator
-    ? `/docs/protocol/v1/validators/${data.address.split('.')[0]}/${data.address.split('.')[1]}`
+    ? (() => {
+        const parts = data.address.split('.');
+        const validatorName = parts[1];
+        const isObserver = validatorName.includes('obs');
+        return isObserver 
+          ? `/docs/protocol/v1/validators/${parts[0]}/observer/${validatorName}`
+          : `/docs/protocol/v1/validators/${parts[0]}/${validatorName}`;
+      })()
     : null;
 
   return (
