@@ -7,10 +7,8 @@
         "course-state-validator",
         "module-policy",
         "module-ref-validator",
-        "assignment-validator", 
-        "assignment-cbor-obs",
-        "course-state-cbor-obs",
-        "module-cbor-obs"
+        "assignment-validator",
+        "..."
     ],
     "defaultOpen": false
 }

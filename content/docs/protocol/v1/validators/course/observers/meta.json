@@ -1,0 +1,10 @@
+{
+    "title": "Observers",
+    "description": "Observers from the course.plutus blueprint managing assignments, course states, and modules",
+    "pages": [
+        "assignment-cbor-obs",
+        "course-state-cbor-obs",
+        "module-cbor-obs"
+    ],
+    "defaultOpen": false
+}

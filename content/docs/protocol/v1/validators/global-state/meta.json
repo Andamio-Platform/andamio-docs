@@ -5,7 +5,7 @@
     "pages": [
         "global-state",
         "params-ref-validator",
-        "init-global-state-observer"
+        "..."
     ],
     "defaultOpen": false
 }

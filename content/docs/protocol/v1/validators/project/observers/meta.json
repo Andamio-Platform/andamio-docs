@@ -1,0 +1,11 @@
+{
+    "title": "Observers",
+    "description": "Observers from the project.plutus blueprint managing contributors, escrow, and treasury operations",
+    "pages": [
+        "contributor-state-cbor-obs",
+        "escrow1-cbor-obs",
+        "treasury-token-cbor-obs",
+        "treasury-cbor-obs"
+    ],
+    "defaultOpen": false
+}

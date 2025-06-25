@@ -7,10 +7,7 @@
         "escrow1",
         "treasury-scripts",
         "treasury-token",
-        "contributor-state-cbor-obs",
-        "treasury-token-cbor-obs",
-        "treasury-cbor-obs",
-        "escrow1-cbor-obs"
+        "..."
     ],
     "defaultOpen": false
 }
