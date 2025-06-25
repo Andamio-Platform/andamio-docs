@@ -200,13 +200,13 @@ systems:
           - type: action
             ProjectAction:
               - action: "AcceptProject"
-                transaction: "course-creator-accept-project"
+                transaction: "project-creator-accept-project"
               - action: "DenyProject"
-                transaction: "course-creator-deny-project"
+                transaction: "project-creator-deny-project"
               - action: "RefuseProject"
-                transaction: "course-creator-refuse-project"
+                transaction: "project-creator-refuse-project"
               - action: "ManageContributor"
-                transaction: "course-creator-manage-contributor"
+                transaction: "project-creator-manage-contributor"
 
       escrow1-cbor-obs:
         name: "Escrow1 CBOR Observer"

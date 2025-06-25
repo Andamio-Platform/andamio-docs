@@ -58,13 +58,13 @@ export default async function Page(props: {
           <TransactionDiagramClient txFilePath={pageData.tx_file} />
         )}
         {/* Render validator diagram when validator_system and validator_id are provided */}
-        <h2 className="text-2xl font-bold mb-4">Validator Endpoints</h2>
-        <p>
-          Click on a transaction link to view details about the redeemer and
-          usage of this validator.
-        </p>
         {pageData.validator_system && pageData.validator_id && (
           <>
+            <h2 className="text-2xl font-bold mb-4">Validator Endpoints</h2>
+            <p>
+              Click on a transaction link to view details about the redeemer and
+              usage of this validator.
+            </p>
             {Array.isArray(pageData.validator_id) ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {pageData.validator_id.map((validatorId) => (

@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "generate-api-docs": "node scripts/generate-api-docs.mjs"
+    "generate-api-docs": "node scripts/generate-api-docs.mjs",
+    "docs-coverage": "npx tsx scripts/docs-coverage-check.ts"
   },
   "dependencies": {
     "@content-collections/core": "^0.8.2",
