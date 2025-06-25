@@ -25,7 +25,7 @@ inputs:
       project_hash_list: "hash[]"
       contributor_state: "policy_id"
     output:
-      address: "global_state"
+      address: "global-state.global_state"
       value: ["1 index.100<alias>"]
       datum:
         global_state: "policy_id"
@@ -41,7 +41,7 @@ inputs:
     redeemer:
       alias: "string"
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["2 contributor_state.<alias>"]
       datum: 
         project_hash_list: "hash[]"
@@ -51,7 +51,7 @@ reference-inputs:
   - id: instance_1
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-scripts"
       value: ["1 instance_provider.ContributorStateScripts"]
       datum: "nft"
       script: "contributor_state"
@@ -67,7 +67,7 @@ outputs:
   - id: global_state_1
     type: script
     output:
-      address: "global_state"
+      address: "global-state.global_state"
       value: ["1 index.100<alias>"]
       datum:
         global_state: "policy_id"
@@ -80,6 +80,7 @@ outputs:
 
 mints:
   - id: contributor_state
+    policy: "project.contributor-state-scripts"
     redeemer:
       alias: "string"
     tokens: ["-2 contributor_state.<alias>"]

@@ -81,6 +81,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
           txData.mints?.map((mint) => ({
             id: mint.id,
             tokens: mint.tokens,
+            policy: mint.policy,
             redeemer: mint.redeemer,
           })) || [];
 

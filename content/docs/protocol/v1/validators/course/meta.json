@@ -3,8 +3,10 @@
     "description": "Validators from the course.plutus blueprint managing assignments, course states, and modules",
     "icon": "Workflow",
     "pages": [
-        "course-state-scripts",
-        "module-scripts",
+        "course-state-policy",
+        "course-state-validator",
+        "module-policy",
+        "module-ref-validator",
         "assignment-validator", 
         "assignment-cbor-obs",
         "course-state-cbor-obs",

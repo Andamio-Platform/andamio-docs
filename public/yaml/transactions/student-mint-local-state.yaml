@@ -25,7 +25,7 @@ inputs:
       string: ["201", "202", "203"]
       course_state: "policy_id"
     output:
-      address: "global_state"
+      address: "global-state.global-state"
       value: ["1 index.100bob"]
       datum:
         policy_id: "global_state"
@@ -41,7 +41,7 @@ reference-inputs:
   - id: instance_1
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-scripts"
       value: ["1 instance_provider.CourseStateScripts"]
       datum: "nft"
       script: "course_state"
@@ -57,7 +57,7 @@ outputs:
   - id: global_state_1
     type: script
     output:
-      address: "global_state"
+      address: "global-state.global-state"
       value: ["1 index.100bob"]
       datum:
         policy_id: "global_state"
@@ -73,13 +73,14 @@ outputs:
     redeemer:
       alias: "bob"
     output:
-      address: "course_state"
+      address: "course.course-state-validator"
       value: ["1 course_state.bob"]
       datum: 
         assignment_list: ["201", "202", "203"]
 
 mints:
   - id: course_state
+    policy: "course.course-state-policy"
     redeemer:
       string: "bob"
     tokens: ["1 course_state.bob"]

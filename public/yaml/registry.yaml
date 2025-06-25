@@ -134,6 +134,13 @@ systems:
         purpose: "withdraw"
         redeemer: {}
 
+      init-index-observer:
+        name: "Init Index Observer"
+        purpose: "withdraw"
+        redeemer: 
+          - type: "(alias, ())"
+            transaction: "mint-access-token"
+
       init-index-policy:
         name: "Init Index Policy"
         purpose: "mint"

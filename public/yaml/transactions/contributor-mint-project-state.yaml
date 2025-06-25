@@ -25,7 +25,7 @@ inputs:
       project_list: ["project hash 1", "project hash 2", "project hash 3"]
       contributor_state: "policy_id"
     output:
-      address: "global_state"
+      address: "global-state.global_state"
       value: ["1 index.100bob"]
       datum:
         policy_id: "global_state"
@@ -45,7 +45,7 @@ reference-inputs:
   - id: instance_1
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-scripts"
       value: ["1 instance_provider.ContributorStateScripts"]
       datum: "nft"
       script: "contributor_state"
@@ -61,7 +61,7 @@ outputs:
   - id: global_state_1
     type: script
     output:
-      address: "global_state"
+      address: "global-state.global_state"
       value: ["1 index.100bob"]
       datum:
         policy_id: "global_state"
@@ -79,13 +79,14 @@ outputs:
   - id: contributor_state_1
     type: script
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["2 contributor_state.bob"]
       datum: 
         project_list: ["project hash 1", "project hash 2", "project hash 3"]
 
 mints:
   - id: contributor_state
+    policy: "project.contributor-state-scripts"
     redeemer:
       string: "bob"
       prerequisits: ["(other_nft, [project hash 1])"]

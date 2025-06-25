@@ -46,6 +46,7 @@ interface TransactionOutput {
 // Mint structure
 interface Mint {
   id: string;
+  policy: string;
   redeemer?: RedeemerValue;
   tokens: string[];
 }

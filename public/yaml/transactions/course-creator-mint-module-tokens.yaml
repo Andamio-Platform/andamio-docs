@@ -29,7 +29,7 @@ inputs:
     type: script
     redeemer: "alice"
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.CourseNFT"]
       datum:
         creators: ["alice"]
@@ -46,7 +46,7 @@ outputs:
   - id: instance_governance_1
     type: script
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.CourseNFT"]
       datum:
         creators: ["alice"]
@@ -55,7 +55,7 @@ outputs:
   - id:
     type: script
     output:
-      address: "module"
+      address: "course.module-ref-validator"
       value: ["1 module.103"]
       datum:
         slts: ["(slt, content)"]
@@ -67,6 +67,7 @@ outputs:
 
 mints:
   - id: course-state-scripts
+    policy: "course.module-policy"
     redeemer:
       - string: "103"
         slts: ["(slt, content)"]

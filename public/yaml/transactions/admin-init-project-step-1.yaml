@@ -31,14 +31,14 @@ reference_inputs:
   - id: instance_provider_1
     type: script
     output:
-      address: "instance_provider"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.ProjectNFT"]
       datum: ["nft_logic1", "nft_logic2", "nft_logic3"]
 
   - id: instance_provider_2
     type: script
     output:
-      address: "instance_provider"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.TreasuryToken"]
       datum: ["treasury_token_logic1", "treasury_token_logic2"]
       script: "treasury_token_obs"
@@ -46,7 +46,7 @@ reference_inputs:
   - id: instance_provider_3
     type: script
     output:
-      address: "instance_provider"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.Escrow1"]
       datum: ["escrow_logic1", "escrow_logic2"]
       script: "escrow_obs"
@@ -56,7 +56,7 @@ outputs:
   - id: instance_governance_1
     type: script
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.ProjectNFT"]
       datum:
         creators: ["bob", "carol"]
@@ -65,7 +65,7 @@ outputs:
   - id: instance_1
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.TreasuryToken"]
       datum: "nft"
       script: "treasury_token_logic1 + nft + treasury_token_logic2"
@@ -73,18 +73,20 @@ outputs:
   - id: instance_2
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.Escrow1"]
       datum: "nft"
       script: "escrow_logic1 + nft + escrow_logic2"
 
 # minting
 mints:
-  - id: nft
+  - id: treasury_nft
+    policy: "project.treasury-token"
     redeemer: "()"
     tokens: ['1 nft.ProjectNFT']
   
   - id: instance
+    policy: "instance.instance-provider-scripts"
     redeemer:
       - policy_id: "nft"
         params: ["nft"]

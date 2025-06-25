@@ -24,7 +24,7 @@ inputs:
     type: script
     redeemer: ["alice"]
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.CourseNFT"]
       datum:
         creators: ["bob", "carol"]
@@ -41,7 +41,7 @@ outputs:
   - id: instance_governance_1
     type: script
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.CourseNFT"]
       datum:
         creators: ["alice", "bob", "carol"]

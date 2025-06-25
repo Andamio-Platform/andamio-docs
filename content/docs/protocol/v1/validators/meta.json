@@ -2,8 +2,8 @@
     "title": "Validators",
     "description": "Andamio protocol validators organized by blueprint source",
     "pages": [
-        "global",
-        "index-validator",
+        "global-state",
+        "index-scripts",
         "instance",
         "course",
         "project"

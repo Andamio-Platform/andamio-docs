@@ -24,7 +24,7 @@ inputs:
       alias: "bob"
       maybe_string: "Nothing"
     output:
-      address: "escrow"
+      address: "project.escrow1"
       value: ["1 contributor_state.bob",
               "12000000 lovelace"]
       datum:
@@ -48,7 +48,7 @@ outputs:
   - id: contributor_state_1
     type: script
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["2000000 lovelace + 1 contributor_state.bob"]
       datum: 
         string: ""
@@ -56,5 +56,5 @@ outputs:
   - id: treasury_2
     type: script
     output:
-      address: "treasury"
+      address: "project.treasury-scripts"
       value: ["10000000"]

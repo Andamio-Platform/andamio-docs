@@ -29,7 +29,7 @@ inputs:
     type: script
     redeemer: "alice"
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.ProjectNFT"]
       datum:
         creators: ["alice"]
@@ -39,7 +39,7 @@ reference_inputs:
   - id: instance_1
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-scripts"
       value: ["1 instance_provider.Escrow1"]
       datum: "nft"
       script: "escrow"
@@ -47,7 +47,7 @@ reference_inputs:
   - id: instance_1
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-scripts"
       value: ["1 instance_provider.TreasuryScripts"]
       datum: "nft"
       script: "treasury"
@@ -62,8 +62,8 @@ outputs:
   - id: instance_governance_1
     type: script
     output:
-      address: "instance governance"
-      value: ["1 nft.CourseNFT"]
+      address: "instance.instance-governance-scripts"
+      value: ["1 nft.ProjectNFT"]
       datum:
         creators: ["alice"]
         policy_id: "nft"
@@ -71,7 +71,7 @@ outputs:
   - id: treasury_1
     type: script
     output:
-      address: "treasury"
+      address: "project.treasury-scripts"
       value: ["1 treasury_token.escrow"]
       datum:
         projects: ["(project hash 1, 3)", "(project hash 2, 5)"]
@@ -79,6 +79,7 @@ outputs:
 
 mints:
   - id: treasury_token
+    policy: "project.treasury-token"
     redeemer:
       treasury: "script_hash"
       escrow: "script_hash"

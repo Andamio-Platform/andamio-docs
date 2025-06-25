@@ -30,7 +30,7 @@ inputs:
     redeemer:
       maybe_string: "Nothing"
     output:
-      address: "assignment"
+      address: "course.assignment-validator"
       value: ["1 course_state.bob"]
       datum:
         string: "101"
@@ -51,7 +51,7 @@ outputs:
   - id: course_state_1
     type: script
     output:
-      address: "course_state"
+      address: "course.course-state-validator"
       value: ["1 course_state.bob"]
       datum: 
         assignment_list: ["201", "202", "203"]

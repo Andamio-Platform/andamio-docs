@@ -31,14 +31,14 @@ reference_inputs:
   - id: instance_provider_1
     type: script
     output:
-      address: "instance_provider"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.ProjectNFT"]
       datum: ["nft_logic1", "nft_logic2", "nft_logic3"]
 
   - id: instance_provider_2
     type: script
     output:
-      address: "instance_provider"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.TreasuryToken"]
       datum: ["treasury_token_logic1", "treasury_token_logic2"]
       script: "treasury_token_obs"
@@ -46,7 +46,7 @@ reference_inputs:
   - id: instance_provider_3
     type: script
     output:
-      address: "instance_provider"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.TreasuryScripts"]
       datum: ["treasury_scripts_logic1", "treasury_scripts_logic2", "treasury_scripts_logic3"]
       script: "treasury_scripts_obs"
@@ -54,7 +54,7 @@ reference_inputs:
   - id: instance_provider_4
     type: script
     output:
-      address: "instance_provider"
+      address: "instance.instance-provider-scripts"
       value: ["1 instance_provider.ContributorStateScripts"]
       datum: ["course_state_logic1", "course_state_logic2", "course_state_logic3"]
       script: "contributor_state_obs"
@@ -62,7 +62,7 @@ reference_inputs:
   - id: instance_governance_1
     type: script
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.ProjectNFT"]
       datum:
         creators: ["bob", "carol"]
@@ -74,7 +74,7 @@ outputs:
   - id: instance_1
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-scripts"
       value: ["1 instance_provider.TreasuryScripts"]
       datum: "nft"
       script: "treasury_scripts_logic1 + nft + treasury_scripts_logic2 + treasury_token_policy_id + treasury_scripts_logic3"
@@ -82,7 +82,7 @@ outputs:
   - id: instance_2
     type: script
     output:
-      address: "instance"
+      address: "instance.instance-scripts"
       value: ["1 instance_provider.ContributorStateScripts"]
       datum: "nft"
       script: "course_state_logic1 + nft + course_state_logic2 + [(instance_nft, [102, 103])] + course_state_logic3"
@@ -90,6 +90,7 @@ outputs:
 # minting
 mints:
   - id: instance
+    policy: "instance.instance-provider-scripts"
     redeemer:
       - policy_id: "nft"
         params: ["nft", "treasury_token_policy_id"]

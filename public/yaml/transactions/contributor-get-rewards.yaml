@@ -31,7 +31,7 @@ inputs:
       alias: "bob"
       string: "project hash 1"
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["1 contributor_state.bob"]
       datum: 
         string: ["project hash 2", "project hash 3"]
@@ -41,7 +41,7 @@ inputs:
     redeemer:
       alias: "bob"
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["10000000 lovelace", "1 contributor_state.bob"]
       datum: 
         string: "project hash 1"
@@ -57,7 +57,7 @@ outputs:
   - id: contributor_state_1
     type: script
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["2 contributor_state.bob"]
       datum: 
         string: ["project hash 1", "project hash 2", "project hash 3"]

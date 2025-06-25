@@ -32,7 +32,7 @@ inputs:
       alias: "bob"
       script_hash: "escrow"
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["2 contributor_state.bob"]
       datum: 
         string: ["project hash 2", "project hash 3"]
@@ -50,7 +50,7 @@ inputs:
       script_hash: "escrow"
       maybe_string: "Just some"
     output:
-      address: "treasury"
+      address: "project.treasury-scripts"
       value: ["1 treasury_token.escrow"]
       datum:
         projects: ["(project hash 1, 1)", "(project hash 2, 10)"]
@@ -60,7 +60,7 @@ inputs:
     type: script
     redeemer: "CommitFund"
     output:
-      address: "treasury"
+      address: "project.treasury-scripts"
       value: ["15000000 lovelace"]
 
 # outputs
@@ -74,7 +74,7 @@ outputs:
   - id: contributor_state_1
     type: script
     output:
-      address: "contributor_state"
+      address: "project.contributor-state-scripts"
       value: ["1 contributor_state.bob"]
       datum: 
         string: ["project hash 2", "project hash 3"]
@@ -82,7 +82,7 @@ outputs:
   - id: treasury_1
     type: script
     output:
-      address: "treasury"
+      address: "project.treasury-scripts"
       value: ["1 treasury_token.escrow"]
       datum:
         projects: ["(project hash 2, 10)"]
@@ -91,13 +91,13 @@ outputs:
   - id: treasury_2
     type: script
     output:
-      address: "treasury"
+      address: "project.treasury-scripts"
       value: ["5000000 lovelace"]
   
-  - id:
+  - id: escrow_1
     type: script
     output:
-      address: "escrow"
+      address: "project.escrow1"
       value: ["1 contributor_state.bob",
               "12000000 lovelace"]
       datum:

@@ -22,7 +22,7 @@ inputs:
     type: script
     redeemer: "alice"
     output:
-      address: "instance governance"
+      address: "instance.instance-governance-scripts"
       value: ["1 nft.ProjectNFT"]
       datum:
         creators: ["alice"]
@@ -33,7 +33,7 @@ inputs:
     redeemer: 
       alias: "bob"
     output:
-      address: "escrow"
+      address: "project.escrow1"
       value: ["1 contributor_state.bob",
               "12000000 lovelace"]
       datum:
@@ -57,8 +57,8 @@ outputs:
   - id: instance_governance_1
     type: script
     output:
-      address: "instance governance"
-      value: ["1 nft.CourseNFT"]
+      address: "instance.instance-governance-scripts"
+      value: ["1 nft.ProjectNFT"]
       datum:
         creators: ["alice"]
         policy_id: "nft"
@@ -66,7 +66,7 @@ outputs:
   - id: contributor_state_1
     type: script
     output:
-      address: "assignment"
+      address: "project.contributor-state-scripts"
       value: ["1 contributor_state.bob",
               "2000000 lovelace"]
       datum:
@@ -75,5 +75,5 @@ outputs:
   - id: treasury_2
     type: script
     output:
-      address: "treasury"
+      address: "project.treasury-scripts"
       value: ["5000000 lovelace"]

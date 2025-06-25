@@ -32,7 +32,7 @@ inputs:
       string: ["201", "202", "203"]
       course_state: "policy_id"
     output:
-      address: "global_state"
+      address: "global-state.global-state"
       value: ["1 index.100bob"]
       datum:
         policy_id: "global_state"
@@ -48,7 +48,7 @@ inputs:
     redeemer:
       alias: "bob"
     output:
-      address: "course_state"
+      address: "course.course-state-validator"
       value: ["1 course_state.bob"]
       datum: 
         assignment_list: ["201", "202", "203"]
@@ -74,7 +74,7 @@ outputs:
   - id: global_state_1
     type: script
     output:
-      address: "global_state"
+      address: "global-state.global-state"
       value: ["1 index.100bob"]
       datum:
         policy_id: "global_state"
@@ -87,6 +87,7 @@ outputs:
 
 mints:
   - id: course_state
+    policy: "course.course-state-policy"
     redeemer:
       string: "bob"
     tokens: ["-1 course_state.bob"]

@@ -2,6 +2,7 @@
 
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
+import Link from "next/link";
 
 interface TransactionNodeData {
   name: string;
@@ -13,6 +14,7 @@ interface TransactionNodeData {
   mints?: {
     id: string;
     tokens: string[];
+    policy: string;
     redeemer?: string | object;
   }[];
   withdrawals?: {
@@ -43,6 +45,7 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
     }
   };
 
+
   return (
     <div className="px-4 py-4 shadow-md rounded-md bg-gray-100 border border-gray-700 text-gray-700">
       <Handle type="target" position={Position.Left} className="w-3 h-3" />
@@ -67,7 +70,7 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
           <div className="mt-2 border-t border-gray-600 pt-2">
             <div className="flex items-center justify-between">
               <div className="font-semibold text-xs">
-                Mints ({data.mints[0].tokens.length}):
+                Mints ({data.mints.length}):
               </div>
               <button
                 onClick={() => setShowMintDetails(!showMintDetails)}
@@ -95,34 +98,54 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
               {data.mints.map((mint, index) => (
                 <div
                   key={`mint-${mint.id}-${index}`}
-                  className="bg-purple-100 border-2 border-purple-700 text-purple-700 bg-opacity-30 p-2 rounded text-xs"
+                  className="shadow-md rounded-md bg-purple-100 border-2 border-purple-700 text-purple-700"
                 >
-                  <div>
-                    <span className="font-semibold">ID:</span> {mint.id}
+                  <div className="bg-purple-700 text-purple-100 rounded-t-[calc(0.375rem-2px)] p-2">
+                    <div className="text-sm">Mint: {mint.id}</div>
                   </div>
+                  <div className="px-3 py-2 space-y-2 text-xs">
+                    <div className="flex">
+                      <span className="font-semibold mr-1">Policy:</span>
+                      {(() => {
+                        const hasValidator = mint.policy && mint.policy.includes('.');
+                        const linkUrl = hasValidator 
+                          ? `/docs/protocol/v1/validators/${mint.policy.split('.')[0]}/${mint.policy.split('.')[1]}`
+                          : null;
+                        
+                        return hasValidator && linkUrl ? (
+                          <Link
+                            href={linkUrl}
+                            className="text-purple-600 hover:text-purple-800 transition-colors"
+                          >
+                            {mint.policy.split('.')[1]}
+                          </Link>
+                        ) : (
+                          <span>{mint.policy || 'N/A'}</span>
+                        );
+                      })()}
+                    </div>
 
-                  {showMintDetails && (
-                    <>
-                      {mint.tokens && mint.tokens.length > 0 && (
-                        <div>
-                          <span className="font-semibold">Tokens:</span>
-                          <ul className="list-disc pl-5 space-y-1">
+                    {showMintDetails && (
+                      <div className="space-y-2">
+                        {mint.tokens && mint.tokens.length > 0 && (
+                          <div>
+                            <span className="font-semibold">Tokens:</span>
                             {mint.tokens.map((token, i) => (
-                              <li key={`token-${i}`}>{token}</li>
+                              <pre className="pt-1" key={`token-${i}`}>{token}</pre>
                             ))}
-                          </ul>
-                        </div>
-                      )}
-                      {mint.redeemer && (
-                        <div>
-                          <span className="font-semibold">Redeemer:</span>
-                          <pre className="mt-1 bg-gray-900 text-purple-100 p-1 rounded overflow-x-auto text-xs">
-                            {formatJSON(mint.redeemer)}
-                          </pre>
-                        </div>
-                      )}
-                    </>
-                  )}
+                          </div>
+                        )}
+                        {mint.redeemer && (
+                          <div>
+                            <p className="font-semibold mb-1">Redeemer:</p>
+                            <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto">
+                              {formatJSON(mint.redeemer)}
+                            </pre>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -162,28 +185,26 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
               {data.withdrawals.map((withdrawal, index) => (
                 <div
                   key={`withdrawal-${withdrawal.id}-${index}`}
-                  className="bg-purple-100 border-2 border-purple-700 text-purple-700  bg-opacity-30 p-2 rounded text-xs"
+                  className="shadow-md rounded-md bg-cyan-100 border-2 border-cyan-700 text-cyan-700"
                 >
-                  <div>
-                    <span className="font-semibold">ID:</span> {withdrawal.id}
+                  <div className="bg-cyan-700 text-cyan-100 rounded-t-[calc(0.375rem-2px)] p-2">
+                    <div className="text-sm">Withdrawal: {withdrawal.id}</div>
                   </div>
+                  <div className="px-3 py-2 space-y-2 text-xs">
+                    <div className="flex">
+                      <span className="font-semibold mr-1">Amount:</span>
+                      <span>{withdrawal.amount}</span>
+                    </div>
 
-                  {showWithdrawalDetails && (
-                    <>
+                    {showWithdrawalDetails && withdrawal.redeemer && (
                       <div>
-                        <span className="font-semibold">Amount:</span>{" "}
-                        {withdrawal.amount}
+                        <p className="font-semibold mb-1">Redeemer:</p>
+                        <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto">
+                          {formatJSON(withdrawal.redeemer)}
+                        </pre>
                       </div>
-                      {withdrawal.redeemer && (
-                        <div>
-                          <span className="font-semibold">Redeemer:</span>
-                          <pre className="mt-1 bg-gray-900 text-purple-100 p-1 rounded overflow-x-auto text-xs">
-                            {formatJSON(withdrawal.redeemer)}
-                          </pre>
-                        </div>
-                      )}
-                    </>
-                  )}
+                    )}
+                  </div>
                 </div>
               ))}
             </div>

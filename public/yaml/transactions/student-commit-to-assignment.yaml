@@ -31,7 +31,7 @@ inputs:
       string: "101"
       maybe_string: "Just some"
     output:
-      address: "course_state"
+      address: "course.course-state-validator"
       value: ["1 course_state.bob"]
       datum: 
         assignment_list: ["201", "202", "203"]
@@ -40,7 +40,7 @@ reference_inputs:
 - id:
   type: script
   output:
-    address: "module"
+    address: "course.module-ref-validator"
     value: ["1 module.101"]
     datum:
       slts: ["(slt, content)"]
@@ -61,7 +61,7 @@ outputs:
   - id: assignment_1
     type: script
     output:
-      address: "assignment"
+      address: "course.assignment-validator"
       value: ["1 course_state.bob"]
       datum:
         string: "101"
