@@ -3,6 +3,7 @@
     "icon": "BookText",
     "pages": [
       "whitepaper",
+      "three-problems",
       "original-draft"
     ],
     "defaultOpen": false
