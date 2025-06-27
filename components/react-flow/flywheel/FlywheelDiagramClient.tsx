@@ -7,6 +7,14 @@ const FlywheelDiagram = dynamic(() => import("./FlywheelDiagram"), {
   ssr: false,
 });
 
-export default function FlywheelDiagramClient() {
-  return <FlywheelDiagram />;
+interface FlywheelDiagramClientProps {
+  initialDiagram?: string;
+  showDropdown?: boolean;
+}
+
+export default function FlywheelDiagramClient({ 
+  initialDiagram, 
+  showDropdown = true 
+}: FlywheelDiagramClientProps) {
+  return <FlywheelDiagram initialDiagram={initialDiagram} showDropdown={showDropdown} />;
 }

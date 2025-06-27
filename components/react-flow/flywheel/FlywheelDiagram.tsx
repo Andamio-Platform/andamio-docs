@@ -19,54 +19,42 @@ import "@xyflow/react/dist/style.css";
 // Custom node component
 import FlywheelNode from "./nodes/FlywheelNode";
 
-// Flywheel Content Data - Edit this to change all text in the diagram
-const flywheelContent = {
-  problems: {
-    trust: {
-      title: "The Trust Problem",
-      description:
-        "You can't work with people you don't know. Trust systems remain localized and institutional, failing at the scale and speed required for addressing urgent global challenges.",
-    },
-    proof: {
-      title: "The Proof Problem",
-      description:
-        "You can't demonstrate what you can actually do. Traditional credentialing systems fail to capture real-world capability, creating a catch-22 where you need experience to get opportunities.",
-    },
-    purpose: {
-      title: "The Purpose Problem",
-      description:
-        "The work that pays doesn't solve problems that matter. Organizations optimize for self-preservation rather than impact, creating misalignment between financial security and meaningful contribution.",
-    },
-  },
-  solutions: {
-    scalableCollaboration: {
-      title: "Collaboration Becomes Scalable",
-      description:
-        "Contributors build portable reputations and verified collaboration history, enabling teams to form across organizational boundaries based on demonstrated capability and shared purpose.",
-    },
-    verifiableCapabilities: {
-      title: "Capabilities Become Verifiable",
-      description:
-        "Contributors build portable proof of their abilities through real project work, creating verifiable credentials tied to actual outcomes that transcend institutional boundaries.",
-    },
-    meaningfulOpportunities: {
-      title: "Opportunities Become Meaningful",
-      description:
-        "Organizations compete on mission alignment and impact potential, creating educational pathways tied to real work where contributors build skills while solving genuine problems.",
-    },
-  },
-  edgeLabels: {
-    problemToSolution: {
-      trustToScalable: "Network grows stronger",
-      proofToVerifiable: "Contributors learn by doing",
-      purposeToMeaningful: "Organizations create real opportunities",
-    },
-    flywheelFeedback: {
-      scalableToProof: "Enables verified collaboration",
-      verifiableToMeaningful: "Creates capability demands",
-      meaningfulToTrust: "Attracts purpose-driven talent",
-    },
-  },
+// Import diagram data
+import { DiagramVersion, diagramVersions } from "./flywheelData";
+
+// Edge styling variables - edit these to change arrow and line appearance
+const edgeStyles = {
+  strokeWidth: 9,
+  arrowWidth: 6,
+  arrowHeight: 6,
+};
+
+// Andamio Brand Color Scheme
+const colors = {
+  // Problem to solution edges (solid lines) - using Coral for urgent action
+  problemToSolution: "#FF5A5F", // Coral
+  problemToSolutionBg: "#E6F0F5", // Light Background
+
+  // Flywheel feedback edges (dashed lines) - using Mint Green for positive growth
+  flywheelFeedback: "#00BFA5", // Mint Green
+  flywheelFeedbackBg: "#E6F0F5", // Light Background
+
+  // Background
+  diagramBg: "#F3F4F6", // Light Grey
+};
+
+// Node color scheme - using core Andamio brand colors
+const nodeColors = {
+  problemBg: "#FFFFFF", // White background
+  problemBorder: "#003C54", // Andamio Blue for problems
+  problemText: "#1E1E1E", // Black Text
+  problemBadgeBg: "#003C54", // Andamio Blue badge
+  problemBadgeText: "#FFFFFF", // White text on blue
+  solutionBg: "#E6F0F5", // Light Background for solutions
+  solutionBorder: "#007ACC", // Sky Blue for solutions
+  solutionText: "#1E1E1E", // Black Text
+  solutionBadgeBg: "#007ACC", // Sky Blue badge
+  solutionBadgeText: "#FFFFFF", // White text on blue
 };
 
 // Define custom node types
@@ -75,11 +63,13 @@ const nodeTypes: NodeTypes = {
 };
 
 // Calculate circular positions using trigonometry
-const calculateCircularPositions = () => {
+const calculateCircularPositions = (hasBothTypes = true) => {
   const centerX = 1200;
   const centerY = 1200;
-  const problemRadius = 580; // Massive radius for problem nodes (outer circle)
-  const solutionRadius = 580; // Massive radius for solution nodes (inner circle)
+  // Reduce radius for single-type diagrams (less content)
+  const baseRadius = hasBothTypes ? 580 : 450;
+  const problemRadius = baseRadius; // Radius for problem nodes
+  const solutionRadius = baseRadius; // Radius for solution nodes
 
   // Problem nodes evenly spaced at 120-degree intervals
   const problemAngles = [
@@ -111,278 +101,471 @@ const calculateCircularPositions = () => {
 };
 
 // Create nodes using the content data
-const createFlywheelNodes = () => {
-  const { problemPositions, solutionPositions } = calculateCircularPositions();
+const createFlywheelNodes = (
+  flywheelContent: DiagramVersion["content"],
+  showLabels = true
+) => {
+  const hasBothTypes = !!(
+    flywheelContent.problems && flywheelContent.solutions
+  );
+  const { problemPositions, solutionPositions } =
+    calculateCircularPositions(hasBothTypes);
 
-  return [
-    // Problem nodes (outer circle)
-    {
-      id: "trust-problem",
-      type: "flywheelNode",
-      data: {
-        label: "",
-        description: "",
-        problem: flywheelContent.problems.trust.title,
-        problemDescription: flywheelContent.problems.trust.description,
-        nodeType: "problem" as const,
-        handles: { right: true, left: true, top: true, bottom: true },
-      },
-      position: problemPositions[0],
-    },
-    {
-      id: "proof-problem",
-      type: "flywheelNode",
-      data: {
-        label: "",
-        description: "",
-        problem: flywheelContent.problems.proof.title,
-        problemDescription: flywheelContent.problems.proof.description,
-        nodeType: "problem" as const,
-        handles: { right: true, left: true, top: true, bottom: true },
-      },
-      position: problemPositions[1],
-    },
-    {
-      id: "purpose-problem",
-      type: "flywheelNode",
-      data: {
-        label: "",
-        description: "",
-        problem: flywheelContent.problems.purpose.title,
-        problemDescription: flywheelContent.problems.purpose.description,
-        nodeType: "problem" as const,
-        handles: { right: true, left: true, top: true, bottom: true },
-      },
-      position: problemPositions[2],
-    },
+  const nodes: Node[] = [];
 
-    // Solution nodes (inner circle)
-    {
-      id: "scalable-collaboration",
-      type: "flywheelNode",
-      data: {
-        label: flywheelContent.solutions.scalableCollaboration.title,
-        description:
-          flywheelContent.solutions.scalableCollaboration.description,
-        problem: "",
-        problemDescription: "",
-        nodeType: "step" as const,
-        handles: { right: true, left: true, top: true, bottom: true },
+  // Add solution nodes if solutions are provided
+  if (flywheelContent.solutions) {
+    nodes.push(
+      // Solution nodes (outer circle)
+      {
+        id: "one-solution",
+        type: "flywheelNode",
+        data: {
+          label: flywheelContent.solutions.one.title,
+          description: flywheelContent.solutions.one.description,
+          problem: "",
+          problemDescription: "",
+          nodeType: "step" as const,
+          showLabels,
+          handles: { right: true, left: true, top: true, bottom: true },
+          colors: nodeColors,
+        },
+        position: solutionPositions[0],
       },
-      position: solutionPositions[0],
-    },
-    {
-      id: "verifiable-capabilities",
-      type: "flywheelNode",
-      data: {
-        label: flywheelContent.solutions.verifiableCapabilities.title,
-        description:
-          flywheelContent.solutions.verifiableCapabilities.description,
-        problem: "",
-        problemDescription: "",
-        nodeType: "step" as const,
-        handles: { right: true, left: true, top: true, bottom: true },
+      {
+        id: "two-solution",
+        type: "flywheelNode",
+        data: {
+          label: flywheelContent.solutions.two.title,
+          description: flywheelContent.solutions.two.description,
+          problem: "",
+          problemDescription: "",
+          nodeType: "step" as const,
+          showLabels,
+          handles: { right: true, left: true, top: true, bottom: true },
+          colors: nodeColors,
+        },
+        position: solutionPositions[1],
       },
-      position: solutionPositions[1],
-    },
-    {
-      id: "meaningful-opportunities",
-      type: "flywheelNode",
-      data: {
-        label: flywheelContent.solutions.meaningfulOpportunities.title,
-        description:
-          flywheelContent.solutions.meaningfulOpportunities.description,
-        problem: "",
-        problemDescription: "",
-        nodeType: "step" as const,
-        handles: { right: true, left: true, top: true, bottom: true },
+      {
+        id: "three-solution",
+        type: "flywheelNode",
+        data: {
+          label: flywheelContent.solutions.three.title,
+          description: flywheelContent.solutions.three.description,
+          problem: "",
+          problemDescription: "",
+          nodeType: "step" as const,
+          showLabels,
+          handles: { right: true, left: true, top: true, bottom: true },
+          colors: nodeColors,
+        },
+        position: solutionPositions[2],
+      }
+    );
+  }
+
+  // Add problem nodes if problems are provided
+  if (flywheelContent.problems) {
+    nodes.push(
+      // Problem nodes (inner circle)
+      {
+        id: "one-to-two",
+        type: "flywheelNode",
+        data: {
+          label: "",
+          description: "",
+          problem: flywheelContent.problems.oneToTwo.title,
+          problemDescription: flywheelContent.problems.oneToTwo.description,
+          nodeType: "problem" as const,
+          showLabels,
+          handles: { right: true, left: true, top: true, bottom: true },
+          colors: nodeColors,
+        },
+        position: problemPositions[0],
       },
-      position: solutionPositions[2],
-    },
-  ];
+      {
+        id: "two-to-three",
+        type: "flywheelNode",
+        data: {
+          label: "",
+          description: "",
+          problem: flywheelContent.problems.twoToThree.title,
+          problemDescription: flywheelContent.problems.twoToThree.description,
+          nodeType: "problem" as const,
+          showLabels,
+          handles: { right: true, left: true, top: true, bottom: true },
+          colors: nodeColors,
+        },
+        position: problemPositions[1],
+      },
+      {
+        id: "three-to-one",
+        type: "flywheelNode",
+        data: {
+          label: "",
+          description: "",
+          problem: flywheelContent.problems.threeToOne.title,
+          problemDescription: flywheelContent.problems.threeToOne.description,
+          nodeType: "problem" as const,
+          showLabels,
+          handles: { right: true, left: true, top: true, bottom: true },
+          colors: nodeColors,
+        },
+        position: problemPositions[2],
+      }
+    );
+  }
+
+  return nodes;
 };
 
 // Create edges using the content data
-const createFlywheelEdges = () => [
-  // Problem to Solution edges (radial inward - problems to solutions)
-  {
-    id: "problem-1-to-solution",
-    source: "trust-problem",
-    target: "scalable-collaboration",
-    sourceHandle: "right",
-    targetHandle: "top-target",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: "#dc2626",
-    },
-    style: {
-      strokeWidth: 8,
-      stroke: "#dc2626",
-    },
-    animated: true,
-    label: flywheelContent.edgeLabels.problemToSolution.trustToScalable,
-    labelStyle: {
-      fontSize: 12,
-      fontWeight: 700,
-      fill: "#dc2626",
-    },
-    labelBgStyle: {
-      fill: "#fef2f2",
-      fillOpacity: 0.95,
-      rx: 8,
-      ry: 8,
-    },
-  },
-  {
-    id: "problem-2-to-solution",
-    source: "proof-problem",
-    target: "verifiable-capabilities",
-    sourceHandle: "bottom",
-    targetHandle: "right-target",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: "#dc2626",
-    },
-    style: {
-      strokeWidth: 8,
-      stroke: "#dc2626",
-    },
-    animated: true,
-    label: flywheelContent.edgeLabels.problemToSolution.proofToVerifiable,
-    labelStyle: {
-      fontSize: 12,
-      fontWeight: 700,
-      fill: "#dc2626",
-    },
-    labelBgStyle: {
-      fill: "#fef2f2",
-      fillOpacity: 0.95,
-      rx: 8,
-      ry: 8,
-    },
-  },
-  {
-    id: "problem-3-to-solution",
-    source: "purpose-problem",
-    target: "meaningful-opportunities",
-    sourceHandle: "top",
-    targetHandle: "bottom-target",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: "#dc2626",
-    },
-    style: {
-      strokeWidth: 8,
-      stroke: "#dc2626",
-    },
-    animated: true,
-    label: flywheelContent.edgeLabels.problemToSolution.purposeToMeaningful,
-    labelStyle: {
-      fontSize: 12,
-      fontWeight: 700,
-      fill: "#dc2626",
-    },
-    labelBgStyle: {
-      fill: "#fef2f2",
-      fillOpacity: 0.95,
-      rx: 8,
-      ry: 8,
-    },
-  },
+const createFlywheelEdges = (flywheelContent: DiagramVersion["content"]) => {
+  const edges: Edge[] = [];
 
-  // Circular flywheel edges (solution to next problem clockwise)
-  {
-    id: "solution-1-feedback",
-    source: "scalable-collaboration",
-    target: "proof-problem",
-    sourceHandle: "bottom",
-    targetHandle: "top-target",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: "#2563eb",
-    },
-    style: {
-      strokeWidth: 6,
-      stroke: "#2563eb",
-      strokeDasharray: "12,6",
-    },
-    label: flywheelContent.edgeLabels.flywheelFeedback.scalableToProof,
-    labelStyle: {
-      fontSize: 11,
-      fontWeight: 600,
-      fill: "#2563eb",
-    },
-    labelBgStyle: {
-      fill: "#eff6ff",
-      fillOpacity: 0.95,
-      rx: 6,
-      ry: 6,
-    },
-  },
-  {
-    id: "solution-2-feedback",
-    source: "verifiable-capabilities",
-    target: "purpose-problem",
-    sourceHandle: "left",
-    targetHandle: "bottom-target",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: "#2563eb",
-    },
-    style: {
-      strokeWidth: 6,
-      stroke: "#2563eb",
-      strokeDasharray: "12,6",
-    },
-    label: flywheelContent.edgeLabels.flywheelFeedback.verifiableToMeaningful,
-    labelStyle: {
-      fontSize: 11,
-      fontWeight: 600,
-      fill: "#2563eb",
-    },
-    labelBgStyle: {
-      fill: "#eff6ff",
-      fillOpacity: 0.95,
-      rx: 6,
-      ry: 6,
-    },
-  },
-  {
-    id: "solution-3-feedback",
-    source: "meaningful-opportunities",
-    target: "trust-problem",
-    sourceHandle: "top",
-    targetHandle: "left-target",
-    markerEnd: {
-      type: MarkerType.ArrowClosed,
-      color: "#2563eb",
-    },
-    style: {
-      strokeWidth: 6,
-      stroke: "#2563eb",
-      strokeDasharray: "12,6",
-    },
-    label: flywheelContent.edgeLabels.flywheelFeedback.meaningfulToTrust,
-    labelStyle: {
-      fontSize: 11,
-      fontWeight: 600,
-      fill: "#2563eb",
-    },
-    labelBgStyle: {
-      fill: "#eff6ff",
-      fillOpacity: 0.95,
-      rx: 6,
-      ry: 6,
-    },
-  },
-];
+  // Only create problem-to-solution edges if both exist
+  if (
+    flywheelContent.problems &&
+    flywheelContent.solutions &&
+    flywheelContent.edgeLabels?.solutionToConnection
+  ) {
+    edges.push(
+      // Problem to Solution edges (radial inward - problems to solutions)
+      {
+        id: "problem-1-to-solution",
+        source: "one-to-two",
+        target: "one-solution",
+        sourceHandle: "right",
+        targetHandle: "top-target",
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: colors.problemToSolution,
+          width: edgeStyles.arrowWidth,
+          height: edgeStyles.arrowHeight,
+        },
+        style: {
+          strokeWidth: edgeStyles.strokeWidth,
+          stroke: colors.problemToSolution,
+        },
+        animated: true,
+        label: flywheelContent.edgeLabels.solutionToConnection.oneToTwo,
+        labelStyle: {
+          fontSize: 14,
+          fontWeight: 700,
+          fill: "#1E1E1E", // Black text for better readability
+        },
+        labelBgStyle: {
+          fill: colors.problemToSolutionBg,
+          fillOpacity: 0.95,
+        },
+        labelBgPadding: [8, 16] as [number, number], // [vertical, horizontal] padding
+      },
+      {
+        id: "problem-2-to-solution",
+        source: "two-to-three",
+        target: "two-solution",
+        sourceHandle: "bottom",
+        targetHandle: "right-target",
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: colors.problemToSolution,
+          width: edgeStyles.arrowWidth,
+          height: edgeStyles.arrowHeight,
+        },
+        style: {
+          strokeWidth: edgeStyles.strokeWidth,
+          stroke: colors.problemToSolution,
+        },
+        animated: true,
+        label: flywheelContent.edgeLabels.solutionToConnection.twoToThree,
+        labelStyle: {
+          fontSize: 14,
+          fontWeight: 700,
+          fill: "#1E1E1E", // Black text for better readability
+        },
+        labelBgStyle: {
+          fill: colors.problemToSolutionBg,
+          fillOpacity: 0.95,
+        },
+        labelBgPadding: [8, 16] as [number, number], // [vertical, horizontal] padding
+      },
+      {
+        id: "problem-3-to-solution",
+        source: "three-to-one",
+        target: "three-solution",
+        sourceHandle: "top",
+        targetHandle: "bottom-target",
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+          color: colors.problemToSolution,
+          width: edgeStyles.arrowWidth,
+          height: edgeStyles.arrowHeight,
+        },
+        style: {
+          strokeWidth: edgeStyles.strokeWidth,
+          stroke: colors.problemToSolution,
+        },
+        animated: true,
+        label: flywheelContent.edgeLabels.solutionToConnection.threeToOne,
+        labelStyle: {
+          fontSize: 14,
+          fontWeight: 700,
+          fill: "#1E1E1E", // Black text for better readability
+        },
+        labelBgStyle: {
+          fill: colors.problemToSolutionBg,
+          fillOpacity: 0.95,
+        },
+        labelBgPadding: [8, 16] as [number, number], // [vertical, horizontal] padding
+      }
+    );
+  }
 
-export default function FlywheelDiagram() {
-  const [nodes, , onNodesChange] = useNodesState<Node>(createFlywheelNodes());
-  const [edges, , onEdgesChange] = useEdgesState<Edge>(createFlywheelEdges());
+  // Create flywheel feedback edges based on what nodes exist
+  if (flywheelContent.edgeLabels?.flywheelFeedback) {
+    if (flywheelContent.solutions) {
+      // Solution to problem edges (if both exist) or solution to solution (if problems don't exist)
+      const targetType = flywheelContent.problems ? "problem" : "solution";
+      edges.push(
+        // Solution to next problem/solution clockwise
+        {
+          id: "solution-1-feedback",
+          source: "one-solution",
+          target: targetType === "problem" ? "two-to-three" : "two-solution",
+          sourceHandle: "bottom",
+          targetHandle:
+            targetType === "problem" ? "top-target" : "right-target",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: colors.flywheelFeedback,
+            width: edgeStyles.arrowWidth,
+            height: edgeStyles.arrowHeight,
+          },
+          style: {
+            strokeWidth: edgeStyles.strokeWidth,
+            stroke: colors.flywheelFeedback,
+            strokeDasharray: "12,6",
+          },
+          label: flywheelContent.edgeLabels.flywheelFeedback.oneToTwo,
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: 600,
+            fill: "#1E1E1E",
+          },
+          labelBgStyle: {
+            fill: colors.flywheelFeedbackBg,
+            fillOpacity: 0.95,
+          },
+          labelBgPadding: [8, 16] as [number, number],
+        },
+        {
+          id: "solution-2-feedback",
+          source: "two-solution",
+          target: targetType === "problem" ? "three-to-one" : "three-solution",
+          sourceHandle: "left",
+          targetHandle: "bottom-target",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: colors.flywheelFeedback,
+            width: edgeStyles.arrowWidth,
+            height: edgeStyles.arrowHeight,
+          },
+          style: {
+            strokeWidth: edgeStyles.strokeWidth,
+            stroke: colors.flywheelFeedback,
+            strokeDasharray: "12,6",
+          },
+          label: flywheelContent.edgeLabels.flywheelFeedback.twoToThree,
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: 600,
+            fill: "#1E1E1E",
+          },
+          labelBgStyle: {
+            fill: colors.flywheelFeedbackBg,
+            fillOpacity: 0.95,
+          },
+          labelBgPadding: [8, 16] as [number, number],
+        },
+        {
+          id: "solution-3-feedback",
+          source: "three-solution",
+          target: targetType === "problem" ? "one-to-two" : "one-solution",
+          sourceHandle: targetType === "problem" ? "top" : "right",
+          targetHandle:
+            targetType === "problem" ? "left-target" : "left-target",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: colors.flywheelFeedback,
+            width: edgeStyles.arrowWidth,
+            height: edgeStyles.arrowHeight,
+          },
+          style: {
+            strokeWidth: edgeStyles.strokeWidth,
+            stroke: colors.flywheelFeedback,
+            strokeDasharray: "12,6",
+          },
+          label: flywheelContent.edgeLabels.flywheelFeedback.threeToOne,
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: 600,
+            fill: "#1E1E1E",
+          },
+          labelBgStyle: {
+            fill: colors.flywheelFeedbackBg,
+            fillOpacity: 0.95,
+          },
+          labelBgPadding: [8, 16] as [number, number],
+        }
+      );
+    } else if (flywheelContent.problems) {
+      // Problem to problem edges (if only problems exist)
+      edges.push(
+        {
+          id: "problem-1-feedback",
+          source: "one-to-two",
+          target: "two-to-three",
+          sourceHandle: "right",
+          targetHandle: "top-target",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: colors.flywheelFeedback,
+            width: edgeStyles.arrowWidth,
+            height: edgeStyles.arrowHeight,
+          },
+          style: {
+            strokeWidth: edgeStyles.strokeWidth,
+            stroke: colors.flywheelFeedback,
+            strokeDasharray: "12,6",
+          },
+          label: flywheelContent.edgeLabels.flywheelFeedback.oneToTwo,
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: 600,
+            fill: "#1E1E1E",
+          },
+          labelBgStyle: {
+            fill: colors.flywheelFeedbackBg,
+            fillOpacity: 0.95,
+          },
+          labelBgPadding: [8, 16] as [number, number],
+        },
+        {
+          id: "problem-2-feedback",
+          source: "two-to-three",
+          target: "three-to-one",
+          sourceHandle: "left",
+          targetHandle: "right-target",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: colors.flywheelFeedback,
+            width: edgeStyles.arrowWidth,
+            height: edgeStyles.arrowHeight,
+          },
+          style: {
+            strokeWidth: edgeStyles.strokeWidth,
+            stroke: colors.flywheelFeedback,
+            strokeDasharray: "12,6",
+          },
+          label: flywheelContent.edgeLabels.flywheelFeedback.twoToThree,
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: 600,
+            fill: "#1E1E1E",
+          },
+          labelBgStyle: {
+            fill: colors.flywheelFeedbackBg,
+            fillOpacity: 0.95,
+          },
+          labelBgPadding: [8, 16] as [number, number],
+        },
+        {
+          id: "problem-3-feedback",
+          source: "three-to-one",
+          target: "one-to-two",
+          sourceHandle: "top",
+          targetHandle: "left-target",
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: colors.flywheelFeedback,
+            width: edgeStyles.arrowWidth,
+            height: edgeStyles.arrowHeight,
+          },
+          style: {
+            strokeWidth: edgeStyles.strokeWidth,
+            stroke: colors.flywheelFeedback,
+            strokeDasharray: "12,6",
+          },
+          label: flywheelContent.edgeLabels.flywheelFeedback.threeToOne,
+          labelStyle: {
+            fontSize: 14,
+            fontWeight: 600,
+            fill: "#1E1E1E",
+          },
+          labelBgStyle: {
+            fill: colors.flywheelFeedbackBg,
+            fillOpacity: 0.95,
+          },
+          labelBgPadding: [8, 16] as [number, number],
+        }
+      );
+    }
+  }
+
+  return edges;
+};
+
+// Comments explaining the Three Ps alignment:
+// - Course Local State → Purpose (meaningful work and learning)
+// - Access Token → Participation (trusted authentication and access)
+// - Global State → Proof (verifiable contributions and portable reputation)
+// - Project Local State connects Purpose to Participation through coordinated treasury and governance
+
+interface FlywheelDiagramProps {
+  initialDiagram?: string;
+  showDropdown?: boolean;
+}
+
+export default function FlywheelDiagram({ 
+  initialDiagram, 
+  showDropdown = true 
+}: FlywheelDiagramProps) {
+  const getInitialVersion = () => {
+    if (initialDiagram) {
+      const found = diagramVersions.find(v => v.id === initialDiagram);
+      return found || diagramVersions[0];
+    }
+    return diagramVersions[0];
+  };
+
+  const [selectedVersion, setSelectedVersion] = useState(getInitialVersion());
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>(
+    createFlywheelNodes(selectedVersion.content, selectedVersion.showLabels)
+  );
+  const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>(
+    createFlywheelEdges(selectedVersion.content)
+  );
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
+
+  // Handle version change
+  const handleVersionChange = (versionId: string) => {
+    const newVersion = diagramVersions.find((v) => v.id === versionId);
+    if (newVersion) {
+      setSelectedVersion(newVersion);
+      setNodes(createFlywheelNodes(newVersion.content, newVersion.showLabels));
+      setEdges(createFlywheelEdges(newVersion.content));
+
+      // Fit view after a short delay to ensure nodes are updated
+      setTimeout(() => {
+        if (reactFlowInstance) {
+          reactFlowInstance.fitView({ padding: 0.2, duration: 800 });
+        }
+      }, 100);
+    }
+  };
 
   // Initialize the ReactFlow instance
   const onInit = useCallback((instance: ReactFlowInstance<Node, Edge>) => {
@@ -426,64 +609,59 @@ export default function FlywheelDiagram() {
         maxZoom={2}
         defaultViewport={{ x: 0, y: 0, zoom: 0.3 }}
       >
-        <Background color="#f3f4f6" gap={20} />
+        <Background color={colors.diagramBg} gap={20} />
         <Panel position="top-right">
-          <button
-            onClick={toggleFullScreen}
-            className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded flex items-center shadow transition-colors"
-            title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
-          >
-            {isFullScreen ? (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+          <div className="flex gap-2">
+            {showDropdown && (
+              <select
+                value={selectedVersion.id}
+                onChange={(e) => handleVersionChange(e.target.value)}
+                className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm font-medium shadow transition-colors border border-gray-600"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
-                />
-              </svg>
+                {diagramVersions.map((version) => (
+                  <option key={version.id} value={version.id}>
+                    {version.name}
+                  </option>
+                ))}
+              </select>
             )}
-          </button>
-        </Panel>
-        <Panel position="top-left">
-          <div className="bg-white bg-opacity-95 p-4 rounded-lg shadow-lg max-w-sm">
-            <h3 className="font-bold text-base mb-2 text-gray-800">
-              The Andamio Flywheel
-            </h3>
-            <div className="space-y-2 text-xs">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-0.5 bg-red-500 rounded"></div>
-                <span className="text-gray-700">Problems → Solutions</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-3 h-0.5 bg-blue-500 rounded border border-blue-500"
-                  style={{ borderStyle: "dashed" }}
-                ></div>
-                <span className="text-gray-700">Flywheel feedback</span>
-              </div>
-            </div>
+            <button
+              onClick={toggleFullScreen}
+              className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded flex items-center shadow transition-colors"
+              title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
+            >
+              {isFullScreen ? (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5"
+                  />
+                </svg>
+              )}
+            </button>
           </div>
         </Panel>
       </ReactFlow>

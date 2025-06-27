@@ -9,11 +9,24 @@ export interface FlywheelNodeData {
   problem: string;
   problemDescription: string;
   nodeType: "problem" | "step";
+  showLabels?: boolean;
   handles?: {
     top?: boolean;
     right?: boolean;
     bottom?: boolean;
     left?: boolean;
+  };
+  colors?: {
+    problemBg: string;
+    problemBorder: string;
+    problemText: string;
+    problemBadgeBg: string;
+    problemBadgeText: string;
+    solutionBg: string;
+    solutionBorder: string;
+    solutionText: string;
+    solutionBadgeBg: string;
+    solutionBadgeText: string;
   };
 }
 
@@ -25,17 +38,44 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
     left: true,
   };
 
-  // Different styles for problems vs steps
+  // Default colors if none provided
+  const defaultColors = {
+    problemBg: "#FEF2F2",
+    problemBorder: "#F87171", 
+    problemText: "#7F1D1D",
+    problemBadgeBg: "#FECACA",
+    problemBadgeText: "#991B1B",
+    solutionBg: "#EFF6FF",
+    solutionBorder: "#60A5FA",
+    solutionText: "#1E3A8A",
+    solutionBadgeBg: "#DBEAFE", 
+    solutionBadgeText: "#1D4ED8",
+  };
+
+  const colors = data.colors || defaultColors;
+
+  // Dynamic styles for problems vs steps
   const getNodeStyle = () => {
     if (data.nodeType === "problem") {
-      return "bg-red-50 border-red-400 text-red-900 shadow-lg";
+      return {
+        backgroundColor: colors.problemBg,
+        borderColor: colors.problemBorder,
+        color: colors.problemText,
+      };
     } else {
-      return "bg-blue-50 border-blue-400 text-blue-900 shadow-lg";
+      return {
+        backgroundColor: colors.solutionBg,
+        borderColor: colors.solutionBorder,
+        color: colors.solutionText,
+      };
     }
   };
 
   return (
-    <div className={`px-4 py-3 rounded-lg border-2 relative max-w-[260px] ${getNodeStyle()}`}>
+    <div 
+      className="px-4 py-3 rounded-lg border-2 relative max-w-[260px] shadow-lg"
+      style={getNodeStyle()}
+    >
       {/* Handles */}
       {handles.top && (
         <>
@@ -110,11 +150,19 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
         {data.nodeType === "problem" ? (
           <>
             {/* Problem Badge */}
-            <div className="flex items-center">
-              <div className="px-2 py-0.5 bg-red-200 text-red-800 rounded-full text-xs font-bold uppercase tracking-wide">
-                Problem
+            {data.showLabels !== false && (
+              <div className="flex items-center">
+                <div 
+                  className="px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide"
+                  style={{
+                    backgroundColor: colors.problemBadgeBg,
+                    color: colors.problemBadgeText,
+                  }}
+                >
+                  Problem
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Problem Title */}
             <div className="font-bold text-lg leading-tight">{data.problem}</div>
@@ -125,11 +173,19 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
         ) : (
           <>
             {/* Solution Badge */}
-            <div className="flex items-center">
-              <div className="px-2 py-0.5 bg-blue-200 text-blue-800 rounded-full text-xs font-bold uppercase tracking-wide">
-                Solution
+            {data.showLabels !== false && (
+              <div className="flex items-center">
+                <div 
+                  className="px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wide"
+                  style={{
+                    backgroundColor: colors.solutionBadgeBg,
+                    color: colors.solutionBadgeText,
+                  }}
+                >
+                  Solution
+                </div>
               </div>
-            </div>
+            )}
             
             {/* Solution Title */}
             <div className="font-bold text-base leading-tight">{data.label}</div>
