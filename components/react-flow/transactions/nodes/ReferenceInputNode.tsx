@@ -3,6 +3,8 @@
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import Link from "next/link";
+import { Registry } from "@/types";
+import { createTokenLink } from "../utils/tokenUtils";
 
 interface ReferenceInputNodeData {
   id: string;
@@ -11,6 +13,7 @@ interface ReferenceInputNodeData {
   script?: string;
   value: string[];
   type?: string;
+  registryData?: Registry | null;
 }
 
 // Export the node type for use in the diagram component
@@ -21,17 +24,18 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
 
   const hasDetails = data.datum || data.script;
 
-  const hasValidator = data.address.includes('.');
+  const hasValidator = data.address.includes(".");
   const linkUrl = hasValidator
     ? (() => {
-        const parts = data.address.split('.');
+        const parts = data.address.split(".");
         const validatorName = parts[1];
-        const isObserver = validatorName.includes('obs');
-        return isObserver 
-          ? `/docs/protocol/v1/validators/${parts[0]}/observer/${validatorName}`
+        const isObserver = validatorName.includes("obs");
+        return isObserver
+          ? `/docs/protocol/v1/validators/${parts[0]}/observers/${validatorName}`
           : `/docs/protocol/v1/validators/${parts[0]}/${validatorName}`;
       })()
     : null;
+
 
   return (
     <div className="shadow-md rounded-md bg-orange-100 border-2 border-orange-700 text-orange-700">
@@ -40,13 +44,17 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
       </div>
       <div className="px-3 py-2 space-y-2 text-xs">
         <div className="flex">
-          <span className="font-semibold mr-1">{data.type && data.type?.charAt(0).toUpperCase() + data.type?.slice(1)}{" "}Address:</span>
+          <span className="font-semibold mr-1">
+            {data.type &&
+              data.type?.charAt(0).toUpperCase() + data.type?.slice(1)}{" "}
+            Address:
+          </span>
           {data.type === "script" && linkUrl ? (
             <Link
               href={linkUrl}
               className="text-orange-600 hover:text-orange-800 transition-colors"
             >
-              {data.address.split('.')[1]}
+              {data.address.split(".")[1]}
             </Link>
           ) : (
             <span>{data.address}</span>
@@ -55,13 +63,48 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
 
         <div>
           <span className="font-semibold">Value:</span>
-          {Array.isArray(data.value) ? (
-            data.value.map((val, idx) => <pre className="pt-1" key={idx}>{val}</pre>)
-          ) : (
-            <pre className="pt-1">{data.value}</pre>
-          )}
+          {Array.isArray(data.value)
+            ? data.value.map((val, idx) => {
+                const tokenInfo = createTokenLink(val, data.registryData);
+                return (
+                  <pre className="pt-1" key={idx}>
+                    {tokenInfo.hasToken ? (
+                      <>
+                        {tokenInfo.amount}{" "}
+                        <Link
+                          href={tokenInfo.tokenLink ?? "#"}
+                          className="text-orange-600 hover:text-orange-800 transition-colors"
+                        >
+                          {tokenInfo.displayToken}
+                        </Link>
+                      </>
+                    ) : (
+                      val
+                    )}
+                  </pre>
+                );
+              })
+            : (() => {
+                const tokenInfo = createTokenLink(data.value as string);
+                return (
+                  <pre className="pt-1">
+                    {tokenInfo.hasToken ? (
+                      <>
+                        {tokenInfo.amount}{" "}
+                        <Link
+                          href={tokenInfo.tokenLink ?? "#"}
+                          className="text-orange-600 hover:text-orange-800 transition-colors"
+                        >
+                          {tokenInfo.displayToken}
+                        </Link>
+                      </>
+                    ) : (
+                      data.value
+                    )}
+                  </pre>
+                );
+              })()}
         </div>
-
       </div>
       <div className="text-xs">
         {hasDetails && (

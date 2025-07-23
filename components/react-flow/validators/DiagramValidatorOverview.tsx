@@ -62,7 +62,7 @@ function DiagramValidatorOverview({
   useEffect(() => {
     const fetchRegistryData = async () => {
       try {
-        const response = await fetch("/yaml/registry.yaml");
+        const response = await fetch("/yaml/validator-registry-v1.yaml");
         const yamlText = await response.text();
         const data = yaml.load(yamlText) as Registry;
         setRegistryData(data);
@@ -111,6 +111,7 @@ function DiagramValidatorOverview({
               ? validator.purpose.join(", ")
               : validator.purpose,
             system: system,
+            id: validatorId, // Pass the validator ID for linking
           },
         };
         diagramNodes.push(validatorNode);

@@ -28,10 +28,10 @@ const nodeTypes: NodeTypes = {
 const protocolData = {
   nodes: [
     {
-      id: "index",
+      id: "index-validators",
       type: "protocolNode",
       data: {
-        label: "Index System",
+        label: "Index Validators",
         description: "Ensures uniqueness of access tokens",
         handles: { right: true, left: false, top: false, bottom: false },
         href: "/docs/protocol/v1/validators/index-validators",
@@ -39,10 +39,10 @@ const protocolData = {
       position: { x: 50, y: 50 },
     },
     {
-      id: "global",
+      id: "global-state",
       type: "protocolNode",
       data: {
-        label: "Global System",
+        label: "Global State",
         description: "Tracks user credentials",
         handles: {
           right: true,
@@ -94,8 +94,8 @@ const protocolData = {
   edges: [
     {
       id: "index-to-global",
-      source: "index",
-      target: "global",
+      source: "index-validators",
+      target: "global-state",
       sourceHandle: "right",
       targetHandle: "left",
       markerEnd: {
@@ -105,7 +105,7 @@ const protocolData = {
     },
     {
       id: "global-to-instance",
-      source: "global",
+      source: "global-state",
       target: "instance",
       sourceHandle: "right",
       targetHandle: "left",
@@ -138,7 +138,7 @@ const protocolData = {
     },
     {
       id: "global-to-course",
-      source: "global",
+      source: "global-state",
       target: "course",
       sourceHandle: "bottomLeft",
       targetHandle: "top",
@@ -155,7 +155,7 @@ const protocolData = {
     },
     {
       id: "global-to-project",
-      source: "global",
+      source: "global-state",
       target: "project",
       sourceHandle: "bottomRight",
       targetHandle: "top",

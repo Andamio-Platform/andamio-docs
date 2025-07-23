@@ -3,6 +3,8 @@
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import Link from "next/link";
+import { Registry } from "@/types";
+import { createTokenLink } from "../utils/tokenUtils";
 
 interface InputNodeData {
   id: string;
@@ -13,6 +15,7 @@ interface InputNodeData {
   value: string[];
   redeemer?: string;
   type?: string; // make sure to include type
+  registryData?: Registry | null;
 }
 
 // Export the node type for use in the diagram component
@@ -23,17 +26,18 @@ function InputNode({ data }: { data: InputNodeData }) {
 
   const hasDetails = data.redeemer || data.datum || data.script;
 
-  const hasValidator = data.address.includes('.');
+  const hasValidator = data.address.includes(".");
   const linkUrl = hasValidator
     ? (() => {
-        const parts = data.address.split('.');
+        const parts = data.address.split(".");
         const validatorName = parts[1];
-        const isObserver = validatorName.includes('obs');
-        return isObserver 
-          ? `/docs/protocol/v1/validators/${parts[0]}/observer/${validatorName}`
+        const isObserver = validatorName.includes("obs");
+        return isObserver
+          ? `/docs/protocol/v1/validators/${parts[0]}/observers/${validatorName}`
           : `/docs/protocol/v1/validators/${parts[0]}/${validatorName}`;
       })()
     : null;
+
 
   return (
     <div className="shadow-md rounded-md bg-blue-100 border-2 border-blue-700 text-blue-700">
@@ -42,13 +46,17 @@ function InputNode({ data }: { data: InputNodeData }) {
       </div>
       <div className="px-3 py-2 space-y-2 text-xs">
         <div className="flex">
-          <span className="font-semibold mr-1">{data.type && data.type?.charAt(0).toUpperCase() + data.type?.slice(1)}{" "}Address:</span>
+          <span className="font-semibold mr-1">
+            {data.type &&
+              data.type?.charAt(0).toUpperCase() + data.type?.slice(1)}{" "}
+            Address:
+          </span>
           {data.type === "script" && linkUrl ? (
             <Link
               href={linkUrl}
               className="text-blue-600 hover:text-blue-800 transition-colors"
             >
-              {data.address.split('.')[1]}
+              {data.address.split(".")[1]}
             </Link>
           ) : (
             <span>{data.address}</span>
@@ -57,13 +65,48 @@ function InputNode({ data }: { data: InputNodeData }) {
 
         <div>
           <span className="font-semibold">Value:</span>
-          {Array.isArray(data.value) ? (
-            data.value.map((val, idx) => <pre className="pt-1" key={idx}>{val}</pre>)
-          ) : (
-            <pre className="pt-1">{data.value}</pre>
-          )}
+          {Array.isArray(data.value)
+            ? data.value.map((val, idx) => {
+                const tokenInfo = createTokenLink(val, data.registryData);
+                return (
+                  <pre className="pt-1" key={idx}>
+                    {tokenInfo.hasToken ? (
+                      <>
+                        {tokenInfo.amount}{" "}
+                        <Link
+                          href={tokenInfo.tokenLink ?? "#"}
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          {tokenInfo.displayToken}
+                        </Link>
+                      </>
+                    ) : (
+                      val
+                    )}
+                  </pre>
+                );
+              })
+            : (() => {
+                const tokenInfo = createTokenLink(data.value as string, data.registryData);
+                return (
+                  <pre className="pt-1">
+                    {tokenInfo.hasToken ? (
+                      <>
+                        {tokenInfo.amount}{" "}
+                        <Link
+                          href={tokenInfo.tokenLink ?? "#"}
+                          className="text-blue-600 hover:text-blue-800 transition-colors"
+                        >
+                          {tokenInfo.displayToken}
+                        </Link>
+                      </>
+                    ) : (
+                      data.value
+                    )}
+                  </pre>
+                );
+              })()}
         </div>
-
       </div>
       <div className="text-xs">
         {hasDetails && (
@@ -99,13 +142,13 @@ function InputNode({ data }: { data: InputNodeData }) {
                 <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto">
                   {typeof data.redeemer === "string"
                     ? (() => {
-                      try {
-                        const parsed = JSON.parse(data.redeemer);
-                        return JSON.stringify(parsed, null, 2);
-                      } catch {
-                        return data.redeemer;
-                      }
-                    })()
+                        try {
+                          const parsed = JSON.parse(data.redeemer);
+                          return JSON.stringify(parsed, null, 2);
+                        } catch {
+                          return data.redeemer;
+                        }
+                      })()
                     : JSON.stringify(data.redeemer, null, 2)}
                 </pre>
               </div>
@@ -117,13 +160,13 @@ function InputNode({ data }: { data: InputNodeData }) {
                 <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto">
                   {typeof data.datum === "string"
                     ? (() => {
-                      try {
-                        const parsed = JSON.parse(data.datum);
-                        return JSON.stringify(parsed, null, 2);
-                      } catch {
-                        return data.datum;
-                      }
-                    })()
+                        try {
+                          const parsed = JSON.parse(data.datum);
+                          return JSON.stringify(parsed, null, 2);
+                        } catch {
+                          return data.datum;
+                        }
+                      })()
                     : JSON.stringify(data.datum, null, 2)}
                 </pre>
               </div>

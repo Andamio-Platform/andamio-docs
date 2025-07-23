@@ -21,14 +21,15 @@ import TransactionNode from "./nodes/TransactionNode";
 import InputNode from "./nodes/InputNode";
 import OutputNode from "./nodes/OutputNode";
 import ReferenceInputNode from "./nodes/ReferenceInputNode";
-import { TransactionYaml } from "@/types";
-// Client-side component can't directly use server-side functions
-// We'll need to fetch the data from an API endpoint instead
+import { TransactionYaml, Registry } from "@/types";
+import yaml from "js-yaml";
 
 // Props interface for the component
 interface DiagramTransactionFlowProps {
   txData: TransactionYaml;
+  registryData?: Registry | null;
 }
+
 
 // Define custom node types
 const nodeTypes: NodeTypes = {
@@ -43,19 +44,46 @@ export default function TxDiagram({ txData }: { txData: TransactionYaml }) {
 }
 
 // Client-side only diagram component to avoid hydration mismatches
-function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
+function DiagramTransactionFlow({ txData, registryData }: DiagramTransactionFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [loading, setLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
+  const [internalRegistryData, setInternalRegistryData] = useState<Registry | null>(registryData || null);
+  const [isRegistryLoading, setIsRegistryLoading] = useState(!registryData);
 
   console.log("Transaction data received:", txData);
+
+  // Fetch registry data if not provided
+  useEffect(() => {
+    const fetchRegistryData = async () => {
+      if (internalRegistryData) {
+        setIsRegistryLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("/yaml/validator-registry-v1.yaml");
+        const yamlText = await response.text();
+        const data = yaml.load(yamlText) as Registry;
+        setInternalRegistryData(data);
+        setIsRegistryLoading(false);
+      } catch (error) {
+        console.error("Error loading registry data:", error);
+        setIsRegistryLoading(false);
+      }
+    };
+
+    fetchRegistryData();
+  }, [internalRegistryData]);
 
   // Initialize the diagram with transaction data
   useEffect(() => {
     const initDiagram = async () => {
+      if (isRegistryLoading) return;
+      
       try {
         console.log(
           "Initializing diagram with provided transaction data:",
@@ -174,6 +202,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
             role: txData.metadata.role,
             mints: mintsData,
             withdrawals: withdrawalsData,
+            registryData: internalRegistryData,
           },
         };
         diagramNodes.push(txNode);
@@ -207,6 +236,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
                   : JSON.stringify(input.output.datum)
                 : undefined,
               script: input.output.script,
+              registryData: internalRegistryData,
             },
           };
           diagramNodes.push(inputNode);
@@ -248,6 +278,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
                     : JSON.stringify(refInput.output.datum)
                   : undefined,
                 script: refInput.output.script,
+                registryData: internalRegistryData,
               },
             };
             diagramNodes.push(refInputNode);
@@ -290,6 +321,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
                   : JSON.stringify(output.output.datum)
                 : undefined,
               script: output.output.script,
+              registryData: internalRegistryData,
             },
           };
           diagramNodes.push(outputNode);
@@ -321,7 +353,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
     };
 
     initDiagram();
-  }, [txData, setNodes, setEdges]);
+  }, [txData, setNodes, setEdges, internalRegistryData, isRegistryLoading]);
 
   // Fit view to the graph when nodes change
   const onInit = useCallback((instance: ReactFlowInstance<Node, Edge>) => {
@@ -354,7 +386,7 @@ function DiagramTransactionFlow({ txData }: DiagramTransactionFlowProps) {
 
   // Render the diagram
   const renderDiagram = () => {
-    if (loading) {
+    if (loading || isRegistryLoading) {
       return (
         <div className="flex items-center justify-center h-full bg-gray-800 bg-opacity-50 text-white">
           <div className="text-center">

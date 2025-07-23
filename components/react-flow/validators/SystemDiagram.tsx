@@ -54,7 +54,7 @@ function SystemDiagramOverview({ system }: { system: string }) {
   useEffect(() => {
     const fetchRegistryData = async () => {
       try {
-        const response = await fetch("/yaml/registry.yaml");
+        const response = await fetch("/yaml/validator-registry-v1.yaml");
         const yamlText = await response.text();
         const data = yaml.load(yamlText) as Registry;
         setRegistryData(data);
@@ -112,26 +112,32 @@ function SystemDiagramOverview({ system }: { system: string }) {
         const validatorRedeemerCounts = validatorKeys.map((validatorId) => {
           const validator = validators[validatorId];
           const redeemerData = validator.redeemer;
-          
+
           if (!redeemerData) return 0;
-          
-          const redeemers = Array.isArray(redeemerData) ? redeemerData : [redeemerData];
+
+          const redeemers = Array.isArray(redeemerData)
+            ? redeemerData
+            : [redeemerData];
           let totalRedeemers = 0;
-          
+
           redeemers.forEach((redeemer) => {
             if (!redeemer || Object.keys(redeemer).length === 0) return;
-            
+
             if (redeemer.type === "bytes" || !redeemer.type) {
               totalRedeemers += 1;
             } else {
-              const actionKey = Object.keys(redeemer).find(key => key !== "type");
+              const actionKey = Object.keys(redeemer).find(
+                (key) => key !== "type"
+              );
               if (actionKey) {
-                const actions = Array.isArray(redeemer[actionKey]) ? redeemer[actionKey] : [redeemer[actionKey]];
+                const actions = Array.isArray(redeemer[actionKey])
+                  ? redeemer[actionKey]
+                  : [redeemer[actionKey]];
                 totalRedeemers += actions.length;
               }
             }
           });
-          
+
           return Math.max(totalRedeemers, 1); // Minimum 1 for spacing calculation
         });
 
@@ -140,25 +146,25 @@ function SystemDiagramOverview({ system }: { system: string }) {
         const validatorX = 600; // All validators in center column
         const baseValidatorSpacing = 80; // Base minimum spacing between validators
         const redeemerSpacing = 60; // Space per redeemer
-        
+
         // Calculate cumulative Y positions for validators
         const validatorPositions: number[] = [];
         let currentY = systemY;
-        
+
         // Center the entire diagram vertically
         const totalHeight = validatorRedeemerCounts.reduce((sum, count) => {
-          return sum + baseValidatorSpacing + (count * redeemerSpacing);
+          return sum + baseValidatorSpacing + count * redeemerSpacing;
         }, 0);
-        currentY = systemY - (totalHeight / 2);
+        currentY = systemY - totalHeight / 2;
 
         validatorKeys.forEach((validatorId, validatorIndex) => {
           const redeemerCount = validatorRedeemerCounts[validatorIndex];
-          
+
           // Position this validator
           validatorPositions.push(currentY);
-          
+
           // Move to next validator position (current + base spacing + space for redeemers)
-          currentY += baseValidatorSpacing + (redeemerCount * redeemerSpacing);
+          currentY += baseValidatorSpacing + redeemerCount * redeemerSpacing;
         });
 
         validatorKeys.forEach((validatorId, validatorIndex) => {
@@ -178,6 +184,7 @@ function SystemDiagramOverview({ system }: { system: string }) {
                 ? validator.purpose.join(", ")
                 : validator.purpose,
               system: system,
+              id: validatorId, // Pass the validator ID for linking
             },
           };
           diagramNodes.push(validatorNode);
@@ -220,8 +227,8 @@ function SystemDiagramOverview({ system }: { system: string }) {
                 validatorRedeemers.push({
                   id: `redeemer-${validatorId}-${redeemerIndex}`,
                   type: redeemer.type || "bytes",
-                  transaction: Array.isArray(redeemer.transaction) 
-                    ? redeemer.transaction.join(", ") 
+                  transaction: Array.isArray(redeemer.transaction)
+                    ? redeemer.transaction.join(", ")
                     : redeemer.transaction || "",
                 });
               } else {
@@ -244,11 +251,11 @@ function SystemDiagramOverview({ system }: { system: string }) {
                       actionIndex: number
                     ) => {
                       // Handle different action structures
-                      const actionName = Array.isArray(action.action) 
-                        ? action.action.join(", ") 
+                      const actionName = Array.isArray(action.action)
+                        ? action.action.join(", ")
                         : action.action || actionKey;
-                      const transaction = Array.isArray(action.transaction) 
-                        ? action.transaction.join(", ") 
+                      const transaction = Array.isArray(action.transaction)
+                        ? action.transaction.join(", ")
                         : action.transaction || "";
 
                       validatorRedeemers.push({
@@ -266,12 +273,14 @@ function SystemDiagramOverview({ system }: { system: string }) {
             // Now position all redeemers for this validator with equal spacing
             const redeemerX = 1000; // All redeemers in right column
             const totalRedeemerCount = validatorRedeemers.length;
-            
+
             // Calculate starting Y position for redeemers (centered around validator)
-            const redeemerStartY = validatorY - ((totalRedeemerCount - 1) * redeemerSpacing) / 2;
+            const redeemerStartY =
+              validatorY - ((totalRedeemerCount - 1) * redeemerSpacing) / 2;
 
             validatorRedeemers.forEach((redeemerData, redeemerIndex) => {
-              const redeemerY = redeemerStartY + (redeemerIndex * redeemerSpacing);
+              const redeemerY =
+                redeemerStartY + redeemerIndex * redeemerSpacing;
 
               const redeemerNode: Node = {
                 id: redeemerData.id,

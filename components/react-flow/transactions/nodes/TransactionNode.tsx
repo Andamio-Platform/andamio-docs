@@ -3,6 +3,8 @@
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import Link from "next/link";
+import { Registry } from "@/types";
+import { createTokenLink } from "../utils/tokenUtils";
 
 interface TransactionNodeData {
   name: string;
@@ -23,6 +25,7 @@ interface TransactionNodeData {
     observer?: string;
     redeemer?: string | object;
   }[];
+  registryData?: Registry | null;
 }
 
 export type { TransactionNodeData };
@@ -117,7 +120,7 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                               const validatorName = parts[1];
                               const isObserver = validatorName.includes("obs");
                               return isObserver
-                                ? `/docs/protocol/v1/validators/${parts[0]}/observer/${validatorName}`
+                                ? `/docs/protocol/v1/validators/${parts[0]}/observers/${validatorName}`
                                 : `/docs/protocol/v1/validators/${parts[0]}/${validatorName}`;
                             })()
                           : null;
@@ -140,11 +143,28 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                         {mint.tokens && mint.tokens.length > 0 && (
                           <div>
                             <span className="font-semibold">Tokens:</span>
-                            {mint.tokens.map((token, i) => (
-                              <pre className="pt-1" key={`token-${i}`}>
-                                {token}
-                              </pre>
-                            ))}
+                            {mint.tokens.map((token, i) => {
+                              const tokenInfo = createTokenLink(token, data.registryData);
+                              
+                              if (tokenInfo.hasToken) {
+                                return (
+                                  <pre className="pt-1" key={`token-${i}`}>
+                                    {tokenInfo.amount}{" "}
+                                    <Link
+                                      href={tokenInfo.tokenLink!}
+                                      className="text-purple-600 hover:text-purple-800 transition-colors"
+                                    >
+                                      {tokenInfo.displayToken}
+                                    </Link>
+                                  </pre>
+                                );
+                              }
+                              return (
+                                <pre className="pt-1" key={`token-${i}`}>
+                                  {token}
+                                </pre>
+                              );
+                            })}
                           </div>
                         )}
                         {mint.redeemer && (
@@ -222,9 +242,6 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                                 return `/docs/protocol/v1/validators/${parts[0]}/observers/${observerName}`;
                               })()
                             : null;
-
-                          console.log("hasObserver", hasObserver);
-                          console.log("linkUrl", linkUrl);
 
                           return hasObserver && linkUrl ? (
                             <Link

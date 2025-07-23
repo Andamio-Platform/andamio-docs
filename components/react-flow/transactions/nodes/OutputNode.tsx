@@ -3,6 +3,8 @@
 import { memo, useState } from "react";
 import { Handle, Position } from "@xyflow/react";
 import Link from "next/link";
+import { Registry } from "@/types";
+import { createTokenLink } from "../utils/tokenUtils";
 
 interface OutputNodeData {
   id: string;
@@ -11,6 +13,7 @@ interface OutputNodeData {
   script?: string;
   value: string[];
   type: string;
+  registryData?: Registry | null;
 }
 
 // Export the node type for use in the diagram component
@@ -26,12 +29,13 @@ function OutputNode({ data }: { data: OutputNodeData }) {
     ? (() => {
         const parts = data.address.split(".");
         const validatorName = parts[1];
-        const isObserver = validatorName.includes('obs');
-        return isObserver 
-          ? `/docs/protocol/v1/validators/${parts[0]}/observer/${validatorName}`
+        const isObserver = validatorName.includes("obs");
+        return isObserver
+          ? `/docs/protocol/v1/validators/${parts[0]}/observers/${validatorName}`
           : `/docs/protocol/v1/validators/${parts[0]}/${validatorName}`;
       })()
     : null;
+
 
   return (
     <div className="shadow-md rounded-md bg-green-100 border-2 border-green-700 text-green-700">
@@ -58,15 +62,47 @@ function OutputNode({ data }: { data: OutputNodeData }) {
 
         <div>
           <span className="font-semibold">Value:</span>
-          {Array.isArray(data.value) ? (
-            data.value.map((val, idx) => (
-              <pre className="pt-1" key={idx}>
-                {val}
-              </pre>
-            ))
-          ) : (
-            <pre className="pt-1">{data.value}</pre>
-          )}
+          {Array.isArray(data.value)
+            ? data.value.map((val, idx) => {
+                const tokenInfo = createTokenLink(val, data.registryData);
+                return (
+                  <pre className="pt-1" key={idx}>
+                    {tokenInfo.hasToken ? (
+                      <>
+                        {tokenInfo.amount}{" "}
+                        <Link
+                          href={tokenInfo.tokenLink ?? "#"}
+                          className="text-green-600 hover:text-green-800 transition-colors"
+                        >
+                          {tokenInfo.displayToken}
+                        </Link>
+                      </>
+                    ) : (
+                      val
+                    )}
+                  </pre>
+                );
+              })
+            : (() => {
+                const tokenInfo = createTokenLink(data.value as string);
+                return (
+                  <pre className="pt-1">
+                    {tokenInfo.hasToken ? (
+                      <>
+                        {tokenInfo.amount}{" "}
+                        <Link
+                          href={tokenInfo.tokenLink ?? "#"}
+                          className="text-green-600 hover:text-green-800 transition-colors"
+                        >
+                          {tokenInfo.displayToken}
+                        </Link>
+                      </>
+                    ) : (
+                      data.value
+                    )}
+                  </pre>
+                );
+              })()}
         </div>
       </div>
       <div className="text-xs">

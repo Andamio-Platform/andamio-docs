@@ -2,6 +2,7 @@
 
 import { memo } from "react";
 import { Handle, Position } from "@xyflow/react";
+import Link from "next/link";
 
 export interface ProtocolNodeData {
   label: string;
@@ -83,24 +84,32 @@ const ProtocolNode = ({ data }: { data: ProtocolNodeData }) => {
 
       <div className="flex flex-col space-y-2">
         <div className="flex items-center">
-          <div className="font-bold text-lg">{data.label}</div>
+          {data.href ? (
+            <Link 
+              href={data.href}
+              className="font-bold text-lg text-gray-700 hover:text-blue-700 transition-colors"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {data.label}
+            </Link>
+          ) : (
+            <div className="font-bold text-lg">{data.label}</div>
+          )}
         </div>
         <div className="text-xs">
           <div className="text-xs mt-1">{data.description}</div>
           {data.href && (
             <div className="mt-2">
-              <a 
+              <Link 
                 href={data.href} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800 hover:underline text-xs flex items-center"
+                className="text-blue-600 hover:text-blue-800 hover:underline text-xs flex items-center transition-colors"
                 onClick={(e) => e.stopPropagation()}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 View Docs
-              </a>
+              </Link>
             </div>
           )}
         </div>
