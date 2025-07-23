@@ -145,7 +145,8 @@ systems:
       instance-governance-scripts:
         name: "Instance Governance Scripts"
         doc: "protocol/v1/validators/instance/instance-governance-scripts"
-        purpose: "withdraw"
+        purpose: ["spend", "withdraw"]
+        address: "<instance_governance_scripts_address>"
         redeemer: {}
 
       instance-provider-scripts:

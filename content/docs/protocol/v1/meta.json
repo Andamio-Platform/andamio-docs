@@ -4,7 +4,9 @@
         "validators",
         "transactions",
         "tokens",
-        "access-token"
+        "access-token",
+        "variables-mainnet",
+        "variables-preproduction"
     ],
     "defaultOpen": false
 }

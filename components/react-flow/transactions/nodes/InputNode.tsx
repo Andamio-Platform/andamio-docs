@@ -5,6 +5,7 @@ import { Handle, Position } from "@xyflow/react";
 import Link from "next/link";
 import { Registry } from "@/types";
 import { createTokenLink } from "../utils/tokenUtils";
+import { resolveAddressDisplay } from "../utils/addressUtils";
 
 interface InputNodeData {
   id: string;
@@ -26,17 +27,7 @@ function InputNode({ data }: { data: InputNodeData }) {
 
   const hasDetails = data.redeemer || data.datum || data.script;
 
-  const hasValidator = data.address.includes(".");
-  const linkUrl = hasValidator
-    ? (() => {
-        const parts = data.address.split(".");
-        const validatorName = parts[1];
-        const isObserver = validatorName.includes("obs");
-        return isObserver
-          ? `/docs/protocol/v1/validators/${parts[0]}/observers/${validatorName}`
-          : `/docs/protocol/v1/validators/${parts[0]}/${validatorName}`;
-      })()
-    : null;
+  const addressInfo = resolveAddressDisplay(data.address, data.registryData);
 
 
   return (
@@ -51,15 +42,15 @@ function InputNode({ data }: { data: InputNodeData }) {
               data.type?.charAt(0).toUpperCase() + data.type?.slice(1)}{" "}
             Address:
           </span>
-          {data.type === "script" && linkUrl ? (
+          {data.type === "script" && addressInfo.linkUrl ? (
             <Link
-              href={linkUrl}
+              href={addressInfo.linkUrl}
               className="text-blue-600 hover:text-blue-800 transition-colors"
             >
-              {data.address.split(".")[1]}
+              {addressInfo.displayName}
             </Link>
           ) : (
-            <span>{data.address}</span>
+            <span>{addressInfo.displayName}</span>
           )}
         </div>
 
