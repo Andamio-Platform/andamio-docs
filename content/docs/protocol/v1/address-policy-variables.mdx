@@ -1,0 +1,74 @@
+---
+title: "Address and Policy Variables"
+description: "Complete list of address and policy ID variables used throughout the Andamio protocol registry"
+---
+
+# Address and Policy Variables
+
+This document lists all address and policy ID variables used in the Andamio protocol validator registry. These variables represent placeholders for actual blockchain addresses and policy IDs that will be substituted during deployment.
+
+## Address Variables
+
+Address variables are used for validators with "spend" purpose, representing the script addresses where UTxOs are locked.
+
+### Global State System
+- `<params_ref_validator_address>` - Params Ref Validator address
+- `<global_state_address>` - Global State validator address
+
+### Index Validators System  
+- `<index_ref_address>` - Index Ref validator address
+- `<index_scripts_address>` - Index Scripts validator address
+
+### Instance System
+- `<instance_provider_scripts_address>` - Instance Provider Scripts address
+- `<instance_scripts_address>` - Instance Scripts address
+
+### Course System
+- `<assignment_validator_address>` - Assignment Validator address
+- `<course_state_validator_address>` - Course State Validator address
+- `<module_ref_validator_address>` - Module Ref Validator address
+
+### Project System
+- `<contributor_state_scripts_address>` - Contributor State Scripts address
+- `<escrow1_address>` - Escrow1 validator address
+- `<treasury_scripts_address>` - Treasury Scripts address
+
+## Policy ID Variables
+
+Policy ID variables are used for validators with "mint" purpose, representing the minting policies for native tokens.
+
+### Access and Index Policies
+- `<access_token_policyid>` - Access token minting policy
+- `<init_index_policyid>` - Init Index Policy ID
+
+### Instance Policies
+- `<instance_provider_policyid>` - Instance Provider Scripts policy
+- `<instance_policyid>` - Instance Scripts policy
+
+### Course Policies
+- `<course_state_policyid>` - Course State Policy ID
+- `<module_policyid>` - Module Policy ID
+
+### Project Policies
+- `<contributor_state_policyid>` - Contributor State Scripts policy
+- `<treasury_token_policyid>` - Treasury Token policy
+
+## Additional Policy IDs in Asset IDs
+
+These policy IDs appear in token asset-id definitions but may not have corresponding validators in the registry:
+
+- `<index_admin_policyid>` - Index Admin token policy
+- `<index_ref_policyid>` - Index Ref token policy
+- `<instance_admin_policyid>` - Instance Admin token policy
+- `<course_nft_policyid>` - Course NFT policy
+- `<project_nft_policyid>` - Project NFT policy
+
+## Usage Notes
+
+1. **Deployment Substitution**: These variables are placeholders that should be replaced with actual addresses and policy IDs during protocol deployment.
+
+2. **Validator Alignment**: Address variables correspond to validators with "spend" purpose, while policy variables correspond to validators with "mint" purpose.
+
+3. **Token References**: Policy IDs in this list are referenced in token asset-id fields throughout the registry using the pattern `<policyid>.<tokenname>`.
+
+4. **Cross-System Dependencies**: Some policy IDs (like `<instance_policyid>`) are used across multiple systems, indicating shared infrastructure components.

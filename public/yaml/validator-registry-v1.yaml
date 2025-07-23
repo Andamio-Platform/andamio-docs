@@ -122,6 +122,7 @@ systems:
         name: "Init Index Policy"
         doc: "protocol/v1/validators/index-validators/init-index-policy"
         purpose: "mint"
+        policy: "<init_index_policyid>"
         redeemer: {}
     # Index Validator Tokens
     tokens:
@@ -151,6 +152,7 @@ systems:
         name: "Instance Provider Scripts"
         doc: "protocol/v1/validators/instance/instance-provider-scripts"
         purpose: ["spend", "mint"]
+        address: "<instance_provider_scripts_address>"
         policy: "<instance_provider_policyid>"
         redeemer: {}
 
@@ -158,6 +160,7 @@ systems:
         name: "Instance Scripts"
         doc: "protocol/v1/validators/instance/instance-scripts"
         purpose: ["spend", "mint"]
+        address: "<instance_scripts_address>"
         policy: "<instance_policyid>"
         redeemer: {}
     # Instance Validator Tokens
@@ -252,6 +255,7 @@ systems:
         name: "Assignment Validator"
         doc: "protocol/v1/validators/course/assignment-validator"
         purpose: "spend"
+        address: "<assignment_validator_address>"
         redeemer:
           - type: action
             AssignmentDecisionAction:
@@ -274,6 +278,7 @@ systems:
         name: "Course State Validator"
         doc: "protocol/v1/validators/course/course-state-scripts"
         purpose: "spend"
+        address: "<course_state_validator_address>"
         redeemer:
           - type: action
             CourseStateAction:
@@ -307,6 +312,7 @@ systems:
         name: "Module Ref Validator"
         doc: "protocol/v1/validators/course/module-scripts"
         purpose: "spend"
+        address: "<module_ref_validator_address>"
         redeemer:
           - type: action
             ModuleRefAction:
@@ -394,6 +400,8 @@ systems:
         name: "Contributor State Scripts"
         doc: "protocol/v1/validators/project/contributor-state-scripts"
         purpose: ["spend", "mint"]
+        address: "<contributor_state_scripts_address>"
+        policy: "<contributor_state_policyid>"
         redeemer:
           - type: action
             ContributorStateAction:
@@ -416,6 +424,7 @@ systems:
         name: "Escrow1"
         doc: "protocol/v1/validators/project/escrow1"
         purpose: "spend"
+        address: "<escrow1_address>"
         redeemer:
           - type: action
             ProjectAction:
@@ -445,6 +454,7 @@ systems:
         name: "Treasury Scripts"
         doc: "protocol/v1/validators/project/treasury-scripts"
         purpose: "spend"
+        address: "<treasury_scripts_address>"
         redeemer:
           - type: action
             TreasuryAction:
@@ -461,6 +471,7 @@ systems:
         name: "Treasury Token"
         doc: "protocol/v1/validators/project/treasury-token"
         purpose: "mint"
+        policy: "<treasury_token_policyid>"
         redeemer: {}
 
       treasury-token-cbor-obs:

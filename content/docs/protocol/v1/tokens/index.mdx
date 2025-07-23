@@ -1,15 +1,13 @@
 ---
 title: "Token Overview"
-description: "Protocol v1 token reference"
+description: "Protocol v1 token reference and registry integration"
 ---
 
 ## Overview
-This page lists all tokens found in the transaction YAML files located in `public/yaml/transactions/`
 
-## Todo:
-- [ ] these tokens needs to be `<policy_ref>.<actual_name>`
-- [ ] so how does Adrian name them? Where to look? Or is this already it?
-- [ ] need to include course state and contributor state tokens
+This page provides a comprehensive overview of all tokens in the Andamio Protocol v1, organized by system and usage patterns. All tokens follow the dot notation reference system defined in the [validator registry](/docs/protocol/v1/address-policy-variables).
+
+Token references use the format `system.token-name` which maps to registry paths at `systems > system > tokens > token-name`. Each token has an `asset-id` field containing the actual blockchain identifier in the format `<policyid>.<tokenname>`.
 
 ## Tokens by Minting Transaction
 
@@ -73,74 +71,69 @@ This page lists all tokens found in the transaction YAML files located in `publi
 |-------|-----------|-----------|---------|
 | `<treasury_token_policyid>.<escrow_hash>` | project-creator-mint-treasury-token.yaml | script | Treasury escrow management |
 
-## Token Usage by Category
+## Token Systems
+
+The protocol organizes tokens into five main systems:
+
+### Global State System
+- **access-token-user** - User-level access token
+- **access-token-global-state** - Global state access token  
+- **access-token-index** - Index access token
+
+### Index Validators System
+- **index-admin-token** - Index administration token
+- **index-scripts-ref-token** - Index scripts reference token
+
+### Instance System
+- **instance-admin-token** - Instance administration token
+- **course-nft** - Course NFT for course identification
+- **course-state-scripts** - Course state script references
+- **module-scripts** - Module script references
+- **assignment-validator** - Assignment validator references
+- **project-nft** - Project NFT for project identification
+- **treasury-token** - Treasury token references
+- **escrow1** - Escrow validator references
+- **treasury-scripts** - Treasury script references
+- **contributor-state-scripts** - Contributor state script references
+
+### Course System
+- **course-nft** - Course identification NFT
+- **instance-assignment-validator** - Assignment validator instance
+- **instance-module-scripts** - Module scripts instance
+- **instance-course-state-scripts** - Course state scripts instance
+- **course-state-token** - Student course participation token
+- **module-token** - Course module completion credential
+
+### Project System
+- **project-nft** - Project identification NFT
+- **project-instance-treasury-token** - Treasury token instance
+- **project-instance-escrow1** - Escrow instance
+- **project-instance-treasury-scripts** - Treasury scripts instance
+- **project-instance-contributor-state-scripts** - Contributor state scripts instance
+- **contributor-state-token** - Contributor participation token
+- **treasury-token** - Treasury management token
+
+## Token Usage Patterns
+
+Each token in the registry tracks its lifecycle through four usage fields:
+
+- **minted-in** - Transaction that creates the token
+- **used-in** - Transactions that consume the token as input
+- **referenced-in** - Transactions that reference the token without consuming
+- **burned-in** - Transactions that destroy the token
+
+## Registry Integration
+
+For complete token definitions including asset IDs, usage patterns, and cross-references, see the individual token documentation pages organized by system:
+
+- [Global State Tokens](/docs/protocol/v1/tokens/global-state)
+- [Index Validator Tokens](/docs/protocol/v1/tokens/index-validators)
+- [Instance Tokens](/docs/protocol/v1/tokens/instance)
+- [Course Tokens](/docs/protocol/v1/tokens/course)
+- [Project Tokens](/docs/protocol/v1/tokens/project)
+
+All policy ID variables used in token asset IDs are documented in the [Address and Policy Variables](/docs/protocol/v1/address-policy-variables) reference.
 
 
 
 
-# Examples
-
-## Course Instance
-
-
-## Project Instance
-
-# Andamio Mainnet V1
-
-## Tokens by Minting Transaction
-
-### Andamio Access Tokens
-| Asset | Minted In | Stored In | Purpose |
-|-------|-----------|-----------|---------|
-| `e760308d0c14096ff479ec5f2495455505feb790503903fe976c4fd2.222<alias>` | mint-access-token.yaml | user wallet | Higher-level access token |
-| `e760308d0c14096ff479ec5f2495455505feb790503903fe976c4fd2.100<alias>` | mint-access-token.yaml | global state validator | Basic access token |
-| `e760308d0c14096ff479ec5f2495455505feb790503903fe976c4fd2." "` | mint-access-token.yaml | index validator | Empty/default access token |
-
-### Local State NFT Assets
-| Asset | Minted In | Stored In | Purpose |
-|-------|-----------|-----------|---------|
-| `<course_nft_policyid>.CourseNFT` | admin-init-course.yaml | script | Course administration NFT |
-| `<project_nft_policyid>.ProjectNFT` | admin-init-project-step-1.yaml | script | Project administration NFT |
-
-### Local State Instance Provider Assets
-
-**Course**
-| Asset | Minted In | Stored In | Purpose |
-|-------|-----------|-----------|---------|
-| `a8d2f21558831626a4ab01582a4568be1dac3298e6b92450a8e839a3.AssignmentValidator` | admin-init-course.yaml | instance validator | Assignment validation instance |
-| `a8d2f21558831626a4ab01582a4568be1dac3298e6b92450a8e839a3.ModuleScripts` | admin-init-course.yaml | instance validator | Module script instances |
-| `a8d2f21558831626a4ab01582a4568be1dac3298e6b92450a8e839a3.CourseStateScripts` | admin-init-course.yaml | instance validator | Course state script instances |
-
-
-**Project**
-| Asset | Minted In | Stored In | Purpose |
-|-------|-----------|-----------|---------|
-| `a8d2f21558831626a4ab01582a4568be1dac3298e6b92450a8e839a3.TreasuryToken` | admin-init-project-step-1.yaml | instance validator | Treasury token instance |
-| `a8d2f21558831626a4ab01582a4568be1dac3298e6b92450a8e839a3.Escrow1` | admin-init-project-step-1.yaml | instance validator | Escrow instance |
-| `a8d2f21558831626a4ab01582a4568be1dac3298e6b92450a8e839a3.TreasuryScripts` | admin-init-project-step-2.yaml | instance validator | Treasury script instances |
-| `a8d2f21558831626a4ab01582a4568be1dac3298e6b92450a8e839a3.ContributorStateScripts` | admin-init-project-step-2.yaml | instance validator | Contributor state script instances |
-
-### User Local State Assets
-
-**Course**
-| Asset | Minted/Burned In | Stored In | Purpose |
-|-------|------------------|-----------|---------|
-| `<course_state_policyid>.<alias>` | student-mint-local-state.yaml (mint) | script | Student joins course |
-| `<course_state_policyid>.<alias>` | student-burn-local-state.yaml (burn) | script | Student leaves course |
-
-**Project**
-| Asset | Minted/Burned In | Stored In | Purpose |
-|-------|------------------|-----------|---------|
-| `<contributor_state_policyid>.<alias>` | contributor-mint-project-state.yaml (mint) | script | Contributor joins project |
-| `<contributor_state_policyid>.<alias>` | contributor-burn-project-state.yaml (burn) | script | Contributor leaves project |
-
-
-### Course Local State Credential Assets
-| Asset | Minted In | Stored In | Purpose |
-|-------|-----------|-----------|---------|
-| `<module_policyid>.<module_code>` | course-creator-mint-module-tokens.yaml | script | Course module completion token |
-
-### Project Local State Credential Assets
-| Asset | Minted In | Stored In | Purpose |
-|-------|-----------|-----------|---------|
-| `<treasury_token_policyid>.<escrow_hash>` | project-creator-mint-treasury-token.yaml | script | Treasury escrow management |
