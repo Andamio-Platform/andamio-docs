@@ -1,0 +1,28 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: TreasuryAddFundsTransaction
+id: project-creator.treasury-add-funds
+
+metadata:
+  role: "ProjectCreator"
+  category: "treasury_management"
+  estimated_cost: "0.17 ADA"
+  description: "Project creator adds additional funds to project treasury"
+  multi_signature: false
+
+inputs:
+  - id: user_input
+    type: wallet
+    output:
+      address: "funder"
+      value:
+        - "lovelace to deposit"
+
+outputs:
+  - id: treasury_output
+    type: script
+    output:
+      address: "project.treasury-scripts"
+      value:
+        - "lovelace to deposit"

@@ -1,0 +1,133 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: AdminInitProjectStep1Transaction
+id: admin.init-project-step-1
+
+# Metadata about this transaction type
+metadata:
+  role: "InstanceAdmin"
+  category: "instance_management"
+  requires_tokens: ["instance.instance-admin-token"]
+  estimated_cost: "0 ADA"
+  description: "Instance admin initializes a new project (step 1 of 2)"
+  multi_signature: true
+  required_signatures: ["instanceAdmin", "globalAdmin"]
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# inputs
+inputs:
+  - id: instance_admin
+    type: wallet
+    output:
+      address: "instance admin wallet"
+      value: 
+        - "1 instance.instance-admin-token"
+
+# reference inputs
+reference_inputs:
+  - id: instance_provider_1
+    type: script
+    output:
+      address: "instance.instance-provider-scripts"
+      value: 
+        - "1 instance.project-nft"
+      datum: ["nft_logic1", "nft_logic2", "nft_logic3"]
+
+  - id: instance_provider_2
+    type: script
+    output:
+      address: "instance.instance-provider-scripts"
+      value: 
+        - "1 instance.treasury-token"
+      datum: ["treasury_token_logic1", "treasury_token_logic2"]
+      script: "treasury_token_obs"
+
+  - id: instance_provider_3
+    type: script
+    output:
+      address: "instance.instance-provider-scripts"
+      value: 
+        - "1 instance.escrow1"
+      datum: ["escrow_logic1", "escrow_logic2"]
+      script: "escrow_obs"
+
+# outputs
+outputs:
+  - id: instance_admin
+    type: wallet
+    output:
+      address: "instance admin wallet"
+      value: 
+        - "1 instance.instance-admin-token"
+
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance.instance-governance-scripts"
+      value: 
+        - "1 project.project-nft"
+      datum:
+        creators: ["<creator_alias_a>", "<creator_alias_b>"]
+        policy_id: "project.project-nft-policy"
+
+  - id: instance_1
+    type: script
+    output:
+      address: "instance.instance-provider-scripts"
+      value: 
+        - "1 project.project-instance-treasury-token"
+      datum: "project.project-nft-policy"
+      script: "treasury_token_logic1 + project.project-nft-policy + treasury_token_logic2"
+
+  - id: instance_2
+    type: script
+    output:
+      address: "instance.instance-provider-scripts"
+      value: 
+        - "1 project.project-instance-escrow1"
+      datum: "project.project-nft-policy"
+      script: "escrow_logic1 + project.project-nft-policy + escrow_logic2"
+
+# minting
+mints:
+  - id: project_nft
+    policy: "<project_nft_policyid>"
+    redeemer: "()"
+    tokens:
+      - '1 project.project-nft'
+  
+  - id: instance
+    policy: "<instance_policyid>"
+    redeemer:
+      - policy_id: "<project_nft_policyid>"
+        params: ["project.project-nft-policy"]
+        token_name: "TreasuryToken"
+      - policy_id: "<project_nft_policyid>"
+        params: ["project.project-nft-policy"]
+        token_name: "Escrow1"
+    tokens:
+      - "1 project.project-instance-treasury-token"
+      - "1 project.project-instance-escrow1"
+
+# withdrawing
+withdraws:
+  - id: treasury_token_obs
+    observer: "project.treasury-token-cbor-obs"
+    redeemer:
+      tx_id: "string"
+      tx_ix: "string"
+    amount: 0
+
+  - id: escrow_obs
+    observer: "project.escrow1-cbor-obs"
+    redeemer:
+      tx_id: "string"
+      tx_ix: "string"
+    amount: 0

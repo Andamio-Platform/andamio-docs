@@ -1,6 +1,0 @@
-validator_name: "Index_Scripts"
-id: index-scripts
-blueprint_source: "index.plutus"
-purpose: "mint"
-redeemers:
-  - "IndexAction (derived from IndexData structure)"

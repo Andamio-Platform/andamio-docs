@@ -1,6 +1,0 @@
-validator_name: "Treasury_Cbor_Obs"
-id: treasury-cbor-obs
-blueprint_source: "project.plutus"
-purpose: "withdraw"
-redeemers:
-  - "bytes (observer for Treasury_Scripts initialization)"

@@ -1,6 +1,0 @@
-validator_name: "Init_Index_Policy"
-id: init-index-policy
-blueprint_source: "index.plutus"
-purpose: "mint"
-redeemers:
-  - "bytes (linked list initialization)"

@@ -1,6 +1,0 @@
-validator_name: "Module_Cbor_Obs"
-id: module-cbor-obs
-blueprint_source: "course.plutus"
-purpose: "withdraw"
-redeemers:
-  - "bytes (observer for Module_Scripts initialization)"

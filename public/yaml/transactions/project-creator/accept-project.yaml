@@ -1,0 +1,87 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: ProjectCreatorAcceptProjectTransaction
+id: project-creator.accept-project
+
+# Metadata about this transaction type
+metadata:
+  role: "ProjectCreator"
+  category: "project_management"
+  requires_tokens: ["global-state.access-token-user", "project.project-nft"]
+  estimated_cost: "0 ADA"
+  description: "Project creator accepts a contributor's project proposal or application"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# inputs
+inputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "project creator"
+      value: 
+        - "1 global-state.access-token-user"
+  - id: instance_governance_1
+    type: script
+    redeemer: ["<alias_project_creator>"]
+    output:
+      address: "instance.instance-governance-scripts"
+      value: 
+        - "1 project.project-nft"
+      datum:
+        creators: ["<alias_project_creator>"]
+        policy_id: "<project_nft_policyid>"
+
+  - id: escrow_1
+    type: script
+    redeemer: 
+      alias: "<alias_contributor>"
+    output:
+      address: "project.escrow1"
+      value: 
+        - "1 project.contributor-state-token"
+        - "12000000 lovelace"
+      datum:
+        project_data:
+          project_data: "<content_hash>"
+          deadline: <deadline>
+          lovelace_am: <lovelace_amount>
+          flatten_value:
+        script_hash: "<treasury_hash>"
+        policy_id: "<contributor_state_policyid>"
+        maybe_string: "<maybe_string>"
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "project creator"
+      value: 
+        - "1 global-state.access-token-user"
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance.instance-governance-scripts"
+      value: 
+        - "1 project.project-nft"
+      datum:
+        creators: ["<alias_project_creator>"]
+        policy_id: "<project_nft_policyid>"
+
+  - id: contributor_state_1
+    type: script
+    output:
+      address: "project.contributor-state-scripts"
+      value: 
+        - "1 project.contributor-state-token"
+        - "12000000 lovelace"
+      datum:
+        string: "<project_hash>"

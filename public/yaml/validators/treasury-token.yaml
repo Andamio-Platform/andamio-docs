@@ -1,8 +1,0 @@
-validator_name: "Treasury_Token"
-id: treasury-token
-blueprint_source: "project.plutus"
-purpose: "mint"
-redeemers:
-  TreasuryTokenAction:
-    - "MintTreasuryToken"
-    - "BurnTreasuryToken"

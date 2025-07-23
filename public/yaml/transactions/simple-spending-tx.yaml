@@ -5,7 +5,7 @@ metadata:
   role: "General"
   category: "spending"
   requires_tokens: []
-  estimated_fee: "0.17 ADA"
+  estimated_cost: "0.17 ADA"
   description: "Simple spending transaction"
   multi_signature: false
 
@@ -14,22 +14,26 @@ inputs:
     type: wallet
     output:
       address: "user"
-      value: ["5000000 lovelace"]
+      value: 
+        - "5000000 lovelace"
   - id: user_2
     type: wallet
     output:
       address: "user"
-      value: ["25000000 lovelace"]
+      value: 
+        - "25000000 lovelace"
 
 outputs:
   - id: user_a
     type: wallet
     output:
       address: "user_a"
-      value: ["10000000 lovelace"]
+      value: 
+        - "10000000 lovelace"
   - id: user_b
     type: wallet
     output:
       address: "user_b"
-      value: ["20000000 lovelace"]
+      value: 
+        - "20000000 lovelace"
     

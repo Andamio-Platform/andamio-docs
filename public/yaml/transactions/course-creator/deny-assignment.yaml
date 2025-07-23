@@ -1,0 +1,88 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: CourseCreatorDenyAssignmentTransaction
+id: course-creator.deny-assignment
+
+# Metadata about this transaction type
+metadata:
+  role: "CourseCreator"
+  category: "assignment_management"
+  requires_tokens: ["global-state.access-token-user", "course.course-nft"]
+  estimated_cost: "0 ADA"
+  description: "Course creator denies a student's assignment submission"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# inputs
+inputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "course facilitator"
+      value: 
+        - "1 global-state.access-token-user"
+  - id: instance_governance_1
+    type: script
+    redeemer: ["<alias_student>"]
+    output:
+      address: "instance.instance-governance-scripts"
+      value: 
+        - "1 course.course-nft"
+      datum:
+        creators: ["<alias_course_facilitator>"]
+        policy_id: "<course_nft_policyid>"
+
+  - id: assignment-validator
+    type: script
+    redeemer:
+      decision: "Deny"
+      alias: "<alias_student>"
+    output:
+      address: "course.assignment-scripts"
+      value: 
+        - "1 course.course-state-token"
+      datum:
+        module_code: "<module_code>"
+        student_info: "<student_info>"
+        policy_id: "<course_state_policyid>"
+        alias: "<alias_student>"
+        assignment_list: ["<assignment_1>", "<assignment_2>"]
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "course facilitator"
+      value: 
+        - "1 global-state.access-token-user"
+  - id: instance_governance_1
+    type: script
+    output:
+      address: "instance.instance-governance-scripts"
+      value: 
+        - "1 course.course-nft"
+      datum:
+        creators: ["<alias_course_facilitator>"]
+        policy_id: "<course_nft_policyid>"
+
+  - id: assignment-validator
+    type: script
+    output:
+      address: "course.assignment-scripts"
+      value: 
+        - "1 course.course-state-token"
+      datum:
+        module_code: "<module_code>"
+        student_info: "<student_info>"
+        policy_id: "<course_state_policyid>"
+        alias: "<alias_student>"
+        assignment_list: ["<assignment_1>", "<assignment_2>"]
+        status: "denied"
