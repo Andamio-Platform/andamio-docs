@@ -96,13 +96,13 @@ export type ValidatorNodeTypes = {
   redeemerNode: "redeemerNode";
 };
 
-// Registry types based on registry.yaml structure
+// Registry types based on validator-registry-v1.yaml structure
 export interface RedeemerAction {
   action: string;
   transaction: string | string[];
 }
 
-// Redeemer can have different structures based on the registry.yaml
+// Redeemer can have different structures based on the validator-registry-v1.yaml
 export interface RedeemerType {
   type?: string;
   transaction?: string | string[];
@@ -127,6 +127,16 @@ export interface Validator {
 export interface SystemValidators {
   validators: {
     [key: string]: Validator;
+  };
+  tokens?: {
+    [key: string]: {
+      'asset-id'?: string;
+      'minted-in'?: string;
+      'used-in'?: string[];
+      'referenced-in'?: string[];
+      'burned-in'?: string | null;
+      [key: string]: unknown;
+    };
   };
 }
 
