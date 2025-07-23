@@ -3,6 +3,7 @@
     "pages": [
         "validators",
         "transactions",
+        "tokens",
         "access-token"
     ],
     "defaultOpen": false

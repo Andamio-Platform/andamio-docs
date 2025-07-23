@@ -1,0 +1,37 @@
+---
+title: "Contributor State Token"  
+description: "Contributor-specific project state token for project participation tracking"
+token_system: "project"
+token_id: "contributor-state-token"
+---
+
+# Contributor State Token
+
+The Contributor State Token is a contributor-specific token that tracks project participation and enables contributor interactions within project operations and state management.
+
+## Token Details
+
+- **Asset ID**: `<contributor_state_policyid>.<alias>`
+- **System**: Project
+- **Storage Location**: Contributor state validator
+
+## Usage
+
+### Minted In
+- [contributor-mint-project-state](/docs/protocol/v1/transactions/contributor/mint-project-state)
+
+### Used In
+- [contributor-burn-project-state](/docs/protocol/v1/transactions/contributor/burn-project-state)
+- [contributor-commit-project](/docs/protocol/v1/transactions/contributor/commit-project)
+- [contributor-unlock-project](/docs/protocol/v1/transactions/contributor/unlock-project)
+- [contributor-get-rewards](/docs/protocol/v1/transactions/contributor/get-rewards)
+- [contributor-add-info](/docs/protocol/v1/transactions/contributor/add-info)
+- [project-creator-accept-project](/docs/protocol/v1/transactions/project-creator/accept-project)
+- [project-creator-deny-project](/docs/protocol/v1/transactions/project-creator/deny-project)
+- [project-creator-refuse-project](/docs/protocol/v1/transactions/project-creator/refuse-project)
+
+### Referenced In
+This token is not used as a reference input in any documented transactions.
+
+### Burned In
+- [contributor-burn-project-state](/docs/protocol/v1/transactions/contributor/burn-project-state)

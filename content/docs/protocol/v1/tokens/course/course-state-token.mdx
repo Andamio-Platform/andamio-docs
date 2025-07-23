@@ -1,0 +1,34 @@
+---
+title: "Course State Token"
+description: "Student-specific course state token for course participation tracking"
+token_system: "course"
+token_id: "course-state-token"
+---
+
+# Course State Token
+
+The Course State Token is a student-specific token that tracks course participation and enables student interactions within course assignments and state management.
+
+## Token Details
+
+- **Asset ID**: `<course_state_policyid>.<alias>`
+- **System**: Course
+- **Storage Location**: Course state validator
+
+## Usage
+
+### Minted In
+- [student-mint-local-state](/docs/protocol/v1/transactions/student/mint-local-state)
+
+### Used In
+- [course-creator-accept-assignment](/docs/protocol/v1/transactions/course-creator/accept-assignment)
+- [course-creator-deny-assignment](/docs/protocol/v1/transactions/course-creator/deny-assignment)
+- student-commit-to-assignment
+- student-leave-assignment
+- student-update-assignment
+
+### Referenced In
+This token is not used as a reference input in any documented transactions.
+
+### Burned In
+- student-burn-local-state
