@@ -58,6 +58,12 @@ function DiagramTransactionFlow({
   const [isRegistryLoading, setIsRegistryLoading] = useState(!registryData);
 
   console.log("Transaction data received:", txData);
+  console.log("Transaction data type:", typeof txData);
+  console.log("Transaction data keys:", txData ? Object.keys(txData) : "null");
+  console.log("Loading state:", loading);
+  console.log("Registry loading state:", isRegistryLoading);
+  console.log("Has metadata:", !!txData?.metadata);
+  console.log("Metadata content:", txData?.metadata);
 
   // Fetch registry data if not provided
   useEffect(() => {
@@ -85,7 +91,11 @@ function DiagramTransactionFlow({
   // Initialize the diagram with transaction data
   useEffect(() => {
     const initDiagram = async () => {
-      if (isRegistryLoading || !txData || !txData.metadata) return;
+      console.log("InitDiagram called - isRegistryLoading:", isRegistryLoading, "txData:", !!txData, "metadata:", !!txData?.metadata);
+      if (isRegistryLoading || !txData || !txData.metadata) {
+        console.log("Skipping diagram init due to missing data");
+        return;
+      }
 
       try {
         console.log(
@@ -101,8 +111,8 @@ function DiagramTransactionFlow({
         );
         console.log(`Received mints: ${JSON.stringify(txData.mints)}`);
         console.log(`Received withdraws: ${JSON.stringify(txData.withdraws)}`);
-        console.log(`Inputs length: ${txData.inputs?.length || 0}`);
-        console.log(`Outputs length: ${txData.outputs?.length || 0}`);
+        console.log(`Inputs length: ${(txData.inputs || []).length}`);
+        console.log(`Outputs length: ${(txData.outputs || []).length}`);
 
         const diagramNodes: Node[] = [];
         const diagramEdges: Edge[] = [];
@@ -150,11 +160,11 @@ function DiagramTransactionFlow({
         };
 
         // Calculate estimated heights and positions
-        const inputHeights: number[] = txData.inputs.map(estimateNodeHeight);
+        const inputHeights: number[] = (txData.inputs || []).map(estimateNodeHeight);
         const refInputHeights: number[] = txData.reference_inputs
           ? txData.reference_inputs.map(estimateNodeHeight)
           : [];
-        const outputHeights: number[] = txData.outputs.map(estimateNodeHeight);
+        const outputHeights: number[] = (txData.outputs || []).map(estimateNodeHeight);
 
         // Calculate minimum spacing needed between nodes
         const minSpacing = 40; // Minimum gap between nodes
@@ -212,11 +222,11 @@ function DiagramTransactionFlow({
 
         // Process regular inputs
         console.log(
-          `Processing ${txData.inputs.length} inputs:`,
-          JSON.stringify(txData.inputs)
+          `Processing ${(txData.inputs || []).length} inputs:`,
+          JSON.stringify(txData.inputs || [])
         );
 
-        txData.inputs.forEach((input, index) => {
+        (txData.inputs || []).forEach((input, index) => {
           console.log(`Creating input node ${index} with ID ${input.id}`);
 
           const inputNode: Node = {
@@ -303,10 +313,10 @@ function DiagramTransactionFlow({
 
         // Process outputs
         console.log(
-          `Processing ${txData.outputs.length} outputs:`,
-          JSON.stringify(txData.outputs)
+          `Processing ${(txData.outputs || []).length} outputs:`,
+          JSON.stringify(txData.outputs || [])
         );
-        txData.outputs.forEach((output, index) => {
+        (txData.outputs || []).forEach((output, index) => {
           console.log(`Creating output node ${index} with ID ${output.id}`);
 
           const outputNode: Node = {

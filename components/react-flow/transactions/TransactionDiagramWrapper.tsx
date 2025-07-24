@@ -17,9 +17,11 @@ export default function TransactionDiagramWrapper({
     const fetchTransactionData = async () => {
       try {
         setLoading(true);
+        console.log("Fetching transaction data for:", txFilePath);
         const response = await fetch(
           `/api/transaction?file=${encodeURIComponent(txFilePath)}`
         );
+        console.log("Response status:", response.status);
 
         if (!response.ok) {
           throw new Error(
@@ -28,7 +30,10 @@ export default function TransactionDiagramWrapper({
         }
 
         const data = await response.json();
-        setTxData(data);
+        console.log("Received transaction data:", data);
+        console.log("Extracted transaction data:", data.data);
+        // The API returns { data: TransactionYaml }, so we need data.data
+        setTxData(data.data);
         setError(null);
       } catch (err) {
         console.error("Error fetching transaction data:", err);
