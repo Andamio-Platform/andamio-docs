@@ -1,22 +1,25 @@
 deployment: preprod
 version: v1
+andamio_protocol_treasury:
+andamio_services_treasury:
 systems:
   global-state:
     addresses:
       params_ref_validator_address: ""
-      global_state_address: ""
+      global_state_address: addr_test1xrrkcdgg3tyzdj9qu628erlh3kx5f9tcn0rjjsvm8ge5xpvke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzqs6wq6p
     tokens:
-      access_token_policyid: ""
+      access_token_policyid: c76c35088ac826c8a0e6947c8ff78d8d4495789bc729419b3a334305
 
   index-validators:
     addresses:
       index_ref_address: ""
       index_scripts_address: ""
     tokens:
-      access_token_policyid: ""
+      access_token_policyid: c76c35088ac826c8a0e6947c8ff78d8d4495789bc729419b3a334305
       init_index_policyid: ""
       index_admin_policyid: ""
       index_ref_policyid: ""
+
   instance:
     addresses:
       instance_governance_scripts_address: ""
@@ -26,23 +29,6 @@ systems:
       instance_provider_policyid: ""
       instance_policyid: ""
       instance_admin_policyid: ""
-  course:
-    addresses:
-      assignment_validator_address: ""
-      course_state_validator_address: ""
-      module_ref_validator_address: ""
-    tokens:
-      course_nft_policyid: ""
-      course_state_policyid: ""
-      module_policyid: ""
-  project:
-    addresses:
-      contributor_state_scripts_address: ""
-      escrow1_address: ""
-      treasury_scripts_address: ""
-    tokens:
-      project_nft_policyid: ""
-      contributor_state_policyid: ""
-      treasury_token_policyid: ""
+
 
   

@@ -6,7 +6,7 @@ id: project-creator.manage-treasury-token
 
 # Metadata about this transaction type
 metadata:
-  role: "ProjectCreator"
+  role: "project-creator"
   category: "treasury_management"
   requires_tokens: ["global-state.access-token-user", "project.project-nft", "project.treasury-token"]
   estimated_cost: "4.5 ADA"

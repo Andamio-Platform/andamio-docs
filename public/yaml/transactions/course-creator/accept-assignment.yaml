@@ -6,7 +6,7 @@ id: course-creator.accept-assignment
 
 # Metadata about this transaction type
 metadata:
-  role: "CourseCreator"
+  role: "course-creator"
   category: "assignment_management"
   requires_tokens: ["global-state.access-token-user", "course.course-nft"]
   estimated_cost: "0 ADA"

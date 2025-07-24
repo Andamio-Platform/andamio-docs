@@ -6,7 +6,7 @@ id: general.mint-access-token
 
 # Metadata about this transaction type
 metadata:
-  role: "all"
+  role: "general"
   category: "general"
   requires_tokens: ["global-state.access-token-index"]
   estimated_cost: "0 ADA"

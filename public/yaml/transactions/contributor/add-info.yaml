@@ -6,7 +6,7 @@ id: contributor.add-info
 
 # Metadata about this transaction type
 metadata:
-  role: "Contributor"
+  role: "contributor"
   category: "project"
   requires_tokens: ["global-state.access-token-user", "project.contributor-state-token"]
   estimated_cost: "0 ADA"

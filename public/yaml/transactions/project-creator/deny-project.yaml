@@ -6,7 +6,7 @@ id: project-creator.deny-project
 
 # Metadata about this transaction type
 metadata:
-  role: "ProjectCreator"
+  role: "project-creator"
   category: "project_management"
   requires_tokens: ["global-state.access-token-user", "project.project-nft"]
   estimated_cost: "0 ADA"

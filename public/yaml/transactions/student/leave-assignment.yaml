@@ -6,7 +6,7 @@ id: student.leave-assignment
 
 # Metadata about this transaction type
 metadata:
-  role: "Student"
+  role: "student"
   category: "assignment_management"
   requires_tokens: ["global-state.access-token-user", "course.course-state-token"]
   estimated_cost: "0 ADA"

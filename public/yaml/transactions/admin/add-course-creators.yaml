@@ -6,7 +6,7 @@ id: admin.add-course-creators
 
 # Metadata about this transaction type
 metadata:
-  role: "InstanceAdmin"
+  role: "admin"
   category: "access_management"
   requires_tokens: ["course.course-nft", "instance.instance-admin-token"]
   estimated_cost: "0 ADA"

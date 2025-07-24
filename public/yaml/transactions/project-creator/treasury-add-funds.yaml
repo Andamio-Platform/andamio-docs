@@ -5,7 +5,7 @@ name: TreasuryAddFundsTransaction
 id: project-creator.treasury-add-funds
 
 metadata:
-  role: "ProjectCreator"
+  role: "project-creator"
   category: "treasury_management"
   estimated_cost: "0.17 ADA"
   description: "Project creator adds additional funds to project treasury"

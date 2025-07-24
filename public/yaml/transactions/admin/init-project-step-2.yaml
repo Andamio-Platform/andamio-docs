@@ -8,7 +8,7 @@ id: admin.init-project-step-2
 
 # Metadata about this transaction type
 metadata:
-  role: "InstanceAdmin"
+  role: "admin"
   category: "instance_management"
   requires_tokens: ["instance.instance-admin-token"]
   estimated_cost: "0 ADA"
