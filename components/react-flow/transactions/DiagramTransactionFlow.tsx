@@ -85,7 +85,7 @@ function DiagramTransactionFlow({
   // Initialize the diagram with transaction data
   useEffect(() => {
     const initDiagram = async () => {
-      if (isRegistryLoading) return;
+      if (isRegistryLoading || !txData || !txData.metadata) return;
 
       try {
         console.log(
@@ -389,7 +389,7 @@ function DiagramTransactionFlow({
 
   // Render the diagram
   const renderDiagram = () => {
-    if (loading || isRegistryLoading) {
+    if (loading || isRegistryLoading || !txData || !txData.metadata) {
       return (
         <div className="flex items-center justify-center h-full bg-gray-800 bg-opacity-50 text-white">
           <div className="text-center">
