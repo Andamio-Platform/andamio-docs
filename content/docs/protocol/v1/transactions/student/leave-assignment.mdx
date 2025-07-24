@@ -11,14 +11,6 @@ tx_file: "student/leave-assignment.yaml"
 
 This transaction allows a student to leave an assignment they previously committed to, removing their commitment and potentially forfeiting staked tokens.
 
-## Transaction Metadata
-
-- **Role**: Student
-- **Category**: assignment_management
-- **Required Tokens**: localStateToken, 222at
-- **Estimated Fee**: 1.5 ADA
-- **Multi-signature**: No
-
 ## Protocol Description
 
 The transaction removes the student's assignment commitment from the course state and updates their local state to reflect the withdrawal. This allows students to exit assignments they can no longer complete, though there may be penalties depending on the course structure.

@@ -25,7 +25,7 @@ export function resolveAddressDisplay(
         : `/docs/protocol/v1/validators/${system}/${validatorName}`;
       
       return {
-        displayName: validator.address || address, // Display the placeholder address from registry
+        displayName: typeof validator.address === 'string' ? validator.address : address, // Display the placeholder address from registry
         linkUrl,
         isValidator: true
       };

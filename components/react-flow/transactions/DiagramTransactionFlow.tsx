@@ -30,7 +30,6 @@ interface DiagramTransactionFlowProps {
   registryData?: Registry | null;
 }
 
-
 // Define custom node types
 const nodeTypes: NodeTypes = {
   transactionNode: TransactionNode,
@@ -44,14 +43,18 @@ export default function TxDiagram({ txData }: { txData: TransactionYaml }) {
 }
 
 // Client-side only diagram component to avoid hydration mismatches
-function DiagramTransactionFlow({ txData, registryData }: DiagramTransactionFlowProps) {
+function DiagramTransactionFlow({
+  txData,
+  registryData,
+}: DiagramTransactionFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [loading, setLoading] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
-  const [internalRegistryData, setInternalRegistryData] = useState<Registry | null>(registryData || null);
+  const [internalRegistryData, setInternalRegistryData] =
+    useState<Registry | null>(registryData || null);
   const [isRegistryLoading, setIsRegistryLoading] = useState(!registryData);
 
   console.log("Transaction data received:", txData);
@@ -83,7 +86,7 @@ function DiagramTransactionFlow({ txData, registryData }: DiagramTransactionFlow
   useEffect(() => {
     const initDiagram = async () => {
       if (isRegistryLoading) return;
-      
+
       try {
         console.log(
           "Initializing diagram with provided transaction data:",
@@ -219,7 +222,7 @@ function DiagramTransactionFlow({ txData, registryData }: DiagramTransactionFlow
           const inputNode: Node = {
             id: `input-node-${input.id}-${index}`,
             type: "inputNode",
-            position: { x: 100, y: inputPositions[index] },
+            position: { x: 0, y: inputPositions[index] },
             data: {
               id: input.id,
               address: input.output.address,
@@ -264,7 +267,7 @@ function DiagramTransactionFlow({ txData, registryData }: DiagramTransactionFlow
               id: `ref-input-node-${refInput.id}-${index}`,
               type: "referenceInputNode",
               position: {
-                x: 100,
+                x: 0,
                 y: refInputPositions[index],
               },
               data: {
@@ -309,7 +312,7 @@ function DiagramTransactionFlow({ txData, registryData }: DiagramTransactionFlow
           const outputNode: Node = {
             id: `output-node-${output.id}-${index}`,
             type: "outputNode",
-            position: { x: 950, y: outputPositions[index] },
+            position: { x: 825, y: outputPositions[index] },
             data: {
               id: output.id,
               address: output.output.address,

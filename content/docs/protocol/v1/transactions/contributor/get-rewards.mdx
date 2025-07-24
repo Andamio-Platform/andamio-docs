@@ -11,14 +11,6 @@ tx_file: "contributor/get-rewards.yaml"
 
 This transaction allows a contributor to claim rewards for completed project work. The contributor must provide proof of completion to withdraw rewards from the project treasury.
 
-## Transaction Metadata
-
-- **Role**: Contributor
-- **Category**: reward_management
-- **Required Tokens**: 100at, contributorNFT, projectCompletionToken
-- **Estimated Fee**: 2.5 ADA
-- **Multi-signature**: No
-
 ## Protocol Description
 
 The transaction distributes rewards from the project treasury to the contributor based on completion proof. The treasury UTxO is updated with reduced funds and reward tokens, while the contributor receives their earned rewards. The completion proof validates the contributor's work according to project criteria.

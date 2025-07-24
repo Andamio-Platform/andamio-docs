@@ -12,6 +12,9 @@ import { getMDXComponents } from "@/mdx-components";
 import TransactionDiagramClient from "@/components/react-flow/transactions/TransactionDiagramClient";
 import ProtocolFlowClient from "@/components/react-flow/protocol/ProtocolFlowClient";
 import type { TOCItemType } from "fumadocs-core/server";
+import TxYamlMetadata from "@/components/protocol-info/TxYamlMetadata";
+import TokenInfo from "@/components/protocol-info/TokenInfo";
+import ValidatorInfo from "@/components/protocol-info/ValidatorInfo";
 
 // Extended page data interface to include validator properties
 interface ExtendedPageData {
@@ -59,8 +62,18 @@ export default async function Page(props: {
             a: createRelativeLink(source, page),
           })}
         />
+        {params.slug?.join("/").startsWith("protocol/v1/validators/") &&
+          params.slug.length >= 5 && (
+            <ValidatorInfo
+              validatorSystem={params.slug[3]}
+              validatorId={params.slug[4]}
+            />
+          )}
         {pageData.tx_file && (
-          <TransactionDiagramClient txFilePath={pageData.tx_file} />
+          <>
+            <TransactionDiagramClient txFilePath={pageData.tx_file} />
+            <TxYamlMetadata txFilePath={pageData.tx_file} />
+          </>
         )}
 
         {/* Show protocol diagram only on the validators index page */}
@@ -73,6 +86,11 @@ export default async function Page(props: {
             <ProtocolFlowClient />
           </div>
         )}
+
+        {params.slug?.join("/").startsWith("protocol/v1/tokens/") &&
+          params.slug.length >= 5 && (
+            <TokenInfo tokenSystem={params.slug[3]} tokenId={params.slug[4]} />
+          )}
       </DocsBody>
     </DocsPage>
   );

@@ -5,8 +5,6 @@ validator_system: "index-validators"
 validator_id: "index-ref"
 ---
 
-# Index Reference
-
 The Index Reference validator stores reference scripts for Index_Scripts and maintains fee data and other information in its datum. This validator is part of the index blueprint and serves as a reference point for index operations.
 
 <ValidatorDiagram
@@ -14,14 +12,6 @@ The Index Reference validator stores reference scripts for Index_Scripts and mai
   validator="index-ref"
 />
 
-## Blueprint Source
-
-This validator is defined in the **index.plutus** blueprint.
-
-## Redeemers
-
-- `bytes` - Reference script storage for Index_Scripts
-
-## Purpose
+## About
 
 This validator serves as a reference script storage mechanism for index validators, providing secure storage for index scripts and maintaining fee structures and configuration data in the datum.

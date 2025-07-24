@@ -6,7 +6,8 @@
         "tokens",
         "access-token",
         "variables-mainnet",
-        "variables-preproduction"
+        "variables-preproduction",
+        "placeholder-documentation"
     ],
     "defaultOpen": false
 }

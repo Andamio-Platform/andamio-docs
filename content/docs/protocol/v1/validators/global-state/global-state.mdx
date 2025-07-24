@@ -5,8 +5,6 @@ validator_system: "global-state"
 validator_id: "global-state"
 ---
 
-# Global State
-
 The Global State validator manages global states and handles system-wide operations across the Andamio protocol. This validator is part of the global blueprint and serves as the central authority for global state management.
 
 <ValidatorDiagram
@@ -14,19 +12,6 @@ The Global State validator manages global states and handles system-wide operati
   validator="global-state"
 />
 
-## Blueprint Source
-
-This validator is defined in the **global.plutus** blueprint.
-
-## Redeemers
-
-### GlobalStateAction
-- `AddTokenInformation` - Add new local state reference to global state
-- `UpdateTokenInformation` - Update existing local state reference
-- `AddAllowedCsTn` - Add allowed currency symbol and token name pairs
-- `UpdateGlobalInfo` - Update global system information
-- `ChangeIndexData` - Modify index data structures
-
-## Purpose
+## About
 
 This validator manages the global state of the Andamio protocol, handling token information, allowed currency symbols, and system-wide configuration changes. It serves as the central registry for protocol-wide settings and permissions.

@@ -5,8 +5,6 @@ validator_system: "project"
 validator_id: "treasury-scripts"
 ---
 
-# Treasury Scripts
-
 The Treasury Scripts validator manages project treasury operations and handles fund distribution for projects. This validator is part of the project blueprint and controls treasury-related functionality.
 
 <ValidatorDiagram
@@ -14,18 +12,6 @@ The Treasury Scripts validator manages project treasury operations and handles f
   validator="treasury-scripts"
 />
 
-## Blueprint Source
-
-This validator is defined in the **project.plutus** blueprint.
-
-## Redeemers
-
-### TreasuryAction
-- `AddFunds` - Add funds to the project treasury
-- `CommitProject` - Commit treasury funds for project execution
-- `GetRewards` - Distribute rewards from treasury
-- `ManageTreasury` - Manage treasury configuration and operations
-
-## Purpose
+## About
 
 This validator manages the treasury operations for projects, handling fund additions, commitments, reward distribution, and treasury configuration. It ensures secure and controlled financial operations within project workflows.

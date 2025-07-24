@@ -23,8 +23,8 @@ observers:
 # Validator
 1. Follow Miro diagrams that already exist
 2. Try to use Blueprints only to generate the YAML code!
-3. Set up registry.yaml
-4. Use the registry.yaml to populate address fields in transactions
+3. Set up validator-registry-v1.yaml
+4. Use the validator-registry-v1.yaml to populate address fields in transactions
 5. Allow Address to be a pointer
 6. Play with color coding addresses and token names
 

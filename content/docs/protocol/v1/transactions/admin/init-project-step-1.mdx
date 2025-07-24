@@ -11,14 +11,6 @@ tx_file: "admin/init-project-step-1.yaml"
 
 This transaction is the first step in initializing a new project. The instance admin begins the project setup process, transitioning the project state from pending to step 1 complete.
 
-## Transaction Metadata
-
-- **Role**: InstanceAdmin
-- **Category**: instance_management
-- **Required Tokens**: instanceAdminNFT
-- **Estimated Fee**: 3.5 ADA
-- **Multi-signature**: Yes (instanceAdmin + globalAdmin)
-
 ## Protocol Description
 
 The transaction consumes a project state UTxO in pending status and outputs it with step1_complete status. This is part of a two-step initialization process where the project configuration is established incrementally.

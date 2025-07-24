@@ -4,22 +4,12 @@ description: Validators managing on-chain linked list data structures
 validator_system: "index-validators"
 ---
 
-# Index Validators
-
 The Index validators manage a linked list data structure used to guarantee the uniqueness of each access token alias issued on Andamio. This allows the alias to serve as a provably unique global identifier in any local state context.
 
 <ValidatorDiagram
   system="index-validators"
 />
 
-## Blueprint Source
-
-This validator is defined in the **index.plutus** blueprint.
-
-## Redeemers
-
-- `IndexAction` - Derived from IndexData structure for linked list operations
-
-## Purpose
+## About
 
 This validator manages the on-chain linked list data structures that provide efficient indexing and navigation capabilities across the Andamio protocol. It handles operations on the indexed data and maintains the integrity of the linked list structure.

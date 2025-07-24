@@ -1,0 +1,64 @@
+# Deployment Examples
+
+deployment: mainnet
+version: v1
+
+# Local Instances
+local_instances:
+  course:
+    addresses:
+      assignment_validator_address: ""
+      course_state_validator_address: ""
+      module_ref_validator_address: ""
+    tokens:
+      course_nft_policyid: ""
+      course_state_policyid: ""
+      module_policyid: ""
+  project:
+    addresses:
+      contributor_state_scripts_address: ""
+      escrow1_address: ""
+      treasury_scripts_address: ""
+    tokens:
+      project_nft_policyid: ""
+      contributor_state_policyid: ""
+      treasury_token_policyid: ""
+
+# Transactions
+transactions:
+  general:
+    mint-access-token:
+  admin:
+    init-course:
+    add-course-creators:
+    remove-course-creators:
+    init-project-step-1:
+    init-project-step-2:
+    add-project-creators:
+    remove-project-creators:
+  course-creator:
+    mint-module-tokens:
+    accept-assignment:
+    deny-assignment:
+  student:
+    mint-local-state:
+    burn-local-state:
+    commit-to-assignment:
+    update-assignment:
+    leave-assignment:
+  project-creator:
+    treasury-add-funds:
+    mint-treasury-token:
+    manage-treasury-token:
+    accept-project:
+    deny-project:
+    refuse-project:
+  contributor:
+    mint-project-state:
+    burn-project-state:
+    commit-project:
+    add-info:
+    unlock-project:
+    get-rewards:
+    
+  

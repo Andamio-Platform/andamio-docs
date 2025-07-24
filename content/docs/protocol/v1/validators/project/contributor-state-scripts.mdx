@@ -5,8 +5,6 @@ validator_system: "project"
 validator_id: "contributor-state-scripts"
 ---
 
-# Contributor State Scripts
-
 The Contributor State Scripts validator manages contributor information and handles project participation states. This validator is part of the project blueprint and controls contributor-related functionality.
 
 <ValidatorDiagram
@@ -14,21 +12,6 @@ The Contributor State Scripts validator manages contributor information and hand
   validator="contributor-state-scripts"
 />
 
-## Blueprint Source
-
-This validator is defined in the **project.plutus** blueprint.
-
-## Redeemers
-
-### ContributorStateAction
-- `AddContributorInfo` - Add new contributor information
-- `UpdateContributorInfo` - Update existing contributor information
-- `BurnContributorInfo` - Remove contributor information
-- `CommitProject` - Commit contributor to a project
-- `UnlockProject` - Release contributor from project commitment
-- `GetRewards` - Claim project completion rewards
-- `BurnContributorState` - Remove contributor state from circulation
-
-## Purpose
+## About
 
 This validator manages the lifecycle of contributor participation in projects, handling contributor information, project commitments, and reward distribution. It serves as the central authority for contributor-related state management.

@@ -6,10 +6,10 @@ id: general.mint-access-token
 
 # Metadata about this transaction type
 metadata:
-  role: "General"
-  category: "access_management"
-  requires_tokens: ["userStateToken"]
-  estimated_cost: "2.5 ADA"
+  role: "all"
+  category: "general"
+  requires_tokens: ["global-state.access-token-index"]
+  estimated_cost: "0 ADA"
   description: "User mints access tokens (100at, 222at) for protocol participation"
   multi_signature: false
 
@@ -47,7 +47,7 @@ reference_inputs:
         - "1 index-validators.index-scripts-ref-token"
       datum:
         index_data:
-          address: "andamio-treasury"
+          address: "<andamio_protocol_treasury>"
           output_datum: "NoDatum"
           flatten_value: 
             - "5000000 lovelace"
@@ -81,7 +81,7 @@ outputs:
   - id: treasury_1
     type: "wallet"
     output:
-      address: "andamio-treasury"
+      address: "<andamio_protocol_treasury>"
       value:
         - "5000000 lovelace"
   - id: global_1

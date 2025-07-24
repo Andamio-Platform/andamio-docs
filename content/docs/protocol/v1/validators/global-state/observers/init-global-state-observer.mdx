@@ -5,8 +5,6 @@ validator_system: "global-state"
 validator_id: "init-global-state-observer"
 ---
 
-# Initialize Global State Observer
-
 The Initialize Global State Observer validator observes the initialization process of global state validators. This validator is part of the global blueprint and ensures proper setup of global state management.
 
 <ValidatorDiagram
@@ -14,14 +12,6 @@ The Initialize Global State Observer validator observes the initialization proce
   validator="init-global-state-observer"
 />
 
-## Blueprint Source
-
-This validator is defined in the **global.plutus** blueprint.
-
-## Redeemers
-
-- `bytes` - Global state initialization observer
-
-## Purpose
+## About
 
 This validator serves as an observer for the initialization process of global state validators, ensuring proper setup and validation of global state management smart contracts during system deployment.

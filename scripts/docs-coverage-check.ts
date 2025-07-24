@@ -157,7 +157,7 @@ async function checkDocumentationCoverage(): Promise<void> {
     process.cwd(),
     "public",
     "yaml",
-    "registry.yaml"
+    "validator-registry-v1.yaml"
   );
   const transactionMdxDir = path.join(
     process.cwd(),
@@ -314,14 +314,18 @@ async function checkDocumentationCoverage(): Promise<void> {
   if (report.mdxWithoutTxFile.length === 0) {
     console.log("✅ All transaction MDX files have tx_file specified");
   } else {
-    report.mdxWithoutTxFile.forEach((file) => console.log(`  ❌ ${path.relative(process.cwd(), file)}`));
+    report.mdxWithoutTxFile.forEach((file) =>
+      console.log(`  ❌ ${path.relative(process.cwd(), file)}`)
+    );
   }
 
   console.log("\n🛡️  VALIDATOR MDX FILES WITHOUT validator_id:");
   if (report.mdxWithoutValidatorId.length === 0) {
     console.log("✅ All validator MDX files have validator_id specified");
   } else {
-    report.mdxWithoutValidatorId.forEach((file) => console.log(`  ❌ ${path.relative(process.cwd(), file)}`));
+    report.mdxWithoutValidatorId.forEach((file) =>
+      console.log(`  ❌ ${path.relative(process.cwd(), file)}`)
+    );
   }
 
   console.log("\n= MDX FILES REFERENCING MISSING TX FILES:");
@@ -338,7 +342,9 @@ async function checkDocumentationCoverage(): Promise<void> {
     console.log("✅ All validator_id references exist in registry");
   } else {
     report.mdxReferencingMissingValidators.forEach(({ mdxFile, validatorId }) =>
-      console.log(`  ❌ ${path.relative(process.cwd(), mdxFile)} → ${validatorId}`)
+      console.log(
+        `  ❌ ${path.relative(process.cwd(), mdxFile)} → ${validatorId}`
+      )
     );
   }
 

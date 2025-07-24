@@ -5,8 +5,6 @@ validator_system: "global-state"
 validator_id: "params-ref-validator"
 ---
 
-# Global Reference
-
 The Global Reference validator stores reference scripts for Global_State and maintains data in its datum. This validator is part of the global blueprint and serves as a reference point for global state operations.
 
 <ValidatorDiagram
@@ -14,14 +12,6 @@ The Global Reference validator stores reference scripts for Global_State and mai
   validator="params-ref-validator"
 />
 
-## Blueprint Source
-
-This validator is defined in the **global.plutus** blueprint.
-
-## Redeemers
-
-- `bytes` - Reference script storage validation
-
-## Purpose
+## About
 
 This validator serves as a reference script storage mechanism for global state validators, providing a secure and reliable way to store and access global state reference scripts and associated data.

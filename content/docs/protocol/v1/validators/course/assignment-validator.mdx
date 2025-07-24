@@ -5,8 +5,6 @@ validator_system: "course"
 validator_id: "assignment-validator"
 ---
 
-# Assignment Validator
-
 The Assignment Validator is the core validator where course assignments are approved, rejected, or updated. This validator is part of the course blueprint and handles all assignment decision-making processes.
 
 <ValidatorDiagram
@@ -14,17 +12,6 @@ The Assignment Validator is the core validator where course assignments are appr
   validator="assignment-validator"
 />
 
-## Blueprint Source
-
-This validator is defined in the **course.plutus** blueprint.
-
-## Redeemers
-
-### AssignmentDecisionAction
-- `Accept` - Approve student assignment submission
-- `Reject` - Deny student assignment submission  
-- `Update` - Update assignment details or requirements
-
-## Purpose
+## About
 
 This validator manages the lifecycle of course assignments, providing course creators with the ability to evaluate student submissions and make decisions on their acceptance or rejection.

@@ -1,5 +1,8 @@
 // No need to import React Flow types here as they're used directly in the component
 
+// Export API types for external consumption
+export * from './api';
+
 // Define types for complex structures
 type DatumValue = string | Record<string, unknown> | null;
 type RedeemerValue = string | Record<string, unknown> | null;

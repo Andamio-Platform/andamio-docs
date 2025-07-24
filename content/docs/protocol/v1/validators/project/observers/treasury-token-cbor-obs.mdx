@@ -5,8 +5,6 @@ validator_system: "project"
 validator_id: "treasury-token-cbor-obs"
 ---
 
-# Treasury Token CBOR Observer
-
 The Treasury Token CBOR Observer validator observes the initialization of the Treasury_Token validator. This validator is part of the project blueprint and handles the CBOR observation for treasury token operations.
 
 <ValidatorDiagram
@@ -14,14 +12,6 @@ The Treasury Token CBOR Observer validator observes the initialization of the Tr
   validator="treasury-token-cbor-obs"
 />
 
-## Blueprint Source
-
-This validator is defined in the **project.plutus** blueprint.
-
-## Redeemers
-
-- `bytes` - Observer for Treasury_Token initialization
-
-## Purpose
+## About
 
 This validator serves as an observer for the initialization process of treasury token validators, ensuring proper setup and validation of treasury token management smart contracts.

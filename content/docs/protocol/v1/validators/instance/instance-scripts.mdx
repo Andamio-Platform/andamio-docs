@@ -5,8 +5,6 @@ validator_system: "instance"
 validator_id: "instance-scripts"
 ---
 
-# Instance Scripts
-
 The Instance Scripts validator manages core instance operations and handles validator management within instances. This validator is part of the instance blueprint and controls the main instance functionality.
 
 <ValidatorDiagram
@@ -14,18 +12,6 @@ The Instance Scripts validator manages core instance operations and handles vali
   validator="instance-scripts"
 />
 
-## Blueprint Source
-
-This validator is defined in the **instance.plutus** blueprint.
-
-## Redeemers
-
-### InstanceAction
-- `AddValidators` - Add new validators to the instance
-- `RemoveValidator` - Remove validators from the instance
-- `BurnInstance` - Remove instance from circulation
-- `UpdateInstance` - Update instance configuration and metadata
-
-## Purpose
+## About
 
 This validator manages the core operations of instances within the Andamio protocol, including validator management, instance configuration updates, and instance lifecycle control. It serves as the central authority for instance-related operations.

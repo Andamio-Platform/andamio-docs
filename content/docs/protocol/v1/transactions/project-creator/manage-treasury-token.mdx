@@ -11,14 +11,6 @@ tx_file: "project-creator/manage-treasury-token.yaml"
 
 This transaction allows a project creator to manage treasury funds and distribution, including reward payments to contributors. Requires multi-signature approval from both project creator and instance admin.
 
-## Transaction Metadata
-
-- **Role**: ProjectCreator
-- **Category**: treasury_management
-- **Required Tokens**: 100at, projectCreatorNFT, treasuryToken
-- **Estimated Fee**: 4.5 ADA
-- **Multi-signature**: Yes (projectCreator + instanceAdmin)
-
 ## Protocol Description
 
 The transaction manages treasury operations including fund distribution, reward allocation updates, and payment scheduling. The treasury UTxO is updated with new balances while reward payments are distributed to eligible contributors. Admin approval ensures oversight of significant treasury operations.

@@ -5,8 +5,6 @@ validator_system: "project"
 validator_id: "escrow1"
 ---
 
-# Escrow 1
-
 The Escrow 1 validator serves as the main escrow mechanism for project acceptance and contributor management. This validator is part of the project blueprint and handles escrow operations for project workflows.
 
 <ValidatorDiagram
@@ -14,18 +12,6 @@ The Escrow 1 validator serves as the main escrow mechanism for project acceptanc
   validator="escrow1"
 />
 
-## Blueprint Source
-
-This validator is defined in the **project.plutus** blueprint.
-
-## Redeemers
-
-### ProjectAction
-- `AcceptProject` - Accept a project proposal
-- `DenyProject` - Deny a project proposal
-- `RefuseProject` - Refuse a project with detailed reasoning
-- `ManageContributor` - Manage contributor assignments and permissions
-
-## Purpose
+## About
 
 This validator manages the escrow functionality for projects, handling project proposals, acceptances, and contributor management. It ensures secure and controlled project workflows with proper authorization and escrow mechanisms.

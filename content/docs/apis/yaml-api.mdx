@@ -1,0 +1,290 @@
+---
+title: YAML Data API
+description: Access Andamio protocol YAML files via REST API endpoints
+---
+
+# YAML Data API
+
+The Andamio documentation site provides comprehensive REST API endpoints to access all YAML protocol data for external applications.
+
+## Base URL
+
+All API endpoints are available at: `https://docs.andamio.io/api/`
+
+## Available Endpoints
+
+### Registry API
+
+Access the validator registry data:
+
+- `GET /api/registry` - Complete validator registry
+- `GET /api/registry/systems/{system}` - System-specific data
+
+### Transactions API  
+
+Access transaction definitions:
+
+- `GET /api/transactions` - List all transactions
+- `GET /api/transactions?role={role}` - Filter by role
+- `GET /api/transactions/{role}/{transaction}` - Specific transaction
+
+### Deployments API
+
+Access deployment parameters:
+
+- `GET /api/deployments` - List available deployments
+- `GET /api/deployments/{deployment}` - Deployment-specific data
+
+### File Discovery
+
+- `GET /api/yaml` - List all available YAML files
+
+### TypeScript Types
+
+- `GET /api/types` - Download TypeScript definitions file
+
+## Direct File Access
+
+YAML files are also directly accessible with proper CORS headers:
+
+- `GET /yaml/validator-registry-v1.yaml` - Registry file
+- `GET /yaml/transactions/{role}/{transaction}.yaml` - Transaction files
+- `GET /yaml/deployments/{deployment}/{file}.yaml` - Deployment files
+
+## TypeScript Support
+
+Complete TypeScript definitions are available for all API responses:
+
+### Installation Options
+
+**Option 1: Direct Download**
+```bash
+# Download via API endpoint
+curl -o andamio-api.d.ts https://docs.andamio.io/api/types
+
+# Or download static file
+curl -o andamio-api.d.ts https://docs.andamio.io/types/andamio-api.d.ts
+```
+
+**Option 2: Copy from Documentation** 
+Copy the complete type definitions from this page into your project.
+
+**Option 3: Future NPM Package** (Coming Soon)
+```bash
+# Will be available as:
+npm install @andamio/api-types
+```
+
+### Import Types
+
+```typescript
+import type { 
+  RegistryResponse,
+  TransactionResponse,
+  TransactionsListResponse,
+  DeploymentsListResponse,
+  ApiError
+} from './andamio-api';
+```
+
+## Response Types
+
+### Registry API
+
+```typescript
+interface RegistryResponse {
+  systems: {
+    [key: string]: {
+      validators?: { [key: string]: ValidatorInfo };
+      tokens?: { [key: string]: TokenInfo };
+    };
+  };
+}
+
+interface SystemResponse {
+  system: string;
+  data: {
+    validators?: { [key: string]: ValidatorInfo };
+    tokens?: { [key: string]: TokenInfo };
+  };
+}
+```
+
+### Transactions API
+
+```typescript
+interface TransactionsListResponse {
+  count: number;
+  transactions: TransactionListItem[];
+}
+
+interface TransactionResponse {
+  role: string;
+  transaction: string;
+  file: string;
+  data: TransactionYaml;
+}
+```
+
+### Deployments API
+
+```typescript
+interface DeploymentsListResponse {
+  count: number;
+  deployments: DeploymentListItem[];
+}
+
+interface DeploymentResponse {
+  deployment: string;
+  files: {
+    [fileName: string]: unknown | { error: string };
+  };
+}
+```
+
+### Error Responses
+
+```typescript
+interface ApiError {
+  error: string;
+  status: number;
+}
+```
+
+## Usage Examples
+
+### TypeScript (Recommended)
+
+```typescript
+import type { 
+  RegistryResponse, 
+  TransactionResponse, 
+  TransactionsListResponse,
+  ApiError 
+} from './andamio-api';
+
+// Fetch complete registry with type safety
+const registry: RegistryResponse = await fetch('https://docs.andamio.io/api/registry')
+  .then(res => res.json());
+
+// Access typed data
+const globalStateValidators = registry.systems['global-state']?.validators;
+console.log(globalStateValidators?.['global-state']?.name); // "Global State"
+
+// Get specific transaction with error handling
+async function getTransaction(role: string, transaction: string): Promise<TransactionResponse> {
+  const response = await fetch(
+    `https://docs.andamio.io/api/transactions/${role}/${transaction}`
+  );
+  
+  if (!response.ok) {
+    const error: ApiError = await response.json();
+    throw new Error(error.error);
+  }
+  
+  return response.json();
+}
+
+// List all transactions for a role
+const adminTxs: TransactionsListResponse = await fetch(
+  'https://docs.andamio.io/api/transactions?role=admin'
+).then(res => res.json());
+
+// Process transaction list with type safety
+adminTxs.transactions.forEach(tx => {
+  console.log(`${tx.role}/${tx.transaction}: ${tx.url}`);
+});
+```
+
+### JavaScript
+
+```javascript
+// Fetch complete registry
+const registry = await fetch('https://docs.andamio.io/api/registry')
+  .then(res => res.json());
+
+// Get specific transaction
+const transaction = await fetch(
+  'https://docs.andamio.io/api/transactions/admin/add-course-creators'
+).then(res => res.json());
+
+// List all transactions for a role
+const adminTxs = await fetch(
+  'https://docs.andamio.io/api/transactions?role=admin'
+).then(res => res.json());
+```
+
+### Python
+
+```python
+import requests
+
+# Fetch registry
+response = requests.get('https://docs.andamio.io/api/registry')
+registry = response.json()
+
+# Get deployment params
+response = requests.get('https://docs.andamio.io/api/deployments/mainnet-v1')
+deployment = response.json()
+```
+
+### curl
+
+```bash
+# Get registry
+curl https://docs.andamio.io/api/registry
+
+# Get specific transaction
+curl https://docs.andamio.io/api/transactions/contributor/mint-project-state
+
+# List all available files
+curl https://docs.andamio.io/api/yaml
+
+# Download TypeScript definitions
+curl -o andamio-api.d.ts https://docs.andamio.io/api/types
+```
+
+### Direct YAML Access
+
+```bash
+# Download registry YAML directly
+curl https://docs.andamio.io/yaml/validator-registry-v1.yaml
+
+# Download transaction YAML
+curl https://docs.andamio.io/yaml/transactions/admin/init-course.yaml
+```
+
+## Rate Limits
+
+- No authentication required
+- Reasonable usage limits apply
+- Responses are cached for 5 minutes
+
+## CORS Support
+
+All endpoints include proper CORS headers for authorized domains:
+
+- **Allowed Origins**: 
+  - `http://localhost:3000` (development)
+  - `http://localhost:3001` (development)
+  - `https://app.andamio.io` (production)
+  - `https://preprod.andamio.io` (staging)
+- `Access-Control-Allow-Methods: GET, OPTIONS`
+- `Access-Control-Allow-Headers: Content-Type`
+
+## Error Handling
+
+Standard HTTP status codes:
+
+- `200` - Success
+- `404` - Resource not found  
+- `500` - Server error
+
+Error responses include descriptive messages:
+
+```json
+{
+  "error": "Transaction 'invalid/transaction' not found",
+  "status": 404
+}
+```

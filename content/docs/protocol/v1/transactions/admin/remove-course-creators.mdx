@@ -11,14 +11,6 @@ tx_file: "admin/rm-course-creators.yaml"
 
 This transaction allows an instance admin to remove course creators from the platform. It requires multi-signature approval from both the instance admin and global admin.
 
-## Transaction Metadata
-
-- **Role**: InstanceAdmin
-- **Category**: access_management
-- **Required Tokens**: instanceAdminNFT
-- **Estimated Fee**: 3.0 ADA
-- **Multi-signature**: Yes (instanceAdmin + globalAdmin)
-
 ## Protocol Description
 
 The transaction updates the course creators UTxO by removing specified creators from the authorized list. The creator list is updated while maintaining the permissions structure for remaining active creators.

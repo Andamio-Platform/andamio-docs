@@ -5,8 +5,6 @@ validator_system: "project"
 validator_id: "treasury-token"
 ---
 
-# Treasury Token
-
 The Treasury Token validator manages treasury token minting and burning operations for project treasuries. This validator is part of the project blueprint and controls treasury token lifecycle.
 
 <ValidatorDiagram
@@ -14,16 +12,6 @@ The Treasury Token validator manages treasury token minting and burning operatio
   validator="treasury-token"
 />
 
-## Blueprint Source
-
-This validator is defined in the **project.plutus** blueprint.
-
-## Redeemers
-
-### TreasuryTokenAction
-- `MintTreasuryToken` - Create new treasury tokens
-- `BurnTreasuryToken` - Remove treasury tokens from circulation
-
-## Purpose
+## About
 
 This validator manages the lifecycle of treasury tokens within projects, handling the minting and burning of tokens that represent treasury ownership and control. It ensures proper treasury token management and authorization.

@@ -1,0 +1,48 @@
+deployment: preprod
+version: v1
+systems:
+  global-state:
+    addresses:
+      params_ref_validator_address: ""
+      global_state_address: ""
+    tokens:
+      access_token_policyid: ""
+
+  index-validators:
+    addresses:
+      index_ref_address: ""
+      index_scripts_address: ""
+    tokens:
+      access_token_policyid: ""
+      init_index_policyid: ""
+      index_admin_policyid: ""
+      index_ref_policyid: ""
+  instance:
+    addresses:
+      instance_governance_scripts_address: ""
+      instance_provider_scripts_address: ""
+      instance_scripts_address: ""
+    tokens:
+      instance_provider_policyid: ""
+      instance_policyid: ""
+      instance_admin_policyid: ""
+  course:
+    addresses:
+      assignment_validator_address: ""
+      course_state_validator_address: ""
+      module_ref_validator_address: ""
+    tokens:
+      course_nft_policyid: ""
+      course_state_policyid: ""
+      module_policyid: ""
+  project:
+    addresses:
+      contributor_state_scripts_address: ""
+      escrow1_address: ""
+      treasury_scripts_address: ""
+    tokens:
+      project_nft_policyid: ""
+      contributor_state_policyid: ""
+      treasury_token_policyid: ""
+
+  
