@@ -64,7 +64,7 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
     );
   }
 
-  if (error || !txData) {
+  if (error || !txData || !txData.metadata) {
     return null; // Fail silently to not disrupt the page
   }
 
@@ -96,14 +96,14 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
               <div className="text-xs text-muted-foreground font-medium mb-1">
                 Role
               </div>
-              <div className="text-sm font-medium">{metadata.role}</div>
+              <div className="text-sm font-medium">{metadata.role || "Unknown"}</div>
             </div>
             
             <div>
               <div className="text-xs text-muted-foreground font-medium mb-1">
                 Category
               </div>
-              <div className="text-sm font-medium">{metadata.category}</div>
+              <div className="text-sm font-medium">{metadata.category || "Unknown"}</div>
             </div>
             
             <div>
@@ -125,7 +125,7 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
             <div className="text-xs text-muted-foreground font-medium mb-1">
               Description
             </div>
-            <div className="text-sm">{metadata.description}</div>
+            <div className="text-sm">{metadata.description || "No description available"}</div>
           </div>
         </div>
       </div>
