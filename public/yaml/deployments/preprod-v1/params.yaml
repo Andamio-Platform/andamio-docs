@@ -22,12 +22,12 @@ systems:
 
   instance:
     addresses:
-      instance_governance_scripts_address: ""
-      instance_provider_scripts_address: ""
-      instance_scripts_address: ""
+      instance_governance_scripts_address: addr_test1xzx8yjaufqwec9vnze5a4mqpuxuxasks9tvut534cc44ft5ke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzqs0v3wq
+      instance_provider_scripts_address: addr_test1xra9ne75azha7sa3pq5letmml6ugsh4fppwhfhk088jm8tyke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzq0lvt5x
+      instance_scripts_address: addr_test1xpyga27u94rsgnzdgu4df3w8mes538dymt5dhqlszgmfxeyke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzqcrqkuk
     tokens:
-      instance_provider_policyid: ""
-      instance_policyid: ""
+      instance_provider_policyid: fa59e7d4e8afdf43b10829fcaf7bfeb8885ea9085d74decf39e5b3ac
+      instance_policyid: 488eabdc2d47044c4d472ad4c5c7de61489da4dae8db83f012369364
       instance_admin_policyid: ""
 
 
