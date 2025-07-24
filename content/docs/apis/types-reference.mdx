@@ -177,6 +177,18 @@ export interface TransactionResponse {
   data: TransactionYaml;
 }
 
+// Enhanced transaction response with deployment resolution
+export interface ResolvedTransactionResponse extends TransactionResponse {
+  resolved?: {
+    addresses: {
+      [path: string]: string | null;
+    };
+    tokens: {
+      [path: string]: string | null;
+    };
+  };
+}
+
 // Deployments API Types
 export interface DeploymentListItem {
   deployment: string;
@@ -218,6 +230,7 @@ export type ApiResponse =
   | SystemResponse
   | TransactionsListResponse
   | TransactionResponse
+  | ResolvedTransactionResponse
   | DeploymentsListResponse
   | DeploymentResponse
   | YamlFilesResponse
@@ -229,7 +242,7 @@ export type ApiResponse =
 ### Basic Usage
 
 ```typescript
-import type { RegistryResponse, TransactionResponse } from './andamio-api';
+import type { RegistryResponse, TransactionResponse, ResolvedTransactionResponse } from './andamio-api';
 
 // Fetch registry with type safety
 const registry: RegistryResponse = await fetch('https://docs.andamio.io/api/registry')
@@ -237,6 +250,17 @@ const registry: RegistryResponse = await fetch('https://docs.andamio.io/api/regi
 
 // Access nested data with IntelliSense support
 const globalTokens = registry.systems['global-state']?.tokens;
+
+// Fetch transaction with deployment resolution
+const resolvedTx: ResolvedTransactionResponse = await fetch(
+  'https://docs.andamio.io/api/transactions/general/mint-access-token?deployment=mainnet&version=v1'
+).then(res => res.json());
+
+// Access resolved addresses and tokens
+if (resolvedTx.resolved) {
+  console.log('Resolved addresses:', resolvedTx.resolved.addresses);
+  console.log('Resolved tokens:', resolvedTx.resolved.tokens);
+}
 ```
 
 ### Error Handling

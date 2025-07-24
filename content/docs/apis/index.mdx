@@ -1,8 +1,54 @@
 ---
 title: Andamio APIs
-description: Andamio APIs
+description: Comprehensive APIs for accessing Andamio protocol data and building applications
 ---
 
-### Andamio APIs
+# Andamio APIs
 
-The Andamio APIs are a set of tools for building Andamio applications.
+The Andamio APIs provide comprehensive access to protocol data, transaction definitions, and deployment information for building Andamio applications.
+
+## Available APIs
+
+### 🔧 YAML Data API
+Access protocol configuration data, validator registry, and transaction definitions:
+- **Registry API** - Complete validator and token registry
+- **Transactions API** - Transaction definitions with deployment resolution
+- **Deployments API** - Network deployment parameters
+
+[Learn more →](/docs/apis/yaml-api)
+
+### 📘 Express API Reference  
+OpenAPI-documented endpoints for protocol interactions:
+- Validator UTxO queries
+- Datum decoding services
+- Transaction building assistance
+
+[View Reference →](/docs/apis/reference)
+
+## Key Features
+
+### Deployment Resolution
+Transaction endpoints can resolve blockchain addresses and policy IDs from deployment files:
+
+```typescript
+// Get transaction with mainnet addresses resolved
+const response = await fetch(
+  'https://docs.andamio.io/api/transactions/general/mint-access-token?deployment=mainnet&version=v1'
+);
+```
+
+### TypeScript Support
+Full TypeScript definitions available for all API responses:
+
+```bash
+curl -o andamio-api.d.ts https://docs.andamio.io/api/types
+```
+
+### CORS Support
+All endpoints include proper CORS headers for authorized domains, enabling direct browser access from approved applications.
+
+## Quick Start
+
+1. **Explore the YAML API** for protocol data access
+2. **Check the TypeScript types** for type-safe development
+3. **View the OpenAPI reference** for detailed endpoint documentation

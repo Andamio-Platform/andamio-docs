@@ -2,12 +2,15 @@
 
 import { loadYamlFile } from "@/utils/yaml";
 import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
-import { TransactionYaml } from "@/types";
+import { TransactionYaml, ResolvedTransactionResponse } from "@/types";
+import { deploymentResolver } from "@/utils/deployment-resolver";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const txFile = searchParams.get("file");
+  const deployment = searchParams.get("deployment") || "preprod";
+  const version = searchParams.get("version") || "v1";
 
   if (!txFile) {
     return NextResponse.json(
@@ -19,7 +22,31 @@ export async function GET(request: NextRequest) {
   try {
     const txData = await loadYamlFile(`yaml/transactions/${txFile}`) as TransactionYaml;
     
-    const response = NextResponse.json(txData);
+    // Resolve addresses and tokens from deployment files
+    const resolved = await deploymentResolver.resolveTransaction(
+      txData,
+      deployment,
+      version
+    );
+    
+    // Extract role from file path (e.g., "admin/add-course-creators.yaml" -> "admin")
+    const role = txFile.includes("/") ? txFile.split("/")[0] : "general";
+    const transaction = txFile.includes("/") 
+      ? txFile.split("/")[1].replace(".yaml", "") 
+      : txFile.replace(".yaml", "");
+    
+    const responseData: ResolvedTransactionResponse = {
+      role,
+      transaction,
+      file: txFile,
+      data: txData,
+      resolved: {
+        addresses: resolved.resolvedAddresses,
+        tokens: resolved.resolvedTokens,
+      },
+    };
+    
+    const response = NextResponse.json(responseData);
     
     // Add CORS headers for external access
     addCorsHeaders(response, request);

@@ -158,6 +158,26 @@ export interface TransactionResponse {
   data: TransactionYaml;
 }
 
+// Enhanced transaction response with deployment resolution
+export interface ResolvedTransactionResponse extends TransactionResponse {
+  resolved?: {
+    addresses: {
+      [addressName: string]: {
+        path: string;
+        originalValue: string;
+        resolvedValue: string;
+      };
+    };
+    tokens: {
+      [tokenName: string]: {
+        path: string;
+        originalValue: string;
+        resolvedValue: string;
+      };
+    };
+  };
+}
+
 // Deployments API Types
 export interface DeploymentListItem {
   deployment: string;
@@ -199,6 +219,7 @@ export type ApiResponse =
   | SystemResponse
   | TransactionsListResponse
   | TransactionResponse
+  | ResolvedTransactionResponse
   | DeploymentsListResponse
   | DeploymentResponse
   | YamlFilesResponse
