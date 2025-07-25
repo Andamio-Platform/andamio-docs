@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import yaml from "js-yaml";
+import { DeploymentParams } from "@/types";
 
 interface TokenInfoProps {
   tokenSystem: string;
@@ -22,18 +23,6 @@ interface Registry {
     [key: string]: {
       tokens?: {
         [key: string]: TokenData;
-      };
-    };
-  };
-}
-
-interface DeploymentParams {
-  deployment: string;
-  version: string;
-  systems: {
-    [key: string]: {
-      tokens?: {
-        [key: string]: string;
       };
     };
   };

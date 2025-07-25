@@ -28,15 +28,30 @@ Access transaction definitions with optional deployment resolution:
 - `GET /api/transactions?role={role}` - Filter by role
 - `GET /api/transactions/{role}/{transaction}` - Specific transaction
 - `GET /api/transaction?file={file}` - Transaction by file path
+- `GET /api/expected-tx/{role}/{transaction}` - Enhanced transaction data with resolved inputs/outputs
+- `GET /api/expected-tx?file={file}` - Enhanced transaction data by file path
 
 #### Query Parameters for Transaction Endpoints
 
-Both `/api/transactions/{role}/{transaction}` and `/api/transaction` support:
+All transaction endpoints (`/api/transactions/{role}/{transaction}`, `/api/transaction`, `/api/expected-tx/{role}/{transaction}`, and `/api/expected-tx`) support:
 
 - `deployment` (optional) - Deployment name (default: "preprod")
 - `version` (optional) - Deployment version (default: "v1")
 
 When these parameters are provided, the API will resolve addresses and policy IDs from the deployment files.
+
+#### Expected Transaction Endpoint
+
+The `/api/expected-tx` endpoints provide enhanced transaction data with resolved tokens and addresses. They accept the same parameters as the regular transaction endpoints but return structured data with:
+
+- Resolved blockchain addresses from deployment parameters
+- Policy IDs and asset names parsed from token definitions
+- Documentation links for each token
+- Properly formatted asset information
+
+The endpoint can be accessed in two ways:
+1. **By role and transaction**: `/api/expected-tx/{role}/{transaction}`
+2. **By file path**: `/api/expected-tx?file={role}/{transaction}.yaml`
 
 ### Deployments API
 
@@ -92,6 +107,7 @@ import type {
   RegistryResponse,
   TransactionResponse,
   ResolvedTransactionResponse,
+  ExpectedTxResponse,
   TransactionsListResponse,
   DeploymentsListResponse,
   ApiError
@@ -146,6 +162,36 @@ interface ResolvedTransactionResponse extends TransactionResponse {
       [path: string]: string | null;
     };
   };
+}
+
+// Expected transaction response with resolved inputs/outputs
+interface ExpectedTxResponse {
+  label: string;
+  linkUrl: string;
+  docsId: string;
+  inputs: ExpectedTxInput[];
+  outputs: ExpectedTxOutput[];
+}
+
+interface ExpectedTxInput {
+  address: string;
+  docsId: string;
+  assets: ExpectedTxAsset[];
+}
+
+interface ExpectedTxOutput {
+  address: string;
+  docsId: string;
+  assets: ExpectedTxAsset[];
+}
+
+interface ExpectedTxAsset {
+  label: string;
+  linkUrl: string;
+  docsId: string;
+  policyId: string | undefined | null;
+  assetName: string | undefined | null;
+  quantity: string | undefined | null;
 }
 ```
 
@@ -216,6 +262,36 @@ const mainnetTx = await fetch(
 if (mainnetTx.resolved && Object.keys(mainnetTx.resolved.addresses).length > 0) {
   console.log('Addresses resolved from mainnet deployment');
 }
+```
+
+### Using Expected Transaction Endpoint
+
+```typescript
+// Get enhanced transaction data with resolved addresses and tokens
+// Option 1: Using role and transaction in URL
+const expectedTx1: ExpectedTxResponse = await fetch(
+  'https://docs.andamio.io/api/expected-tx/admin/init-course?deployment=preprod&version=v1'
+).then(res => res.json());
+
+// Option 2: Using file parameter
+const expectedTx2: ExpectedTxResponse = await fetch(
+  'https://docs.andamio.io/api/expected-tx?file=admin/init-course.yaml&deployment=preprod&version=v1'
+).then(res => res.json());
+
+// Access structured inputs with resolved data
+expectedTx1.inputs.forEach(input => {
+  console.log(`Input address: ${input.address}`); // Resolved blockchain address
+  
+  input.assets.forEach(asset => {
+    console.log(`Asset: ${asset.label}`);
+    console.log(`Policy ID: ${asset.policyId}`); // Resolved from deployment
+    console.log(`Asset Name: ${asset.assetName}`); // Parsed from registry
+    console.log(`Docs Link: ${asset.linkUrl}`); // Direct link to token docs
+  });
+});
+
+// Access transaction documentation link
+console.log(`Transaction docs: ${expectedTx1.linkUrl}`);
 ```
 
 ### TypeScript (Recommended)
@@ -305,6 +381,12 @@ curl https://docs.andamio.io/api/transactions/contributor/mint-project-state
 
 # Get transaction with mainnet deployment resolution
 curl "https://docs.andamio.io/api/transactions/general/mint-access-token?deployment=mainnet&version=v1"
+
+# Get expected transaction with resolved data (by role/transaction)
+curl "https://docs.andamio.io/api/expected-tx/admin/init-course?deployment=preprod&version=v1"
+
+# Get expected transaction with resolved data (by file)
+curl "https://docs.andamio.io/api/expected-tx?file=admin/init-course.yaml&deployment=preprod&version=v1"
 
 # List all available files
 curl https://docs.andamio.io/api/yaml

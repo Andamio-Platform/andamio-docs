@@ -10,7 +10,12 @@ export interface ApiError {
 }
 
 // Registry API Types
-export interface RegistryResponse extends Registry {}
+export interface RegistryResponse extends Registry {
+  // API response metadata
+  timestamp?: string;
+  version?: string;
+  source?: string;
+}
 
 export interface SystemResponse {
   system: string;
@@ -79,6 +84,35 @@ export interface DeploymentResponse {
   };
 }
 
+export interface ExpectedTxResponse {
+  label: string;
+  linkUrl: string;
+  docsId: string;
+  inputs: ExpectedTxInput[];
+  outputs: ExpectedTxOutput[];
+}
+
+export interface ExpectedTxInput {
+  address: string;
+  docsId: string;
+  assets: ExpectedTxAsset[];
+}
+
+export interface ExpectedTxOutput {
+  address: string;
+  docsId: string;
+  assets: ExpectedTxAsset[];
+}
+
+export interface ExpectedTxAsset {
+  label: string;
+  linkUrl: string;
+  docsId: string;
+  policyId: string | undefined | null;
+  assetName: string | undefined | null;
+  quantity: string | undefined | null;
+}
+
 // YAML Files Discovery API Types
 export interface YamlFilesCategory {
   count: number;
@@ -96,8 +130,51 @@ export interface YamlFilesResponse {
   allFiles: string[];
 }
 
+export interface DeploymentParams {
+  deployment: string;
+  version: string;
+  systems: {
+    [key: string]: {
+      addresses?: {
+        [key: string]: string;
+      };
+      tokens?: {
+        [key: string]: string;
+      };
+    };
+  };
+}
+
+export interface DeploymentExampleParams {
+  deployment: string;
+  version: string;
+  local_instances?: {
+    course?: {
+      addresses?: {
+        [key: string]: string;
+      };
+      tokens?: {
+        [key: string]: string;
+      };
+    };
+    project?: {
+      addresses?: {
+        [key: string]: string;
+      };
+      tokens?: {
+        [key: string]: string;
+      };
+    };
+  };
+  transactions?: {
+    [role: string]: {
+      [transactionName: string]: string;
+    };
+  };
+}
+
 // Union type for all possible API responses
-export type ApiResponse = 
+export type ApiResponse =
   | RegistryResponse
   | SystemResponse
   | TransactionsListResponse
@@ -106,4 +183,6 @@ export type ApiResponse =
   | DeploymentsListResponse
   | DeploymentResponse
   | YamlFilesResponse
+  | ExpectedTxResponse
+  | DeploymentParams
   | ApiError;
