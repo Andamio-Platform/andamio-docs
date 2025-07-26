@@ -12,7 +12,7 @@ metadata:
   estimated_cost: "0 ADA"
   description: "Instance admin removes project creators from the platform"
   multi_signature: true
-  required_signatures: ["instanceAdmin", "globalAdmin"]
+  required_signatures: ["instanceAdmin"]
 
 graph_attrs:
   rankdir: LR

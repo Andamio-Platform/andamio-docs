@@ -12,7 +12,7 @@ metadata:
   estimated_cost: "0 ADA"
   description: "Instance admin adds new course creators to the platform"
   multi_signature: true
-  required_signatures: ["instanceAdmin", "globalAdmin"]
+  required_signatures: ["instanceAdmin"]
 
 graph_attrs:
   rankdir: LR
@@ -32,7 +32,7 @@ inputs:
         - "1 course.course-nft"
       datum:
         creators: ["<current_creator_1>", "<current_creator_2>"]
-        policy_id: "course.course-state-policy"
+        policy_id: "course.course-nft-policy"
 
   - id: instance_admin
     type: wallet
@@ -58,4 +58,4 @@ outputs:
         - "1 course.course-nft"
       datum:
         creators: ["<alias_to_add>", "<current_creator_1>", "<current_creator_2>"]
-        policy_id: "course.course-state-policy"
+        policy_id: "course.course-nft-policy"

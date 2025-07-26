@@ -14,7 +14,7 @@ metadata:
   estimated_cost: "0 ADA"
   description: "Instance admin completes project initialization (step 2 of 2)"
   multi_signature: true
-  required_signatures: ["instanceAdmin"]
+  required_signatures: ["instanceAdmin", "globalAdmin"]
 
 graph_attrs:
   rankdir: LR
@@ -60,14 +60,14 @@ reference_inputs:
       datum: ["treasury_scripts_logic1", "treasury_scripts_logic2", "treasury_scripts_logic3"]
       script: "treasury_scripts_obs"
 
-  - id: instance_provider_4
+  - id: instance_provider_3
     type: script
     output:
       address: "instance.instance-provider-scripts"
       value: 
-        - "1 instance.contributor-state-scripts"
-      datum: ["contributor_state_logic1", "contributor_state_logic2", "contributor_state_logic3"]
-      script: "contributor_state_obs"
+        - "1 instance.escrow1"
+      datum: ["escrow_logic1", "escrow_logic2"]
+      script: "escrow_obs"
 
   - id: instance_governance_1
     type: script
@@ -102,9 +102,18 @@ outputs:
     output:
       address: "instance.instance-scripts"
       value: 
-        - "1 project.project-instance-contributor-state-scripts"
+        - "1 project.project-instance-treasury-token"
       datum: "project.project-nft-policy"
-      script: "contributor_state_logic1 + project.project-nft-policy + contributor_state_logic2 + [(project.project-nft-policy, [102, 103])] + contributor_state_logic3"
+      script: "treasury_token_logic1 + project.project-nft-policy + treasury_token_logic2"
+
+  - id: instance_3
+    type: script
+    output:
+      address: "instance.instance-scripts"
+      value: 
+        - "1 project.project-instance-escrow1"
+      datum: "project.project-nft-policy"
+      script: "escrow_logic1 + project.project-nft-policy + escrow_logic2"
 
 # minting
 mints:
@@ -114,12 +123,16 @@ mints:
       - policy_id: "project.project-nft-policy"
         params: ["project.project-nft-policy", "project.treasury-token-policy"]
         token_name: "TreasuryScripts"
-      - policy_id: "project.project-nft-policy"
-        params: ["project.project-nft-policy", "[(project.project-nft-policy, [ls_data])]"]
-        token_name: "ContributorStateScripts"
+      - policy_id: "<project_nft_policyid>"
+        params: ["project.project-nft-policy"]
+        token_name: "TreasuryToken"
+      - policy_id: "<project_nft_policyid>"
+        params: ["project.project-nft-policy"]
+        token_name: "Escrow1"
     tokens:
       - "1 project.project-instance-treasury-scripts"
-      - "1 project.project-instance-contributor-state-scripts"
+      - "1 project.project-instance-treasury-token"
+      - "1 project.project-instance-escrow1"
 
 # withdrawing
 withdraws:
@@ -130,8 +143,15 @@ withdraws:
       tx_ix: "string"
     amount: 0
 
-  - id: contributor_state_obs
-    observer: "project.contributor-state-cbor-obs"
+  - id: treasury_token_obs
+    observer: "project.treasury-token-cbor-obs"
+    redeemer:
+      tx_id: "string"
+      tx_ix: "string"
+    amount: 0
+
+  - id: escrow_obs
+    observer: "project.escrow1-cbor-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"

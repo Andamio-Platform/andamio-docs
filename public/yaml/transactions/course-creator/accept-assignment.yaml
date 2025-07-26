@@ -28,9 +28,10 @@ inputs:
       address: "course facilitator"
       value: 
         - "1 global-state.access-token-user"
+
   - id: instance_governance_1
     type: script
-    redeemer: ["<alias_student>"]
+    redeemer: ["<alias_course_facilitator>"]
     output:
       address: "instance.instance-governance-scripts"
       value: 
@@ -63,6 +64,7 @@ outputs:
       address: "course facilitator"
       value: 
         - "1 global-state.access-token-user"
+
   - id: instance_governance_1
     type: script
     output:
@@ -76,7 +78,7 @@ outputs:
   - id: assignment_validator_1
     type: script
     output:
-      address: "course.assignment-scripts"
+      address: "course.course-state-validator"
       value: 
         - "1 course.course-state-token"
       datum:

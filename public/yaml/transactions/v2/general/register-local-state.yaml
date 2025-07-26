@@ -1,0 +1,59 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: RegisterLocalState
+id: general.register-lcoal-state
+
+# Metadata about this transaction type
+metadata:
+  role: "general"
+  category: "general"
+  requires_tokens: ["local-state.local-state-nft"]
+  estimated_cost: "0 ADA"
+  description: "Register a local state instance to be usable with global state v2."
+  multi_signature: false
+  required_signatures: ["localStateOwner"]
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# inputs
+inputs:
+  - id: local_state_owner
+    type: wallet
+    output:
+      address: "local state owner wallet"
+      value: 
+        - "1 local-state.local-state-nft" 
+
+# outputs
+outputs:
+  - id: local_state_owner
+    type: wallet
+    output:
+      address: "local state owner wallet"
+      value: 
+        - "1 local-state.local-state-nft" 
+
+  - id: local_state_registration
+    type: script
+    output:
+      address: "global.local-state-registration"
+      value: 
+        - "1 global.local-state-registration"
+      datum: "local_state_nft_policyid"
+      script: "local_state_token_policy"
+
+# minting
+mints:
+  - id: global.local-state-registration
+    policy: "<local-state-registration>"
+    redeemer:
+      - policy_id: "<local_state_nft_policyid>"
+      - policy_id: "<local_state_token_policyid>"
+    tokens:
+      - "1 global.local-state-registration"

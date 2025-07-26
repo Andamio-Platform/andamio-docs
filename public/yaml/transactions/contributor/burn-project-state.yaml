@@ -1,7 +1,7 @@
 # Token references use dot notation to map to validator-registry-v1.yaml
 # Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
 
-name: ContributorBurnContributorInfoTransaction
+name: ContributorBurnContributorStateTransaction
 id: contributor.burn-project-state
 
 # Metadata about this transaction type
@@ -21,6 +21,7 @@ inputs:
       address: "user"
       value: 
         - "1 global-state.access-token-user"
+        
   - id: global_state_1
     type: script
     redeemer: 

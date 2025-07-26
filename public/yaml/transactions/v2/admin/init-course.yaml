@@ -1,8 +1,8 @@
 # Token references use dot notation to map to validator-registry-v1.yaml
 # Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
 
-name: AdminInitCourseTransaction
-id: admin.init-course
+name: AdminInitCourseV2Transaction
+id: admin.init-course-v2
 
 # Metadata about this transaction type
 metadata:
@@ -58,14 +58,14 @@ reference_inputs:
       datum: ["module_logic1", "module_logic2"]
       script: "module_obs"
 
-  - id: instance_provider_course_state_scripts
+  - id: instance_provider_course_state_scripts_v2
     type: script
     output:
       address: "instance.instance-provider-scripts"
       value: 
-        - "1 instance.course-state-scripts"
-      datum: ["course_state_logic1", "course_state_logic2", "course_state_logic3"]
-      script: "course_state_obs"
+        - "1 instance.course-state-scripts-v2"
+      datum: ["course_state_v2_logic1", "course_state_v2_logic2", "course_state_v2_logic3"]
+      script: "course_state_v2_obs"
 
 # outputs
 outputs:
@@ -84,7 +84,7 @@ outputs:
         - "1 course.course-nft"
       datum:
         creators: ["<creator_alias_a>", "<creator_alias_b>"]
-        policy_id: "course.course-nft-policy"
+        policy_id: "course_nft_policyid"
 
   - id: instance_assignment_validator
     type: script
@@ -92,7 +92,7 @@ outputs:
       address: "instance.instance-scripts"
       value: 
         - "1 course.instance-assignment-validator"
-      datum: "course.course-nft-policy"
+      datum: "course_nft_policyid"
       script: "assignment_logic1 + course.course-state-policy + assignment_logic2"
 
   - id: instance_module_scripts
@@ -101,17 +101,17 @@ outputs:
       address: "instance.instance-scripts"
       value: 
         - "1 course.instance-module-scripts"
-      datum: "course.course-nft-policy"
-      script: "module_logic1 + course.course-state-policy + module_logic2"
+      datum: "course_nft_policyid"
+      script: "module_logic1 + course.course-state-v2-policy + module_logic2"
 
-  - id: instance_course_state_scripts
+  - id: local_state_registration_1
     type: script
     output:
-      address: "instance.instance-scripts"
+      address: "global.local-state-registration"
       value: 
-        - "1 course.instance-course-state-scripts"
-      datum: "course.course-nft-policy"
-      script: "course_state_logic1 + course.course-state-policy + course_state_logic2 + course.module-policy + course_state_logic3"
+        - "1 global.local-state-registration"
+      datum: "course_nft_policyid"
+      script: "course_state_v2_logic1 + course.course-nft + course_state_v2_logic2 + course.module-policy + course_state_v2_logic3"
 
 # minting
 mints:
@@ -125,18 +125,22 @@ mints:
     policy: "<instance_policyid>"
     redeemer:
       - policy_id: "<course_nft_policyid>"
-        params: ["course.course-nft-policy"]
+        params: ["course.course-state-policy"]
         token_name: "AssignmentValidator"
       - policy_id: "<course_nft_policyid>"
-        params: ["course.course-nft-policy"]
+        params: ["course.course-state-policy"]
         token_name: "ModuleScripts"
-      - policy_id: "<course_nft_policyid>"
-        params: ["course.course-nft-policy", "course.module-policy"]
-        token_name: "CourseStateScripts"
     tokens:
       - "1 course.instance-assignment-validator"
       - "1 course.instance-module-scripts"
-      - "1 course.instance-course-state-scripts"
+  
+  - id: global.local-state-registration
+    policy: "<local-state-registration>"
+    redeemer:
+      - policy_id: "<course_nft_policyid>"
+      - policy_id: "<course_state_v2_policyid>"
+    tokens:
+      - "1 global.local-state-registration"
 
 # withdrawing
 withdraws:
@@ -154,8 +158,8 @@ withdraws:
       tx_ix: "string"
     amount: 0
 
-  - id: course-state-cbor-obs
-    observer: "course.course-state-cbor-obs"
+  - id: course-state-v2-cbor-obs
+    observer: "course.course-state-v2-cbor-obs"
     redeemer:
       tx_id: "string"
       tx_ix: "string"

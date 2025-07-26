@@ -10,7 +10,7 @@ metadata:
   category: "project"
   requires_tokens: ["global-state.access-token-user", "project.contributor-state-token"]
   estimated_cost: "0 ADA"
-  description: "Contributor adds or updates their profile information"
+  description: "Contributor adds or updates their project submission information"
   multi_signature: false
 
 # inputs

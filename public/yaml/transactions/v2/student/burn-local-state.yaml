@@ -1,0 +1,94 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: StudentBurnCourseStateV2Transaction
+id: student.burn-course-state
+
+# Metadata about this transaction type
+metadata:
+  role: "student"
+  category: "state_management"
+  requires_tokens: ["global-state.access-token-user", "global-state.access-token-global-state", "course.course-state-v2-token"]
+  estimated_cost: "0 ADA"
+  description: "Student burns local state token and moves to global state v2"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# inputs
+inputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "student"
+      value: 
+        - "1 global-state.access-token-user"
+
+  - id: global_state_v2_1
+    type: script
+    redeemer: 
+      nft: "<course_nft_policyid>"
+      data_index: 1
+      state_data_hash: "201 + 202 + 203"
+      policy_id: "<course_state_v2_policyid>"
+      new_state_data_hash: "101 + 102 + 103 + 201 + 202 + 203"
+    output:
+      address: "global-state.global-state-v2"
+      value: 
+        - "1 global-state.access-token-global-state"
+      datum:
+        alias: "<alias>"
+        local_states:
+          - nft: "<project_nft_policyid>"
+            data_hash: "state-data-hash + ''"
+
+          - nft: "<course_nft_policyid>"
+            data_hash: "201 + 202 + 203 + <course_state_v2_policyid>"
+
+  - id: course_state_v2_1
+    type: script
+    redeemer:
+      alias: "alias"
+    output:
+      address: "course.course-state-v2-validator"
+      value: 
+        - "1 course.course-state-v2-token"
+      datum: 
+        assignment_list: ["101", "102", "103"]
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "student"
+      value: 
+        - "1 global-state.access-token-user"
+
+  - id: global_state_v2_1
+    type: script
+    output:
+      address: "global-state.global-state"
+      value: 
+        - "1 global-state.access-token-global-state"
+      datum:
+        alias: "<alias>"
+        local_states:
+          - nft: "<course_nft_policyid>"
+            data_hash: "101 + 102 103 + 201 + 202 + 203 + ''"
+            
+          - nft: "<project_nft_policyid>"
+            data_hash: "state-data-hash + ''"
+
+mints:
+  - id: course_state_v2
+    policy: "course.course-state-v2-policy"
+    redeemer:
+      string: "alias"
+    tokens:
+      - "-1 course.course-state-v2-token"

@@ -1,7 +1,7 @@
 # Token references use dot notation to map to validator-registry-v1.yaml
 # Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
 
-name: StudentMintLocalStateTransaction
+name: StudentMintCourseStateTransaction
 id: student.mint-local-state
 
 # Metadata about this transaction type
@@ -28,6 +28,7 @@ inputs:
       address: "student"
       value: 
         - "1 global-state.access-token-user"
+
   - id: global_state_1
     type: script
     redeemer: 
@@ -49,13 +50,13 @@ inputs:
 
 # reference inputs
 reference_inputs:
-  - id: instance_1
+  - id: _1
     type: script
     output:
       address: "instance.instance-scripts"
       value: 
         - "1 course.instance-course-state-scripts"
-      datum: "nft"
+      datum: "<course_nft_policyid>"
       script: "course_state"
 
 # outputs
@@ -66,6 +67,7 @@ outputs:
       address: "student"
       value: 
         - "1 global-state.access-token-user"
+
   - id: global_state_1
     type: script
     output:

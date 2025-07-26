@@ -1,0 +1,87 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: ContributorBurnContributorStateV2Transaction
+id: contributor.burn-project-state-v2
+
+# Metadata about this transaction type
+metadata:
+  role: "contributor"
+  category: "project"
+  requires_tokens: ["global-state.access-token-user", "global-state.access-token-global-state", "project.contributor-state-v2-token"]
+  estimated_cost: "0 ADA"
+  description: "Contributor burns their contributor token to leave project and record results in global state v2"
+  multi_signature: false
+
+# inputs
+inputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: 
+        - "1 global-state.access-token-user"
+        
+  - id: global_state_v2_1
+    type: script
+    redeemer: 
+      nft: "<project_nft_policyid>"
+      data_index: 0
+      state_data_hash: "<project_hash_2> + <project_hash_3>"
+      policy_id: "<contributor_state_v2_policyid>"
+      new_state_data_hash: "<project_hash_1> + <project_hash_2> + <project_hash_3>"
+    output:
+      address: "global-state.global-state-v2"
+      value: 
+        - "1 global-state.access-token-global-state"
+      datum:
+        alias: "<alias>"
+        local_states:
+          - nft: "<project_nft_policyid>"
+            data_hash: "<project_hash_2> + <project_hash_3> + contributor_state_v2_policyid"
+
+          - nft: "<project_nft_policyid>"
+            data_hash: "state-data-hash + ''"
+
+  - id: contributor_state_v2_1
+    type: script
+    redeemer:
+      string: "<alias>"
+    output:
+      address: "project.contributor-state-v2-scripts"
+      value: 
+        - "2 project.contributor-state-v2-token"
+      datum: 
+        project_list: ["<project_hash_1>", "<project_hash_2>", "<project_hash_3>"]
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value: 
+        - "1 global-state.access-token-user"
+
+  - id: global_state_v2_1
+    type: script
+    output:
+      address: "global-state.global-state-v2"
+      value: 
+        - "1 global-state.access-token-global-state"
+      datum:
+        alias: "<alias>"
+        local_states:
+          - nft: "<project_nft_policyid>"
+            data_hash: "<project_hash_3> + <project_hash_2> + <project_hash_3> + contributor_state_v2_policyid"
+
+          - nft: "<project_nft_policyid>"
+            data_hash: "state-data-hash + ''"
+
+mints:
+  - id: contributor_state_v2
+    policy: "<contributor_state_v2_policyid>"
+    redeemer:
+      string: "<alias>"
+    tokens:
+      - "-2 project.contributor-state-v2-token"
