@@ -133,6 +133,8 @@ export interface YamlFilesResponse {
 export interface DeploymentParams {
   deployment: string;
   version: string;
+  andamio_protocol_treasury?: string;
+  andamio_services_treasury?: string;
   systems: {
     [key: string]: {
       addresses?: {

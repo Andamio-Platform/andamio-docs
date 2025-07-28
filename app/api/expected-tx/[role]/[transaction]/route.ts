@@ -181,6 +181,14 @@ async function resolveAddress(
 
     const addressPlaceholder = addressMatch[1];
 
+    // First check if it's a top-level parameter (like andamio_protocol_treasury)
+    if (addressPlaceholder in paramsData) {
+      const value = paramsData[addressPlaceholder as keyof DeploymentParams];
+      if (typeof value === "string") {
+        return value;
+      }
+    }
+
     // Check each system in params
     for (const system of Object.keys(paramsData.systems || {})) {
       const systemData = paramsData.systems[system];
