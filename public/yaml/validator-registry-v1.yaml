@@ -46,7 +46,7 @@ systems:
     tokens:
       access-token-user:
         asset-id: "<access_token_policyid>.222<alias>"
-        minted-in: "general.mint-access-token"
+        minted-in: "general.access-token-mint"
         used-in:
           - "contributor.mint-project-state"
           - "contributor.burn-project-state"
@@ -71,7 +71,7 @@ systems:
         burned-in: null
       access-token-global-state:
         asset-id: "<access_token_policyid>.100<alias>"
-        minted-in: "general.mint-access-token"
+        minted-in: "general.access-token-mint"
         used-in:
           - "contributor.mint-project-state"
           - "contributor.burn-project-state"
@@ -81,8 +81,8 @@ systems:
         burned-in: null
       access-token-index:
         asset-id: "<access_token_policyid>.\" \""
-        minted-in: "general.mint-access-token"
-        used-in: "general.mint-access-token"
+        minted-in: "general.access-token-mint"
+        used-in: "general.access-token-mint"
         referenced-in:
         burned-in: null
   
@@ -116,7 +116,7 @@ systems:
         purpose: "withdraw"
         redeemer: 
           - type: "(alias, ())"
-            transaction: "general.mint-access-token"
+            transaction: "general.access-token-mint"
 
       init-index-policy:
         name: "Init Index Policy"
@@ -136,7 +136,7 @@ systems:
         asset-id: "<index_ref_policyid>.IndexScripts"
         minted-in:
         used-in:
-        referenced-in: "general.mint-access-token"
+        referenced-in: "general.access-token-mint"
         burned-in:
   
   # Instance Validators

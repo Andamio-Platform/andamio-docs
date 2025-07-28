@@ -129,7 +129,7 @@ export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
       return `/docs/protocol/v1/transactions/${mappedRole}/${transactionName}`;
     }
 
-    // Fallback for legacy format (e.g., "mint-access-token" without dot notation)
+    // Fallback for legacy format (e.g., "access-token-mint" without dot notation)
     return `/docs/protocol/v1/transactions/general/${txName}`;
   };
 

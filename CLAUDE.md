@@ -173,7 +173,7 @@ access-token-user:
 
 ### Completed Transaction Usage Updates
 The following transactions have been fully processed with usage field updates:
-- ✅ `mint-access-token` (already complete)
+- ✅ `access-token-mint` (already complete)
 - ✅ `admin-add-course-creators` 
 - ✅ `admin-add-project-creators`
 - ✅ `admin-init-course`
@@ -196,7 +196,7 @@ All documentation follows standardized URL patterns for predictable linking:
   - `/docs/protocol/v1/transactions/admin/add-course-creators`
   - `/docs/protocol/v1/transactions/contributor/mint-project-state`
   - `/docs/protocol/v1/transactions/student/burn-local-state`
-  - `/docs/protocol/v1/transactions/general/mint-access-token`
+  - `/docs/protocol/v1/transactions/general/access-token-mint`
 
 #### **Token Documentation**
 - **Pattern**: `/docs/protocol/v1/tokens/<system>/<token-name>`
@@ -283,7 +283,7 @@ Each token in the registry tracks its usage across transactions:
 tokens:
   access-token-user:
     asset-id: "<access_token_policyid>.222<alias>"
-    minted-in: "mint-access-token"           # Transaction that creates the token
+    minted-in: "access-token-mint"           # Transaction that creates the token
     used-in: ["contributor-mint-project-state", ...]  # Transactions that consume the token
     referenced-in: []                        # Transactions that reference the token
     burned-in: null                         # Transactions that destroy the token

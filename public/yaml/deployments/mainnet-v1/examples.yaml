@@ -27,7 +27,7 @@ local_instances:
 # Transactions
 transactions:
   general:
-    mint-access-token:
+    access-token-mint:
   admin:
     init-course:
     add-course-creators:

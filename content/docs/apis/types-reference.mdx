@@ -253,7 +253,7 @@ const globalTokens = registry.systems['global-state']?.tokens;
 
 // Fetch transaction with deployment resolution
 const resolvedTx: ResolvedTransactionResponse = await fetch(
-  'https://docs.andamio.io/api/transactions/general/mint-access-token?deployment=mainnet&version=v1'
+  'https://docs.andamio.io/api/transactions/general/access-token-mint?deployment=mainnet&version=v1'
 ).then(res => res.json());
 
 // Access resolved addresses and tokens

@@ -70,7 +70,7 @@ outputs:
 ```
 
 ## Files Successfully Updated
-1. **mint-access-token.yaml** ✅ - Template/reference file
+1. **access-token-mint.yaml** ✅ - Template/reference file
 2. **admin-init-course.yaml** ✅ - Course initialization
 3. **admin-init-project-step-1.yaml** ✅ - Project init step 1
 4. **admin-init-project-step-2.yaml** ✅ - Project init step 2

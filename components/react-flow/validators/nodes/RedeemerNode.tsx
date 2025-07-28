@@ -16,7 +16,7 @@ const roles = [
   "course-creator",
   "project-creator",
   "student",
-  "general", // Added general role for transactions like mint-access-token
+  "general", // Added general role for transactions like access-token-mint
 ];
 
 const RedeemerNode = ({ data }: { data: RedeemerNodeData }) => {
@@ -37,11 +37,11 @@ const RedeemerNode = ({ data }: { data: RedeemerNodeData }) => {
   // Generate the appropriate link for a transaction using dot notation
   const getTransactionLink = (transaction: string): string => {
     // Handle dot notation format: "role.transaction-name"
-    if (transaction.includes('.')) {
-      const [role, txName] = transaction.split('.');
+    if (transaction.includes(".")) {
+      const [role, txName] = transaction.split(".");
       return `/docs/protocol/v1/transactions/${role}/${txName}`;
     }
-    
+
     // Fallback: Check if transaction starts with any of the roles (legacy format)
     for (const role of roles) {
       if (transaction.startsWith(`${role}-`)) {

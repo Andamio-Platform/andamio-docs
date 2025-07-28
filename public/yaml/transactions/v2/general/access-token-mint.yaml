@@ -2,7 +2,7 @@
 # Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
 
 name: AccessTokenMintTransaction
-id: general.mint-access-token-v2
+id: general.access-token-mint-v2
 
 # Metadata about this transaction type
 metadata:

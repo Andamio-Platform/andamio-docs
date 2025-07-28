@@ -229,7 +229,7 @@ The transaction endpoints can resolve actual blockchain addresses and policy IDs
 ```typescript
 // Get transaction with mainnet deployment resolution
 const response = await fetch(
-  'https://docs.andamio.io/api/transactions/general/mint-access-token?deployment=mainnet&version=v1'
+  'https://docs.andamio.io/api/transactions/general/access-token-mint?deployment=mainnet&version=v1'
 );
 const txData: ResolvedTransactionResponse = await response.json();
 
@@ -380,7 +380,7 @@ curl https://docs.andamio.io/api/registry
 curl https://docs.andamio.io/api/transactions/contributor/mint-project-state
 
 # Get transaction with mainnet deployment resolution
-curl "https://docs.andamio.io/api/transactions/general/mint-access-token?deployment=mainnet&version=v1"
+curl "https://docs.andamio.io/api/transactions/general/access-token-mint?deployment=mainnet&version=v1"
 
 # Get expected transaction with resolved data (by role/transaction)
 curl "https://docs.andamio.io/api/expected-tx/admin/init-course?deployment=preprod&version=v1"
