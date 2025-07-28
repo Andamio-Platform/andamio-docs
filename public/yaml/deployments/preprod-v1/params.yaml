@@ -1,19 +1,19 @@
 deployment: preprod
 version: v1
-andamio_protocol_treasury:
+andamio_protocol_treasury: addr_test1qpuwf43fgc6wx3ed20c6wgm267t84ypxdc02qrdnjqkwgtlxakhvwf2dxzsqncufwrrau2ftmv79kh5dl9djq4jly3xspgyfcz
 andamio_services_treasury:
 systems:
   global-state:
     addresses:
       params_ref_validator_address: ""
-      global_state_address: addr_test1xrrkcdgg3tyzdj9qu628erlh3kx5f9tcn0rjjsvm8ge5xpvke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzqs6wq6p
+      global_state_address: addr_test1xr7xs02kjwr7v3frqrx4exearkd5nmx5ashhzsj5l3nja7yke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzq6ptcdp
     tokens:
       access_token_policyid: c76c35088ac826c8a0e6947c8ff78d8d4495789bc729419b3a334305
 
   index-validators:
     addresses:
-      index_ref_address: ""
-      index_scripts_address: ""
+      index_ref_address: addr_test1xqzp3cel9p95shlsaertqrt0wcmym5y780ljmca80k4u8ruke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzqdxy5xn
+      index_scripts_address: addr_test1xrrkcdgg3tyzdj9qu628erlh3kx5f9tcn0rjjsvm8ge5xpvke8x9mpjf7aerjt3n3nfd5tnzkfhlprp09mpf4sdy8dzqs6wq6p
     tokens:
       access_token_policyid: c76c35088ac826c8a0e6947c8ff78d8d4495789bc729419b3a334305
       init_index_policyid: ""
