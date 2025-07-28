@@ -327,12 +327,31 @@ export async function GET(
       })
     );
 
+    // Calculate andamio_protocol_treasury_fee
+    let andamio_protocol_treasury_fee = 0;
+    
+    // Check outputs for any sent to andamio_protocol_treasury
+    for (const output of txData.outputs) {
+      if (output.output.address === "<andamio_protocol_treasury>") {
+        // Sum up lovelace values sent to treasury
+        for (const asset of output.output.value) {
+          if (asset.includes("lovelace")) {
+            const match = asset.match(/^(\d+)\s+lovelace$/);
+            if (match) {
+              andamio_protocol_treasury_fee += parseInt(match[1], 10);
+            }
+          }
+        }
+      }
+    }
+
     const repsonseData: ExpectedTxResponse = {
       label: txData.name,
       linkUrl: `https://docs.andamio.io/docs/protocol/${version}/transactions/${txData.metadata.role}/${txData.name}`,
       docsId: `${txData.metadata.role}.${txData.name}`,
       inputs: inputs,
       outputs: outputs,
+      andamio_protocol_treasury_fee: andamio_protocol_treasury_fee,
     };
 
     const response = NextResponse.json(repsonseData);

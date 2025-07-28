@@ -90,6 +90,7 @@ export interface ExpectedTxResponse {
   docsId: string;
   inputs: ExpectedTxInput[];
   outputs: ExpectedTxOutput[];
+  andamio_protocol_treasury_fee: number;
 }
 
 export interface ExpectedTxInput {
