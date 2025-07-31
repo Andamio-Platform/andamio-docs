@@ -1,0 +1,10 @@
+{
+    "title": "Global State",
+    "description": "V2 global state validators for enhanced state management and V1 compatibility",
+    "icon": "Globe",
+    "pages": [
+        "global-state",
+        "global-state-v2"
+    ],
+    "defaultOpen": false
+}

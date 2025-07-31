@@ -15,6 +15,7 @@ import type { TOCItemType } from "fumadocs-core/server";
 import TxYamlMetadata from "@/components/protocol-info/TxYamlMetadata";
 import TokenInfo from "@/components/protocol-info/TokenInfo";
 import ValidatorInfo from "@/components/protocol-info/ValidatorInfo";
+import ValidatorDiagram from "@/components/react-flow/validators/DiagramValidatorOverview";
 
 // Extended page data interface to include validator properties
 interface ExtendedPageData {
@@ -81,12 +82,25 @@ export default async function Page(props: {
             a: createRelativeLink(source, page),
           })}
         />
-        {params.slug?.join("/").startsWith("protocol/v1/validators/") &&
+        {(params.slug?.join("/").startsWith("protocol/v1/validators/") ||
+          params.slug?.join("/").startsWith("protocol/v2/validators/")) &&
           params.slug.length >= 5 && (
-            <ValidatorInfo
-              validatorSystem={params.slug[3]}
-              validatorId={params.slug[4]}
-            />
+            <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-12">
+              <div className="col-span-1 xl:col-span-4">
+                <ValidatorDiagram
+                  system={params.slug[3]}
+                  validatorId={params.slug.length === 6 && params.slug[4] === "observers" ? params.slug[5] : params.slug[4]}
+                  version={protocolVersion}
+                />
+              </div>
+              <div className="col-span-1 xl:col-span-1 w-full">
+                <ValidatorInfo
+                  validatorSystem={params.slug[3]}
+                  validatorId={params.slug.length === 6 && params.slug[4] === "observers" ? params.slug[5] : params.slug[4]}
+                  version={protocolVersion}
+                />
+              </div>
+            </div>
           )}
 
         {/* Show protocol diagram only on the validators index page */}
@@ -100,9 +114,14 @@ export default async function Page(props: {
           </div>
         )}
 
-        {params.slug?.join("/").startsWith("protocol/v1/tokens/") &&
+        {(params.slug?.join("/").startsWith("protocol/v1/tokens/") ||
+          params.slug?.join("/").startsWith("protocol/v2/tokens/")) &&
           params.slug.length >= 5 && (
-            <TokenInfo tokenSystem={params.slug[3]} tokenId={params.slug[4]} />
+            <TokenInfo
+              tokenSystem={params.slug[3]}
+              tokenId={params.slug[4]}
+              version={protocolVersion}
+            />
           )}
       </DocsBody>
     </DocsPage>

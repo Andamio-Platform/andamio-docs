@@ -1,0 +1,13 @@
+{
+  "title": "Tokens",
+  "pages": [
+    "index",
+    "global-state",
+    "global", 
+    "index-validators",
+    "local-state",
+    "instance",
+    "course",
+    "project"
+  ]
+}

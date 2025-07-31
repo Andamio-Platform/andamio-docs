@@ -36,14 +36,16 @@ const nodeTypes = {
 export default function ValidatorDiagram({
   system,
   validatorId,
+  version = "v1",
 }: DiagramValidatorOverviewProps) {
-  return <DiagramValidatorOverview system={system} validatorId={validatorId} />;
+  return <DiagramValidatorOverview system={system} validatorId={validatorId} version={version} />;
 }
 
 // Client-side only diagram component to avoid hydration mismatches
 function DiagramValidatorOverview({
   system,
   validatorId,
+  version = "v1",
 }: DiagramValidatorOverviewProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -62,7 +64,7 @@ function DiagramValidatorOverview({
   useEffect(() => {
     const fetchRegistryData = async () => {
       try {
-        const response = await fetch("/yaml/validator-registry-v1.yaml");
+        const response = await fetch(`/yaml/validator-registry-${version}.yaml`);
         const yamlText = await response.text();
         const data = yaml.load(yamlText) as Registry;
         setRegistryData(data);
@@ -74,7 +76,7 @@ function DiagramValidatorOverview({
     };
 
     fetchRegistryData();
-  }, []);
+  }, [version]);
 
   // Initialize the diagram with validator data
   useEffect(() => {

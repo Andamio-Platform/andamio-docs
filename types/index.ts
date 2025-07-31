@@ -91,6 +91,7 @@ export interface DiagramTransactionWrapperProps {
 export interface DiagramValidatorOverviewProps {
   system: string;
   validatorId: string;
+  version?: string;
 }
 
 // Node type identifiers for validator diagram

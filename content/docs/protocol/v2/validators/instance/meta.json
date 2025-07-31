@@ -1,0 +1,11 @@
+{
+    "title": "Instance",
+    "description": "Instance-level validators for provider operations and governance",
+    "icon": "Layers",
+    "pages": [
+        "instance-provider-scripts",
+        "instance-governance-scripts",
+        "instance-scripts"
+    ],
+    "defaultOpen": false
+}

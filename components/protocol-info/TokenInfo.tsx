@@ -8,6 +8,7 @@ import { DeploymentParams } from "@/types";
 interface TokenInfoProps {
   tokenSystem: string;
   tokenId: string;
+  version?: string;
 }
 
 interface TokenData {
@@ -28,7 +29,7 @@ interface Registry {
   };
 }
 
-export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
+export default function TokenInfo({ tokenSystem, tokenId, version = "v1" }: TokenInfoProps) {
   const [tokenData, setTokenData] = useState<TokenData | null>(null);
   const [mainnetParams, setMainnetParams] = useState<DeploymentParams | null>(
     null
@@ -46,7 +47,7 @@ export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
 
         // Fetch registry data
         const registryResponse = await fetch(
-          "/yaml/validator-registry-v1.yaml"
+          `/yaml/validator-registry-${version}.yaml`
         );
         const registryText = await registryResponse.text();
         const registry = yaml.load(registryText) as Registry;
@@ -63,8 +64,8 @@ export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
 
         // Fetch deployment params
         const [mainnetResponse, preprodResponse] = await Promise.all([
-          fetch("/yaml/deployments/mainnet-v1/params.yaml"),
-          fetch("/yaml/deployments/preprod-v1/params.yaml"),
+          fetch(`/yaml/deployments/mainnet-${version}/params.yaml`),
+          fetch(`/yaml/deployments/preprod-${version}/params.yaml`),
         ]);
 
         const mainnetText = await mainnetResponse.text();
@@ -83,7 +84,7 @@ export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
     };
 
     fetchData();
-  }, [tokenSystem, tokenId]);
+  }, [tokenSystem, tokenId, version]);
 
   if (loading) {
     return (
@@ -126,11 +127,11 @@ export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
       };
 
       const mappedRole = roleMap[role] || role;
-      return `/docs/protocol/v1/transactions/${mappedRole}/${transactionName}`;
+      return `/docs/protocol/${version}/transactions/${mappedRole}/${transactionName}`;
     }
 
     // Fallback for legacy format (e.g., "access-token-mint" without dot notation)
-    return `/docs/protocol/v1/transactions/general/${txName}`;
+    return `/docs/protocol/${version}/transactions/general/${txName}`;
   };
 
   // Helper function to resolve placeholders in asset ID
@@ -291,7 +292,7 @@ export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
           <div className="px-4 py-3">
             <div className="flex items-center gap-4">
               <div className="text-xs text-muted-foreground font-medium min-w-[80px]">
-                Mainnet v1
+                Mainnet {version}
               </div>
               <div className="flex-1">
                 {mainnetParams ? (
@@ -333,7 +334,7 @@ export default function TokenInfo({ tokenSystem, tokenId }: TokenInfoProps) {
           <div className="px-4 py-3">
             <div className="flex items-center gap-4">
               <div className="text-xs text-muted-foreground font-medium min-w-[80px]">
-                Preprod v1
+                Preprod {version}
               </div>
               <div className="flex-1">
                 {preprodParams ? (

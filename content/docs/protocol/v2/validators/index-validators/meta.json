@@ -1,0 +1,11 @@
+{
+    "title": "Index Validators",
+    "description": "Index system validators for access token management and reference operations",
+    "icon": "Key", 
+    "pages": [
+        "index-scripts",
+        "index-ref",
+        "observers"
+    ],
+    "defaultOpen": false
+}

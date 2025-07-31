@@ -1,0 +1,12 @@
+{
+    "title": "Observers",
+    "description": "Project validator observers for transaction validation",
+    "icon": "Eye",
+    "pages": [
+        "contributor-state-v2-cbor-obs",
+        "treasury-cbor-obs",
+        "treasury-token-cbor-obs",
+        "escrow1-cbor-obs"
+    ],
+    "defaultOpen": false
+}

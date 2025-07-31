@@ -1,0 +1,519 @@
+# Andamio Registry - Source of Truth for Validators and Redeemers (Protocol v2)
+# This file serves as the central registry for all validators and their redeemers
+
+systems:
+  # Global State V2 System
+  global-state:
+    validators:
+      global-state:
+        name: "Global State V1"
+        doc: "protocol/v2/validators/global-state/global-state"
+        purpose: "spend"
+        address: "<global_state_address>"
+        redeemer:
+          - type: action
+            GlobalStateAction:
+              - action: "MoveStateV1ToV2"
+                transaction: ["user.move-global-state-v1-to-v2"]
+      
+      global-state-v2:
+        name: "Global State V2"
+        doc: "protocol/v2/validators/global-state/global-state-v2"
+        purpose: "spend"
+        address: "<global_state_v2_address>"
+        redeemer:
+          - type: action
+            GlobalStateV2Action:
+              - action: "StateChangeMint"
+                transaction: ["contributor.mint-project-state", "student.mint-project-state"]
+              - action: "StateChangeBurn"
+                transaction: ["contributor.burn-project-state", "student.burn-local-state"]
+              - action: "AccessTokenMint"
+                transaction: ["general.access-token-mint"]
+    
+    tokens:
+      access-token-user:
+        asset-id: "<access_token_policyid>.222<alias>"
+        minted-in: "general.access-token-mint"
+        used-in:
+          - "contributor.mint-project-state"
+          - "contributor.burn-project-state"
+          - "contributor.commit-project"
+          - "contributor.get-rewards"
+          - "student.mint-project-state"
+          - "student.burn-local-state"
+          - "student.commit-to-assignment"
+          - "user.move-global-state-v1-to-v2"
+        referenced-in: null
+        burned-in: null
+        
+      access-token-global-state:
+        asset-id: "<access_token_policyid>.100<alias>"
+        minted-in: "general.access-token-mint"
+        used-in:
+          - "contributor.mint-project-state"
+          - "contributor.burn-project-state"
+          - "student.mint-project-state"
+          - "student.burn-local-state"
+          - "user.move-global-state-v1-to-v2"
+        referenced-in: null
+        burned-in: null
+        
+      access-token-index:
+        asset-id: "<access_token_policyid>.\" \""
+        minted-in: "general.access-token-mint"
+        used-in: "general.access-token-mint"
+        referenced-in: null
+        burned-in: null
+
+  # Local State Registration System
+  global:
+    validators:
+      local-state-registration:
+        name: "Local State Registration"
+        doc: "protocol/v2/validators/global/local-state-registration"
+        purpose: "mint"
+        address: "<local_state_registration_address>"
+        redeemer:
+          - type: action
+            LocalStateRegistrationAction:
+              - action: "MintRegistration"
+                transaction: ["admin.init-course", "admin.init-project-step-1", "contributor.mint-project-state", "student.mint-project-state", "general.register-local-state"]
+    
+    tokens:
+      local-state-registration:
+        asset-id: "<local_state_registration_policyid>.LocalStateRegistration"
+        minted-in: "general.register-local-state"
+        used-in:
+          - "admin.init-course"
+          - "admin.init-project-step-1"
+          - "contributor.mint-project-state"
+          - "student.mint-project-state"
+          - "general.register-local-state"
+        referenced-in: null
+        burned-in: null
+    
+  # Index Validators
+  index-validators:
+    validators:
+      index-scripts:
+        name: "Index Scripts"
+        doc: "protocol/v2/validators/index-validators/index-scripts"
+        purpose: "mint"
+        address: "<index_scripts_address>"
+        redeemer:
+          - type: action
+            IndexScriptsAction:
+              - action: "MintAccessToken"
+                transaction: ["general.access-token-mint"]
+      
+      index-ref:
+        name: "Index Ref"
+        doc: "protocol/v2/validators/index-validators/index-ref"
+        purpose: "spend"
+        address: "<index_ref_address>"
+        redeemer:
+          - type: action
+            IndexRefAction:
+              - action: "UseReference"
+                transaction: ["general.access-token-mint", "user.move-global-state-v1-to-v2"]
+      
+      init-index-observer-v2:
+        name: "Init Index Observer V2"
+        doc: "protocol/v2/validators/index-validators/observers/init-index-observer-v2"
+        purpose: "withdraw"
+        address: "<init_index_observer_v2_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["general.access-token-mint", "user.move-global-state-v1-to-v2"]
+    
+    tokens:
+      index-scripts-ref-token:
+        asset-id: "<index_scripts_ref_token_policyid>.IndexScriptsRef"
+        minted-in: null
+        used-in:
+          - "general.access-token-mint"
+          - "user.move-global-state-v1-to-v2"
+        referenced-in:
+          - "general.access-token-mint"
+          - "user.move-global-state-v1-to-v2"
+        burned-in: null
+  
+  # Local State System
+  local-state:
+    validators:
+    tokens:
+      local-state-nft:
+        asset-id: "<local_state_nft_policyid>.LocalStateNFT"
+        minted-in: "general.register-local-state"
+        used-in: "general.register-local-state"
+        referenced-in: null
+        burned-in: null
+        
+  # Instance System
+  instance:
+    validators:
+      instance-provider-scripts:
+        name: "Instance Provider Scripts"
+        doc: "protocol/v2/validators/instance/instance-provider-scripts"
+        purpose: "spend"
+        address: "<instance_provider_scripts_address>"
+        redeemer:
+          - type: action
+            InstanceProviderAction:
+              - action: "InitCourse"
+                transaction: ["admin.init-course"]
+              - action: "InitProject"
+                transaction: ["admin.init-project-step-1", "admin.init-project-step-2"]
+      
+      instance-governance-scripts:
+        name: "Instance Governance Scripts"
+        doc: "protocol/v2/validators/instance/instance-governance-scripts"
+        purpose: "spend"
+        address: "<instance_governance_scripts_address>"
+        redeemer:
+          - type: action
+            InstanceGovernanceAction:
+              - action: "InitCourse"
+                transaction: ["admin.init-course"]
+              - action: "InitProject"
+                transaction: ["admin.init-project-step-1"]
+      
+      instance-scripts:
+        name: "Instance Scripts"
+        doc: "protocol/v2/validators/instance/instance-scripts"
+        purpose: "spend"
+        address: "<instance_scripts_address>"
+        redeemer:
+          - type: action
+            InstanceAction:
+              - action: "InitCourse"
+                transaction: ["admin.init-course"]
+              - action: "InitProject"
+                transaction: ["admin.init-project-step-2"]
+    
+    tokens:
+      instance-admin-token:
+        asset-id: "<instance_admin_token_policyid>.InstanceAdmin"
+        minted-in: null
+        used-in:
+          - "admin.init-course"
+          - "admin.init-project-step-1"
+          - "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      course-nft:
+        asset-id: "<course_nft_policyid>.CourseNFT"
+        minted-in: null
+        used-in: "admin.init-course"
+        referenced-in: null
+        burned-in: null
+      
+      assignment-validator:
+        asset-id: "<assignment_validator_policyid>.AssignmentValidator"
+        minted-in: null
+        used-in: "admin.init-course"
+        referenced-in: null
+        burned-in: null
+      
+      module-scripts:
+        asset-id: "<module_scripts_policyid>.ModuleScripts"
+        minted-in: null
+        used-in: "admin.init-course"
+        referenced-in: null
+        burned-in: null
+      
+      course-state-scripts-v2:
+        asset-id: "<course_state_scripts_v2_policyid>.CourseStateScriptsV2"
+        minted-in: null
+        used-in: "admin.init-course"
+        referenced-in: null
+        burned-in: null
+      
+      project-nft:
+        asset-id: "<project_nft_policyid>.ProjectNFT"
+        minted-in: null
+        used-in:
+          - "admin.init-project-step-1"
+          - "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      contributor-state-v2-scripts:
+        asset-id: "<contributor_state_v2_scripts_policyid>.ContributorStateV2Scripts"
+        minted-in: null
+        used-in: "admin.init-project-step-1"
+        referenced-in: null
+        burned-in: null
+      
+      treasury-token:
+        asset-id: "<treasury_token_policyid>.TreasuryToken"
+        minted-in: null
+        used-in: "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      treasury-scripts:
+        asset-id: "<treasury_scripts_policyid>.TreasuryScripts"
+        minted-in: null
+        used-in: "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      escrow1:
+        asset-id: "<escrow1_policyid>.Escrow1"
+        minted-in: null
+        used-in: "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+
+  # Course System V2
+  course:
+    validators:
+      course-state-v2-validator:
+        name: "Course State V2 Validator"
+        doc: "protocol/v2/validators/course/course-state-v2-validator"
+        purpose: "spend"
+        address: "<course_state_v2_validator_address>"
+        redeemer:
+          - type: action
+            CourseStateV2Action:
+              - action: "BurnLocalState"
+                transaction: ["student.burn-local-state"]
+              - action: "CommitToAssignment"
+                transaction: ["student.commit-to-assignment"]
+      
+      course-state-v2-scripts:
+        name: "Course State V2 Scripts"
+        doc: "protocol/v2/validators/course/course-state-v2-scripts"
+        purpose: "spend"
+        address: "<course_state_v2_scripts_address>"
+        redeemer:
+          - type: action
+            CourseStateV2ScriptsAction:
+              - action: "MintProjectState"
+                transaction: ["student.mint-project-state"]
+      
+      assignment-validator:
+        name: "Assignment Validator"
+        doc: "protocol/v2/validators/course/assignment-validator"
+        purpose: "spend"
+        address: "<assignment_validator_address>"
+        redeemer:
+          - type: action
+            AssignmentAction:
+              - action: "CommitToAssignment"
+                transaction: ["student.commit-to-assignment"]
+      
+      module-ref-validator:
+        name: "Module Ref Validator"
+        doc: "protocol/v2/validators/course/module-ref-validator"
+        purpose: "spend"
+        address: "<module_ref_validator_address>"
+        redeemer:
+          - type: action
+            ModuleRefAction:
+              - action: "CommitToAssignment"
+                transaction: ["student.commit-to-assignment"]
+      
+      assignment-cbor-obs:
+        name: "Assignment CBOR Observer"
+        doc: "protocol/v2/validators/course/observers/assignment-cbor-obs"
+        purpose: "withdraw"
+        address: "<assignment_cbor_obs_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["admin.init-course"]
+      
+      module-cbor-obs:
+        name: "Module CBOR Observer"
+        doc: "protocol/v2/validators/course/observers/module-cbor-obs"
+        purpose: "withdraw"
+        address: "<module_cbor_obs_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["admin.init-course"]
+      
+      course-state-v2-cbor-obs:
+        name: "Course State V2 CBOR Observer"
+        doc: "protocol/v2/validators/course/observers/course-state-v2-cbor-obs"
+        purpose: "withdraw"
+        address: "<course_state_v2_cbor_obs_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["admin.init-course"]
+    
+    tokens:
+      course-nft:
+        asset-id: "<course_nft_policyid>.CourseNFT"
+        minted-in: null
+        used-in: "admin.init-course"
+        referenced-in: null
+        burned-in: null
+      
+      instance-assignment-validator:
+        asset-id: "<instance_assignment_validator_policyid>.InstanceAssignmentValidator"
+        minted-in: null
+        used-in: "admin.init-course"
+        referenced-in: null
+        burned-in: null
+      
+      instance-module-scripts:
+        asset-id: "<instance_module_scripts_policyid>.InstanceModuleScripts"
+        minted-in: null
+        used-in: "admin.init-course"
+        referenced-in: null
+        burned-in: null
+      
+      course-state-v2-token:
+        asset-id: "<course_state_v2_token_policyid>.CourseStateV2Token"
+        minted-in: "student.mint-project-state"
+        used-in:
+          - "student.burn-local-state"
+          - "student.commit-to-assignment"
+          - "student.mint-project-state"
+        referenced-in: null
+        burned-in: "student.burn-local-state"
+      
+      module-token:
+        asset-id: "<module_token_policyid>.ModuleToken"
+        minted-in: null
+        used-in: "student.commit-to-assignment"
+        referenced-in: null
+        burned-in: null
+      
+      course-state-v2-policy:
+        asset-id: "<course_state_v2_policyid>.CourseStateV2Policy"
+        minted-in: null
+        used-in: "student.burn-local-state"
+        referenced-in: null
+        burned-in: null
+
+  # Project System V2
+  project:
+    validators:
+      contributor-state-v2-scripts:
+        name: "Contributor State V2 Scripts"
+        doc: "protocol/v2/validators/project/contributor-state-v2-scripts"
+        purpose: "spend"
+        address: "<contributor_state_v2_scripts_address>"
+        redeemer:
+          - type: action
+            ContributorStateV2Action:
+              - action: "MintProjectState"
+                transaction: ["contributor.mint-project-state"]
+              - action: "BurnProjectState"
+                transaction: ["contributor.burn-project-state"]
+              - action: "CommitProject"
+                transaction: ["contributor.commit-project"]
+              - action: "GetRewards"
+                transaction: ["contributor.get-rewards"]
+      
+      treasury-scripts:
+        name: "Treasury Scripts"
+        doc: "protocol/v2/validators/project/treasury-scripts"
+        purpose: "spend"
+        address: "<treasury_scripts_address>"
+        redeemer:
+          - type: action
+            TreasuryAction:
+              - action: "CommitProject"
+                transaction: ["contributor.commit-project"]
+      
+      escrow1:
+        name: "Escrow 1"
+        doc: "protocol/v2/validators/project/escrow1"
+        purpose: "spend"
+        address: "<escrow1_address>"
+        redeemer:
+          - type: action
+            EscrowAction:
+              - action: "CommitProject"
+                transaction: ["contributor.commit-project"]
+      
+      contributor-state-v2-cbor-obs:
+        name: "Contributor State V2 CBOR Observer"
+        doc: "protocol/v2/validators/project/observers/contributor-state-v2-cbor-obs"
+        purpose: "withdraw"
+        address: "<contributor_state_v2_cbor_obs_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["admin.init-project-step-1"]
+      
+      treasury-cbor-obs:
+        name: "Treasury CBOR Observer"
+        doc: "protocol/v2/validators/project/observers/treasury-cbor-obs"
+        purpose: "withdraw"
+        address: "<treasury_cbor_obs_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["admin.init-project-step-2"]
+      
+      treasury-token-cbor-obs:
+        name: "Treasury Token CBOR Observer"
+        doc: "protocol/v2/validators/project/observers/treasury-token-cbor-obs"
+        purpose: "withdraw"
+        address: "<treasury_token_cbor_obs_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["admin.init-project-step-2"]
+      
+      escrow1-cbor-obs:
+        name: "Escrow 1 CBOR Observer"
+        doc: "protocol/v2/validators/project/observers/escrow1-cbor-obs"
+        purpose: "withdraw"
+        address: "<escrow1_cbor_obs_address>"
+        redeemer:
+          - type: bytes
+            transaction: ["admin.init-project-step-2"]
+    
+    tokens:
+      project-nft:
+        asset-id: "<project_nft_policyid>.ProjectNFT"
+        minted-in: null
+        used-in:
+          - "admin.init-project-step-1"
+          - "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      contributor-state-v2-token:
+        asset-id: "<contributor_state_v2_token_policyid>.ContributorStateV2Token"
+        minted-in: "contributor.mint-project-state"
+        used-in:
+          - "contributor.mint-project-state"
+          - "contributor.burn-project-state"
+          - "contributor.commit-project"
+          - "contributor.get-rewards"
+        referenced-in: null
+        burned-in: "contributor.burn-project-state"
+      
+      project-instance-treasury-scripts:
+        asset-id: "<project_instance_treasury_scripts_policyid>.ProjectInstanceTreasuryScripts"
+        minted-in: null
+        used-in: "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      project-instance-treasury-token:
+        asset-id: "<project_instance_treasury_token_policyid>.ProjectInstanceTreasuryToken"
+        minted-in: null
+        used-in: "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      project-instance-escrow1:
+        asset-id: "<project_instance_escrow1_policyid>.ProjectInstanceEscrow1"
+        minted-in: null
+        used-in: "admin.init-project-step-2"
+        referenced-in: null
+        burned-in: null
+      
+      treasury-token:
+        asset-id: "<treasury_token_policyid>.TreasuryToken"
+        minted-in: null
+        used-in: "contributor.commit-project"
+        referenced-in: null
+        burned-in: null
+  

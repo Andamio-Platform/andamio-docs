@@ -8,6 +8,7 @@ import { RedeemerType } from "@/types";
 interface ValidatorInfoProps {
   validatorSystem: string;
   validatorId: string;
+  version?: string;
 }
 
 interface ValidatorData {
@@ -46,6 +47,7 @@ interface DeploymentParams {
 export default function ValidatorInfo({
   validatorSystem,
   validatorId,
+  version = "v1",
 }: ValidatorInfoProps) {
   const [validatorData, setValidatorData] = useState<ValidatorData | null>(
     null
@@ -66,7 +68,7 @@ export default function ValidatorInfo({
 
         // Fetch registry data
         const registryResponse = await fetch(
-          "/yaml/validator-registry-v1.yaml"
+          `/yaml/validator-registry-${version}.yaml`
         );
         const registryText = await registryResponse.text();
         const registry = yaml.load(registryText) as Registry;
@@ -83,8 +85,8 @@ export default function ValidatorInfo({
 
         // Fetch deployment params
         const [mainnetResponse, preprodResponse] = await Promise.all([
-          fetch("/yaml/deployments/mainnet-v1/params.yaml"),
-          fetch("/yaml/deployments/preprod-v1/params.yaml"),
+          fetch(`/yaml/deployments/mainnet-${version}/params.yaml`),
+          fetch(`/yaml/deployments/preprod-${version}/params.yaml`),
         ]);
 
         const mainnetText = await mainnetResponse.text();
@@ -103,7 +105,7 @@ export default function ValidatorInfo({
     };
 
     fetchData();
-  }, [validatorSystem, validatorId]);
+  }, [validatorSystem, validatorId, version]);
 
   if (loading) {
     return (
@@ -138,11 +140,11 @@ export default function ValidatorInfo({
       };
 
       const mappedRole = roleMap[role] || role;
-      return `/docs/protocol/v1/transactions/${mappedRole}/${transactionName}`;
+      return `/docs/protocol/${version}/transactions/${mappedRole}/${transactionName}`;
     }
 
     // Fallback for legacy format
-    return `/docs/protocol/v1/transactions/general/${txName}`;
+    return `/docs/protocol/${version}/transactions/general/${txName}`;
   };
 
   // Helper function to resolve placeholders
@@ -376,7 +378,7 @@ export default function ValidatorInfo({
           <div className="px-4 py-3">
             <div className="flex items-center gap-4">
               <div className="text-xs text-muted-foreground font-medium min-w-[80px]">
-                Mainnet v1
+                Mainnet {version}
               </div>
               <div className="flex-1 space-y-2">
                 {validatorData.address && (
@@ -468,7 +470,7 @@ export default function ValidatorInfo({
           <div className="px-4 py-3">
             <div className="flex items-center gap-4">
               <div className="text-xs text-muted-foreground font-medium min-w-[80px]">
-                Preprod v1
+                Preprod {version}
               </div>
               <div className="flex-1 space-y-2">
                 {validatorData.address && (

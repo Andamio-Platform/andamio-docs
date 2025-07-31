@@ -1,0 +1,9 @@
+{
+    "title": "Global Registration",
+    "description": "Local state registration system for V2 protocol coordination",
+    "icon": "FileText",
+    "pages": [
+        "local-state-registration"
+    ],
+    "defaultOpen": false
+}
