@@ -17,6 +17,7 @@ interface InputNodeData {
   redeemer?: string;
   type?: string; // make sure to include type
   registryData?: Registry | null;
+  version?: string;
 }
 
 // Export the node type for use in the diagram component
@@ -27,7 +28,7 @@ function InputNode({ data }: { data: InputNodeData }) {
 
   const hasDetails = data.redeemer || data.datum || data.script;
 
-  const addressInfo = resolveAddressDisplay(data.address, data.registryData);
+  const addressInfo = resolveAddressDisplay(data.address, data.registryData, data.version || "v1");
 
 
   return (
@@ -58,7 +59,7 @@ function InputNode({ data }: { data: InputNodeData }) {
           <span className="font-semibold">Value:</span>
           {Array.isArray(data.value)
             ? data.value.map((val, idx) => {
-                const tokenInfo = createTokenLink(val, data.registryData);
+                const tokenInfo = createTokenLink(val, data.registryData, data.version || "v1");
                 return (
                   <pre className="pt-1" key={idx}>
                     {tokenInfo.hasToken ? (
@@ -78,7 +79,7 @@ function InputNode({ data }: { data: InputNodeData }) {
                 );
               })
             : (() => {
-                const tokenInfo = createTokenLink(data.value as string, data.registryData);
+                const tokenInfo = createTokenLink(data.value as string, data.registryData, data.version || "v1");
                 return (
                   <pre className="pt-1">
                     {tokenInfo.hasToken ? (

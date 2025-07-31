@@ -8,6 +8,6 @@ const TransactionDiagramWrapper = dynamic(
   { ssr: false }
 );
 
-export default function TransactionDiagramClient({ txFilePath }: { txFilePath: string }) {
-  return <TransactionDiagramWrapper txFilePath={txFilePath} />;
+export default function TransactionDiagramClient({ txFilePath, version }: { txFilePath: string; version?: string }) {
+  return <TransactionDiagramWrapper txFilePath={txFilePath} version={version} />;
 }

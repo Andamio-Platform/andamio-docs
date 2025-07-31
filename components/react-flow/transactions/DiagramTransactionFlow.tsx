@@ -28,6 +28,7 @@ import yaml from "js-yaml";
 interface DiagramTransactionFlowProps {
   txData: TransactionYaml;
   registryData?: Registry | null;
+  version?: string;
 }
 
 // Define custom node types
@@ -38,14 +39,21 @@ const nodeTypes: NodeTypes = {
   referenceInputNode: ReferenceInputNode,
 };
 
-export default function TxDiagram({ txData }: { txData: TransactionYaml }) {
-  return <DiagramTransactionFlow txData={txData} />;
+export default function TxDiagram({
+  txData,
+  version = "v1",
+}: {
+  txData: TransactionYaml;
+  version?: string;
+}) {
+  return <DiagramTransactionFlow txData={txData} version={version} />;
 }
 
 // Client-side only diagram component to avoid hydration mismatches
 function DiagramTransactionFlow({
   txData,
   registryData,
+  version = "v1",
 }: DiagramTransactionFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -91,7 +99,14 @@ function DiagramTransactionFlow({
   // Initialize the diagram with transaction data
   useEffect(() => {
     const initDiagram = async () => {
-      console.log("InitDiagram called - isRegistryLoading:", isRegistryLoading, "txData:", !!txData, "metadata:", !!txData?.metadata);
+      console.log(
+        "InitDiagram called - isRegistryLoading:",
+        isRegistryLoading,
+        "txData:",
+        !!txData,
+        "metadata:",
+        !!txData?.metadata
+      );
       if (isRegistryLoading || !txData || !txData.metadata) {
         console.log("Skipping diagram init due to missing data");
         return;
@@ -160,11 +175,15 @@ function DiagramTransactionFlow({
         };
 
         // Calculate estimated heights and positions
-        const inputHeights: number[] = (txData.inputs || []).map(estimateNodeHeight);
+        const inputHeights: number[] = (txData.inputs || []).map(
+          estimateNodeHeight
+        );
         const refInputHeights: number[] = txData.reference_inputs
           ? txData.reference_inputs.map(estimateNodeHeight)
           : [];
-        const outputHeights: number[] = (txData.outputs || []).map(estimateNodeHeight);
+        const outputHeights: number[] = (txData.outputs || []).map(
+          estimateNodeHeight
+        );
 
         // Calculate minimum spacing needed between nodes
         const minSpacing = 40; // Minimum gap between nodes
@@ -203,15 +222,24 @@ function DiagramTransactionFlow({
         const txNodeY =
           diagramHeight > 500 ? Math.min(diagramHeight / 4, 150) : 80;
 
+        // Calculate transaction node width based on content
+        // Base width for transaction name and basic info
+        const estimatedTxNodeWidth = 200 + txData.name.length * 8;
+
+        // Calculate output node x position based on tx node width
+        const txNodeX = 435;
+        const outputNodeX = txNodeX + estimatedTxNodeWidth + 50; // 50px spacing
+
         // Create transaction node with mints and withdrawals
         const txNode: Node = {
           id: "transaction-node",
           type: "transactionNode",
-          position: { x: 435, y: txNodeY },
+          position: { x: txNodeX, y: txNodeY },
           data: {
             name: txData.name,
             fee: txData.metadata.estimated_fee,
             type: txData.metadata.category,
+            version: version,
             role: txData.metadata.role,
             mints: mintsData,
             withdrawals: withdrawalsData,
@@ -237,6 +265,7 @@ function DiagramTransactionFlow({
               id: input.id,
               address: input.output.address,
               value: input.output.value,
+              version: version,
               type: input.type,
               redeemer: input.redeemer
                 ? typeof input.redeemer === "string"
@@ -284,6 +313,7 @@ function DiagramTransactionFlow({
                 id: refInput.id,
                 address: refInput.output.address,
                 value: refInput.output.value,
+                version: version,
                 type: refInput.type,
                 datum: refInput.output.datum
                   ? typeof refInput.output.datum === "string"
@@ -322,11 +352,12 @@ function DiagramTransactionFlow({
           const outputNode: Node = {
             id: `output-node-${output.id}-${index}`,
             type: "outputNode",
-            position: { x: 825, y: outputPositions[index] },
+            position: { x: outputNodeX, y: outputPositions[index] },
             data: {
               id: output.id,
               address: output.output.address,
               value: output.output.value,
+              version: version,
               type: output.type,
               datum: output.output.datum
                 ? typeof output.output.datum === "string"
@@ -366,7 +397,14 @@ function DiagramTransactionFlow({
     };
 
     initDiagram();
-  }, [txData, setNodes, setEdges, internalRegistryData, isRegistryLoading]);
+  }, [
+    txData,
+    setNodes,
+    setEdges,
+    internalRegistryData,
+    isRegistryLoading,
+    version,
+  ]);
 
   // Fit view to the graph when nodes change
   const onInit = useCallback((instance: ReactFlowInstance<Node, Edge>) => {

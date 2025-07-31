@@ -6,6 +6,7 @@ import { TransactionYaml } from "@/types";
 
 interface TxYamlMetadataProps {
   txFilePath: string;
+  version?: string;
 }
 
 interface ExtendedMetadata {
@@ -19,7 +20,10 @@ interface ExtendedMetadata {
   required_signatures?: string[];
 }
 
-export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
+export default function TxYamlMetadata({
+  txFilePath,
+  version = "v1",
+}: TxYamlMetadataProps) {
   const [txData, setTxData] = useState<TransactionYaml | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,15 +33,19 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
       try {
         setLoading(true);
         const response = await fetch(
-          `/api/transaction?file=${encodeURIComponent(txFilePath)}`
+          `/api/transaction?file=${encodeURIComponent(txFilePath)}&version=${version}`
         );
 
         if (!response.ok) {
-          throw new Error(`Failed to fetch transaction data: ${response.status}`);
+          throw new Error(
+            `Failed to fetch transaction data: ${response.status}`
+          );
         }
 
         const data = await response.json();
-        setTxData(data);
+        console.log("TxYamlMetadata received data:", data);
+        // The API returns the transaction data in data.data
+        setTxData(data.data || data);
         setError(null);
       } catch (err) {
         console.error("Error fetching transaction metadata:", err);
@@ -48,7 +56,7 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
     };
 
     fetchTransactionData();
-  }, [txFilePath]);
+  }, [txFilePath, version]);
 
   if (loading) {
     return (
@@ -64,8 +72,14 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
     );
   }
 
-  if (error || !txData || !txData.metadata) {
+  if (error || !txData) {
+    console.warn("TxYamlMetadata: No data available", { error, txData });
     return null; // Fail silently to not disrupt the page
+  }
+
+  if (!txData.metadata) {
+    console.warn("TxYamlMetadata: No metadata in transaction data", txData);
+    return null;
   }
 
   const metadata = txData.metadata as ExtendedMetadata;
@@ -75,11 +89,11 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
     // Handle dot notation: system.token-name
     if (tokenName.includes(".")) {
       const [system, token] = tokenName.split(".");
-      return `/docs/protocol/v1/tokens/${system}/${token}`;
+      return `/docs/protocol/${version}/tokens/${system}/${token}`;
     }
-    
+
     // Fallback for tokens without dot notation
-    return `/docs/protocol/v1/tokens/global-state/${tokenName}`;
+    return `/docs/protocol/${version}/tokens/global-state/${tokenName}`;
   };
 
   return (
@@ -91,33 +105,41 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
         </div>
 
         <div className="px-4 py-3 space-y-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
               <div className="text-xs text-muted-foreground font-medium mb-1">
                 Role
               </div>
-              <div className="text-sm font-medium">{metadata.role || "Unknown"}</div>
+              <div className="text-sm font-medium">
+                {metadata.role || "Unknown"}
+              </div>
             </div>
-            
+
             <div>
               <div className="text-xs text-muted-foreground font-medium mb-1">
                 Category
               </div>
-              <div className="text-sm font-medium">{metadata.category || "Unknown"}</div>
+              <div className="text-sm font-medium">
+                {metadata.category || "Unknown"}
+              </div>
             </div>
-            
+
             <div>
               <div className="text-xs text-muted-foreground font-medium mb-1">
                 Estimated Cost
               </div>
-              <div className="text-sm font-medium">{metadata.estimated_fee || metadata.estimated_cost || "0 ADA"}</div>
+              <div className="text-sm font-medium">
+                {metadata.estimated_fee || metadata.estimated_cost || "0 ADA"}
+              </div>
             </div>
-            
+
             <div>
               <div className="text-xs text-muted-foreground font-medium mb-1">
                 Multi-signature
               </div>
-              <div className="text-sm font-medium">{metadata.multi_signature ? "Yes" : "No"}</div>
+              <div className="text-sm font-medium">
+                {metadata.multi_signature ? "Yes" : "No"}
+              </div>
             </div>
           </div>
 
@@ -125,7 +147,9 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
             <div className="text-xs text-muted-foreground font-medium mb-1">
               Description
             </div>
-            <div className="text-sm">{metadata.description || "No description available"}</div>
+            <div className="text-sm">
+              {metadata.description || "No description available"}
+            </div>
           </div>
         </div>
       </div>
@@ -155,25 +179,26 @@ export default function TxYamlMetadata({ txFilePath }: TxYamlMetadataProps) {
       )}
 
       {/* Required Signatures Section */}
-      {metadata.required_signatures && metadata.required_signatures.length > 0 && (
-        <div className="border border-border/50 rounded-lg overflow-hidden">
-          <div className="bg-muted/20 px-4 py-2 border-b border-border/50">
-            <div className="text-sm font-medium">Required Signatures</div>
-          </div>
+      {metadata.required_signatures &&
+        metadata.required_signatures.length > 0 && (
+          <div className="border border-border/50 rounded-lg overflow-hidden">
+            <div className="bg-muted/20 px-4 py-2 border-b border-border/50">
+              <div className="text-sm font-medium">Required Signatures</div>
+            </div>
 
-          <div className="px-4 py-3">
-            <ul className="space-y-0.5 ml-4">
-              {metadata.required_signatures.map((sig, index) => (
-                <li key={index} className="list-disc text-xs">
-                  <span className="text-violet-700 dark:text-violet-400">
-                    {sig}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <div className="px-4 py-3">
+              <ul className="space-y-0.5 ml-4">
+                {metadata.required_signatures.map((sig, index) => (
+                  <li key={index} className="list-disc text-xs">
+                    <span className="text-violet-700 dark:text-violet-400">
+                      {sig}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 }

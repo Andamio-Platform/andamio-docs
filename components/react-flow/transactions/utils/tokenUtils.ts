@@ -13,9 +13,10 @@ export interface TokenInfo {
  * Creates token link information with asset ID resolution from registry
  * @param tokenStr - Token string in format "amount system.token-name"
  * @param registryData - Registry data for asset ID lookup
+ * @param version - Protocol version (v1 or v2)
  * @returns TokenInfo object with linking and display information
  */
-export const createTokenLink = (tokenStr: string, registryData?: Registry | null): TokenInfo => {
+export const createTokenLink = (tokenStr: string, registryData?: Registry | null, version: string = "v1"): TokenInfo => {
   // Match pattern: "amount system.token-name"
   const tokenMatch = tokenStr.match(/^\d+\s+([^.]+)\.([^\s]+)$/);
   
@@ -31,7 +32,7 @@ export const createTokenLink = (tokenStr: string, registryData?: Registry | null
     
     return {
       hasToken: true,
-      tokenLink: `/docs/protocol/v1/tokens/${system}/${tokenName}`,
+      tokenLink: `/docs/protocol/${version}/tokens/${system}/${tokenName}`,
       tokenName: tokenName,
       displayToken: displayToken,
       amount: amount,

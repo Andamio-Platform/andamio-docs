@@ -43,6 +43,9 @@ export default async function Page(props: {
   // Cast page data to our extended interface
   const pageData = page.data as ExtendedPageData;
 
+  // Detect protocol version from URL
+  const protocolVersion = params.slug?.includes("v2") ? "v2" : "v1";
+
   const docsWidth =
     pageData.tx_file ||
     pageData.validator_system ||
@@ -51,10 +54,26 @@ export default async function Page(props: {
       : "w-2/3";
 
   return (
-    <DocsPage toc={pageData.toc} full={pageData.full}>
+    <DocsPage full={pageData.full}>
       <DocsTitle>{pageData.title}</DocsTitle>
       <DocsDescription>{pageData.description}</DocsDescription>
       <DocsBody className={docsWidth}>
+        {pageData.tx_file && (
+          <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-12">
+            <div className="col-span-1 xl:col-span-4">
+              <TransactionDiagramClient
+                txFilePath={pageData.tx_file}
+                version={protocolVersion}
+              />
+            </div>
+            <div className="col-span-1 xl:col-span-1 w-full">
+              <TxYamlMetadata
+                txFilePath={pageData.tx_file}
+                version={protocolVersion}
+              />
+            </div>
+          </div>
+        )}
         <MDXContent
           code={pageData.body}
           components={getMDXComponents({
@@ -69,12 +88,6 @@ export default async function Page(props: {
               validatorId={params.slug[4]}
             />
           )}
-        {pageData.tx_file && (
-          <>
-            <TransactionDiagramClient txFilePath={pageData.tx_file} />
-            <TxYamlMetadata txFilePath={pageData.tx_file} />
-          </>
-        )}
 
         {/* Show protocol diagram only on the validators index page */}
         {/* TODO: Embed diagrams directly in MDX files by creating a custom component */}

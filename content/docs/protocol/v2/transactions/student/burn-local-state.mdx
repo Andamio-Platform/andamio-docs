@@ -1,0 +1,15 @@
+---
+title: "Burn Local State"
+description: "Student burns their local state token when leaving the platform"
+tx_file: "student/burn-local-state.yaml"
+---
+
+# Burn Local State Transaction (V2)
+
+## Overview
+
+This transaction allows students to burn their local state token when they wish to exit the Andamio platform. This cleanly removes their registration and returns any locked resources.
+
+## Protocol Description
+
+The V2 local state burning process ensures proper cleanup of student records. Before burning their local state, students must complete or abandon all active course enrollments and claim any pending rewards. The transaction removes their registration from the global state and releases locked collateral.

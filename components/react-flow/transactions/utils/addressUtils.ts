@@ -8,7 +8,8 @@ export interface AddressInfo {
 
 export function resolveAddressDisplay(
   address: string,
-  registryData?: Registry | null
+  registryData?: Registry | null,
+  version: string = "v1"
 ): AddressInfo {
   // Handle dot notation addresses (e.g., "global-state.global-state")
   if (address.includes(".") && registryData) {
@@ -21,8 +22,8 @@ export function resolveAddressDisplay(
       const validator = registryData.systems[system].validators[validatorName];
       const isObserver = validatorName.includes("obs");
       const linkUrl = isObserver
-        ? `/docs/protocol/v1/validators/${system}/observers/${validatorName}`
-        : `/docs/protocol/v1/validators/${system}/${validatorName}`;
+        ? `/docs/protocol/${version}/validators/${system}/observers/${validatorName}`
+        : `/docs/protocol/${version}/validators/${system}/${validatorName}`;
       
       return {
         displayName: typeof validator.address === 'string' ? validator.address : address, // Display the placeholder address from registry

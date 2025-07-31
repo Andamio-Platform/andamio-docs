@@ -6,8 +6,10 @@ import { TransactionYaml } from "@/types";
 
 export default function TransactionDiagramWrapper({
   txFilePath,
+  version = "v1",
 }: {
   txFilePath: string;
+  version?: string;
 }) {
   const [txData, setTxData] = useState<TransactionYaml | null>(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +21,7 @@ export default function TransactionDiagramWrapper({
         setLoading(true);
         console.log("Fetching transaction data for:", txFilePath);
         const response = await fetch(
-          `/api/transaction?file=${encodeURIComponent(txFilePath)}`
+          `/api/transaction?file=${encodeURIComponent(txFilePath)}&version=${version}`
         );
         console.log("Response status:", response.status);
 
@@ -44,7 +46,7 @@ export default function TransactionDiagramWrapper({
     };
 
     fetchTransactionData();
-  }, [txFilePath]);
+  }, [txFilePath, version]);
 
   if (loading) {
     return (
@@ -77,5 +79,5 @@ export default function TransactionDiagramWrapper({
     );
   }
 
-  return <TxDiagram txData={txData} />;
+  return <TxDiagram txData={txData} version={version} />;
 }

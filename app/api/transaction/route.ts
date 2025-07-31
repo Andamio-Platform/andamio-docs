@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const txData = await loadYamlFile(`yaml/transactions/${txFile}`) as TransactionYaml;
+    const txData = await loadYamlFile(`yaml/transactions/${version}/${txFile}`) as TransactionYaml;
     
     // Resolve addresses and tokens from deployment files
     const resolved = await deploymentResolver.resolveTransaction(

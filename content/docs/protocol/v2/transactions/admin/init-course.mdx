@@ -1,0 +1,15 @@
+---
+title: "Initialize Course"
+description: "Instance admin initializes a new course in the platform"
+tx_file: "admin/init-course.yaml"
+---
+
+# Initialize Course Transaction (V2)
+
+## Overview
+
+This transaction allows an instance admin to initialize a new course in the platform using the V2 protocol. The course state transitions from pending to active status.
+
+## Protocol Description
+
+The V2 implementation streamlines the course initialization process with improved state management. The transaction consumes a course state UTxO in pending status and outputs it with active status, establishing course parameters and making it available for students.

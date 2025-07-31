@@ -1,0 +1,45 @@
+---
+title: "Protocol V2 Transactions"
+description: "Complete reference for all Andamio Protocol V2 transactions"
+---
+
+# Protocol V2 Transactions
+
+The Andamio Protocol V2 introduces enhanced transaction patterns with improved state management, better gas efficiency, and clearer separation of concerns.
+
+## Transaction Categories
+
+### Admin Transactions
+Instance administrator operations for platform management:
+- [Initialize Course](/docs/protocol/v2/transactions/admin/init-course) - Set up new courses
+- [Initialize Project Step 1](/docs/protocol/v2/transactions/admin/init-project-step-1) - Begin project setup
+- [Initialize Project Step 2](/docs/protocol/v2/transactions/admin/init-project-step-2) - Complete project setup
+
+### Contributor Transactions
+Project contributor operations:
+- [Mint Project State](/docs/protocol/v2/transactions/contributor/mint-project-state) - Join a project
+- [Commit Project](/docs/protocol/v2/transactions/contributor/commit-project) - Submit contributions
+- [Get Rewards](/docs/protocol/v2/transactions/contributor/get-rewards) - Claim earned rewards
+- [Burn Project State](/docs/protocol/v2/transactions/contributor/burn-project-state) - Exit a project
+
+### Student Transactions
+Course participant operations:
+- [Mint Project State](/docs/protocol/v2/transactions/student/mint-project-state) - Start course project
+- [Commit to Assignment](/docs/protocol/v2/transactions/student/commit-to-assignment) - Submit assignments
+- [Burn Local State](/docs/protocol/v2/transactions/student/burn-local-state) - Leave platform
+
+### General Transactions
+Basic protocol operations available to all users:
+- [Access Token Mint](/docs/protocol/v2/transactions/general/access-token-mint) - Get protocol access tokens
+- [Register Local State](/docs/protocol/v2/transactions/general/register-local-state) - Register with protocol
+
+### User Migration
+Special migration operations:
+- [Move Global State V1 to V2](/docs/protocol/v2/transactions/user/move-global-state-v1-to-v2) - Upgrade from V1
+
+## V2 Improvements
+
+- **Enhanced State Management**: Clearer state transitions and validation
+- **Better Gas Efficiency**: Optimized transaction patterns reduce costs
+- **Improved Security**: Additional validation layers and permission checks
+- **Migration Support**: Smooth transition path from V1 to V2
