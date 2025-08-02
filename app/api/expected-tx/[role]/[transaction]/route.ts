@@ -234,7 +234,7 @@ export async function GET(
 
   try {
     const txData = (await loadYamlFile(
-      `yaml/transactions/${txFile}`
+      `yaml/transactions/${version}/${txFile}`
     )) as TransactionYaml;
 
     // Helper function to process asset value into ExpectedTxAsset
