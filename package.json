@@ -7,6 +7,9 @@
     "dev": "next dev --turbo",
     "start": "next start",
     "generate-api-docs": "node scripts/generate-api-docs.mjs",
+    "convert-swagger": "node scripts/convert-swagger-to-openapi.mjs",
+    "generate-example-docs": "npm run convert-swagger",
+    "generate-all-api-docs": "node scripts/generate-all-api-docs.mjs",
     "docs-coverage": "npx tsx scripts/docs-coverage-check.ts"
   },
   "dependencies": {
@@ -39,6 +42,7 @@
     "eslint": "^8",
     "eslint-config-next": "15.3.2",
     "postcss": "^8.5.3",
+    "swagger2openapi": "^7.0.8",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3"
   }
