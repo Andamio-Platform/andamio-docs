@@ -4,6 +4,8 @@
     "pages": [
         "getting-started", 
         "reference",
+        "example",
+        "apis",
         "..."
     ],
     "defaultOpen": false
