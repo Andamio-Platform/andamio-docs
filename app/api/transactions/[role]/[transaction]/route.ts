@@ -15,8 +15,8 @@ export async function GET(
     const searchParams = request.nextUrl.searchParams;
     const deployment = searchParams.get("deployment") || "preprod";
     const version = searchParams.get("version") || "v1";
-    
-    const filePath = `yaml/transactions/${role}/${transaction}.yaml`;
+
+    const filePath = `yaml/transactions/${version}/${role}/${transaction}.yaml`;
     const txData = await loadYamlFile(filePath) as TransactionYaml;
     
     // Resolve addresses and tokens from deployment files
