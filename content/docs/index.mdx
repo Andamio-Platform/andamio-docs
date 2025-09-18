@@ -5,9 +5,19 @@ icon: House
 
 import { House, Code, BookText, Workflow, Coins } from "lucide-react";
 
-Andamio is a verified trust protocol for distributed work. Organizations can mint credentials, verify skills, and find contributors. Individuals can learn, discover opportunities, join project teams, and launch their own projects.
+Andamio is a set of protocols that support collaboration and allow anyone to create and earn credentials. This ecosystem consists of a foundational layer—the core Andamio Protocol—that provides universal identity through access tokens and tamper-proof state management, plus application protocols that build specific functionality on top of this foundation.
 
-In this documentation you will learn how Andamio works.
+The first application protocols are Course (for learning and credentialing) and Project (for collaborative work). Like the internet's layered architecture, these protocols leverage the foundational layer without needing to solve identity and state management independently.
+
+In this documentation you will learn how these protocols work together and how new protocols can be built within the Andamio ecosystem.
+
+## How It Works
+
+**Foundation Layer**: Universal identity (access tokens) and tamper-proof state management that any protocol can build upon.
+
+**Application Layer**: Specific protocols like Course (learning/credentials) and Project (collaborative work) that leverage the foundation.
+
+**Global/Local Architecture**: Users get unique identities through global state, while each protocol handles its own local interactions—no need to rebuild identity systems.
 
 ## What You'll Find
 
