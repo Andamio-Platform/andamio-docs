@@ -27,10 +27,14 @@ Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` 
 
 **When you finish a Glossary Game session:**
 1. **Ensure the changelog is updated**: Claude should automatically update `GLOSSARY_GAME_CHANGELOG.md` with your session
-2. **Commit your changes**: Make sure to commit both the glossary updates and the changelog entry
+2. **Commit your changes**: Make sure to commit both the glossary updates and the changelog entry using this format:
    ```bash
    git add docs/reference/GLOSSARY.md content/docs/glossary.mdx GLOSSARY_GAME_CHANGELOG.md
-   git commit -m "Glossary Game: Update [terms discussed] definitions"
+   git commit -m "glossary game: <date> <player-name> (terms: <comma-separated-terms>)"
+   ```
+   Example:
+   ```bash
+   git commit -m "glossary game: 2025-09-22 James (terms: SSOI)"
    ```
 3. **Push your changes** so the team benefits from the refined understanding
 
