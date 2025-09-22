@@ -8,7 +8,15 @@ A reference guide for key terms, concepts, and acronyms used throughout Andamio 
 The primary authentication mechanism for the Andamio network. A cryptographically secure token that allows users to carry their verified identity, credentials, and reputation across different applications. Functions like "HTTPS for professional identity." The Access Token contains the on-chain datum that stores a user's SSOI data.
 
 ### Self-Sovereign On-Chain Identity (SSOI)
-Andamio's implementation of self-sovereign identity on Cardano. The SSOI data is stored on-chain in the Access Token datum, and only the owner of the wallet holding the Access Token can authorize transactions that update their SSOI. This ensures users have complete control over their professional identity and credentials. Andamio aims to establish SSOI as a Cardano Improvement Proposal (CIP) standard.
+A decentralized identity data standard and framework built on Cardano. SSOI represents a minimalist approach to identity: just an alias (user-chosen identifier) and a collection of references to local states. This intentional simplicity enables maximum composability - any application can create its own local state type while maintaining interoperability through the shared SSOI pattern.
+
+**Technical Implementation**: In Andamio V2, SSOI is encoded in the Access Token's Global State Datum as:
+- `alias`: User's self-chosen on-chain identifier (ByteArray, no prefix)
+- `local_state_data`: Pairs of PolicyId → ByteArray (blake2b_256 hash of data + local state token)
+
+**Evolution**: The andamio-SSOI repository shows the vision for a standalone SSOI standard (beyond V2), moving toward W3C DID compatibility with verification methods and RBAC, while maintaining the core principle of simplicity.
+
+**Strategic Goal**: SSOI establishes the pattern for decentralized identity. Success means other protocols adopt this simple structure for their own needs. It's like TCP/IP for identity - a minimal protocol that enables maximum innovation on top. Andamio is launching two local states as proofs of concept for this broader vision, a universal self-sovereign on-chain identity standard for Cardano that's so simple it naturally encourages adoption.
 
 ### Credentials
 Cryptographically verified attestations of skills, achievements, or qualifications issued through the Andamio protocol. Unlike self-declared qualifications, these are on-chain verifiable and portable across platforms. Credentials earned by completing Courses serve as prerequisites for accessing Project Local States, enabling permissionless credential sharing across the network.
