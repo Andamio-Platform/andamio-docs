@@ -3,6 +3,32 @@
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
+## Try the Concept Game with Claude Code
+
+Want to explore Andamio's terminology and concepts? Clone this repository and try the **Concept Validation Game** with Claude Code:
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/andamio-dev/andamio-docs.git
+   cd andamio-docs
+   ```
+
+2. **Open Claude Code** in this directory
+3. **Start the game**: Ask Claude to play the Concept Validation Game with Andamio terminology
+
+The game is a collaborative learning exercise where Claude presents its understanding of Andamio terms and you provide corrections and context. It might help us:
+- Achieve team alignment on terminology and concepts
+- Develop emergent definitions that reflect shared understanding
+- Iteratively refine documentation through collaborative discussion
+
+Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` and will help you explore concepts like SSOI (Self-Sovereign On-Chain Identity), Project Treasury, Access Tokens, and more.
+
+Internal team glossary: `docs/reference/GLOSSARY.md`
+
+Public glossary: `content/docs/glossary.mdx`
+
+## Development
+
 Run development server:
 
 ```bash
@@ -38,7 +64,13 @@ resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 - [Fumadocs](https://fumadocs.vercel.app) - learn about Fumadocs
 
+## Protocol Documentation
 
-## Diagram Generation
+The project contains comprehensive documentation for the Andamio protocol:
 
-See [diagrams/README.md](diagrams/README.md) for details on how to generate diagrams. A set of transaction descriptions are found in [diagrams/graphviz/generate/yaml](diagrams/graphviz/generate/yaml). (Note: these are a first draft and auto generated - need to be cleaned up and verified)
+- **Transaction specifications**: Found in `public/yaml/transactions/` organized by role (admin, contributor, course-creator, project-creator, student, general)
+- **Validator registry**: Central source of truth at `public/yaml/validator-registry-v1.yaml`
+- **Protocol documentation**: Generated MDX files in `content/docs/protocol/v1/`
+- **Working glossary**: Located at `docs/reference/GLOSSARY.md`
+
+For details on the documentation system architecture, see `CLAUDE.md`.

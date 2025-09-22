@@ -1,6 +1,7 @@
 {
     "pages": [
         "index",
+        "glossary",
         "whitepaper",
         "protocol",
         "tokenomics",

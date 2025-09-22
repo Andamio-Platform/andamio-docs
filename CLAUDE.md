@@ -302,8 +302,60 @@ The documentation system supports bidirectional linking:
 
 This linking system provides comprehensive navigation between all protocol components, making the documentation highly interconnected and discoverable.
 
+## Concept Validation Game
+
+The Concept Validation Game is a collaborative learning exercise for iteratively refining and validating Claude's understanding of Andamio terms and concepts. The working glossary is located at `docs/reference/GLOSSARY.md`.
+
+### How the Game Works
+
+1. **Agent Presents**: Claude shares current understanding of a term/concept including definition and characteristics
+2. **Human Validates/Corrects**: Human provides feedback with corrections and additional context
+3. **Agent Updates**: Claude incorporates feedback and updates understanding
+4. **Iteration**: Process repeats to refine understanding further
+
+### Starting the Game
+
+- **Human Chooses**: "Let's run an example with [term/concept]"
+- **Agent Suggests**: Claude identifies concepts that need validation
+- **Organic Discovery**: During conversation when uncertainty arises about a term
+
+### Best Practices for Claude
+
+- **Be honest about confidence levels**: "I'm uncertain about..."
+- **Look for patterns**: "I notice this term appears with..."
+- **Ask about relationships**: "How does [TERM A] relate to [TERM B]?"
+- **Surface inconsistencies**: "I see this used two different ways..."
+- **Update docs in real-time** while context is fresh
+- **Ask clarifying questions** when uncertain
+- **Provide context-specific corrections** rather than just saying "wrong"
+- **Build iteratively** through multiple short rounds
+
+### Example Opening
+
+"I'd like to validate my understanding of your terminology. I've noticed some terms that could use clarification:
+1. **[Term]** - I see this used frequently but am unsure if it means X or Y
+2. **[Term]** - This seems to have a specific meaning in your context
+3. **[Term]** - I've seen inconsistent usage of this
+
+Should we start with one of these, or would you prefer a different term?"
+
+### Benefits
+
+- **Accuracy Improvement**: Corrects misunderstandings and knowledge gaps
+- **Contextualization**: Learns Andamio-specific meanings and nuances
+- **Confidence Calibration**: Better understanding of certainty levels
+- **Knowledge Audit**: Surfaces what Claude understands correctly vs incorrectly
+- **Real-time Documentation**: Updates happen while context is fresh
+
+Use this game whenever terminology seems unclear or when starting work on new aspects of the Andamio protocol.
+
 # important-instruction-reminders
 Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.
 ALWAYS prefer editing an existing file to creating a new one.
 NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+- docs/reference/GLOSSARY.md is a team-facing document and can include "private" sections. However content/docs/glossary.mdx is public facing and only includes  - Core Protocol Concepts (Access Token, SSOI, Credentials, Local State, Global State, Validators, Contributors, Student, Project Creator, Project, Project
+   Treasury, Prerequisites, Escrow Validator)
+  - Technical Architecture (Protocol V2, Transaction API, Transaction Sponsorship, Service Fees, SDK)
+  - Acronyms & Abbreviations (streamlined list)
+- Glossary Game and Concept Game mean the same thing. When playing, assume the player is a team member and can discuss both private and public glossary docs.
