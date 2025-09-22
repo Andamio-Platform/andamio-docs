@@ -61,7 +61,7 @@ The Concept Validation Game is a collaborative learning exercise designed to ite
 
 ## Example Session
 
-**Topic**: Self-Sovereign On-Chain Identity (SSOI)
+**Topic**: Self-Sovereign On-chain Identity (SSOI)
 
 **Round 1**:
 

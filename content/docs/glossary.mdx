@@ -10,16 +10,16 @@ A reference guide for key terms, concepts, and acronyms used throughout Andamio 
 ## Core Protocol Concepts
 
 ### Access Token (Andamio Access Token)
-The primary authentication mechanism for the Andamio network. A cryptographically secure token that allows users to carry their verified identity, credentials, and reputation across different applications. Functions like "HTTPS for professional identity." The Access Token contains the on-chain datum that stores a user's SSOI data.
+The primary authentication mechanism for the Andamio network. A cryptographically secure token that allows users to carry their verified identity, credentials, and reputation across different applications. Each user has one Access Token with a unique alias that spans across any organizations and local states in which they participate. The Access Token datum stores the user's SSOI (Self-Sovereign On-chain Identity) - their complete record of participation, achievements, and progress across all Andamio organizations.
 
-### Self-Sovereign On-Chain Identity (SSOI)
-A decentralized identity standard built on Cardano that enables users to maintain complete control over their professional identity and credentials. SSOI uses a minimalist design - storing just a user's chosen alias and references to their various local states - which creates maximum flexibility for different applications to integrate while maintaining interoperability. In Andamio V2, the SSOI data is stored on-chain in the Access Token datum, and only the owner of the wallet holding the Access Token can authorize transactions that update their identity. SSOI establishes the pattern for decentralized identity on Cardano - a minimal protocol that enables maximum innovation on top. Andamio is working to establish SSOI as a Cardano Improvement Proposal (CIP) standard to enable widespread adoption across the ecosystem.
+### Self-Sovereign On-chain Identity (SSOI)
+A user's portable, self-controlled record of participation, achievements, and progress across all Andamio organizations and local states, stored in their Access Token datum. SSOI uses a minimalist design - storing just a user's chosen alias and PolicyId → Hash pairs for each local state participation. The actual credential details are stored off-chain in application databases, with the on-chain hash ensuring data integrity. This creates maximum flexibility for different applications while maintaining interoperability and keeping on-chain data minimal. Organizations can choose to recognize credentials from other organizations, creating a trust network where a web development credential earned at Organization A can be accepted as a prerequisite at Organization B. In Andamio V2, only the owner of the wallet holding the Access Token can authorize transactions that update their identity. SSOI establishes the pattern for decentralized identity on Cardano - a minimal protocol that enables maximum innovation on top.
 
 ### Credentials
-Cryptographically verified attestations of skills, achievements, or qualifications issued through the Andamio protocol. Unlike self-declared qualifications, these are on-chain verifiable and portable across platforms. Credentials earned by completing Courses serve as prerequisites for accessing Project Local States, enabling permissionless credential sharing across the network.
+Cryptographically verified attestations of skills, achievements, or qualifications issued through the Andamio protocol and permanently attached to a user's SSOI. Unlike self-declared qualifications, these are on-chain verifiable and portable across platforms. Once earned, credentials become part of the user's sovereign identity that they control - no organization can revoke them. Credentials earned by completing Courses can be recognized by any organization as prerequisites for their local states, enabling permissionless credential sharing and a trust network between organizations.
 
 ### Local State
-Custom logic and rules specific to individual applications or organizations built on Andamio. The two main types are Course Local States (where participants are called "students") and Project Local States (where participants are called "contributors"). Local states allow apps to define their own governance models, requirements, and business logic while still participating in the global network.
+Organization-specific contexts (courses, projects, etc.) that define custom logic and rules while participating in the global Andamio network. Organizations can have multiple local states - for example, a course and a related project where the course serves as prerequisite. The two main types are Course Local States (where participants are called "students") and Project Local States (where participants are called "contributors"). Local states from one organization can serve as prerequisites for another organization's local states, enabling cross-organizational credential recognition. User participation in local states is recorded in their SSOI.
 
 ### Global State
 The shared, protocol-level state that all Andamio applications can access. Contains universal credentials, reputation scores, and cross-platform data that creates network effects.
@@ -69,7 +69,7 @@ Pre-built libraries in multiple languages (JavaScript, Python, Go, Rust) that ma
 
 - **API**: Application Programming Interface
 - **SDK**: Software Development Kit
-- **SSOI**: Self-Sovereign On-Chain Identity
+- **SSOI**: Self-Sovereign On-chain Identity
 - **TVL**: Total Value Locked
 - **RBAC**: Role-Based Access Control
 - **DAO**: Decentralized Autonomous Organization

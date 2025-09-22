@@ -3,9 +3,9 @@
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
-## Try the Concept Game with Claude Code
+## Try the Glossary Game with Claude Code
 
-Want to explore Andamio's terminology and concepts? Clone this repository and try the **Concept Validation Game** with Claude Code:
+Want to explore Andamio's terminology and concepts? Clone this repository and try the **Glossary Game** (also known as Concept Validation Game) with Claude Code:
 
 1. **Clone the repository**:
    ```bash
@@ -14,18 +14,31 @@ Want to explore Andamio's terminology and concepts? Clone this repository and tr
    ```
 
 2. **Open Claude Code** in this directory
-3. **Start the game**: Ask Claude to play the Concept Validation Game with Andamio terminology
+3. **Start the game**: Ask Claude to play the Glossary Game with Andamio terminology
 
 The game is a collaborative learning exercise where Claude presents its understanding of Andamio terms and you provide corrections and context. It might help us:
 - Achieve team alignment on terminology and concepts
 - Develop emergent definitions that reflect shared understanding
 - Iteratively refine documentation through collaborative discussion
 
-Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` and will help you explore concepts like SSOI (Self-Sovereign On-Chain Identity), Project Treasury, Access Tokens, and more.
+Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` and will help you explore concepts like SSOI (Self-Sovereign On-chain Identity), Project Treasury, Access Tokens, and more.
+
+### Important: After Playing the Glossary Game
+
+**When you finish a Glossary Game session:**
+1. **Ensure the changelog is updated**: Claude should automatically update `GLOSSARY_GAME_CHANGELOG.md` with your session
+2. **Commit your changes**: Make sure to commit both the glossary updates and the changelog entry
+   ```bash
+   git add docs/reference/GLOSSARY.md content/docs/glossary.mdx GLOSSARY_GAME_CHANGELOG.md
+   git commit -m "Glossary Game: Update [terms discussed] definitions"
+   ```
+3. **Push your changes** so the team benefits from the refined understanding
 
 Internal team glossary: `docs/reference/GLOSSARY.md`
 
 Public glossary: `content/docs/glossary.mdx`
+
+Session history: `GLOSSARY_GAME_CHANGELOG.md`
 
 ## Development
 
