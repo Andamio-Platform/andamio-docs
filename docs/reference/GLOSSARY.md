@@ -5,26 +5,36 @@ A reference guide for key terms, concepts, and acronyms used throughout Andamio 
 ## Core Protocol Concepts
 
 ### Access Token (Andamio Access Token)
-The primary authentication mechanism for the Andamio network. A cryptographically secure token that allows users to carry their verified identity, credentials, and reputation across different applications. Each user has one Access Token with a unique alias that spans across any organizations and local states in which they participate. The Access Token datum stores the user's SSOI (Self-Sovereign On-chain Identity) - their complete record of participation, achievements, and progress across all Andamio organizations.
+The primary authentication mechanism for the Andamio network implemented using the CIP68 token standard. Each user has one Access Token pair consisting of a 222 token (held in their wallet as proof of ownership) and a corresponding 100 token (held at the Global State Validator address containing their SSOI data). The Access Token enables users to carry their verified identity, credentials, and reputation across different applications through a unique alias that spans across any organizations and local states in which they participate.
 
 ### Self-Sovereign On-chain Identity (SSOI)
-A user's portable, self-controlled record of participation, achievements, and progress across all Andamio organizations and local states, stored in their Access Token datum. SSOI represents a minimalist approach to identity: just an alias (user-chosen identifier) and a collection of references to local states. This intentional simplicity enables maximum composability and interoperability.
+A decentralized identity framework built on Cardano that enables users to maintain portable, self-controlled records of their participation, achievements, and credentials across all Andamio organizations. SSOI represents a minimalist approach to identity: just an alias (user-chosen identifier) and a collection of references to local states. This intentional simplicity enables maximum composability and interoperability.
+
+**Technical Architecture**:
+SSOI uses the CIP68 token standard with a unique implementation:
+- **Token Pair System**: Each user has two linked tokens with the same policy ID:
+  - **222 Token**: Held in user's wallet as proof of ownership (no datum attached)
+  - **100 Token**: Held at Global State Validator address containing all SSOI data in its datum
+- **Single Validator Address**: One Global State Validator address holds ALL users' 100 tokens
+- **Data Separation**: User maintains sovereignty via 222 token ownership while all identity data lives at a predictable on-chain location
 
 **Key Properties**:
 - **One Access Token = One SSOI**: Each user maintains a single identity across the entire network
 - **Cross-organizational**: Spans all organizations and local states where the holder participates
 - **Portable credentials**: Achievements earned in one organization can be recognized by others
-- **User-controlled**: Individuals own their learning identity; organizations cannot revoke earned credentials
+- **User-controlled**: Individuals own their learning identity via the 222 token; organizations cannot revoke earned credentials
+- **Extensible Framework**: Supports custom local state types with their own business logic (Course and Project implemented, more possible)
 
-**Technical Implementation**: In Andamio V2, SSOI is encoded in the Access Token's Global State Datum as:
+**Data Model**: In Andamio V2, SSOI data is stored in the 100 token's datum at Global State Validator:
 - `alias`: User's self-chosen on-chain identifier (ByteArray, no prefix)
 - `local_state_data`: Pairs of PolicyId → ByteArray (blake2b_256 hash of arbitrary off-chain data)
 
 **Storage Architecture**:
-- **On-chain (Access Token datum)**: Stores only PolicyId → Hash pairs - minimal, verifiable fingerprints of participation
+- **On-chain (100 token datum)**: Stores only PolicyId → Hash pairs - minimal, verifiable fingerprints of participation
+- **User wallet (222 token)**: Contains only the ownership token, no datum updates needed
 - **Off-chain (application databases)**: The actual credential data that the hash commits to (grades, completion dates, contributions, etc.)
 - **Hash verification**: Applications verify the hash matches their database entry to ensure data integrity
-- **Scalability**: Access Token datum grows by small, fixed increments (PolicyId + hash) per participation, keeping gas costs manageable
+- **Scalability**: 100 token datum grows by small, fixed increments (PolicyId + hash) per participation, keeping gas costs manageable
 
 **Data Control**:
 - **Local state owners decide**: What data to include in the hash (courses might hash grades/dates, projects might hash contributions/reviews)
