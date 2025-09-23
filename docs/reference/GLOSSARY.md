@@ -43,17 +43,41 @@ A user's portable, self-controlled record of participation, achievements, and pr
 Cryptographically verified attestations of skills, achievements, or qualifications issued through the Andamio protocol and permanently attached to a user's SSOI. Unlike self-declared qualifications, these are on-chain verifiable and portable across platforms. Once earned, credentials become part of the user's sovereign identity that they control - no organization can revoke them. Credentials earned by completing Courses can be recognized by any organization as prerequisites for their local states, enabling permissionless credential sharing and a trust network between organizations.
 
 ### Local State
-Organization-specific contexts (courses, projects, etc.) that define custom logic and rules while participating in the global Andamio network. Organizations can have multiple local states - for example, a course and a related project where the course serves as prerequisite. The two main types are Course Local States (where participants are called "students") and Project Local States (where participants are called "contributors").
+Detailed implementations of specific work scopes (courses, projects, and future types) that contain all the granular data and business logic for their domain. The protocol provides Local State **Systems** (Course and Project currently, with more types coming), and each system can have multiple **Instances** - individual implementations owned and managed by specific Access Token Holders.
+
+**Systems vs Instances**:
+- **Systems**: The types of local states available (Course, Project, and future custom types)
+- **Instances**: Individual implementations like "Intro to Woodworking" (owned by Alice) or "Contribute to Andamio App" (owned by Carol)
+- **Instance Ownership**: Each instance is owned and managed by an Access Token Holder who controls that specific instance
 
 **Key Features**:
-- **Organization ownership**: Each local state belongs to a specific organization
-- **Multiple per org**: Organizations can maintain multiple local states for different purposes
-- **Cross-org prerequisites**: Local states from one organization can serve as prerequisites for another
-- **SSOI integration**: User participation in local states is recorded in their SSOI
-- **Custom governance**: Each local state can define its own requirements and business logic
+- **Contains all details**: Stores complete data (e.g., which specific course modules completed, project contributions)
+- **Work-scoped data**: The data represents an area of work (course content, project tasks), not personal user data
+- **Instance control**: The owner Access Token Holder manages their instance (sets requirements, approves completions, etc.)
+- **Independent validation rules**: Each local state type has its own validators and business logic
+- **SSOI integration**: Generates data that "bubbles up" to Global State as policy ID + hash summaries in Access Token Datum
+- **Prerequisite validation**: Can inspect other local states' detailed data (e.g., checking if specific modules 102 and 301 were completed)
+- **Extensible ecosystem**: Designed for many builders to create new local state types following SSOI standard
+- **Standardized reporting**: Must follow SSOI standard for how summaries are stored in Access Token Datum, but internal logic is flexible
 
 ### Global State
-The shared, protocol-level state that all Andamio applications can access. Contains universal credentials, reputation scores, and cross-platform data that creates network effects.
+The protocol-level infrastructure that serves as a registry and index for all local states across the Andamio network. Global State stores summaries of local state participation in the Access Token Datum as policy ID + hash pairs following the SSOI standard, but does not contain the detailed local state data itself.
+
+**Components**:
+- **Access Token System**: Stores SSOI summaries (policy ID + hash pairs) from local states in Access Token Datum
+- **Protocol Governance**: Core protocol rules and upgrade mechanisms
+- **Global State Data**: Protocol-wide shared data and parameters
+- **Instance Registry**: Central registry where all Local States are registered (discovery feature planned but not yet implemented)
+
+### Instance Registry
+A component of Global State that tracks which Local State instances are authorized to issue credentials to users' SSoIs (write PolicyId → Hash pairs to Access Tokens). The registry serves as a permission layer ensuring only legitimate local states can update user identities.
+
+**Key Properties**:
+- **Permissionless registration**: Once a local state exists, registration is permissionless by design
+- **Current limitation**: Admin must currently mint a local state token (temporary requirement being addressed)
+- **Credential authority**: Only registered instances can write to Access Token SSoIs
+- **Anti-spam mechanism**: Prevents unauthorized actors from polluting user identities with invalid credentials
+- **Verification source**: Other organizations check the registry to verify credential legitimacy
 
 ### Validators
 Smart contracts that enforce the rules of the Andamio protocol. Includes both Global State Validators (protocol-wide rules) and Local State Validators (app-specific rules).
@@ -65,7 +89,14 @@ Access Token Holders who participate in Andamio's Local States. The term "Contri
 A Contributor participating in a Course Local State. Students earn Credentials by completing course requirements, which then serve as prerequisites for accessing Project Local States. From the protocol perspective, Students and Contributors are identical - both are Access Token Holders with the same underlying capabilities.
 
 ### Project Creator
-An Access Token Holder with special privileges within Project Local States. Project Creators define task descriptions, approve task completions and reward amounts in the on-chain Project Treasury, and can add funds to Project Treasuries. Only Project Creators can approve tasks on the Andamio Project Protocol. Project Creators can also participate as Contributors in their own or other projects.
+An instance-specific role assigned to Access Token Holders within individual Project Local States. When a Project Local State instance is created, one Access Token holder is assigned as the initial Project Creator (the "owner"). This Project Creator can then add additional Project Creators to share management responsibilities for that specific project instance.
+
+**Key Properties**:
+- **Instance-scoped**: Project Creator privileges only apply within the specific project instance where assigned
+- **Multi-creator support**: Multiple Project Creators can manage a single project instance collaboratively
+- **On-chain privileges**: Can approve task commitments, manage Project Treasury, define task requirements
+- **Not transferable across projects**: Being a Project Creator in Project A provides no privileges in Project B
+- **Dual participation**: Project Creators can also participate as Contributors in their own or other projects
 
 ### Project
 A complete Andamio entity consisting of multiple on-chain validators including a treasury validator and escrow validators. Projects coordinate work, manage funds, and track contributions through this multi-validator architecture.
