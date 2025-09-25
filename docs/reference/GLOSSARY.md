@@ -58,7 +58,6 @@ Detailed implementations of specific work scopes (courses, projects, and future 
 **Systems vs Instances**:
 - **Systems**: The types of local states available (Course, Project, and future custom types)
 - **Instances**: Individual implementations like "Intro to Woodworking" (owned by Alice) or "Contribute to Andamio App" (owned by Carol)
-- **Instance Ownership**: Each instance is owned and managed by an Access Token Holder who controls that specific instance
 
 **Key Features**:
 - **Contains all details**: Stores complete data (e.g., which specific course modules completed, project contributions)
@@ -69,6 +68,27 @@ Detailed implementations of specific work scopes (courses, projects, and future 
 - **Prerequisite validation**: Can inspect other local states' detailed data (e.g., checking if specific modules 102 and 301 were completed)
 - **Extensible ecosystem**: Designed for many builders to create new local state types following SSOI standard
 - **Standardized reporting**: Must follow SSOI standard for how summaries are stored in Access Token Datum, but internal logic is flexible
+
+### Instance Ownership
+The on-chain ownership of a specific Local State instance (Course or Project) by a single Access Token holder who has sole administrative control over that parameterized validator instance.
+
+**Key Concepts**:
+- **Parameterized Validators**: The mechanism on Cardano that allows creating multiple distinct instances from the same base validator code (Course or Project)
+- **Local State Instances**: Individual deployments like "TypeScript Development" Course or "S3 Facilitation" Course, each being a separate parameterized instance
+- **Single Owner Model**: Each instance has exactly one owner - the Access Token holder who controls that specific instance
+- **Administrative Authority**: The owner has exclusive control over their Local State instance (sets requirements, approves completions, manages participants)
+
+**Identity & Ownership Architecture**:
+- Instance Owner must have an Access Token
+- **SSOI (Self-Sovereign On-Chain Identity)** is encoded in the Access Token's datum (Global State Datum)
+- One SSOI/Access Token can own multiple instances (e.g., one person can own several different courses)
+- This creates a verifiable on-chain link between identity and instance control
+
+**Current Capabilities**:
+- No ownership transfer mechanism yet (planned future feature)
+- Course and Project Local States currently supported
+- New Local State types can be added through Global State governance
+- Each instance operates independently with its own rules and participants
 
 ### Global State
 The protocol-level infrastructure that serves as a registry and index for all local states across the Andamio network. Global State stores summaries of local state participation in the Access Token Datum as policy ID + hash pairs following the SSOI standard, but does not contain the detailed local state data itself.
