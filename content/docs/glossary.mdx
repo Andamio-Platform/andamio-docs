@@ -7,6 +7,20 @@ description: A reference guide for key terms, concepts, and acronyms used throug
 
 A reference guide for key terms, concepts, and acronyms used throughout Andamio documentation.
 
+## Andamio Ecosystem Overview
+
+### Andamio Protocol
+The foundational layer of smart contracts deployed on the Cardano blockchain that establishes the rules and infrastructure for decentralized identity (SSOI), credential management, and work coordination. The protocol defines how Access Tokens, Global State, and Local States interact to create a trustless system for skills verification and contribution tracking. Currently in Version 2, the protocol is permissionless and can be integrated by any application or organization.
+
+### Andamio Network
+The collective ecosystem of all organizations, applications, and users interacting through the Andamio Protocol. The network includes all deployed Local State instances (Courses and Projects), all Access Token holders with their SSoIs, and the trust relationships formed when organizations recognize each other's credentials. The network effect grows as more organizations join and cross-recognize credentials, creating a decentralized skills and contribution graph.
+
+### Andamio API
+The Transaction API (Tx API) service that provides RESTful endpoints for interacting with the Andamio Protocol. The API abstracts blockchain complexity by handling transaction building, signing coordination, and submission to the Cardano network. It enables developers to integrate Andamio functionality without deep blockchain knowledge, supporting operations like minting Access Tokens, updating SSoIs, and managing Local States. The API also provides query endpoints for reading on-chain data.
+
+### Andamio App
+The reference web application that demonstrates full integration with the Andamio Protocol through the Andamio API. Built as an open-source Next.js application, it provides user interfaces for creating and managing SSoIs, participating in Courses to earn credentials, contributing to Projects, and viewing the network of trust relationships. While the Andamio App is the primary interface, organizations can build their own custom applications using the API or SDK.
+
 ## Core Protocol Concepts
 
 ### Access Token (Andamio Access Token)
