@@ -14,6 +14,7 @@ const docs = defineCollection({
     tx_file: z.string().optional(),
     validator_system: z.string().optional(),
     validator_id: z.union([z.string(), z.array(z.string())]).optional(),
+    tags: z.array(z.string()).optional(),
   }),
   transform: transformMDX,
 });

@@ -34,10 +34,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 3. **Organize Documentation**:
    ```bash
    node scripts/organize-api-docs.mjs
+   node scripts/add-tags-to-mdx.mjs
    ```
    This will:
    - Create nested directory structure based on OpenAPI tags
    - Move MDX files to appropriate subdirectories
+   - Add tags to frontmatter of each MDX file
    - Generate `meta.json` files for each directory
    - Update root `meta.json` with top-level directories
 

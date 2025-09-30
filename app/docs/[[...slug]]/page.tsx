@@ -27,6 +27,7 @@ interface ExtendedPageData {
   tx_file?: string;
   validator_system?: string;
   validator_id?: string | string[];
+  tags?: string[];
   _openapi?: Record<string, unknown>;
   _meta: Record<string, unknown>;
   body: string;
@@ -58,6 +59,18 @@ export default async function Page(props: {
     <DocsPage full={pageData.full}>
       <DocsTitle>{pageData.title}</DocsTitle>
       <DocsDescription>{pageData.description}</DocsDescription>
+      {pageData.tags && pageData.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4 not-prose">
+          {pageData.tags.map((tag) => (
+            <span
+              key={tag}
+              className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
       <DocsBody className={docsWidth}>
         {pageData.tx_file && (
           <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-12">

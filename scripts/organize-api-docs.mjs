@@ -41,7 +41,7 @@ const directoryStructure = {};
 // Process each file
 for (const file of mdxFiles) {
   const filePath = path.join(API_DIR, file);
-  const content = await fs.readFile(filePath, 'utf8');
+  let content = await fs.readFile(filePath, 'utf8');
 
   // Extract route from frontmatter
   const routeMatch = content.match(/route:\s*(.+)/);
@@ -56,6 +56,15 @@ for (const file of mdxFiles) {
   if (!tags || tags.length === 0) {
     console.log(`⚠️  Skipping ${file} - no tags found for route ${route}`);
     continue;
+  }
+
+  // Add tags to frontmatter
+  const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
+  if (frontmatterMatch) {
+    const frontmatter = frontmatterMatch[1];
+    const tagsYaml = `tags:\n${tags.map(tag => `  - "${tag}"`).join('\n')}`;
+    const newFrontmatter = `---\n${frontmatter}\n${tagsYaml}\n---`;
+    content = content.replace(/^---\n[\s\S]*?\n---/, newFrontmatter);
   }
 
   // Build directory path from tags
@@ -75,8 +84,14 @@ for (const file of mdxFiles) {
   }
   directoryStructure[dirPath].files.push(file);
 
-  // Move file
-  await fs.rename(filePath, targetFile);
+  // Write file with updated frontmatter
+  await fs.writeFile(targetFile, content);
+
+  // Remove original if it's different location
+  if (filePath !== targetFile) {
+    await fs.unlink(filePath);
+  }
+
   console.log(`✅ ${file} → ${dirPath}/`);
 }
 
