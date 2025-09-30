@@ -1,12 +1,17 @@
 {
-    "title": "Andamio API",
-    "icon": "Network",
-    "pages": [
-        "getting-started", 
-        "reference",
-        "example",
-        "api",
-        "..."
-    ],
-    "defaultOpen": false
+  "title": "Andamio API",
+  "icon": "Network",
+  "pages": [
+    "admin",
+    "api-key",
+    "atlas-tx-builder-api",
+    "authentication",
+    "general",
+    "health",
+    "metrics",
+    "node-backend-api",
+    "platform-api",
+    "user"
+  ],
+  "defaultOpen": false
 }
