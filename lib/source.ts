@@ -23,5 +23,12 @@ export const source = loader({
 });
 
 export const openapi = createOpenAPI({
+  // Proxy requests to the Andamio API Gateway
+  // Users need to authenticate via:
+  // 1. Register: /auth/register
+  // 2. Login: /auth/login (get JWT token)
+  // 3. Request API Key: /apikey/request (with Bearer token)
+  // 4. Use both Bearer token and API key in requests
+  // Note: Base URL is handled by the proxy route
   proxyUrl: "/api/proxy",
 });

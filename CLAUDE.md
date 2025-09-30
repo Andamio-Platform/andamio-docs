@@ -7,7 +7,127 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run dev` - Start development server with Turbo (http://localhost:3000)
 - `npm run build` - Build the application for production
 - `npm run start` - Start production server
-- `npm run generate-api-docs` - Generate API documentation from OpenAPI schema
+- `npm run generate-api-docs` - Generate API documentation from OpenAPI schema (legacy, uses express-openapi.yaml)
+- `npm run generate-all-api-docs` - Generate all API documentation (including Andamio API Gateway)
+
+## Swagger/OpenAPI Documentation Workflow
+
+### Andamio API Gateway Schema
+- **Live API Docs**: https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/index.html
+- **Schema Endpoint**: https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/doc.json
+- **Local Schema**: `/data/andamio-api-gateway.json`
+
+### Complete Workflow
+1. **Pull Latest Schema**:
+   ```bash
+   curl -s https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/doc.json -o data/andamio-api-gateway.json
+   ```
+
+2. **Generate Documentation**:
+   ```bash
+   npm run generate-all-api-docs
+   ```
+   This will:
+   - Convert Swagger 2.0 to OpenAPI 3.0 (saves to `data/andamio-api-gateway-openapi.json`)
+   - Generate ~140 MDX files (initially flat in `content/docs/api/`)
+
+3. **Organize Documentation**:
+   ```bash
+   node scripts/organize-api-docs.mjs
+   ```
+   This will:
+   - Create nested directory structure based on OpenAPI tags
+   - Move MDX files to appropriate subdirectories
+   - Generate `meta.json` files for each directory
+   - Update root `meta.json` with top-level directories
+
+4. **Review Output**:
+   - Check organized directory structure in `content/docs/api/`
+   - Top-level directories: `admin`, `api-key`, `atlas-tx-builder-api`, `authentication`, `general`, `health`, `metrics`, `node-backend-api`, `platform-api`, `user`
+   - Nested directories follow tag hierarchy (e.g., `atlas-tx-builder-api/atlas-instance-admin/atlas-self-service/`)
+   - Each file references `data/andamio-api-gateway-openapi.json` for live rendering
+
+5. **Commit Changes**:
+   - Commit raw schema, converted OpenAPI 3.0 file, and all generated/organized docs
+
+### File Locations
+- **Raw Schemas**:
+  - `/data/andamio-api-gateway.json` (Andamio API Gateway - Swagger 2.0, source)
+  - `/data/andamio-api-gateway-openapi.json` (Auto-generated OpenAPI 3.0 conversion)
+  - `/data/express-openapi.yaml` (Legacy API schema)
+  - `/data/example-swagger.json` (Example API schema)
+- **Generated Docs**:
+  - `/content/docs/api/` (Andamio API Gateway docs - ~140 MDX files)
+- **Generation Scripts**:
+  - `scripts/generate-all-api-docs.mjs` (Main script - generates flat MDX files from schema)
+  - `scripts/organize-api-docs.mjs` (Organization script - creates directory structure based on tags)
+  - `scripts/generate-api-docs.mjs` (Legacy script - single API)
+  - `scripts/convert-swagger-to-openapi.mjs` (Standalone converter)
+- **OpenAPI Integration**:
+  - `app/api/proxy/` - OpenAPI proxy for live API documentation
+  - `lib/source.ts` - Content source with OpenAPI integration
+
+### Configuration
+API generation is configured in `scripts/generate-all-api-docs.mjs`:
+```javascript
+const API_CONFIGS = [
+  {
+    input: './data/andamio-api-gateway.json',
+    output: './content/docs/api',
+    isOpenAPI: false, // Swagger 2.0, needs conversion
+  },
+  // ... other configs
+];
+```
+
+### Directory Organization
+API docs are organized by OpenAPI tags into nested directories:
+- Single tag → top-level directory (e.g., `admin/`, `health/`)
+- Multiple tags → nested directories (e.g., `atlas-tx-builder-api/atlas-instance-admin/atlas-self-service/`)
+- Tag names converted to kebab-case for directory names
+- Each directory contains `meta.json` with title and `pages: ['...']` for auto-discovery
+
+### Interactive API Testing
+
+The API documentation supports interactive testing with the following setup:
+
+**Schema Location:**
+- Converted OpenAPI 3.0 schema copied to `/public/data/andamio-api-gateway-openapi.json`
+- Accessible to browser at `/data/andamio-api-gateway-openapi.json`
+- All MDX files reference `data/andamio-api-gateway-openapi.json` (relative path, no leading slash)
+- Schema includes `servers` field with API Gateway URL for proxy requests
+
+**Proxy Configuration:**
+- OpenAPI proxy configured in `lib/source.ts` and `app/api/proxy/route.ts`
+- Allowed origin: `https://andamio-api-308006323670.us-central1.run.app`
+- Server URL (from schema): `https://andamio-api-308006323670.us-central1.run.app/api/v1`
+- Proxy endpoint: `/api/proxy` forwards requests to API Gateway
+
+**Authentication Flow:**
+1. **Register** → `/auth/register` - Create user account
+2. **Login** → `/auth/login` - Get JWT token
+3. **Authorize** → Click "Authorize" button, add `Bearer YOUR_JWT_TOKEN` to BearerAuth
+4. **Request API Key** → `/apikey/request` - Get API key (store securely!)
+5. **Authorize Again** → Add `YOUR_API_KEY` to ApiKeyAuth field
+6. **Test Endpoints** → Use "Try it out" on any endpoint page
+
+**User Guide:**
+- Complete authentication guide in `/content/docs/api/index.mdx`
+- Links to register, login, and API key request endpoints
+- Instructions for using the Authorize button in the API docs UI
+
+**Known Limitation - Local Development:**
+- In local development, the API Gateway may block requests due to CORS policies
+- The proxy attempts to work around this by removing origin headers
+- For full testing capability, the docs site domain needs to be allowlisted on the API Gateway
+- Production deployment at `docs.andamio.io` should be added to API Gateway's allowed origins
+- Alternative: Users can test directly on the API Gateway's Swagger UI at `https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/index.html`
+
+### Maintenance
+- **When to regenerate**: After API Gateway deployments or schema changes
+- **Full workflow**: Pull schema → Generate docs → Organize into directories → Copy schema to public/
+- **What to commit**: Raw schema, converted OpenAPI file (both `/data` and `/public/data`), organized directory structure, and all MDX files
+- **Verification**: Check that directory structure matches tag hierarchy and MDX files correctly reference `/data/andamio-api-gateway-openapi.json`
 
 ## Architecture Overview
 

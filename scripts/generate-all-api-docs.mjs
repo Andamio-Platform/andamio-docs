@@ -9,26 +9,46 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Configuration for API documentation generation
 const API_CONFIGS = [
   {
-    input: './data/express-openapi.yaml',
-    output: './content/docs/apis/reference',
-    isOpenAPI: true, // Already OpenAPI 3.0+
-  },
-  {
-    input: './data/example-swagger.json',
-    output: './content/docs/apis/example',
+    input: './data/andamio-api-gateway.json',
+    output: './content/docs/api',
     isOpenAPI: false, // Swagger 2.0, needs conversion
   },
+  // Legacy schemas - commented out, only using andamio-api-gateway now
+  // {
+  //   input: './data/express-openapi.yaml',
+  //   output: './content/docs/api/reference',
+  //   isOpenAPI: true, // Already OpenAPI 3.0+
+  // },
+  // {
+  //   input: './data/example-swagger.json',
+  //   output: './content/docs/api/example',
+  //   isOpenAPI: false, // Swagger 2.0, needs conversion
+  // },
   // Add more API configs here as needed
 ];
 
 async function convertSwaggerToOpenAPI(inputPath) {
   const swaggerContent = await fs.readFile(inputPath, 'utf8');
   const swaggerDoc = JSON.parse(swaggerContent);
-  
+
   return new Promise((resolve, reject) => {
     converter.convertObj(swaggerDoc, { patch: true, warnOnly: true }, (err, result) => {
       if (err) reject(err);
-      else resolve(result.openapi);
+      else {
+        const openapi = result.openapi;
+
+        // Add servers field for Andamio API Gateway if not present
+        if (!openapi.servers && swaggerDoc.host) {
+          openapi.servers = [
+            {
+              url: `https://${swaggerDoc.host}${swaggerDoc.basePath || ''}`,
+              description: 'Andamio API Gateway (Production)'
+            }
+          ];
+        }
+
+        resolve(openapi);
+      }
     });
   });
 }
