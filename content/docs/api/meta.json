@@ -1,11 +1,11 @@
 {
-    "title": "APIs",
+    "title": "Andamio API",
     "icon": "Network",
     "pages": [
         "getting-started", 
         "reference",
         "example",
-        "apis",
+        "api",
         "..."
     ],
     "defaultOpen": false
