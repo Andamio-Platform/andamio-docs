@@ -70,9 +70,16 @@ The fix involved ensuring the OpenAPI schema includes the `servers` field:
 
 This field tells the proxy where to forward requests. The conversion script (`scripts/generate-all-api-docs.mjs`) automatically adds this during the Swagger 2.0 → OpenAPI 3.0 conversion.
 
-### CORS Configuration
+### Technical Details
 
-The Andamio API Gateway has been configured to accept all incoming routes, so CORS is not an issue. The proxy successfully forwards requests from the docs site to the API Gateway.
+**CORS Configuration:**
+- The Andamio API Gateway accepts all incoming routes
+- The proxy successfully forwards requests from the docs site to the API Gateway
+
+**Header Optimization:**
+- The proxy only forwards essential headers to avoid 431 (Request Header Fields Too Large) errors
+- Forwarded headers: `authorization`, `x-api-key`, `content-type`, `accept`
+- This prevents large browser headers from being sent to the API Gateway
 
 ## Updating Documentation
 

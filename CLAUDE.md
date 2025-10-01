@@ -107,6 +107,7 @@ The API documentation supports interactive testing with the following setup:
 - **Server URL** (from schema `servers` field): `https://andamio-api-308006323670.us-central1.run.app/api/v1`
 - Proxy endpoint: `/api/proxy` forwards requests to the server URL defined in the schema
 - The `servers` field is automatically added during Swagger → OpenAPI conversion in `scripts/generate-all-api-docs.mjs`
+- **Header forwarding**: Only essential headers are forwarded (authorization, x-api-key, content-type, accept) to avoid 431 errors
 
 **Authentication Flow:**
 1. **Register** → `/auth/register` - Create user account
