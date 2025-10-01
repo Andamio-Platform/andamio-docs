@@ -29,6 +29,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    ```
    This will:
    - Convert Swagger 2.0 to OpenAPI 3.0 (saves to `data/andamio-api-gateway-openapi.json`)
+   - **Add `servers` field** to OpenAPI schema pointing to `https://andamio-api-308006323670.us-central1.run.app/api/v1`
    - Generate ~140 MDX files (initially flat in `content/docs/api/`)
 
 3. **Organize Documentation**:
@@ -42,6 +43,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    - Add tags to frontmatter of each MDX file
    - Generate `meta.json` files for each directory
    - Update root `meta.json` with top-level directories
+   - Copy OpenAPI schema to `/public/data/` for browser access
 
 4. **Review Output**:
    - Check organized directory structure in `content/docs/api/`
@@ -97,13 +99,14 @@ The API documentation supports interactive testing with the following setup:
 - Converted OpenAPI 3.0 schema copied to `/public/data/andamio-api-gateway-openapi.json`
 - Accessible to browser at `/data/andamio-api-gateway-openapi.json`
 - All MDX files reference `data/andamio-api-gateway-openapi.json` (relative path, no leading slash)
-- Schema includes `servers` field with API Gateway URL for proxy requests
+- **CRITICAL**: Schema MUST include `servers` field with API Gateway URL for proxy to work
 
 **Proxy Configuration:**
 - OpenAPI proxy configured in `lib/source.ts` and `app/api/proxy/route.ts`
 - Allowed origin: `https://andamio-api-308006323670.us-central1.run.app`
-- Server URL (from schema): `https://andamio-api-308006323670.us-central1.run.app/api/v1`
-- Proxy endpoint: `/api/proxy` forwards requests to API Gateway
+- **Server URL** (from schema `servers` field): `https://andamio-api-308006323670.us-central1.run.app/api/v1`
+- Proxy endpoint: `/api/proxy` forwards requests to the server URL defined in the schema
+- The `servers` field is automatically added during Swagger → OpenAPI conversion in `scripts/generate-all-api-docs.mjs`
 
 **Authentication Flow:**
 1. **Register** → `/auth/register` - Create user account
@@ -118,12 +121,11 @@ The API documentation supports interactive testing with the following setup:
 - Links to register, login, and API key request endpoints
 - Instructions for using the Authorize button in the API docs UI
 
-**Known Limitation - Local Development:**
-- In local development, the API Gateway may block requests due to CORS policies
-- The proxy attempts to work around this by removing origin headers
-- For full testing capability, the docs site domain needs to be allowlisted on the API Gateway
-- Production deployment at `docs.andamio.io` should be added to API Gateway's allowed origins
-- Alternative: Users can test directly on the API Gateway's Swagger UI at `https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/index.html`
+**Interactive Testing Status:**
+- ✅ **Working!** The proxy successfully forwards requests to the API Gateway
+- The Andamio API Gateway accepts all incoming routes and CORS is properly configured
+- Users can test endpoints directly in the docs using the "Try it out" feature
+- Authentication required: Follow the authentication flow above to get JWT and API key tokens
 
 ### Maintenance
 - **When to regenerate**: After API Gateway deployments or schema changes

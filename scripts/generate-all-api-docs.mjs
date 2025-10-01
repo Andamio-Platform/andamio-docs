@@ -37,14 +37,15 @@ async function convertSwaggerToOpenAPI(inputPath) {
       else {
         const openapi = result.openapi;
 
-        // Add servers field for Andamio API Gateway if not present
-        if (!openapi.servers && swaggerDoc.host) {
+        // Always add/override servers field for Andamio API Gateway
+        if (swaggerDoc.host) {
           openapi.servers = [
             {
               url: `https://${swaggerDoc.host}${swaggerDoc.basePath || ''}`,
               description: 'Andamio API Gateway (Production)'
             }
           ];
+          console.log(`  ✅ Added servers field: ${openapi.servers[0].url}`);
         }
 
         resolve(openapi);

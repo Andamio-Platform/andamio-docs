@@ -19202,5 +19202,11 @@
         }
       }
     }
-  }
+  },
+  "servers": [
+    {
+      "url": "https://andamio-api-308006323670.us-central1.run.app/api/v1",
+      "description": "Andamio API Gateway (Production)"
+    }
+  ]
 }

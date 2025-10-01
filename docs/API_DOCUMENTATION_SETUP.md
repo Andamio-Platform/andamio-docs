@@ -43,64 +43,36 @@ User Browser → Docs Site (/api/proxy) → API Gateway
 5. **Authorize Again** → Add `YOUR_API_KEY` to ApiKeyAuth field
 6. **Test** → Use "Try it out" on any endpoint
 
-## Current Limitation: CORS
+## Interactive Testing Status
 
-### The Problem
+### ✅ Working!
 
-When running locally or on a new domain, the API Gateway blocks requests:
+The interactive API testing is now fully functional! Users can:
+- Test endpoints directly in the documentation
+- Use the "Try it out" feature on any endpoint page
+- Authenticate with JWT tokens and API keys
+- See live responses from the API Gateway
 
-```
-[Proxy] The origin "http://localhost:3000" is not allowed.
-```
+### How It Works
 
-This happens because:
-- The browser sends the request origin in headers
-- The API Gateway checks the origin against its allowlist
-- If the origin isn't allowed, it returns a CORS error
+The fix involved ensuring the OpenAPI schema includes the `servers` field:
 
-### The Solution
-
-**Add these domains to the API Gateway's CORS allowed origins:**
-
-For local development:
-```
-http://localhost:3000
-```
-
-For production:
-```
-https://docs.andamio.io
+```json
+{
+  "servers": [
+    {
+      "url": "https://andamio-api-308006323670.us-central1.run.app/api/v1",
+      "description": "Andamio API Gateway (Production)"
+    }
+  ]
+}
 ```
 
-### Where to Configure CORS
+This field tells the proxy where to forward requests. The conversion script (`scripts/generate-all-api-docs.mjs`) automatically adds this during the Swagger 2.0 → OpenAPI 3.0 conversion.
 
-The API Gateway needs to be configured to allow these origins. This is typically done in:
-- API Gateway configuration file
-- Environment variables
-- CORS middleware settings
+### CORS Configuration
 
-**Configuration needed:**
-```
-ALLOWED_ORIGINS=http://localhost:3000,https://docs.andamio.io
-```
-
-Or in Go (Fiber):
-```go
-app.Use(cors.New(cors.Config{
-    AllowOrigins: "http://localhost:3000,https://docs.andamio.io",
-    AllowHeaders: "Origin,Content-Type,Accept,Authorization,X-API-Key",
-    AllowMethods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
-}))
-```
-
-## Workaround for Testing
-
-Until CORS is configured, users can test endpoints at the API Gateway's own Swagger UI:
-```
-https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/index.html
-```
-
-This works because it's on the same domain as the API.
+The Andamio API Gateway has been configured to accept all incoming routes, so CORS is not an issue. The proxy successfully forwards requests from the docs site to the API Gateway.
 
 ## Updating Documentation
 
@@ -115,6 +87,7 @@ npm run generate-all-api-docs
 
 # 3. Organize into directories
 node scripts/organize-api-docs.mjs
+node scripts/add-tags-to-mdx.mjs
 
 # 4. Build and deploy
 npm run build
@@ -122,10 +95,11 @@ npm run build
 
 The scripts automatically:
 - Convert Swagger 2.0 → OpenAPI 3.0
-- Add server URL for requests
-- Generate 136 endpoint pages
-- Organize by API tags
-- Copy schema to public directory
+- **Add `servers` field** with API Gateway URL (critical for proxy to work!)
+- Generate ~140 endpoint pages
+- Organize by API tags into nested directories
+- Add tags to MDX frontmatter
+- Copy schema to `/public/data/` directory
 
 ## Files to Know
 
@@ -136,12 +110,12 @@ The scripts automatically:
 - **`app/api/proxy/route.ts`** - Proxy request handler
 - **`content/docs/api/index.mdx`** - User-facing authentication guide
 
-## Next Steps
+## Key Takeaways
 
-1. **Add CORS Origins** - Configure API Gateway to allow docs site origins
-2. **Test Locally** - Verify "Try it out" works on `localhost:3000`
-3. **Deploy** - Push to production and test on live domain
-4. **Verify** - Confirm users can authenticate and test endpoints
+1. **The `servers` field is critical** - Without it, the proxy doesn't know where to send requests
+2. **Always run organize scripts** - After generating docs, run `organize-api-docs.mjs` and `add-tags-to-mdx.mjs`
+3. **CORS is configured** - The API Gateway accepts all incoming routes
+4. **Interactive testing works** - Users can test endpoints directly in the docs
 
 ## Questions?
 
