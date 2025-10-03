@@ -1,56 +1,83 @@
 ---
-title: Andamio Project Protocol
-description: How Andamio enables credential-gated collaboration with full auditability
+title: Project Protocol
+description: Credential-gated collaborative work with treasury management and reward distribution
 validator_system: "project"
 ---
 
-# Project Protocol: The Andamio Story in Action
+# Project Protocol
 
-The Project Protocol showcases how Andamio's layered architecture creates **open yet gated access** to collaborative work. It is like a digital commons where access is earned through verifiable contributions rather than controlled by gatekeepers.
-
-Let's explore how the magic happens.
-
-## The Journey: From Credentials to Contribution
-
-**1. Self-Sovereign On-chain Identity (SSOI)**: Anyone can mint an [access token](/docs/protocol/v1/tokens/global-state/access-token-user) and create their unique identity.
-
-**2. Earning Credentials**: Contributors complete [Courses](/docs/protocol/v1/validators/course), earning verifiable credentials stored in their local course states.
-
-**3. Project Enrollment**: When a project requires specific skills, contributors with the necessary credentials can enroll.
-
-**4. Collaborative Work**: Enrolled contributors complete project tasks, with all progress tracked in tamper-proof local project states.
-
-## The Three Pillars in Action
-
-### (A) Credential-Gated Access
-Projects can require specific course completions before allowing enrollment. The [contributor state scripts](/docs/protocol/v1/validators/project/contributor-state-scripts) verify credentials by checking course completion tokens in the contributor's state history.
-
-### (B) Complete Auditability
-Every action is recorded on-chain: who enrolled when, what tasks were completed, how rewards were distributed. The [treasury scripts](/docs/protocol/v1/validators/project/treasury-scripts) and [escrow validators](/docs/protocol/v1/validators/project/escrow1) create an immutable audit trail of all project activity.
-
-### (C) Open Access System
-While projects can set requirements, the system remains permissionless. Anyone can:
-- Create their identity (mint access token)
-- Gain credentials (complete courses)
-- Join qualified projects (meet requirements)
-- Launch their own projects (become a project creator)
-
-No gatekeepers, just verifiable requirements and transparent processes.
+The Project Protocol enables credential-gated collaborative work with built-in treasury management and transparent reward distribution. Projects can define skill requirements, manage contributor enrollment, track work completion, and distribute rewards—all with complete on-chain auditability.
 
 <ValidatorDiagram
   system="project"
 />
 
-## Use Cases
+## Project Lifecycle
 
-Andamio is built to enable trust across networks of distributed collaborators. Contributors can prove their skills, project creators can verify qualifications, and everyone can audit the entire process. The result is a merit-based system where reputation is earned and verifiable, not claimed or centrally controlled.
+### 1. Project Creation
+A project creator initializes a new project by creating:
+- **Project UTxO**: Holds project configuration and state
+- **Treasury**: Stores project funds for contributor rewards
+- **Prerequisites**: Optional credential requirements for contributors
 
-This foundation enables diverse applications:
+See: [admin-init-project-step-1](/docs/protocol/v1/transactions/admin/init-project-step-1), [admin-init-project-step-2](/docs/protocol/v1/transactions/admin/init-project-step-2)
 
-**1. Integrated Learning Organizations**: Companies or institutions can design connected courses and projects where completing Course A unlocks Project B, creating structured "learning-to-earning" and "gig to full-time" pathways.
+### 2. Contributor Enrollment
+Contributors with required credentials can:
+- **Mint project state token**: Creates local state for tracking contributions
+- **Lock credentials**: Prerequisites are verified and locked as proof of eligibility
+- **Join project**: Begin working on project tasks
 
-**2. Interoperable Applications**: Developers can build applications that leverage Andamio's credential verification. Examples include hiring platforms, grant systems, and reputation networks, all using the same underlying trust infrastructure.
+See: [contributor-mint-project-state](/docs/protocol/v1/transactions/contributor/mint-project-state), [contributor-commit-project](/docs/protocol/v1/transactions/contributor/commit-project)
 
-**3. Cross-Organizational Ecosystems**: Imagine courses from University X qualifying contributors for projects at Company Y, or credentials from Organization A being recognized in Organization B's hiring, all verified on-chain without middlemen.
+### 3. Work & Rewards
+As contributors complete tasks:
+- **Add contribution info**: Update local state with completed work
+- **Unlock rewards**: Withdraw earned funds from treasury
+- **Get rewards**: Claim available rewards to wallet
 
-The Project Protocol demonstrates how Andamio protocols compose: global identity from the foundation layer, credentials from Course Protocol, and collaborative structures from Project Protocol. It's a powerful, interoperable system for distributed work and learning.
+See: [contributor-add-project-info](/docs/protocol/v1/transactions/contributor/add-project-info), [contributor-unlock-project-rewards](/docs/protocol/v1/transactions/contributor/unlock-project-rewards), [contributor-get-project-rewards](/docs/protocol/v1/transactions/contributor/get-project-rewards)
+
+### 4. Project Completion
+When the project ends:
+- **Burn project state**: Contributors can clean up their local state
+- **Final rewards**: Remaining treasury funds distributed
+- **Audit trail**: Complete history preserved on-chain
+
+See: [contributor-burn-project-state](/docs/protocol/v1/transactions/contributor/burn-project-state)
+
+## Key Components
+
+### Contributor State
+The [contributor state scripts](/docs/protocol/v1/validators/project/contributor-state-scripts) manage individual contributor participation. Each contributor has a local project state UTxO that tracks:
+- Credential verification (prerequisite course completions)
+- Work completed and contributions made
+- Rewards earned and claimed
+- Participation history
+
+### Project Treasury
+The [treasury scripts](/docs/protocol/v1/validators/project/treasury-scripts) manage project funding. The treasury:
+- Holds project funds securely
+- Tracks reward allocations
+- Enforces withdrawal rules
+- Provides complete audit trail of fund distribution
+
+### Escrow System
+The [escrow validators](/docs/protocol/v1/validators/project/escrow1) provide secure intermediate holding for sensitive operations:
+- Credential locking during enrollment
+- Reward distribution coordination
+- State transition safety
+
+## Project-Specific Features
+
+### Credential-Based Access
+Projects can require specific course completions before allowing enrollment. When contributors mint their project state, the validator checks their course completion tokens to verify they meet all prerequisites.
+
+### Transparent Treasury
+All project funding is visible on-chain. Contributors can verify available funds, track reward distribution, and audit the complete financial history of the project.
+
+### Flexible Contribution Tracking
+Project states can track arbitrary contribution data, allowing projects to define their own metrics for work completion and reward allocation.
+
+### Composability
+The Project Protocol builds on the [Global State](/docs/protocol/v1/validators/global-state) (for identity) and [Course Protocol](/docs/protocol/v1/validators/course) (for credentials), demonstrating how Andamio's validator systems compose to create powerful collaborative structures.

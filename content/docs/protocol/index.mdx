@@ -1,15 +1,68 @@
 ---
 title: Andamio Protocol
-description: Andamio Protocol
+description: A decentralized protocol for credential-gated collaboration with full auditability
 ---
 
-### Andamio Protocol
+# Andamio Protocol
 
-Andamio is a decentralized protocol for the creation and management of immutable, interopable credentials. It provides a minimal global standard for placing credentials the Cardano blockchain, and a flexible toolkit for defining and using new credentials.
+Andamio is a decentralized protocol for the creation and management of immutable, interoperable credentials. It provides a minimal global standard for placing credentials on the Cardano blockchain, and a flexible toolkit for defining and using new credentials.
 
 This documentation is a work in progress, and we are grateful that you are reading it. We will continue to refine the docs throughout Q3 2025, and we are grateful for your feedback. Please reach out on [our Discord](https://discord.gg/abBbsGZpZ5), on [Twitter @AndamioPlatform](https://twitter.com/AndamioPlatform), or [via GitHub](https://github.com/Andamio-Platform/andamio-docs).
 
-### Goals of this Documentation
+## The Andamio Story: From Identity to Contribution
+
+Andamio's layered architecture creates **open yet gated access** to collaborative work. It is tooling for a digital commons where access is earned through verifiable contributions and reputation emerges as the result of participation and collaboration.
+
+### The Journey
+
+**1. Andamio Access Token and Self-Sovereign On-chain Identity (SSOI)**: Anyone can mint an [access token](/docs/protocol/v1/tokens/global-state/access-token-user) to create a unique identity on Andamio.
+
+**2. Earning Credentials for Learning**: Access token holders complete [Courses](/docs/protocol/v1/validators/course), earning verifiable credentials.
+
+**3. Project Enrollment**: When a [Project](/docs/protocol/v1/validators/project) requires specific skills, contributors with the necessary credentials can enroll.
+
+**4. Collaborative Work**: Enrolled contributors complete project tasks. Project completion creates additional credentials that are portable just like course credentials.
+
+## Scaffolding Concepts
+
+### (A) Credential-Gated Access
+Projects and courses can require specific prerequisites before allowing participation. Validators verify credentials by checking completion tokens in the contributor's state history, creating a merit-based access system.
+
+### (B) Complete Auditability
+Every action is recorded on-chain: who enrolled when, what tasks were completed, how rewards were distributed. Treasury and escrow validators create an immutable audit trail of all activity.
+
+### (C) Open Access System
+While projects can set requirements, the system remains permissionless. Anyone can:
+- Create their identity (mint access token)
+- Gain credentials (complete courses)
+- Join qualified projects (meet requirements)
+- Launch their own projects (become a project creator)
+
+No gatekeepers, just verifiable requirements and transparent processes.
+
+## Use Cases
+
+Andamio is built to enable trust across networks of distributed collaborators. Contributors can prove their skills, project creators can verify qualifications, and everyone can audit the entire process. The result is a merit-based system where reputation is earned and verifiable, not claimed or centrally controlled.
+
+This foundation enables diverse applications:
+
+**1. Integrated Learning Organizations**: Companies or institutions can design connected courses and projects where completing Course A unlocks Project B, creating structured "learning-to-earning" and "gig to full-time" pathways.
+
+**2. Interoperable Applications**: Developers can build applications that leverage Andamio's credential verification. Examples include hiring platforms, grant systems, and reputation networks, all using the same underlying trust infrastructure.
+
+**3. Cross-Organizational Ecosystems**: Courses from University X can qualify contributors for projects at Company Y. Credentials from Organization A can be recognized in Organization B's hiring, all verified on-chain without middlemen.
+
+## Protocol Architecture
+
+Andamio's protocol is composed of several interconnected validator systems:
+
+- **[Global State](/docs/protocol/v1/validators/global-state)**: Foundation layer for identity and system-wide configuration
+- **[Course Protocol](/docs/protocol/v1/validators/course)**: Learning and credential issuance
+- **[Project Protocol](/docs/protocol/v1/validators/project)**: Collaborative work and reward distribution
+
+Each system builds on the previous layers, creating a powerful, interoperable system for distributed work and learning.
+
+## Goals of this Documentation
 
 1. Reusable, maintainable, and up-to-date documentation for the Andamio Protocol.
 2. Educational resources for developers to learn how to build on Andamio.
