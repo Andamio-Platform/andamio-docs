@@ -1,0 +1,81 @@
+# Token references use dot notation to map to validator-registry-v1.yaml
+# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
+
+name: ContributorSubmitProjectTransaction
+id: contributor.submit-project
+
+# Metadata about this transaction type
+metadata:
+  role: "contributor"
+  category: "project"
+  requires_tokens: ["global-state.access-token-user", "project.contributor-state-token"]
+  estimated_cost: "0 ADA"
+  description: "Contributor submits completed project task for review by Project Manager"
+  multi_signature: false
+
+graph_attrs:
+  rankdir: LR
+  bgcolor: "#ffffff"
+  splines: ortho
+  nodesep: 0.4
+  ranksep: 0.8
+
+# inputs
+inputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value:
+        - "1 global-state.access-token-user"
+        - "2000000 lovelace"
+
+  - id: escrow_1
+    type: script
+    redeemer:
+      alias: "<alias>"
+      policy_id: "<contributor_state_policyid>"
+      maybe_string: "<submission_evidence>"
+    output:
+      address: "project.escrow1"
+      value:
+        - "1 project.contributor-state-token"
+        - "<reward_lovelace_amount> + 2000000 lovelace"
+      datum:
+        project_data:
+          project_data: "<content_hash>"
+          deadline: <deadline>
+          lovelace_am: <lovelace_amount>
+          flatten_value:
+        script_hash: "<treasury_hash>"
+        policy_id: "<contributor_state_policyid>"
+        maybe_string: null
+
+# outputs
+outputs:
+  - id: user_1
+    type: wallet
+    output:
+      address: "user"
+      value:
+        - "1 global-state.access-token-user"
+
+  - id: escrow_1
+    type: script
+    output:
+      address: "project.escrow1"
+      value:
+        - "1 project.contributor-state-token"
+        - "<reward_lovelace_amount> + 2000000 lovelace"
+      datum:
+        project_data:
+          project_data: "<content_hash>"
+          deadline: <deadline>
+          lovelace_am: <lovelace_amount>
+          flatten_value:
+        script_hash: "<treasury_hash>"
+        policy_id: "<contributor_state_policyid>"
+        maybe_string: "<submission_evidence>"
+
+validity_range:
+  invalid_after: <timestamp>
