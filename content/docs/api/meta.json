@@ -2,16 +2,13 @@
   "title": "Andamio API",
   "icon": "Network",
   "pages": [
-    "api-key",
-    "authentication",
     "admin",
+    "api-key",
+    "atlas-tx-builder-api",
+    "authentication",
     "node-backend-api",
     "platform-api",
-    "atlas-tx-builder-api",
-    "health",
-    "metrics",
-    "user",
-    "general"
+    "user"
   ],
   "defaultOpen": false
 }

@@ -2,22 +2,28 @@ import fs from 'fs/promises';
 import path from 'path';
 
 const API_DIR = './content/docs/api';
-const SCHEMA_PATH = './data/andamio-api-gateway.json';
+const SCHEMA_PATH = './data/andamio-api-gateway-openapi.json';
 
-// Load schema and extract path-to-tags mapping
+// Load schema and extract path-to-tags and x-access-level mapping
 const schema = JSON.parse(await fs.readFile(SCHEMA_PATH, 'utf8'));
 const pathToTags = {};
+const pathToAccessLevel = {};
 
 for (const [apiPath, methods] of Object.entries(schema.paths)) {
   for (const [method, spec] of Object.entries(methods)) {
     if (spec.tags) {
       pathToTags[apiPath] = spec.tags;
+    }
+    if (spec['x-access-level']) {
+      pathToAccessLevel[apiPath] = spec['x-access-level'];
+    }
+    if (spec.tags || spec['x-access-level']) {
       break;
     }
   }
 }
 
-console.log('🏷️  Adding tags to MDX files...\n');
+console.log('🏷️  Adding tags and access levels to MDX files...\n');
 
 // Recursively find all MDX files
 async function findMdxFiles(dir) {
@@ -54,31 +60,49 @@ for (const filePath of mdxFiles) {
 
   const route = routeMatch[1].trim();
   const tags = pathToTags[route];
+  const accessLevel = pathToAccessLevel[route];
 
-  if (!tags || tags.length === 0) {
+  if ((!tags || tags.length === 0) && !accessLevel) {
     skipped++;
     continue;
   }
 
-  // Check if tags already exist
-  if (content.includes('tags:')) {
+  // Check if both tags and access-level already exist
+  const hasTags = content.includes('tags:');
+  const hasAccessLevel = content.includes('access-level:');
+
+  if (hasTags && hasAccessLevel) {
     skipped++;
     continue;
   }
 
-  // Add tags to frontmatter
+  // Add tags and access-level to frontmatter
   const frontmatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
   if (frontmatterMatch) {
     const frontmatter = frontmatterMatch[1];
-    const tagsYaml = `tags:\n${tags.map(tag => `  - "${tag}"`).join('\n')}`;
-    const newFrontmatter = `---\n${frontmatter}\n${tagsYaml}\n---`;
-    content = content.replace(/^---\n[\s\S]*?\n---/, newFrontmatter);
+    let additions = [];
 
-    await fs.writeFile(filePath, content);
-    updated++;
+    if (tags && tags.length > 0 && !hasTags) {
+      additions.push(`tags:\n${tags.map(tag => `  - "${tag}"`).join('\n')}`);
+    }
 
-    const fileName = path.basename(filePath);
-    console.log(`✅ ${fileName} - Added tags: ${tags.join(', ')}`);
+    if (accessLevel && !hasAccessLevel) {
+      additions.push(`access-level: "${accessLevel}"`);
+    }
+
+    if (additions.length > 0) {
+      const newFrontmatter = `---\n${frontmatter}\n${additions.join('\n')}\n---`;
+      content = content.replace(/^---\n[\s\S]*?\n---/, newFrontmatter);
+
+      await fs.writeFile(filePath, content);
+      updated++;
+
+      const fileName = path.basename(filePath);
+      const updateInfo = [];
+      if (tags && !hasTags) updateInfo.push(`tags: ${tags.join(', ')}`);
+      if (accessLevel && !hasAccessLevel) updateInfo.push(`access-level: ${accessLevel}`);
+      console.log(`✅ ${fileName} - Added ${updateInfo.join(' | ')}`);
+    }
   }
 }
 

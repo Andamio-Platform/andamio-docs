@@ -13,14 +13,436 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "version": "v0.4.0"
+    "version": "v0.5.0"
   },
   "paths": {
+    "/admin/general/config": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Provides redacted application configuration details. This endpoint is for administrative use only. It returns a sanitized version of the application's configuration, omitting sensitive information.",
+        "tags": [
+          "Admin",
+          "General"
+        ],
+        "summary": "Get redacted application configuration",
+        "operationId": "get-config",
+        "responses": {
+          "200": {
+            "description": "Redacted application configuration - A JSON object containing non-sensitive configuration details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/general_viewmodels.RedactedConfig"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Failed to read configuration file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "getConfigV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
+    "/admin/general/full-config": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Provides the complete application configuration details from config.yaml. This endpoint is for administrative use only and requires appropriate authentication and authorization.",
+        "tags": [
+          "Admin",
+          "General"
+        ],
+        "summary": "Get full application configuration (Admin Only)",
+        "operationId": "get-full-config",
+        "responses": {
+          "200": {
+            "description": "Full application configuration in YAML format.",
+            "content": {
+              "application/x-yaml": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication token is missing or invalid.",
+            "content": {
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnauthorizedErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Failed to read configuration file.",
+            "content": {
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "getFullConfigV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
+    "/admin/general/info": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Provides basic application information such as version, build date, and environment. This endpoint offers insights into the application's deployment and build details.",
+        "tags": [
+          "Admin",
+          "General"
+        ],
+        "summary": "Get application information",
+        "operationId": "get-info",
+        "responses": {
+          "200": {
+            "description": "Application information - A JSON object containing the application's version, build date, environment, and status.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/general_viewmodels.GetInfoResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Failed to get api info.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "getInfoV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
+    "/admin/health/full": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Performs a comprehensive health check of the application, including database and Redis connections. This endpoint checks the operational status of critical services to ensure system health.",
+        "tags": [
+          "Admin",
+          "Health"
+        ],
+        "summary": "Perform a full health check",
+        "operationId": "full-health-check",
+        "responses": {
+          "200": {
+            "description": "OK - The application and its critical dependencies are healthy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/health_viewmodels.FullHealthCheckResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable - One or more critical dependencies (e.g., database, Redis) are not reachable or healthy.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ServiceUnavailableErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "fullHealthCheckV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
+    "/admin/health/liveness": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Performs a simple liveness check to indicate if the application is running.",
+        "tags": [
+          "Admin",
+          "Health"
+        ],
+        "summary": "Perform a liveness check",
+        "operationId": "liveness-check",
+        "responses": {
+          "200": {
+            "description": "OK - The application is running.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/health_viewmodels.LivenessCheckResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Failed to check liveness.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "livenessCheckV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
+    "/admin/health/readiness": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Performs a comprehensive readiness check of the application, including database and Redis connections.",
+        "tags": [
+          "Admin",
+          "Health"
+        ],
+        "summary": "Perform a readiness check",
+        "operationId": "readiness-check",
+        "responses": {
+          "200": {
+            "description": "OK - The application and its critical dependencies are ready.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/health_viewmodels.ReadinessCheckResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable - One or more critical dependencies are not ready.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ServiceUnavailableErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "readinessCheckV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
+    "/admin/metrics/fiber": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Provides a comprehensive dashboard of application metrics, offering insights into performance and operational status. This endpoint is intended for monitoring and diagnostic purposes.",
+        "tags": [
+          "Admin",
+          "Metrics"
+        ],
+        "summary": "Retrieve fiber metrics dashboard",
+        "operationId": "fiber-metrics-dashboard",
+        "responses": {
+          "200": {
+            "description": "OK - HTML content of the metrics dashboard.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "fiberMetricsDashboardV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
+    "/admin/metrics/prometheus": {
+      "get": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Exposes Prometheus metrics for monitoring the application.",
+        "tags": [
+          "Admin",
+          "Metrics"
+        ],
+        "summary": "Expose Prometheus metrics",
+        "operationId": "prometheus-metrics",
+        "responses": {
+          "200": {
+            "description": "Prometheus metrics data",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - Failed to check liveness.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "internal",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "prometheusMetricsV1",
+        "x-rate-limit-tier": "admin"
+      }
+    },
     "/admin/set-user-role": {
       "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
         "description": "This endpoint allows an administrator to set a user's subscription tier.",
         "tags": [
-          "Admin"
+          "Admin",
+          "Setting"
         ],
         "summary": "Set User Role",
         "operationId": "set-user-role",
@@ -32,7 +454,7 @@
               }
             }
           },
-          "description": "Set User Role Request Body - Contains the user ID and the new tier ID.",
+          "description": "Set User Role Request Body - Contains the user ID and either the new tier ID or tier name (at least one must be provided).",
           "required": true
         },
         "responses": {
@@ -47,7 +469,7 @@
             }
           },
           "400": {
-            "description": "Bad Request - The request body is malformed or missing required fields.",
+            "description": "Bad Request - The request body is malformed, missing required fields, or the provided tier ID/name is invalid.",
             "content": {
               "application/json": {
                 "schema": {
@@ -117,6 +539,7 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "setUserRoleV1",
         "x-rate-limit-tier": "admin"
@@ -218,9 +641,10 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "deleteApiKeyV1",
-        "x-rate-limit-tier": "free"
+        "x-rate-limit-tier": "none"
       }
     },
     "/apikey/request": {
@@ -319,9 +743,10 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "requestApiKeyV1",
-        "x-rate-limit-tier": "free"
+        "x-rate-limit-tier": "none"
       }
     },
     "/apikey/rotate": {
@@ -440,9 +865,10 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "rotateApiKeyV1",
-        "x-rate-limit-tier": "free"
+        "x-rate-limit-tier": "none"
       }
     },
     "/atlas-tx-builder/contributor/burn-project-state": {
@@ -542,6 +968,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnProjectStateV1",
         "x-rate-limit-tier": "free"
@@ -644,6 +1071,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnProjectStateV2",
         "x-rate-limit-tier": "free"
@@ -746,6 +1174,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitProjectV1",
         "x-rate-limit-tier": "free"
@@ -848,6 +1277,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitProjectV2",
         "x-rate-limit-tier": "free"
@@ -950,6 +1380,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "getRewardsV1",
         "x-rate-limit-tier": "free"
@@ -1052,6 +1483,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "getRewardsV2",
         "x-rate-limit-tier": "free"
@@ -1154,6 +1586,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "unlockProjectV1",
         "x-rate-limit-tier": "free"
@@ -1256,6 +1689,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "updateProjectInfoV1",
         "x-rate-limit-tier": "free"
@@ -1358,6 +1792,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnModuleV1",
         "x-rate-limit-tier": "free"
@@ -1460,6 +1895,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "decideAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -1562,6 +1998,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintModuleV1",
         "x-rate-limit-tier": "free"
@@ -1664,6 +2101,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "updateModuleV1",
         "x-rate-limit-tier": "free"
@@ -1766,6 +2204,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addFundsTreasuryV1",
         "x-rate-limit-tier": "free"
@@ -1868,6 +2307,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintAccessTokenV1",
         "x-rate-limit-tier": "free"
@@ -1970,6 +2410,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintAccessTokenV2",
         "x-rate-limit-tier": "free"
@@ -2072,6 +2513,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "unlockAdaIndexV1",
         "x-rate-limit-tier": "free"
@@ -2174,6 +2616,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addCourseCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -2275,6 +2718,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addProjectCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -2370,6 +2814,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addAssignmentValidatorV1",
         "x-rate-limit-tier": "free"
@@ -2473,6 +2918,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addContributorStateValidatorV1",
         "x-rate-limit-tier": "free"
@@ -2568,6 +3014,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addCourseStateValidatorV1",
         "x-rate-limit-tier": "free"
@@ -2663,6 +3110,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addEscrowValidatorV1",
         "x-rate-limit-tier": "free"
@@ -2758,6 +3206,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addModuleValidatorV1",
         "x-rate-limit-tier": "free"
@@ -2853,6 +3302,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addTreasuryValidatorV1",
         "x-rate-limit-tier": "free"
@@ -2948,6 +3398,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addTreasuryTokenValidatorV1",
         "x-rate-limit-tier": "free"
@@ -3049,6 +3500,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnInstanceTokenV1",
         "x-rate-limit-tier": "free"
@@ -3150,6 +3602,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initCourseV1",
         "x-rate-limit-tier": "free"
@@ -3251,6 +3704,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initCourseV2",
         "x-rate-limit-tier": "free"
@@ -3352,6 +3806,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initProject1V1",
         "x-rate-limit-tier": "free"
@@ -3453,6 +3908,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initProject1V2",
         "x-rate-limit-tier": "free"
@@ -3554,6 +4010,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initProject2V1",
         "x-rate-limit-tier": "free"
@@ -3655,6 +4112,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initProject2V2",
         "x-rate-limit-tier": "free"
@@ -3756,6 +4214,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "migrateV1V2",
         "x-rate-limit-tier": "free"
@@ -3857,6 +4316,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "removeCourseCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -3958,6 +4418,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "removeInstanceReferenceScriptV1",
         "x-rate-limit-tier": "free"
@@ -4059,6 +4520,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "removeProjectCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -4154,6 +4616,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -4257,6 +4720,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddContributorStateV1",
         "x-rate-limit-tier": "free"
@@ -4360,6 +4824,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddCourseCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -4455,6 +4920,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddCourseStateV1",
         "x-rate-limit-tier": "free"
@@ -4550,6 +5016,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddEscrowV1",
         "x-rate-limit-tier": "free"
@@ -4645,6 +5112,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddModuleValidatorV1",
         "x-rate-limit-tier": "free"
@@ -4748,6 +5216,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddProjectCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -4843,6 +5312,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddTreasuryV1",
         "x-rate-limit-tier": "free"
@@ -4938,6 +5408,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceAddTreasuryTokenV1",
         "x-rate-limit-tier": "free"
@@ -5041,6 +5512,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceInitCourseV1",
         "x-rate-limit-tier": "free"
@@ -5144,6 +5616,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceInitCourseV2",
         "x-rate-limit-tier": "free"
@@ -5247,6 +5720,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceInitProject1V1",
         "x-rate-limit-tier": "free"
@@ -5350,6 +5824,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceInitProject1V2",
         "x-rate-limit-tier": "free"
@@ -5453,6 +5928,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceInitProject2V1",
         "x-rate-limit-tier": "free"
@@ -5556,6 +6032,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceInitProject2V2",
         "x-rate-limit-tier": "free"
@@ -5659,6 +6136,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceRemoveCourseCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -5762,6 +6240,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "selfServiceRemoveProjectCreatorAliasesV1",
         "x-rate-limit-tier": "free"
@@ -5864,6 +6343,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addContributorV1",
         "x-rate-limit-tier": "free"
@@ -5966,6 +6446,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addContributorV2",
         "x-rate-limit-tier": "free"
@@ -6068,6 +6549,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnTreasuryTokenV1",
         "x-rate-limit-tier": "free"
@@ -6170,6 +6652,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "decideProjectV1",
         "x-rate-limit-tier": "free"
@@ -6272,6 +6755,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "manageTreasuryV1",
         "x-rate-limit-tier": "free"
@@ -6374,6 +6858,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintTreasuryTokenV1",
         "x-rate-limit-tier": "free"
@@ -6476,6 +6961,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "removeContributorV1",
         "x-rate-limit-tier": "free"
@@ -6578,6 +7064,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "removeContributorV2",
         "x-rate-limit-tier": "free"
@@ -6680,6 +7167,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "delegateScriptStakingV1",
         "x-rate-limit-tier": "free"
@@ -6782,6 +7270,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "withdrawScriptStakingV1",
         "x-rate-limit-tier": "free"
@@ -6884,6 +7373,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnCourseStateV1",
         "x-rate-limit-tier": "free"
@@ -6986,6 +7476,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnCourseStateV2",
         "x-rate-limit-tier": "free"
@@ -7088,6 +7579,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -7190,6 +7682,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitAssignmentV2",
         "x-rate-limit-tier": "free"
@@ -7292,6 +7785,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "unlockAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -7394,6 +7888,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "updateAssignmentInfoV1",
         "x-rate-limit-tier": "free"
@@ -7496,6 +7991,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "changeGlobalInfoV1",
         "x-rate-limit-tier": "free"
@@ -7598,6 +8094,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "deleteGlobalStateV1",
         "x-rate-limit-tier": "free"
@@ -7700,6 +8197,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "deleteGlobalStateV2",
         "x-rate-limit-tier": "free"
@@ -7802,6 +8300,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintCourseStateV1",
         "x-rate-limit-tier": "free"
@@ -7904,6 +8403,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintCourseStateV2",
         "x-rate-limit-tier": "free"
@@ -8006,6 +8506,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintProjectStateV1",
         "x-rate-limit-tier": "free"
@@ -8108,6 +8609,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintProjectStateV2",
         "x-rate-limit-tier": "free"
@@ -8210,6 +8712,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "moveGlobalStateV1ToV2",
         "x-rate-limit-tier": "free"
@@ -8306,9 +8809,10 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "loginV1",
-        "x-rate-limit-tier": "free"
+        "x-rate-limit-tier": "none"
       }
     },
     "/auth/register": {
@@ -8402,374 +8906,10 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "userRegisterV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/general/config": {
-      "get": {
-        "description": "Provides redacted application configuration details. This endpoint is for administrative use only. It returns a sanitized version of the application's configuration, omitting sensitive information.",
-        "tags": [
-          "General"
-        ],
-        "summary": "Get redacted application configuration",
-        "operationId": "get-config",
-        "responses": {
-          "200": {
-            "description": "Redacted application configuration - A JSON object containing non-sensitive configuration details.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/general_viewmodels.RedactedConfig"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - Failed to read configuration file.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "getConfigV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/general/full-config": {
-      "get": {
-        "description": "Provides the complete application configuration details from config.yaml. This endpoint is for administrative use only and requires appropriate authentication and authorization.",
-        "tags": [
-          "General"
-        ],
-        "summary": "Get full application configuration (Admin Only)",
-        "operationId": "get-full-config",
-        "responses": {
-          "200": {
-            "description": "Full application configuration in YAML format.",
-            "content": {
-              "application/x-yaml": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized - Authentication token is missing or invalid.",
-            "content": {
-              "application/x-yaml": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.UnauthorizedErrorResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "application/x-yaml": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - Failed to read configuration file.",
-            "content": {
-              "application/x-yaml": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "getFullConfigV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/general/info": {
-      "get": {
-        "description": "Provides basic application information such as version, build date, and environment. This endpoint offers insights into the application's deployment and build details.",
-        "tags": [
-          "General"
-        ],
-        "summary": "Get application information",
-        "operationId": "get-info",
-        "responses": {
-          "200": {
-            "description": "Application information - A JSON object containing the application's version, build date, environment, and status.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/general_viewmodels.GetInfoResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - Failed to get api info.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "getInfoV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/health/full": {
-      "get": {
-        "description": "Performs a comprehensive health check of the application, including database and Redis connections. This endpoint checks the operational status of critical services to ensure system health.",
-        "tags": [
-          "Health"
-        ],
-        "summary": "Perform a full health check",
-        "operationId": "full-health-check",
-        "responses": {
-          "200": {
-            "description": "OK - The application and its critical dependencies are healthy.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/health_viewmodels.FullHealthCheckResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service Unavailable - One or more critical dependencies (e.g., database, Redis) are not reachable or healthy.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ServiceUnavailableErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "fullHealthCheckV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/health/liveness": {
-      "get": {
-        "description": "Performs a simple liveness check to indicate if the application is running.",
-        "tags": [
-          "Health"
-        ],
-        "summary": "Perform a liveness check",
-        "operationId": "liveness-check",
-        "responses": {
-          "200": {
-            "description": "OK - The application is running.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/health_viewmodels.LivenessCheckResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - Failed to check liveness.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "livenessCheckV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/health/readiness": {
-      "get": {
-        "description": "Performs a comprehensive readiness check of the application, including database and Redis connections.",
-        "tags": [
-          "Health"
-        ],
-        "summary": "Perform a readiness check",
-        "operationId": "readiness-check",
-        "responses": {
-          "200": {
-            "description": "OK - The application and its critical dependencies are ready.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/health_viewmodels.ReadinessCheckResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service Unavailable - One or more critical dependencies are not ready.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ServiceUnavailableErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "readinessCheckV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/metrics/fiber": {
-      "get": {
-        "description": "Provides a comprehensive dashboard of application metrics, offering insights into performance and operational status. This endpoint is intended for monitoring and diagnostic purposes.",
-        "tags": [
-          "Metrics"
-        ],
-        "summary": "Retrieve fiber metrics dashboard",
-        "operationId": "fiber-metrics-dashboard",
-        "responses": {
-          "200": {
-            "description": "OK - HTML content of the metrics dashboard.",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "text/html": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "fiberMetricsDashboardV1",
-        "x-rate-limit-tier": "free"
-      }
-    },
-    "/metrics/prometheus": {
-      "get": {
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "description": "Exposes Prometheus metrics for monitoring the application.",
-        "tags": [
-          "Metrics"
-        ],
-        "summary": "Expose Prometheus metrics",
-        "operationId": "prometheus-metrics",
-        "responses": {
-          "200": {
-            "description": "Prometheus metrics data",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden - The authenticated user does not have the necessary permissions to access this resource. Or the user IP is blacklisted.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error - Failed to check liveness.",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
-                }
-              }
-            }
-          }
-        },
-        "x-metadata-status": "alpha",
-        "x-operation-id": "prometheusMetricsV1",
-        "x-rate-limit-tier": "free"
+        "x-rate-limit-tier": "none"
       }
     },
     "/node-backend-api/admin/add-course-creators": {
@@ -8869,6 +9009,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addCourseCreatorsV1",
         "x-rate-limit-tier": "free"
@@ -8971,6 +9112,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addProjectCreatorsV1",
         "x-rate-limit-tier": "free"
@@ -9073,6 +9215,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initCourseV1",
         "x-rate-limit-tier": "free"
@@ -9175,6 +9318,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initProjectStep1V1",
         "x-rate-limit-tier": "free"
@@ -9277,6 +9421,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "initProjectStep2V1",
         "x-rate-limit-tier": "free"
@@ -9379,6 +9524,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "removeCourseCreatorsV1",
         "x-rate-limit-tier": "free"
@@ -9481,6 +9627,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "removeProjectCreatorsV1",
         "x-rate-limit-tier": "free"
@@ -9583,6 +9730,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "aggregateUserInfoV1",
         "x-rate-limit-tier": "free"
@@ -9688,6 +9836,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "assignmentValidatorDecodedDatumV1",
         "x-rate-limit-tier": "free"
@@ -9793,6 +9942,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "assignmentValidatorUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -9895,6 +10045,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "contributorStatePoliciesV1",
         "x-rate-limit-tier": "free"
@@ -10000,6 +10151,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "contributorStateUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -10102,6 +10254,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "courseStateDecodedDatumV1",
         "x-rate-limit-tier": "free"
@@ -10204,6 +10357,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "courseInfoV1",
         "x-rate-limit-tier": "free"
@@ -10309,6 +10463,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "courseStateUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -10411,6 +10566,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "escrowDecodedDatumV1",
         "x-rate-limit-tier": "free"
@@ -10516,6 +10672,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "escrowUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -10618,6 +10775,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "globalStateDecodedDatumV1",
         "x-rate-limit-tier": "free"
@@ -10723,6 +10881,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "globalStateUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -10825,6 +10984,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "governanceValidatorCoursesByCreatorV1",
         "x-rate-limit-tier": "free"
@@ -10930,6 +11090,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "governanceValidatorUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -11032,6 +11193,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "checkAliasAvailabilityV1",
         "x-rate-limit-tier": "free"
@@ -11137,6 +11299,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "indexValidatorUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -11242,6 +11405,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "instanceValidatorUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -11347,6 +11511,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "moduleRefValidatorDecodedDatumsV1",
         "x-rate-limit-tier": "free"
@@ -11452,6 +11617,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "moduleRefValidatorUTxOsV1",
         "x-rate-limit-tier": "free"
@@ -11554,6 +11720,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitmentCountV1",
         "x-rate-limit-tier": "free"
@@ -11656,6 +11823,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitmentCountUnderAliasV1",
         "x-rate-limit-tier": "free"
@@ -11758,6 +11926,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "enrolleeCountV1",
         "x-rate-limit-tier": "free"
@@ -11860,6 +12029,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnLocalStateV1",
         "x-rate-limit-tier": "free"
@@ -11962,6 +12132,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitToAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -12064,6 +12235,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "leaveAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -12166,6 +12338,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintLocalStateV1",
         "x-rate-limit-tier": "free"
@@ -12268,8 +12441,324 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "updateAssignmentV1",
+        "x-rate-limit-tier": "free"
+      }
+    },
+    "/node-backend-api/treasury/history": {
+      "post": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "description": "Retrieves the transaction history of a treasury. This action allows fetching the transaction history of a treasury, and requires the policy ID of the treasury.",
+        "tags": [
+          "Node Backend API",
+          "NBA Treasury"
+        ],
+        "summary": "Treasury History",
+        "operationId": "treasury-history",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/nba_treasury_viewmodels.TreasuryHistoryRequest"
+              }
+            }
+          },
+          "description": "Treasury History Request Body - Contains the policy ID of the treasury for which to retrieve history.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the treasury transaction history. The response contains a list of treasury transactions, each with a transaction ID, type (e.g., deposit, withdrawal), amount, and timestamp.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/nba_treasury_viewmodels.TreasuryHistoryItem"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: Invalid input. Details: Failed to parse JSON request body: The body is malformed or missing required fields. This error occurs when the request body cannot be parsed as JSON or is missing essential fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.BadRequestErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Invalid or missing credentials. Details: User ID not found in authentication context. Please ensure a valid token is provided. This error indicates that the authentication token is missing, invalid, or the user ID could not be extracted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnauthorizedErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions or tier access. Details: User does not have required role. This error occurs when the authenticated user lacks the necessary roles or permissions to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity: Invalid request structure or data. Details: Treasury history request validation failed: [specific validation error message from the validator]. This error signifies that the request is syntactically correct but semantically invalid, failing business logic validation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnprocessableEntityErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: Rate limit or quota exceeded. Details: Minute rate limit exceeded for API key. This error is returned when the API key's rate limit has been exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.TooManyRequestsErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: An unexpected error occurred. Details: User metadata not found in context or Failed to get treasury history at API layer. This error indicates an unexpected server-side issue, such as a failure to retrieve user metadata or an error during the API layer call to get treasury history.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "private",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "treasuryHistoryV1",
+        "x-rate-limit-tier": "free"
+      }
+    },
+    "/node-backend-api/treasury/info": {
+      "post": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "description": "Retrieves detailed information about a treasury. This action allows fetching detailed information about a treasury, and requires the policy ID of the treasury.",
+        "tags": [
+          "Node Backend API",
+          "NBA Treasury"
+        ],
+        "summary": "Treasury Information",
+        "operationId": "treasury-information",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/nba_treasury_viewmodels.TreasuryInfoRequest"
+              }
+            }
+          },
+          "description": "Treasury Information Request Body - Contains the policy ID of the treasury for which to retrieve information.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the treasury information. The response contains the treasury ID, total funds, and project token count.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/nba_treasury_viewmodels.TreasuryInfoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: Invalid input. Details: Failed to parse JSON request body: The body is malformed or missing required fields. This error occurs when the request body cannot be parsed as JSON or is missing essential fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.BadRequestErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Invalid or missing credentials. Details: User ID not found in authentication context. Please ensure a valid token is provided. This error indicates that the authentication token is missing, invalid, or the user ID could not be extracted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnauthorizedErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions or tier access. Details: User does not have required role. This error occurs when the authenticated user lacks the necessary roles or permissions to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity: Invalid request structure or data. Details: Treasury info request validation failed: [specific validation error message from the validator]. This error signifies that the request is syntactically correct but semantically invalid, failing business logic validation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnprocessableEntityErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: Rate limit or quota exceeded. Details: Minute rate limit exceeded for API key. This error is returned when the API key's rate limit has been exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.TooManyRequestsErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: An unexpected error occurred. Details: User metadata not found in context or Failed to get treasury info at API layer. This error indicates an unexpected server-side issue, such as a failure to retrieve user metadata or an error during the API layer call to get treasury info.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "private",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "treasuryInfoV1",
+        "x-rate-limit-tier": "free"
+      }
+    },
+    "/node-backend-api/treasury/utxos": {
+      "post": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "description": "Retrieves UTxOs associated with a treasury. This action allows fetching UTxOs associated with a treasury, and requires the policy ID of the treasury and can optionally include project hash, escrow hash, and filter.",
+        "tags": [
+          "Node Backend API",
+          "NBA Treasury"
+        ],
+        "summary": "Treasury UTxOs",
+        "operationId": "treasury-utxos",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/nba_treasury_viewmodels.TreasuryUTxOsRequest"
+              }
+            }
+          },
+          "description": "Treasury UTxOs Request Body - Contains the policy ID and optional filters for treasury UTxOs.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the treasury UTxOs. The response contains a list of UTxOs, each with transaction hash, output index, amount, datum hash, and datum.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/common_viewmodels.UTxOResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request: Invalid input. Details: Failed to parse JSON request body: The body is malformed or missing required fields. This error occurs when the request body cannot be parsed as JSON or is missing essential fields.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.BadRequestErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized: Invalid or missing credentials. Details: User ID not found in authentication context. Please ensure a valid token is provided. This error indicates that the authentication token is missing, invalid, or the user ID could not be extracted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnauthorizedErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden: Insufficient permissions or tier access. Details: User does not have required role. This error occurs when the authenticated user lacks the necessary roles or permissions to perform this action.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.ForbiddenErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity: Invalid request structure or data. Details: Treasury UTxOs request validation failed: [specific validation error message from the validator]. This error signifies that the request is syntactically correct but semantically invalid, failing business logic validation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnprocessableEntityErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too Many Requests: Rate limit or quota exceeded. Details: Minute rate limit exceeded for API key. This error is returned when the API key's rate limit has been exceeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.TooManyRequestsErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error: An unexpected error occurred. Details: User metadata not found in context or Failed to get treasury UTxOs at API layer. This error indicates an unexpected server-side issue, such as a failure to retrieve user metadata or an error during the API layer call to get treasury UTxOs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.InternalServerErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "x-access-level": "private",
+        "x-metadata-status": "alpha",
+        "x-operation-id": "treasuryUTxOsV1",
         "x-rate-limit-tier": "free"
       }
     },
@@ -12370,6 +12859,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintAccessTokenV1",
         "x-rate-limit-tier": "free"
@@ -12472,6 +12962,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addInfoV1",
         "x-rate-limit-tier": "free"
@@ -12574,6 +13065,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "burnContributorStateV1",
         "x-rate-limit-tier": "free"
@@ -12676,6 +13168,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "commitProjectV1",
         "x-rate-limit-tier": "free"
@@ -12778,6 +13271,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "getRewardsV1",
         "x-rate-limit-tier": "free"
@@ -12880,6 +13374,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintProjectStateV1",
         "x-rate-limit-tier": "free"
@@ -12982,6 +13477,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "unlockProjectV1",
         "x-rate-limit-tier": "free"
@@ -13084,6 +13580,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "acceptAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -13186,6 +13683,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "denyAssignmentV1",
         "x-rate-limit-tier": "free"
@@ -13288,6 +13786,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintModuleTokensV1",
         "x-rate-limit-tier": "free"
@@ -13390,6 +13889,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "addFundV1",
         "x-rate-limit-tier": "free"
@@ -13492,6 +13992,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "acceptProjectV1",
         "x-rate-limit-tier": "free"
@@ -13594,6 +14095,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "denyProjectV1",
         "x-rate-limit-tier": "free"
@@ -13696,6 +14198,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "manageTreasuryTokenV1",
         "x-rate-limit-tier": "free"
@@ -13798,6 +14301,7 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "mintTreasuryTokenV1",
         "x-rate-limit-tier": "free"
@@ -13900,12 +14404,13 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
         "x-operation-id": "refuseProjectV1",
         "x-rate-limit-tier": "free"
       }
     },
-    "/platform/courses": {
+    "/platform/published-courses": {
       "get": {
         "security": [
           {
@@ -13924,7 +14429,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/platform_viewmodels.GetCoursesResponse"
+                  "$ref": "#/components/schemas/platform_viewmodels.GetPublishedCoursesResponse"
                 }
               }
             }
@@ -14010,12 +14515,13 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
-        "x-operation-id": "getCourses",
+        "x-operation-id": "getPublishedCourses",
         "x-rate-limit-tier": "free"
       }
     },
-    "/platform/treasuries": {
+    "/platform/published-treasuries": {
       "get": {
         "security": [
           {
@@ -14034,7 +14540,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/platform_viewmodels.GetTreasuriesResponse"
+                  "$ref": "#/components/schemas/platform_viewmodels.GetPublishedTreasuriesResponse"
                 }
               }
             }
@@ -14090,8 +14596,9 @@
             }
           }
         },
+        "x-access-level": "public",
         "x-metadata-status": "alpha",
-        "x-operation-id": "getTreasuries",
+        "x-operation-id": "getPublishedTreasuries",
         "x-rate-limit-tier": "free"
       }
     },
@@ -14180,9 +14687,10 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "getMeV1",
-        "x-rate-limit-tier": "free"
+        "x-rate-limit-tier": "none"
       }
     },
     "/user/usage": {
@@ -14270,9 +14778,10 @@
             }
           }
         },
+        "x-access-level": "internal",
         "x-metadata-status": "alpha",
         "x-operation-id": "getUsageV1",
-        "x-rate-limit-tier": "free"
+        "x-rate-limit-tier": "none"
       }
     }
   },
@@ -14353,7 +14862,7 @@
     "url": "https://swagger.io/resources/open-api/"
   },
   "x-api-id": "andamio-api-gateway",
-  "x-api-revision": "v0.4.0",
+  "x-api-revision": "v0.5.0",
   "components": {
     "requestBodies": {
       "atlas_add_validator_to_instance_viewmodels.AddAssignmentRequest": {
@@ -14441,14 +14950,16 @@
       "admin_viewmodels.SetUserRoleRequest": {
         "type": "object",
         "required": [
-          "tier_id",
           "user_id"
         ],
         "properties": {
           "tier_id": {
             "type": "integer",
-            "minimum": 1,
-            "example": 2
+            "example": 1
+          },
+          "tier_name": {
+            "type": "string",
+            "example": "pro"
           },
           "user_id": {
             "type": "string",
@@ -14458,6 +14969,10 @@
       },
       "admin_viewmodels.SetUserRoleResponse": {
         "type": "object",
+        "required": [
+          "tier_id",
+          "tier_name"
+        ],
         "properties": {
           "message": {
             "type": "string",
@@ -14465,7 +14980,13 @@
           },
           "tier_id": {
             "type": "integer",
-            "example": 2
+            "minimum": 1,
+            "example": 1
+          },
+          "tier_name": {
+            "type": "string",
+            "minLength": 1,
+            "example": "pro"
           },
           "user_id": {
             "type": "string",
@@ -17180,7 +17701,7 @@
             "type": "string",
             "example": "Bad Request: Invalid input."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 400
           }
@@ -17196,7 +17717,7 @@
             "type": "string",
             "example": "Conflict - The provided alias is already taken by another user. Please choose a different alias."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 409
           }
@@ -17212,7 +17733,7 @@
             "type": "string",
             "example": "Connection Timeout: The connection timed out due to inactivity or other network issues."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 498
           }
@@ -17228,7 +17749,7 @@
             "type": "string",
             "example": "Forbidden: Insufficient permissions or tier access."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 403
           }
@@ -17244,7 +17765,7 @@
             "type": "string",
             "example": "Internal Server Error: An unexpected error occurred."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 500
           }
@@ -17260,7 +17781,7 @@
             "type": "string",
             "example": "Not Found: The requested resource could not be found."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 404
           }
@@ -17276,7 +17797,7 @@
             "type": "string",
             "example": "Request Read Timeout: The server did not receive the full request within the allocated time."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 408
           }
@@ -17292,7 +17813,7 @@
             "type": "string",
             "example": "Response Write Timeout: The server failed to send the full response within the allocated time."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 499
           }
@@ -17308,7 +17829,7 @@
             "type": "string",
             "example": "Service Unavailable - One or more critical dependencies (e.g., database, Redis) are not reachable or healthy."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 503
           }
@@ -17324,7 +17845,7 @@
             "type": "string",
             "example": "Too Many Requests: Rate limit or quota exceeded."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 429
           }
@@ -17340,7 +17861,7 @@
             "type": "string",
             "example": "Unauthorized: Invalid or missing credentials."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 401
           }
@@ -17356,7 +17877,7 @@
             "type": "string",
             "example": "Unprocessable Entity: Invalid request structure or data."
           },
-          "statusCode": {
+          "status_code": {
             "type": "integer",
             "example": 422
           }
@@ -18870,6 +19391,83 @@
           }
         }
       },
+      "nba_treasury_viewmodels.TreasuryHistoryItem": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string",
+            "example": "1000000"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "2023-10-27T10:00:00Z"
+          },
+          "txId": {
+            "type": "string",
+            "example": "transaction_id_hex"
+          },
+          "type": {
+            "type": "string",
+            "example": "deposit"
+          }
+        }
+      },
+      "nba_treasury_viewmodels.TreasuryHistoryRequest": {
+        "type": "object",
+        "properties": {
+          "policy": {
+            "type": "string",
+            "example": "treasury_policy_id"
+          }
+        }
+      },
+      "nba_treasury_viewmodels.TreasuryInfoRequest": {
+        "type": "object",
+        "properties": {
+          "policy": {
+            "type": "string",
+            "example": "treasury_policy_id"
+          }
+        }
+      },
+      "nba_treasury_viewmodels.TreasuryInfoResponse": {
+        "type": "object",
+        "properties": {
+          "projectTokenCount": {
+            "type": "integer",
+            "example": 5
+          },
+          "totalFunds": {
+            "type": "string",
+            "example": "100000000"
+          },
+          "treasuryId": {
+            "type": "string",
+            "example": "treasury_id_hex"
+          }
+        }
+      },
+      "nba_treasury_viewmodels.TreasuryUTxOsRequest": {
+        "type": "object",
+        "properties": {
+          "escrow_hash": {
+            "type": "string",
+            "example": "optional_escrow_hash_hex"
+          },
+          "filter": {
+            "type": "string",
+            "example": "Fund"
+          },
+          "policy": {
+            "type": "string",
+            "example": "treasury_policy_id"
+          },
+          "project_hash": {
+            "type": "string",
+            "example": "optional_project_hash_hex"
+          }
+        }
+      },
       "node_backend_api_models.NodeApiDecodedProjectData": {
         "type": "object",
         "properties": {
@@ -18894,13 +19492,23 @@
       "platform_viewmodels.ContributorPrerequisite": {
         "type": "object",
         "properties": {
-          "contributorPolicyId": {
+          "contributor_policy_id": {
             "type": "string",
             "example": "policyid456"
+          },
+          "course_requirements": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/platform_viewmodels.CourseRequirement"
+            }
           },
           "id": {
             "type": "string",
             "example": "prereq1"
+          },
+          "status": {
+            "type": "string",
+            "example": "DRAFT"
           },
           "title": {
             "type": "string",
@@ -18911,65 +19519,71 @@
       "platform_viewmodels.Course": {
         "type": "object",
         "properties": {
-          "accessTier": {
-            "type": "string",
-            "example": "FREE"
-          },
-          "category": {
-            "type": "string",
-            "example": "Programming"
-          },
-          "courseCode": {
+          "course_code": {
             "type": "string",
             "example": "CS101"
           },
-          "courseNftPolicyId": {
+          "course_nft_policy_id": {
             "type": "string",
             "example": "policyid123"
-          },
-          "createdById": {
-            "type": "string",
-            "example": "user456"
-          },
-          "description": {
-            "type": "string",
-            "example": "A beginner-friendly course on Go."
           },
           "id": {
             "type": "string",
             "example": "course123"
           },
-          "imageUrl": {
+          "image_url": {
             "type": "string",
             "example": "https://example.com/go.png"
-          },
-          "live": {
-            "type": "boolean",
-            "example": true
           },
           "title": {
             "type": "string",
             "example": "Introduction to Go Programming"
+          }
+        }
+      },
+      "platform_viewmodels.CourseRequirement": {
+        "type": "object",
+        "properties": {
+          "course": {
+            "$ref": "#/components/schemas/platform_viewmodels.Course"
           },
-          "videoUrl": {
+          "course_code": {
             "type": "string",
-            "example": "https://example.com/go_intro.mp4"
+            "example": "CS101"
+          },
+          "id": {
+            "type": "string",
+            "example": "req123"
+          },
+          "prerequisite_id": {
+            "type": "string",
+            "example": "prereq1"
+          },
+          "required_modules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "[\"module1\"",
+              "\"module2\"]"
+            ]
           }
         }
       },
       "platform_viewmodels.Escrow": {
         "type": "object",
         "properties": {
-          "_count": {
-            "$ref": "#/components/schemas/platform_viewmodels.EscrowCount"
-          },
-          "contributorPrerequisites": {
+          "contributor_prerequisites": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/platform_viewmodels.ContributorPrerequisite"
             }
           },
-          "escrowNftPolicyId": {
+          "count": {
+            "$ref": "#/components/schemas/platform_viewmodels.EscrowCount"
+          },
+          "escrow_nft_policy_id": {
             "type": "string",
             "example": "policyid789"
           },
@@ -18998,25 +19612,150 @@
           }
         }
       },
-      "platform_viewmodels.GetCoursesResponse": {
+      "platform_viewmodels.GetPublishedCoursesResponse": {
         "type": "object",
         "properties": {
-          "courses": {
+          "published_courses": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/platform_viewmodels.Course"
+              "$ref": "#/components/schemas/platform_viewmodels.PublishedCourse"
             }
           }
         }
       },
-      "platform_viewmodels.GetTreasuriesResponse": {
+      "platform_viewmodels.GetPublishedTreasuriesResponse": {
         "type": "object",
         "properties": {
-          "treasuries": {
+          "published_treasuries": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/platform_viewmodels.Treasury"
+              "$ref": "#/components/schemas/platform_viewmodels.PublishedTreasury"
             }
+          }
+        }
+      },
+      "platform_viewmodels.PublishedCourse": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "example": "Programming"
+          },
+          "course_code": {
+            "type": "string",
+            "example": "CS101"
+          },
+          "course_nft_policy_id": {
+            "type": "string",
+            "example": "policyid123"
+          },
+          "description": {
+            "type": "string",
+            "example": "A beginner-friendly course on Go."
+          },
+          "image_url": {
+            "type": "string",
+            "example": "https://example.com/go.png"
+          },
+          "title": {
+            "type": "string",
+            "example": "Introduction to Go Programming"
+          },
+          "video_url": {
+            "type": "string",
+            "example": "https://example.com/go_intro.mp4"
+          }
+        }
+      },
+      "platform_viewmodels.PublishedTreasury": {
+        "type": "object",
+        "properties": {
+          "andamio_alias": {
+            "type": "string",
+            "example": "Andamio user alias"
+          },
+          "contributor_id": {
+            "type": "string",
+            "example": "contrib789"
+          },
+          "contributor_policy_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "[\"policyid456\"]"
+            ]
+          },
+          "count": {
+            "$ref": "#/components/schemas/platform_viewmodels.TreasuryCount"
+          },
+          "description": {
+            "type": "string",
+            "example": "A treasury for community projects."
+          },
+          "escrow_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "[\"escrow789\"]"
+            ]
+          },
+          "escrows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/platform_viewmodels.Escrow"
+            }
+          },
+          "id": {
+            "type": "string",
+            "example": "treasuryABC"
+          },
+          "image_url": {
+            "type": "string",
+            "example": "https://example.com/treasury.png"
+          },
+          "live": {
+            "type": "boolean",
+            "example": true
+          },
+          "required_modules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "[\"module1\"]"
+            ]
+          },
+          "title": {
+            "type": "string",
+            "example": "Community Treasury"
+          },
+          "total_ada": {
+            "type": "number",
+            "example": 1500.5
+          },
+          "total_tasks": {
+            "type": "integer",
+            "example": 1
+          },
+          "treasury_nft_policy_id": {
+            "type": "string",
+            "example": "policyidXYZ"
+          },
+          "treasury_owner": {
+            "$ref": "#/components/schemas/platform_viewmodels.TreasuryOwner"
+          },
+          "treasury_owner_id": {
+            "type": "string",
+            "example": "owner123"
+          },
+          "video_url": {
+            "type": "string",
+            "example": "https://example.com/treasury_intro.mp4"
           }
         }
       },
@@ -19037,92 +19776,29 @@
           }
         }
       },
-      "platform_viewmodels.Treasury": {
-        "type": "object",
-        "properties": {
-          "_count": {
-            "$ref": "#/components/schemas/platform_viewmodels.TreasuryCount"
-          },
-          "andamioAlias": {
-            "type": "string",
-            "example": "Andamio user alias"
-          },
-          "contributorId": {
-            "type": "string",
-            "example": "contrib789"
-          },
-          "contributorPolicyIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "example": [
-              "[\"policyid456\"]"
-            ]
-          },
-          "description": {
-            "type": "string",
-            "example": "A treasury for community projects."
-          },
-          "escrowIds": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "example": [
-              "[\"escrow789\"]"
-            ]
-          },
-          "escrows": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/platform_viewmodels.Escrow"
-            }
-          },
-          "id": {
-            "type": "string",
-            "example": "treasuryABC"
-          },
-          "imageUrl": {
-            "type": "string",
-            "example": "https://example.com/treasury.png"
-          },
-          "live": {
-            "type": "boolean",
-            "example": true
-          },
-          "title": {
-            "type": "string",
-            "example": "Community Treasury"
-          },
-          "totalAda": {
-            "type": "number",
-            "example": 1500.5
-          },
-          "totalTasks": {
-            "type": "integer",
-            "example": 1
-          },
-          "treasuryNftPolicyId": {
-            "type": "string",
-            "example": "policyidXYZ"
-          },
-          "treasuryOwnerId": {
-            "type": "string",
-            "example": "owner123"
-          },
-          "videoUrl": {
-            "type": "string",
-            "example": "https://example.com/treasury_intro.mp4"
-          }
-        }
-      },
       "platform_viewmodels.TreasuryCount": {
         "type": "object",
         "properties": {
           "escrows": {
             "type": "integer",
             "example": 1
+          }
+        }
+      },
+      "platform_viewmodels.TreasuryOwner": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/platform_viewmodels.User"
+          }
+        }
+      },
+      "platform_viewmodels.User": {
+        "type": "object",
+        "properties": {
+          "access_token_alias": {
+            "type": "string",
+            "example": "user_alias"
           }
         }
       },

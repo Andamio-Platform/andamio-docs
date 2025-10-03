@@ -28,6 +28,7 @@ interface ExtendedPageData {
   validator_system?: string;
   validator_id?: string | string[];
   tags?: string[];
+  "access-level"?: string;
   _openapi?: Record<string, unknown>;
   _meta: Record<string, unknown>;
   body: string;
@@ -55,13 +56,39 @@ export default async function Page(props: {
       ? ""
       : "w-2/3";
 
+  // Helper function to get access level badge styles
+  const getAccessLevelBadge = (level: string) => {
+    const badges = {
+      public: {
+        color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+        label: "Public",
+      },
+      private: {
+        color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+        label: "Private",
+      },
+      internal: {
+        color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
+        label: "Internal",
+      },
+    };
+    return badges[level as keyof typeof badges] || badges.public;
+  };
+
   return (
     <DocsPage full={pageData.full}>
       <DocsTitle>{pageData.title}</DocsTitle>
       <DocsDescription>{pageData.description}</DocsDescription>
-      {pageData.tags && pageData.tags.length > 0 && (
+      {(pageData.tags && pageData.tags.length > 0) || pageData["access-level"] ? (
         <div className="flex flex-wrap gap-2 mb-4 not-prose">
-          {pageData.tags.map((tag) => (
+          {pageData["access-level"] && (
+            <span
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium ${getAccessLevelBadge(pageData["access-level"]).color}`}
+            >
+              {getAccessLevelBadge(pageData["access-level"]).label}
+            </span>
+          )}
+          {pageData.tags && pageData.tags.map((tag) => (
             <span
               key={tag}
               className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
@@ -70,7 +97,7 @@ export default async function Page(props: {
             </span>
           ))}
         </div>
-      )}
+      ) : null}
       <DocsBody className={docsWidth}>
         {pageData.tx_file && (
           <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-12">
