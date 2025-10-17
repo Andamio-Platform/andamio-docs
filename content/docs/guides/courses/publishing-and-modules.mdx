@@ -1,0 +1,110 @@
+---
+title: Publishing Courses and Adding Modules
+description: Learn how to publish your course and add modules over time
+---
+
+# Publishing Courses and Adding Modules
+
+You can publish your course with initial modules and continue adding more modules over time as your content develops.
+
+## Understanding Course Publishing vs Module Minting
+
+Andamio uses **two separate on-chain transactions** for course creation:
+
+### 1. Publish Course Transaction (One-time)
+- **What it does**: Activates your course on-chain and makes it available for enrollment
+- **When to use**: When you are ready to collaborate with other course creators and make your course visible to learners
+- **What gets locked**: Nothing! This transaction only activates the course and makes it visible on Andamio
+- **Frequency**: Once per course
+
+### 2. Mint Module Token Transaction (Repeatable)
+- **What it does**: Creates an on-chain credential for a specific course module
+- **When to use**: For each module you want to add to your course
+- **What gets locked**: **Only the Student Learning Targets (SLTs)** for that module
+- **Frequency**: Once per module (can be done over time)
+
+## Practical Workflow: Launch Early, Add Modules Later
+
+### Example Workflow
+
+You can:
+1. **Publish Course** - Activate your course on-chain today
+2. **Mint Initial Modules** - Start with your core modules (e.g., Module 1, Module 2, Module 3)
+3. **Enroll Early Testers** - Students start working through available content
+4. **Update Lesson Content** - You can tweak the lesson text at any time, even though SLTs will be locked
+5. **Mint Additional Modules** - Add more modules based on student feedback and emerging needs (e.g., add advanced or specialized modules to different learning tracks)
+
+### What Happens for Early Enrollees?
+
+When you add new modules:
+- Early students automatically see new modules in their course interface
+- Their progress on existing modules is preserved
+- They can continue immediately with new content when it becomes available
+- No re-enrollment or special action required
+
+### What Gets Locked, What Stays Flexible?
+
+**Locked After Minting a Module**:
+- Student Learning Targets (SLTs) for that module - text cannot be changed
+- Number of SLTs - you cannot add additional SLTs to a minted module
+
+**Everything Else Stays Flexible**:
+- Course-level metadata (title, description, etc.)
+- Number of modules (add more by minting new module tokens)
+- Lesson content within modules (materials, videos, markdown)
+- Module structure (lessons, organization)
+- Timing of when modules become available
+
+## Benefits of This Approach
+
+### For Course Creators:
+- **Launch faster** - No need to wait for 100% completion
+- **Iterate based on feedback** - Early testers help you identify issues in initial modules before creating later ones
+- **Reduce risk** - Validate demand and engagement before investing in complete course development
+- **Continuous improvement** - Add content as your subject matter evolves
+
+### For Learners:
+- **Start immediately** - Access available content right away rather than waiting for complete course
+- **Stay current** - New modules appear as they're added (like following a course "season")
+- **Consistent experience** - No disruption to progress when new content is added
+
+## Technical Note: Why This Design?
+
+Andamio's separation of course publishing and module minting enables **iterative course development** aligned with agile learning design principles. You can:
+- Validate course market fit before full development
+- Incorporate learner feedback into later modules
+- Add specialized content based on cohort needs
+- Keep courses living and evolving rather than static
+
+**Why lock only SLTs?** Student Learning Targets define the on-chain credential - what learners must demonstrate to earn the module credential. By locking only SLTs on-chain, Andamio ensures:
+- **Credential integrity** - What learners earned is permanently verifiable
+- **Content flexibility** - You can improve lessons, fix typos, update examples, and enhance materials without affecting credential validity
+- **Transparent standards** - Anyone can verify what was required to earn a specific module credential
+
+This design supports the reality that great courses are rarely "finished" - they evolve based on learner needs, subject matter changes, and creator insights - while maintaining credential integrity.
+
+## Frequently Asked Questions
+
+**Q: Can I modify content within an already-minted module?**
+
+A: Yes. Lesson content (materials, videos, markdown) can be updated freely. Only the Student Learning Targets (SLTs) are locked on-chain once a module is minted.
+
+**Q: What if I need to change the SLTs after minting?**
+
+A: SLTs cannot be modified once minted on-chain - they define the credential learners earn. If you need different learning outcomes, create a new module version.
+
+**Q: Can students who started early access modules I add later?**
+
+A: Yes. All students see all minted modules regardless of when they enrolled.
+
+**Q: Is there a limit to how many modules I can add?**
+
+A: No technical limit on number of modules. Each module requires a separate Mint Module Token transaction.
+
+**Q: Do I pay transaction fees each time I add a module?**
+
+A: Yes. Each Mint Module Token transaction incurs Cardano network fees.
+
+**Q: Should I finalize my SLTs before minting a module?**
+
+A: Yes. Since SLTs are immutable once minted, ensure they accurately reflect the learning outcomes for that module. Lesson content can always be refined later.
