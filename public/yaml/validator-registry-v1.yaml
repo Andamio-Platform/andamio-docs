@@ -181,6 +181,7 @@ systems:
           - "admin.rm-course-creators"
           - "admin.init-project-step-1"
           - "admin.init-project-step-2"
+          - "admin.init-single-contributor-state"
           - "admin.add-project-creators"
           - "admin.rm-project-creators"
         referenced-in:
@@ -243,7 +244,9 @@ systems:
         asset-id: "<instance_provider_policyid>.ContributorStateScripts"
         minted-in:
         used-in:
-        referenced-in: "admin.init-project-step-2"
+        referenced-in:
+          - "admin.init-project-step-2"
+          - "admin.init-single-contributor-state"
         burned-in:
       
 
@@ -521,7 +524,9 @@ systems:
         burned-in:
       project-instance-contributor-state-scripts:
         asset-id: "<instance_policyid>.ContributorStateScripts"
-        minted-in: "admin.init-project-step-2"
+        minted-in:
+          - "admin.init-project-step-2"
+          - "admin.init-single-contributor-state"
         used-in:
         referenced-in:
           - "contributor.mint-project-state"

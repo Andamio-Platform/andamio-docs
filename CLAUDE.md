@@ -9,6 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run start` - Start production server
 - `npm run generate-api-docs` - Generate API documentation from OpenAPI schema (legacy, uses express-openapi.yaml)
 - `npm run generate-all-api-docs` - Generate all API documentation (including Andamio API Gateway)
+- `npm run docs-coverage` - Check documentation coverage across protocol components
 
 ## Swagger/OpenAPI Documentation Workflow
 
@@ -168,6 +169,41 @@ This is a Next.js documentation site built with Fumadocs, using content collecti
 - Mermaid diagram support via `components/mdx/mermaid.tsx`
 - OpenAPI documentation integration with proxy endpoint
 - Content collections with MDX transformation and meta schema validation
+
+### Custom MDX Components
+The documentation system includes several custom React components for interactive visualizations:
+
+- **`<TransactionDiagram>`** - Renders interactive transaction flow diagrams from YAML files
+  - Props: `txFile` (path to YAML), `title`, `description`
+  - Example: `<TransactionDiagram txFile="admin/add-course-creators.yaml" />`
+
+- **`<ValidatorDiagram>`** - Renders validator system architecture diagrams
+  - Props: `system` (required), `validator` (optional), `title`, `description`
+  - Example: `<ValidatorDiagram system="global-state" validator="global-state" />`
+
+- **`<Mermaid>`** - Renders Mermaid diagram syntax
+  - Used for flowcharts, sequence diagrams, and other visualizations
+
+- **Other diagram components**: `flywheel-diagram`, `linear-diagram`, `protocol-diagram`
+
+### MDX Frontmatter Schema
+MDX files support custom frontmatter fields defined in `content-collections.ts`:
+
+- **`tx_file`** (string, optional) - Path to transaction YAML file for automatic diagram rendering
+  - Example: `tx_file: "admin/add-course-creators.yaml"`
+
+- **`validator_system`** (string, optional) - Validator system identifier
+  - Example: `validator_system: "global-state"`
+
+- **`validator_id`** (string or array, optional) - Validator identifier(s)
+  - Example: `validator_id: "global-state"` or `validator_id: ["validator-1", "validator-2"]`
+
+- **`tags`** (array, optional) - Tags for API documentation organization
+  - Example: `tags: ["admin", "authentication"]`
+
+### TypeScript Configuration
+- **Path aliases**: Use `@/*` to import from project root (e.g., `import { Component } from "@/components/..."`)
+- **Content collections**: Auto-generated types available at `content-collections` import path
 
 ## Validator Documentation System
 
