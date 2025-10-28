@@ -27,10 +27,10 @@ User Browser → Docs Site (/api/proxy) → API Gateway
 2. **API Proxy** (`/app/api/proxy/route.ts`)
    - Forwards user requests to API Gateway
    - Handles authentication (Bearer token + API key)
-   - Configured to allow `andamio-api-308006323670.us-central1.run.app`
+   - Configured to allow `andamio-api-preprod-308006323670.us-central1.run.app`
 
 3. **Generated Documentation** (`/content/docs/api/*`)
-   - 136 MDX files organized by API category
+   - 75 MDX files organized by API category
    - Each renders an interactive endpoint page
    - Includes "Try it out" functionality
 
@@ -61,8 +61,8 @@ The fix involved ensuring the OpenAPI schema includes the `servers` field:
 {
   "servers": [
     {
-      "url": "https://andamio-api-308006323670.us-central1.run.app/api/v1",
-      "description": "Andamio API Gateway (Production)"
+      "url": "https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1",
+      "description": "Andamio API Gateway (Preprod)"
     }
   ]
 }
@@ -87,7 +87,7 @@ When the API Gateway schema changes:
 
 ```bash
 # 1. Pull latest schema
-curl -s https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/doc.json -o data/andamio-api-gateway.json
+curl -s https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json -o data/andamio-api-gateway.json
 
 # 2. Generate documentation
 npm run generate-all-api-docs
@@ -103,7 +103,7 @@ npm run build
 The scripts automatically:
 - Convert Swagger 2.0 → OpenAPI 3.0
 - **Add `servers` field** with API Gateway URL (critical for proxy to work!)
-- Generate ~140 endpoint pages
+- Generate ~75 endpoint pages
 - Organize by API tags into nested directories
 - Add tags to MDX frontmatter
 - Copy schema to `/public/data/` directory
@@ -127,5 +127,5 @@ The scripts automatically:
 ## Questions?
 
 - Technical setup details: See `CLAUDE.md`
-- API Gateway source: https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/doc.json
-- Live Swagger UI: https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/index.html
+- API Gateway source: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json
+- Live Swagger UI: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html
