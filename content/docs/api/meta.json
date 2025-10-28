@@ -4,7 +4,6 @@
   "pages": [
     "admin",
     "api-key",
-    "atlas-tx-builder-api",
     "authentication",
     "node-backend-api",
     "platform-api",

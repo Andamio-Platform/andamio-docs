@@ -1,9 +1,9 @@
 ---
-title: Add Fund
+title: Add funds
 full: true
 _openapi:
   method: POST
-  route: /node-backend-api/tx/general/add-fund
+  route: /node-backend-api/tx/treasury/add-funds
   toc: []
   structuredData:
     headings: []
@@ -22,4 +22,4 @@ access-level: "public"
 
 Initiates a transaction to add funds to a treasury. This action allows adding funds to a treasury, and requires the treasury policy ID, user address, amount, and can optionally include additional tokens.
 
-<APIPage document={"data/andamio-api-gateway-openapi.json"} operations={[{"path":"/node-backend-api/tx/general/add-fund","method":"post"}]} webhooks={[]} hasHead={false} />
+<APIPage document={"data/andamio-api-gateway-openapi.json"} operations={[{"path":"/node-backend-api/tx/treasury/add-funds","method":"post"}]} webhooks={[]} hasHead={false} />

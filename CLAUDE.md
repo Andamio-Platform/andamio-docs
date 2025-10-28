@@ -14,14 +14,32 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Swagger/OpenAPI Documentation Workflow
 
 ### Andamio API Gateway Schema
-- **Live API Docs**: https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/index.html
-- **Schema Endpoint**: https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/doc.json
+- **Live API Docs**: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html
+- **Schema Endpoint**: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json
 - **Local Schema**: `/data/andamio-api-gateway.json`
+- **Environment**: Preprod (as of October 2024)
+
+### Recent Major Changes (October 2024)
+
+**API Restructuring - Migration to Preprod:**
+- **Endpoint Reduction**: 148 → 75 endpoints (~50% reduction)
+- **Host Change**: Migrated from production to preprod environment
+- **Atlas TX Builder API Removed**: All `/atlas-tx-builder/` endpoints have been removed from the API Gateway
+  - Previously included: ~77 endpoints across 8 categories (contributor, course-creator, general, instance-admin, project-creator, staking-admin, student, user)
+  - Transaction builder functionality moved or consolidated elsewhere
+- **Remaining APIs**: Authentication, API Key, User, Health, Metrics, General, Node Backend API, Platform API
+- **Admin Endpoints**: Now tagged as "Admin" + category (e.g., "Admin, General", "Admin, Health")
+- **Node Backend TX Endpoints**: Transaction endpoints for instance admin operations remain at `/node-backend-api/tx/admin/`
+
+**Documentation Impact:**
+- Deleted `content/docs/api/atlas-tx-builder/` and `content/docs/api/atlas-tx-builder-api/` directories
+- Updated all API Gateway URLs to preprod endpoints
+- Reduced generated MDX file count from ~140 to ~75
 
 ### Complete Workflow
 1. **Pull Latest Schema**:
    ```bash
-   curl -s https://andamio-api-308006323670.us-central1.run.app/api/v1/docs/doc.json -o data/andamio-api-gateway.json
+   curl -s https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json -o data/andamio-api-gateway.json
    ```
 
 2. **Generate Documentation**:
@@ -30,8 +48,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
    ```
    This will:
    - Convert Swagger 2.0 to OpenAPI 3.0 (saves to `data/andamio-api-gateway-openapi.json`)
-   - **Add `servers` field** to OpenAPI schema pointing to `https://andamio-api-308006323670.us-central1.run.app/api/v1`
-   - Generate ~140 MDX files (initially flat in `content/docs/api/`)
+   - **Add `servers` field** to OpenAPI schema pointing to `https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1`
+   - Generate ~75 MDX files (initially flat in `content/docs/api/`)
 
 3. **Organize Documentation**:
    ```bash
@@ -48,8 +66,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 4. **Review Output**:
    - Check organized directory structure in `content/docs/api/`
-   - Top-level directories: `admin`, `api-key`, `atlas-tx-builder-api`, `authentication`, `general`, `health`, `metrics`, `node-backend-api`, `platform-api`, `user`
-   - Nested directories follow tag hierarchy (e.g., `atlas-tx-builder-api/atlas-instance-admin/atlas-self-service/`)
+   - Top-level directories: `admin`, `api-key`, `authentication`, `node-backend-api`, `platform-api`, `user`
+   - Nested directories follow tag hierarchy based on OpenAPI tags
    - Each file references `data/andamio-api-gateway-openapi.json` for live rendering
 
 5. **Commit Changes**:
@@ -62,7 +80,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
   - `/data/express-openapi.yaml` (Legacy API schema)
   - `/data/example-swagger.json` (Example API schema)
 - **Generated Docs**:
-  - `/content/docs/api/` (Andamio API Gateway docs - ~140 MDX files)
+  - `/content/docs/api/` (Andamio API Gateway docs - ~75 MDX files)
 - **Generation Scripts**:
   - `scripts/generate-all-api-docs.mjs` (Main script - generates flat MDX files from schema)
   - `scripts/organize-api-docs.mjs` (Organization script - creates directory structure based on tags)
@@ -104,8 +122,8 @@ The API documentation supports interactive testing with the following setup:
 
 **Proxy Configuration:**
 - OpenAPI proxy configured in `lib/source.ts` and `app/api/proxy/route.ts`
-- Allowed origin: `https://andamio-api-308006323670.us-central1.run.app`
-- **Server URL** (from schema `servers` field): `https://andamio-api-308006323670.us-central1.run.app/api/v1`
+- Allowed origin: `https://andamio-api-preprod-308006323670.us-central1.run.app`
+- **Server URL** (from schema `servers` field): `https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1`
 - Proxy endpoint: `/api/proxy` forwards requests to the server URL defined in the schema
 - The `servers` field is automatically added during Swagger → OpenAPI conversion in `scripts/generate-all-api-docs.mjs`
 - **Header forwarding**: Only essential headers are forwarded (authorization, x-api-key, content-type, accept) to avoid 431 errors
