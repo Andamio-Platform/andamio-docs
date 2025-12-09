@@ -1,0 +1,60 @@
+# V2 Validator: Index Validator
+# Status: PLACEHOLDER - partially complete from CBOR analysis
+
+id: "index.index-validator"
+name: "Index Validator"
+system: "index"
+status: "placeholder"
+
+# From address-registry.json
+address: "addr_test1xqum9pmty3vt3nvxn6mxtvj8gr0k3yrgfglxe4llds5tsjewgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsrr84hd"
+purpose: "spend"
+
+description: |
+  Index linked list validator for alias uniqueness. Holds index tokens with
+  {prev_alias, next_alias} datum forming a sorted linked list. Ensures all
+  aliases in the protocol are unique.
+
+# Known from CBOR analysis
+known_facts:
+  - "Holds index tokens (policy: 39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b)"
+  - "Token name is space character (0x20)"
+  - "Datum contains prev/next alias pointers"
+  - "~1.25 ADA minUTxO per node"
+
+# Transactions that use this validator
+used_in:
+  - transaction: "general.mint-access-token"
+    role: "input+output"
+    notes: "Existing nodes spent and recreated to insert new alias"
+
+# Datum schema (inferred from description)
+datum_schema:
+  status: "partial"
+  fields:
+    - name: "prev_alias"
+      type: "bytes"
+      description: "Previous alias in sorted list (or empty for head)"
+    - name: "next_alias"
+      type: "bytes"
+      description: "Next alias in sorted list (or empty for tail)"
+
+redeemers:
+  status: "unknown"
+  notes: "Need to analyze redeemer from mint-access-token CBOR"
+
+# Related components
+related:
+  policy: "index-policy"
+  policy_id: "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"
+  tokens:
+    - name: "0x20 (space)"
+      hex: "20"
+      description: "Index linked list marker"
+  observer: "index-observer"
+  observer_address: "stake_test17qqz7k43cxmt0qxuu5x8jnvsy75k5thzpmt2mrvsrtfa8ac9vg5z3"
+
+design_notes:
+  - "Linked list maintains sorted order of all aliases"
+  - "New alias inserted between appropriate prev/next nodes"
+  - "Ensures global uniqueness of aliases across protocol"

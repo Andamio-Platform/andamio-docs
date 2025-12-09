@@ -49,7 +49,7 @@
   },
   "transactions": {
     "general.mint-access-token": {
-      "role": "general",
+      "role": "open",
       "system": "general",
       "action": "mint-access-token",
       "endpoint": "/tx/v2/general/mint-access-token",
@@ -73,7 +73,7 @@
         }
       }
     },
-    "admin.course-create": {
+    "course.admin.create": {
       "role": "admin",
       "system": "course",
       "action": "create",
@@ -109,7 +109,7 @@
         }
       }
     },
-    "admin.course-teachers-update": {
+    "course.admin.teachers-update": {
       "role": "admin",
       "system": "course",
       "action": "teachers/update",
@@ -148,7 +148,7 @@
         }
       }
     },
-    "teacher.course-modules-manage": {
+    "course.teacher.modules-manage": {
       "role": "teacher",
       "system": "course",
       "action": "modules/manage",
@@ -229,7 +229,7 @@
         }
       }
     },
-    "teacher.course-assignments-assess": {
+    "course.teacher.assignments-assess": {
       "role": "teacher",
       "system": "course",
       "action": "assignments/assess",
@@ -277,7 +277,7 @@
         }
       }
     },
-    "student.course-enroll": {
+    "course.student.enroll": {
       "role": "student",
       "system": "course",
       "action": "enroll",
@@ -321,7 +321,7 @@
         }
       }
     },
-    "student.course-assignment-update": {
+    "course.student.assignment-update": {
       "role": "student",
       "system": "course",
       "action": "assignment/update",
@@ -359,7 +359,7 @@
         }
       }
     },
-    "student.course-credential-claim": {
+    "course.student.credential-claim": {
       "role": "student",
       "system": "course",
       "action": "credential/claim",

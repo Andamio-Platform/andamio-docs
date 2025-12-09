@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "description": "Friendly names for V2 script addresses - used in YAML files and diagrams",
+  "notes": [
+    "Use these names in YAML address fields instead of raw addr_test1... values",
+    "Format: category.name for validators, wallets.name for wallet addresses",
+    "Names match the keys in address-registry.json validators/wallets sections"
+  ],
+  "validators": {
+    "index.index-validator": {
+      "address": "addr_test1xqum9pmty3vt3nvxn6mxtvj8gr0k3yrgfglxe4llds5tsjewgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsrr84hd",
+      "displayName": "Index Validator",
+      "shortName": "index-validator"
+    },
+    "global.global-state-v2": {
+      "address": "addr_test1xzklyz29dtcmeed2fer9x4y7z205h5l8ng4n57trw6fgdu3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsm4xa2p",
+      "displayName": "Global State V2",
+      "shortName": "global-state-v2"
+    },
+    "course.local-state-nft-validator": {
+      "address": "addr_test1xzlrs55we4u7speyteuqdnw7tl7u4npzm9p2j5l9lgfu32uey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtucd7n",
+      "displayName": "LocalStateNFT Validator",
+      "shortName": "local-state-nft-validator"
+    },
+    "course.local-state-token-validator": {
+      "address": "addr_test1xqd5m8p22gl4qshnkxyvahlq02k7uy23usvt74ugr8wykk3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnspgzxfx",
+      "displayName": "LocalStateToken Validator",
+      "shortName": "local-state-token-validator"
+    },
+    "course.course-governance-validator": {
+      "address": "addr_test1xpswwtj7upt9gh7txled87dc20dwmc6k294ttjq03p4x225ey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtt05jv",
+      "displayName": "Course Governance",
+      "shortName": "course-governance-validator"
+    },
+    "course.module-validator": {
+      "address": "addr_test1xqygr5q96scpwjxlt24s377nq2kk9ur2rd4323nye94ehfuey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmq5egxwn",
+      "displayName": "Module Validator",
+      "shortName": "module-validator"
+    },
+    "course.course-state-validator": {
+      "address": "addr_test1xzg7rrkaypn8m64pus8q3ydenu433mzddq3a25atanz77xyey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmq88awls",
+      "displayName": "Course State Validator",
+      "shortName": "course-state-validator"
+    }
+  },
+  "wallets": {
+    "wallets.protocol-treasury": {
+      "address": "addr_test1qqasyh8kdh742htuzy5rzwgn0hewg2d3m32gle2h4w38kwgqfz280z9xhpx7fv4p7a8y7xpp2nwl9p7k39e28z7jsmfqnvhuml",
+      "displayName": "Protocol Treasury",
+      "shortName": "protocol-treasury",
+      "fee": "5 ADA (access token mint)"
+    },
+    "wallets.instance-treasury": {
+      "address": "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3",
+      "displayName": "Instance Treasury",
+      "shortName": "instance-treasury",
+      "fees": {
+        "course-create": "25 ADA",
+        "teachers-update": "5 ADA"
+      }
+    }
+  },
+  "dynamicAddresses": {
+    "wallets.user": {
+      "displayName": "User Wallet",
+      "description": "Dynamic - specific to the user performing the transaction"
+    },
+    "wallets.admin": {
+      "displayName": "Admin Wallet",
+      "description": "Dynamic - admin's wallet address"
+    },
+    "wallets.teacher": {
+      "displayName": "Teacher Wallet",
+      "description": "Dynamic - teacher's wallet address"
+    },
+    "wallets.student": {
+      "displayName": "Student Wallet",
+      "description": "Dynamic - student's wallet address"
+    }
+  }
+}

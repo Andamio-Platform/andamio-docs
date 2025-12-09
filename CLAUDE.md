@@ -8,7 +8,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run build` - Build the application for production
 - `npm run start` - Start production server
 - `npm run generate-api-docs` - Generate API documentation from OpenAPI schema (legacy, uses express-openapi.yaml)
-- `npm run generate-all-api-docs` - Generate all API documentation (including Andamio API Gateway)
+- `npm run generate-all-api-docs` - Generate Andamio API Gateway documentation
+- `npm run generate-andamioscan-docs` - Generate Andamioscan indexer API documentation
+- `npm run build-all-docs` - **Pull all APIs and regenerate all documentation** (recommended)
 - `npm run docs-coverage` - Check documentation coverage across protocol components
 
 ## Swagger/OpenAPI Documentation Workflow
@@ -152,6 +154,82 @@ The API documentation supports interactive testing with the following setup:
 - **Full workflow**: Pull schema → Generate docs → Organize into directories → Copy schema to public/
 - **What to commit**: Raw schema, converted OpenAPI file (both `/data` and `/public/data`), organized directory structure, and all MDX files
 - **Verification**: Check that directory structure matches tag hierarchy and MDX files correctly reference `/data/andamio-api-gateway-openapi.json`
+
+## Unified API Documentation System
+
+The Andamio platform has multiple API sub-services that will eventually be unified under a single API Gateway. Currently documented sub-services:
+
+### API Sub-Services
+
+| Service | Description | Swagger URL | Local Schema |
+|---------|-------------|-------------|--------------|
+| **Andamio API Gateway** | Auth, user management, platform services | [Swagger UI](https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html) | `data/andamio-api-gateway.json` |
+| **Andamioscan** | Indexer for on-chain data queries | [Swagger UI](https://preprod.andamioscan.andamio.space/swagger/index.html) | `data/andamioscan-swagger.json` |
+| **Atlas TX Builder** | V2 transaction building | [Swagger UI](https://atlas-api-preprod-507341199760.us-central1.run.app/swagger/index.html) | `public/yaml/transactions/v2/atlas-api-swagger.json` |
+
+### Build All Documentation
+
+To pull all API specs and regenerate all documentation:
+
+```bash
+npm run build-all-docs
+```
+
+This command:
+1. Pulls latest swagger specs from all enabled API services
+2. Converts Swagger 2.0 → OpenAPI 3.0 where needed
+3. Generates MDX documentation with cross-references
+4. Updates meta.json navigation files
+5. Verifies all expected files exist
+
+Options:
+- `npm run build-all-docs -- --skip-pull` - Use existing local specs
+- `npm run build-all-docs -- --skip-generate` - Only pull specs, don't generate
+
+### Cross-Reference System
+
+The Andamioscan generator (`scripts/generate-andamioscan-docs.mjs`) maintains cross-references to V2 transaction documentation:
+
+```javascript
+const CROSS_REFERENCES = {
+  transactionTypes: {
+    'UserAccessTokenMint': '/docs/protocol/v2/transactions/general/mint-access-token',
+    'AdminCourseCreate': '/docs/protocol/v2/transactions/course/admin/create',
+    // ... other mappings
+  },
+  related: {
+    transactions: '/docs/protocol/v2/transactions',
+    costs: '/docs/protocol/v2/cost-estimation',
+  }
+};
+```
+
+**Update CROSS_REFERENCES when:**
+- New transaction types are added to Andamioscan
+- V2 transaction documentation paths change
+- New cross-references are needed between services
+
+### Adding New API Services
+
+To add a new API sub-service to the build system:
+
+1. Add entry to `API_SOURCES` in `scripts/build-all-docs.mjs`:
+   ```javascript
+   {
+     name: 'New Service',
+     swaggerUrl: 'https://example.com/swagger.json',
+     localPath: './data/new-service-swagger.json',
+     generateScript: 'generate-new-service-docs',
+     enabled: true,
+     notes: 'Description of service'
+   }
+   ```
+
+2. Create generator script (copy `scripts/generate-andamioscan-docs.mjs` as template)
+
+3. Add npm script to `package.json`
+
+4. Run `npm run build-all-docs` to test
 
 ## Architecture Overview
 
@@ -528,20 +606,87 @@ Should we start with one of these, or would you prefer a different term?"
 
 Use this game whenever terminology seems unclear or when starting work on new aspects of the Andamio protocol.
 
-## V2 Protocol Documentation (In Progress)
+## V2 Protocol Documentation
 
 **Session started**: 2025-12-08
+**Last updated**: 2025-12-09
 
-We are building V2 protocol documentation by parsing decoded transaction CBORs from the Atlas API. Progress and context is tracked in:
+V2 protocol documentation built by parsing decoded transaction CBORs from the Atlas API.
 
-- `public/yaml/transactions/v2/SESSION-NOTES.md` - Full session context and how to resume
+### Status: Phase 1 Complete ✅
+
+**8/8 Course System Transactions Documented:**
+- `general/mint-access-token` - Protocol entry point (~7.9 ADA)
+- `course/admin/create` - Create course (~45 ADA)
+- `course/admin/teachers-update` - Update teachers (~5.3 ADA)
+- `course/teacher/modules-manage` - Mint modules (~1.86 ADA)
+- `course/teacher/assignments-assess` - Assess assignments (~0.21 ADA)
+- `course/student/enroll` - Enroll in course (~2.14 ADA)
+- `course/student/assignment-update` - Update submission (~0.33 ADA)
+- `course/student/credential-claim` - Claim credential (-1.03 ADA refund)
+
+### Key Files
+
+**Registry Files** (source of truth):
+- `public/yaml/transactions/v2/SESSION-NOTES.md` - Full session context, validator mapping, swagger sync workflow
 - `public/yaml/transactions/v2/address-registry.json` - Validators, policies, observers
-- `public/yaml/transactions/v2/cost-registry.json` - Fee structures
-- `public/yaml/transactions/v2/endpoint-registry.json` - API schemas
+- `public/yaml/transactions/v2/address-names.json` - Friendly names for diagram display
+- `public/yaml/transactions/v2/cost-registry.json` - Fee structures with loop costs
+- `public/yaml/transactions/v2/endpoint-registry.json` - API schemas (aligned with swagger)
+- `public/yaml/transactions/v2/atlas-api-swagger.json` - Local copy of Atlas API swagger
 
-**Status**: 3/8 transactions parsed (mint-access-token, course-create, course-teachers-update)
+**Public Docs**:
+- `content/docs/protocol/v2/transactions/` - MDX documentation pages (8 transactions)
 
-**To resume**: Read SESSION-NOTES.md, then continue parsing remaining 5 transaction CBORs
+**API Endpoints**:
+- `/api/transaction-v2?file=<path>&format=v1` - Get transaction YAML data (format=v1 for diagram compatibility)
+- `/api/costs/v2` - Get cost registry (supports `?tx=`, `?loop=`, `?summary=true`)
+
+### V2 YAML Structure
+
+All V2 transaction YAML files follow this structure:
+```yaml
+name: "Transaction Name"
+id: "system.role.action"
+
+metadata:
+  role: "admin|teacher|student|general"
+  system: "course|general"
+  description: "..."
+  api_endpoint: "/tx/v2/..."
+
+inputs:
+  - id: input_name
+    type: script|wallet
+    validator: "validator-name"  # For script types
+    label: "wallet-name"         # For wallet types (e.g., "student-wallet")
+    # ...
+
+outputs:
+  - id: output_name
+    type: script|wallet
+    validator: "validator-name"  # Preferred over raw address
+    label: "wallet-name"         # For wallet types
+    # ...
+```
+
+The `transformV2ToDiagramData()` function in `types/v2.ts` prefers `validator` or `label` over raw addresses for diagram display.
+
+### Swagger Sync Workflow
+
+When the Atlas API swagger updates:
+1. Download: `curl -s "https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json" -o public/yaml/transactions/v2/atlas-api-swagger.json`
+2. Check for new endpoints: `jq '.paths | keys | map(select(contains("/tx/v2/")))' atlas-api-swagger.json`
+3. Update `endpoint-registry.json` if schemas changed
+4. Update MDX docs request body sections
+5. See `SESSION-NOTES.md` for full workflow details
+
+### Next Phase: Validator Documentation
+
+See `SESSION-NOTES.md` for validator mapping analysis. Key gaps:
+- Missing docs: `local-state-token-validator`, `course-governance-validator`
+- Name mismatches between CBOR-discovered validators and existing docs
+- Need to create `validator-registry-v2.yaml` like V1
 
 # important-instruction-reminders
 Do what has been asked; nothing more, nothing less.

@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2025-12-09",
+  "network": "preprod",
+  "notes": [
+    "V2 validator registry built from CBOR transaction analysis",
+    "Placeholder YAMLs created for validators referenced in transaction docs",
+    "Status: documented | placeholder | unknown"
+  ],
+  "validators": {
+    "index": {
+      "index-validator": {
+        "file": "index/index-validator.yaml",
+        "status": "placeholder",
+        "address": "addr_test1xqum9pmty3vt3nvxn6mxtvj8gr0k3yrgfglxe4llds5tsjewgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsrr84hd",
+        "usedIn": ["general.mint-access-token"]
+      }
+    },
+    "general": {
+      "global-state-v2": {
+        "file": "general/global-state-v2.yaml",
+        "status": "documented",
+        "address": "addr_test1xzklyz29dtcmeed2fer9x4y7z205h5l8ng4n57trw6fgdu3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsm4xa2p",
+        "usedIn": ["general.mint-access-token", "course.student.enroll", "course.student.credential-claim"]
+      }
+    },
+    "course": {
+      "local-state-nft-validator": {
+        "file": "course/local-state-nft-validator.yaml",
+        "status": "placeholder",
+        "address": "addr_test1xzlrs55we4u7speyteuqdnw7tl7u4npzm9p2j5l9lgfu32uey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtucd7n",
+        "usedIn": ["course.admin.create", "course.admin.teachers-update"]
+      },
+      "local-state-token-validator": {
+        "file": "course/local-state-token-validator.yaml",
+        "status": "placeholder",
+        "address": "addr_test1xqd5m8p22gl4qshnkxyvahlq02k7uy23usvt74ugr8wykk3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnspgzxfx",
+        "usedIn": ["course.admin.create"],
+        "notes": "Contains embedded script_ref"
+      },
+      "course-governance-validator": {
+        "file": "course/course-governance-validator.yaml",
+        "status": "placeholder",
+        "address": "addr_test1xpswwtj7upt9gh7txled87dc20dwmc6k294ttjq03p4x225ey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtt05jv",
+        "usedIn": ["course.admin.create", "course.admin.teachers-update", "course.teacher.modules-manage"]
+      },
+      "module-validator": {
+        "file": "course/module-validator.yaml",
+        "status": "placeholder",
+        "address": "addr_test1xqygr5q96scpwjxlt24s377nq2kk9ur2rd4323nye94ehfuey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmq5egxwn",
+        "usedIn": ["course.teacher.modules-manage"],
+        "referencedIn": ["course.teacher.assignments-assess", "course.student.enroll", "course.student.assignment-update", "course.student.credential-claim"]
+      },
+      "course-state-validator": {
+        "file": "course/course-state-validator.yaml",
+        "status": "documented",
+        "address": "addr_test1xzg7rrkaypn8m64pus8q3ydenu433mzddq3a25atanz77xyey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmq88awls",
+        "usedIn": ["course.student.enroll", "course.student.assignment-update", "course.teacher.assignments-assess", "course.student.credential-claim"]
+      }
+    }
+  },
+  "observers": {
+    "index-observer": {
+      "stakeAddress": "stake_test17qqz7k43cxmt0qxuu5x8jnvsy75k5thzpmt2mrvsrtfa8ac9vg5z3",
+      "status": "placeholder",
+      "usedIn": ["general.mint-access-token"]
+    },
+    "course-observer": {
+      "stakeAddress": "stake_test17zxrdv3h8h00m2ymhqfgqtkgdqz2wlxuc2ulfurjs7950msgfaf96",
+      "status": "placeholder",
+      "usedIn": ["course.admin.create"]
+    }
+  },
+  "coverage": {
+    "documented": 2,
+    "placeholder": 5,
+    "total": 7,
+    "observersDocumented": 0,
+    "observersTotal": 2
+  }
+}

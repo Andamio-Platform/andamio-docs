@@ -1,0 +1,137 @@
+# Token references use dot notation to map to address-registry.json
+# Format: <category>.<name> maps to registry path
+
+name: "Enroll in Course"
+id: "course.student.enroll"
+
+metadata:
+  role: "student"
+  system: "course"
+  description: "Student enrolls in a course by minting course state token, optionally with initial assignment commit"
+  api_endpoint: "/tx/v2/student/course/enroll"
+
+# Example: Student enrolling with initial assignment commit
+example_context:
+  student_alias: "manager_001"
+  course_id: "23a6bbce3a8deca8985764e847594f6956c9dc643e3f6c8efdba04e4"
+  slt_hash: "8dcbe1b925d87e6c547bbd8071c23a712db4c32751454b0948f8c846e9246b5c"
+  assignment_info: "clear string info"
+
+inputs:
+  - id: student_global_state
+    type: script
+    validator: "global-state-v2"
+    description: "Student's global state UTxO (spent to update with course enrollment)"
+    redeemer:
+      format: "constructor 0"
+      fields:
+        course_id: "<course_id>"
+        index: -1
+        empty_bytes: ""
+        course_state_policy: "<course_state_policy_id>"
+    notes: "Global state updated to track course enrollment"
+
+  - id: student_wallet
+    type: wallet
+    label: "student-wallet"
+    description: "Student's wallet UTxO for fees"
+
+reference_inputs:
+  - id: script_ref_1
+    description: "Script reference"
+    tx_id: "1937336fdedcd62c377c898494e98bec611b5673c7621aad6e8a79e536b9609a"
+    index: 1
+
+  - id: course_local_state_token
+    description: "Course LocalStateToken (contains embedded course validator)"
+    tx_id: "741548bbef43b3fe67bb244627ba2b4e288efd1e128e901391dc1468102868ac"
+    index: 1
+    notes: "Referenced to validate enrollment against course"
+
+  - id: module_ref
+    description: "Module reference (for assignment commit validation)"
+    tx_id: "d444817dee91de3f0836d304b2ba576b751fa8400244258be82efc1c1633f733"
+    index: 2
+    notes: "Module UTxO for validating SLT hash"
+
+outputs:
+  - id: student_access_token_return
+    type: wallet
+    label: "student-wallet"
+    description: "Return student's access token"
+    value:
+      - "~1172320 lovelace"
+      - "1 policies.index-policy::u<student_alias>"
+
+  - id: global_state_updated
+    type: script
+    validator: "global-state-v2"
+    description: "Updated global state with course enrollment"
+    value:
+      - "~1560220 lovelace"
+      - "1 policies.index-policy::g<student_alias>"
+    datum:
+      format: "constructor 0"
+      fields:
+        alias: "<student_alias>"
+        local_state_map:
+          - key: "<course_id>"
+            value: "<course_state_token_hash>"
+    notes: "Map now includes course enrollment reference"
+
+  - id: course_state
+    type: script
+    validator: "course-state-validator"
+    description: "NEW: Student's course state token at course state validator"
+    value:
+      - "~1452470 lovelace"
+      - "1 policies.course-state-policy::<student_alias>"
+    datum:
+      format: "constructor 1"
+      fields:
+        slt_hash: "<slt_hash>"
+        assignment_info: "<assignment_info_string>"
+        additional: "[] (empty list)"
+    notes: "Course state token with assignment commitment"
+
+  - id: student_change
+    type: wallet
+    label: "student-wallet"
+    description: "Change outputs to student wallet"
+    value:
+      - "remaining lovelace"
+
+mints:
+  - id: mint_course_state_token
+    policy: "policies.course-state-policy"
+    redeemer:
+      format: "constructor 0"
+      fields:
+        alias: "<student_alias>"
+        allowed_students: "[] (empty - open enrollment)"
+        commit_data:
+          slt_hash: "<slt_hash>"
+          assignment_info: "<assignment_info_string>"
+    tokens:
+      - "1 policies.course-state-policy::<student_alias>"
+    notes: "Course state token name is student alias"
+
+fees:
+  transaction_fee: "402798"
+  collateral: "604197"
+  service_fee: null
+  notes: "No service fee to treasury observed for student enrollment"
+
+observations:
+  - "Course state policy is parameterized per course (different from index-policy)"
+  - "Course state token name is the student's alias"
+  - "Global state datum is updated to track course enrollment in local_state_map"
+  - "Assignment commit is optional but included in this example"
+  - "Datum constructor 1 indicates active assignment commitment"
+  - "No service fee charged for enrollment"
+  - "References course LocalStateToken to validate enrollment permissions"
+
+questions:
+  - "Is course state policy derived from courseId?"
+  - "What does constructor 0 vs 1 mean in course state datum?"
+  - "How is the course_state_token_hash in global state derived?"

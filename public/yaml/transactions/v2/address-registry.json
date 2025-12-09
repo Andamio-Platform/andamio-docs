@@ -15,7 +15,7 @@
         "u": "user access token (u + alias)",
         "0x20": "index linked list marker (space character)"
       },
-      "inferredFrom": ["general.mint-access-token", "admin.course-create"]
+      "inferredFrom": ["general.mint-access-token", "course.admin.create"]
     },
     "local-state-token-policy": {
       "policyId": "1b4d9c2a523f5042f3b188cedfe07aadee1151e418bf578819dc4b5a",
@@ -23,13 +23,13 @@
       "tokens": {
         "LocalStateToken": "4c6f63616c5374617465546f6b656e"
       },
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     },
     "course-governance-policy": {
       "policyId": "60e72e5ee056545fcb37f2d3f9b853daede356516ab5c80f886a652a",
       "description": "Mints course governance tokens (token name = courseId)",
       "tokenNaming": "Token name is the course NFT policy ID",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     },
     "local-state-nft-policy": {
       "policyId": "68396f1567f5b8d813517b82e1b07e62b4d61392621d916fa5dac3e7",
@@ -38,7 +38,19 @@
         "LocalStateNFT": "4c6f63616c53746174654e4654"
       },
       "designNote": "The LocalStateNFT minting policy ID doubles as the course identifier (courseId). This is a critical design feature - the courseId is not a separate token but the policy that mints the course's LocalStateNFT.",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
+    },
+    "module-policy": {
+      "policyId": "0881d005d4301748df5aab08fbd302ad62f06a1b6b154664c96b9ba7",
+      "description": "Mints module tokens - token name is hash of SLT list",
+      "tokenNaming": "Token name is 32-byte hash (likely SHA256) of the module's SLT strings",
+      "inferredFrom": ["course.teacher.modules-manage"]
+    },
+    "course-state-policy": {
+      "policyId": "91e18edd20667deaa1e40e0891b99f2b18ec4d6823d553abecc5ef18",
+      "description": "Mints course state tokens for student enrollment - parameterized per course",
+      "tokenNaming": "Token name is student alias",
+      "inferredFrom": ["course.student.enroll"]
     }
   },
   "validators": {
@@ -58,7 +70,7 @@
       "address": "addr_test1xzlrs55we4u7speyteuqdnw7tl7u4npzm9p2j5l9lgfu32uey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtucd7n",
       "purpose": "spend",
       "description": "Holds LocalStateNFT with {alias} datum",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     },
     "local-state-token-validator": {
       "address": "addr_test1xqd5m8p22gl4qshnkxyvahlq02k7uy23usvt74ugr8wykk3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnspgzxfx",
@@ -66,13 +78,25 @@
       "description": "Holds LocalStateToken with {courseId} datum AND embedded course validator script_ref",
       "hasScriptRef": true,
       "designNote": "Courses carry their own validator as an embedded script reference. This allows course-specific validation logic.",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     },
     "course-governance-validator": {
       "address": "addr_test1xpswwtj7upt9gh7txled87dc20dwmc6k294ttjq03p4x225ey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtt05jv",
       "purpose": "spend",
       "description": "Holds course governance token with {teachers: [aliases]} datum",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
+    },
+    "module-validator": {
+      "address": "addr_test1xqygr5q96scpwjxlt24s377nq2kk9ur2rd4323nye94ehfuey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmq5egxwn",
+      "purpose": "spend",
+      "description": "Holds module tokens with {course_creator_pkh, teachers, additional_data} datum",
+      "inferredFrom": ["course.teacher.modules-manage"]
+    },
+    "course-state-validator": {
+      "address": "addr_test1xzg7rrkaypn8m64pus8q3ydenu433mzddq3a25atanz77xyey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmq88awls",
+      "purpose": "spend",
+      "description": "Holds student course state tokens with assignment commitment data",
+      "inferredFrom": ["course.student.enroll", "course.teacher.assignments-assess"]
     }
   },
   "observers": {
@@ -86,7 +110,7 @@
       "stakeAddress": "stake_test17zxrdv3h8h00m2ymhqfgqtkgdqz2wlxuc2ulfurjs7950msgfaf96",
       "purpose": "withdraw",
       "description": "Observer for course operations - receives list of tx output refs as redeemer",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     }
   },
   "wallets": {
@@ -104,7 +128,7 @@
       },
       "description": "Instance treasury for course operations",
       "designNote": "Instance-specific treasury. Fees vary by operation type.",
-      "inferredFrom": ["admin.course-create", "admin.course-teachers-update"]
+      "inferredFrom": ["course.admin.create", "course.admin.teachers-update"]
     }
   },
   "referenceUtxos": {
@@ -118,23 +142,27 @@
     },
     "35d93ccfe17ccd6de427c66818f19eb79d729b7abd825be02441a70dfd769aff#3": {
       "description": "Script reference",
-      "inferredFrom": ["admin.course-teachers-update"]
+      "inferredFrom": ["course.admin.teachers-update"]
     },
     "35d93ccfe17ccd6de427c66818f19eb79d729b7abd825be02441a70dfd769aff#4": {
       "description": "Script reference (course-create) - same base tx",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     },
     "fbc7d62489b51e81026b2ed695417cba6a657ac5429d4bb8211bfc7d5aa667a9#0": {
       "description": "Script reference (course-create)",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     },
     "fbc7d62489b51e81026b2ed695417cba6a657ac5429d4bb8211bfc7d5aa667a9#1": {
       "description": "Script reference (course-create)",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
     },
     "fc92ebcf115d39914192a816020cd47ce89253209a05f0f30e6bd9f926d11aee#3": {
       "description": "Script reference (course-create)",
-      "inferredFrom": ["admin.course-create"]
+      "inferredFrom": ["course.admin.create"]
+    },
+    "1937336fdedcd62c377c898494e98bec611b5673c7621aad6e8a79e536b9609a#4": {
+      "description": "Script reference (modules-manage)",
+      "inferredFrom": ["course.teacher.modules-manage"]
     }
   }
 }

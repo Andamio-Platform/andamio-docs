@@ -1,0 +1,1217 @@
+{
+  "schemes": [],
+  "swagger": "2.0",
+  "info": {
+    "description": "Andamio Protocol indexer API",
+    "title": "Andamioscan API",
+    "contact": {},
+    "version": "1.0"
+  },
+  "host": "preprod.andamioscan.andamio.space",
+  "basePath": "/",
+  "paths": {
+    "/v2/courses": {
+      "get": {
+        "description": "Get all courses or a specific course by course_id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "courses"
+        ],
+        "summary": "Get all courses or a specific course",
+        "responses": {
+          "200": {
+            "description": "Single course when course_id provided",
+            "schema": {
+              "$ref": "#/definitions/models.Course"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/courses/{course_id}": {
+      "get": {
+        "description": "Get all courses or a specific course by course_id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "courses"
+        ],
+        "summary": "Get all courses or a specific course",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Course ID",
+            "name": "course_id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single course when course_id provided",
+            "schema": {
+              "$ref": "#/definitions/models.Course"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/courses/{course_id}/students": {
+      "get": {
+        "description": "Get students by course_id or a specific student by alias",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "courses"
+        ],
+        "summary": "Get students by course_id or a specific student",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Course ID",
+            "name": "course_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single student when alias provided",
+            "schema": {
+              "$ref": "#/definitions/models.Student"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/courses/{course_id}/students/{alias}": {
+      "get": {
+        "description": "Get students by course_id or a specific student by alias",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "courses"
+        ],
+        "summary": "Get students by course_id or a specific student",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Course ID",
+            "name": "course_id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Student alias",
+            "name": "alias",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Single student when alias provided",
+            "schema": {
+              "$ref": "#/definitions/models.Student"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions": {
+      "get": {
+        "description": "Get transactions either by tx hash or by type",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get transactions",
+        "parameters": [
+          {
+            "enum": [
+              "UserAccessTokenMint",
+              "AdminCourseCreate",
+              "AdminCourseTeachersUpdate",
+              "StudentCourseEnroll",
+              "StudentCourseAssignmentSubmit",
+              "StudentCourseAssignmentUpdate",
+              "StudentCourseCredentialClaim",
+              "TeacherCourseAssignmentsAssess",
+              "TeacherCourseModulesManage"
+            ],
+            "type": "string",
+            "description": "Transaction type",
+            "name": "type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.Transaction"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/admincourse/create/{tx_hash}": {
+      "get": {
+        "description": "Get list of admin course create transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get admin course create transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionAdminCourseCreate"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/admincourse/teachers_update/{tx_hash}": {
+      "get": {
+        "description": "Get list of admin course teachers update transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get admin course teachers update transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionAdminCourseTeachersUpdate"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/count": {
+      "get": {
+        "description": "Get total number of all transactions",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get transaction count",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.TransactionCountResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/studentcourse/assignment_submit/{tx_hash}": {
+      "get": {
+        "description": "Get list of student course assignment submit transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get student course assignment submit transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionStudentCourseAssignmentSubmit"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/studentcourse/assignment_update/{tx_hash}": {
+      "get": {
+        "description": "Get list of student course assignment update transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get student course assignment update transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionStudentCourseAssignmentUpdate"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/studentcourse/credential_claim/{tx_hash}": {
+      "get": {
+        "description": "Get list of student course credential claim transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get student course credential claim transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionStudentCourseCredentialClaim"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/studentcourse/enroll/{tx_hash}": {
+      "get": {
+        "description": "Get list of student course enroll transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get student course enroll transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionStudentCourseEnroll"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/teachercourse/assignments_assess/{tx_hash}": {
+      "get": {
+        "description": "Get list of teacher course assignments assess transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get teacher course assignments assess transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionTeacherCourseAssignmentsAssess"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/teachercourse/modules_manage/{tx_hash}": {
+      "get": {
+        "description": "Get list of teacher course modules manage transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get teacher course modules manage transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionTeacherCourseModulesManage"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/useraccesstoken/mint/{tx_hash}": {
+      "get": {
+        "description": "Get list of user access token mint transactions by tx hash",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get user access token mint transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.TransactionUserAccessTokenMint"
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/transactions/{tx_hash}": {
+      "get": {
+        "description": "Get transactions either by tx hash or by type",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "transactions"
+        ],
+        "summary": "Get transactions",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Transaction hash",
+            "name": "tx_hash",
+            "in": "path"
+          },
+          {
+            "enum": [
+              "UserAccessTokenMint",
+              "AdminCourseCreate",
+              "AdminCourseTeachersUpdate",
+              "StudentCourseEnroll",
+              "StudentCourseAssignmentSubmit",
+              "StudentCourseAssignmentUpdate",
+              "StudentCourseCredentialClaim",
+              "TeacherCourseAssignmentsAssess",
+              "TeacherCourseModulesManage"
+            ],
+            "type": "string",
+            "description": "Transaction type",
+            "name": "type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/models.Transaction"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/all": {
+      "get": {
+        "description": "Get all users",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "Get all users",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/v2/user/global-state/{alias}": {
+      "get": {
+        "description": "Get user global state",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user global state",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Alias",
+            "name": "alias",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.UserGlobalState"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "github_com_nelsonksh_andamioscan_internal_api_dto.ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      }
+    },
+    "github_com_nelsonksh_andamioscan_internal_api_dto.TransactionCountResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.TransactionCounts"
+        }
+      }
+    },
+    "github_com_nelsonksh_andamioscan_internal_api_dto.TransactionCounts": {
+      "type": "object",
+      "properties": {
+        "assess_assignment": {
+          "type": "integer"
+        },
+        "claim_credential": {
+          "type": "integer"
+        },
+        "create_course": {
+          "type": "integer"
+        },
+        "enroll_course": {
+          "type": "integer"
+        },
+        "manage_modules": {
+          "type": "integer"
+        },
+        "mint_access_token": {
+          "type": "integer"
+        },
+        "submit_assignment": {
+          "type": "integer"
+        },
+        "total": {
+          "type": "integer"
+        },
+        "unknown": {
+          "type": "integer"
+        },
+        "update_assignment": {
+          "type": "integer"
+        },
+        "update_teachers": {
+          "type": "integer"
+        }
+      }
+    },
+    "github_com_nelsonksh_andamioscan_internal_api_dto.UserCourse": {
+      "type": "object",
+      "properties": {
+        "course_id": {
+          "type": "string"
+        },
+        "credential_id": {
+          "type": "string"
+        },
+        "credentials": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "is_enrolled": {
+          "type": "boolean"
+        }
+      }
+    },
+    "github_com_nelsonksh_andamioscan_internal_api_dto.UserGlobalState": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "courses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/github_com_nelsonksh_andamioscan_internal_api_dto.UserCourse"
+          }
+        }
+      }
+    },
+    "models.Assessment": {
+      "type": "object",
+      "properties": {
+        "assessment": {
+          "$ref": "#/definitions/models.Decision"
+        },
+        "studentAlias": {
+          "type": "string"
+        }
+      }
+    },
+    "models.Course": {
+      "type": "object",
+      "properties": {
+        "course_address": {
+          "type": "string"
+        },
+        "course_id": {
+          "type": "string"
+        },
+        "course_state_policy_id": {
+          "type": "string"
+        },
+        "modules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.Module"
+          }
+        },
+        "teachers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models.Decision": {
+      "type": "string",
+      "enum": [
+        "accept",
+        "refuse"
+      ],
+      "x-enum-varnames": [
+        "Accept",
+        "Refuse"
+      ]
+    },
+    "models.Module": {
+      "type": "object",
+      "properties": {
+        "assignment_id": {
+          "type": "string"
+        },
+        "created_by": {
+          "type": "string"
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "slts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models.ModuleCreate": {
+      "type": "object",
+      "properties": {
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "slts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models.ModuleUpdate": {
+      "type": "object",
+      "properties": {
+        "prerequisites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models.Modules": {
+      "type": "object",
+      "properties": {
+        "create": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.ModulesCreated"
+          }
+        },
+        "delete": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.ModulesDeleted"
+          }
+        },
+        "update": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.ModulesUpdated"
+          }
+        }
+      }
+    },
+    "models.ModulesCreated": {
+      "type": "object",
+      "properties": {
+        "assignmentId": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "module": {
+          "$ref": "#/definitions/models.ModuleCreate"
+        }
+      }
+    },
+    "models.ModulesDeleted": {
+      "type": "object",
+      "properties": {
+        "assignmentId": {
+          "type": "string"
+        }
+      }
+    },
+    "models.ModulesUpdated": {
+      "type": "object",
+      "properties": {
+        "assignmentId": {
+          "type": "string"
+        },
+        "module": {
+          "$ref": "#/definitions/models.ModuleUpdate"
+        }
+      }
+    },
+    "models.Student": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "completed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "course_id": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        }
+      }
+    },
+    "models.Transaction": {
+      "type": "object",
+      "properties": {
+        "submitted_at": {
+          "type": "string"
+        },
+        "tx_hash": {
+          "type": "string"
+        },
+        "types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "models.TransactionAdminCourseCreate": {
+      "type": "object",
+      "properties": {
+        "admin": {
+          "type": "string"
+        },
+        "courseAddress": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "courseStatePolicyId": {
+          "type": "string"
+        },
+        "teachers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionAdminCourseTeachersUpdate": {
+      "type": "object",
+      "properties": {
+        "courseId": {
+          "type": "string"
+        },
+        "teachers": {
+          "description": "Stores add/remove operations as JSON",
+          "type": "string"
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionStudentCourseAssignmentSubmit": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "assignmentId": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionStudentCourseAssignmentUpdate": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "assignmentId": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionStudentCourseCredentialClaim": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "credentialId": {
+          "type": "string"
+        },
+        "credentials": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionStudentCourseEnroll": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionTeacherCourseAssignmentsAssess": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "assessments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/models.Assessment"
+          }
+        },
+        "assignmentId": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionTeacherCourseModulesManage": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "courseId": {
+          "type": "string"
+        },
+        "modules": {
+          "$ref": "#/definitions/models.Modules"
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    },
+    "models.TransactionUserAccessTokenMint": {
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "tx": {
+          "$ref": "#/definitions/models.Transaction"
+        },
+        "txHash": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

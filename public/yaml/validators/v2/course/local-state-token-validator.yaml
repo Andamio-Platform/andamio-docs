@@ -1,0 +1,55 @@
+# V2 Validator: Local State Token Validator
+# Status: PLACEHOLDER - needs CBOR analysis to complete
+
+id: "course.local-state-token-validator"
+name: "Local State Token Validator"
+system: "course"
+status: "placeholder"
+
+# From address-registry.json
+address: "addr_test1xqd5m8p22gl4qshnkxyvahlq02k7uy23usvt74ugr8wykk3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnspgzxfx"
+purpose: "spend"
+
+description: |
+  Holds LocalStateToken UTxOs for course registration. Critical feature: contains
+  an embedded script_ref (the course validator itself), which is why it requires
+  ~17 ADA deposit.
+
+# Known from CBOR analysis
+known_facts:
+  - "Holds LocalStateToken (policy: 1b4d9c2a523f5042f3b188cedfe07aadee1151e418bf578819dc4b5a)"
+  - "Contains embedded script_ref (~3.6KB Plutus script)"
+  - "Datum contains courseId (the LocalStateNFT policy ID)"
+  - "High minUTxO (~17 ADA) due to embedded script"
+
+# Transactions that use this validator
+used_in:
+  - transaction: "course.admin.create"
+    role: "output"
+    notes: "Created when course is initialized"
+
+# TODO: Discover from additional CBOR analysis
+datum_schema:
+  status: "partial"
+  known_fields:
+    - name: "course_nft_policy"
+      type: "bytes"
+      description: "The courseId (LocalStateNFT policy ID)"
+  unknown_fields: []
+
+redeemers:
+  status: "unknown"
+  notes: "Need to analyze a transaction that spends this UTxO"
+  known_actions: []
+
+# Related components
+related:
+  policy: "local-state-token-policy"
+  tokens:
+    - name: "LocalStateToken"
+      hex: "4c6f63616c5374617465546f6b656e"
+
+questions:
+  - "When is this UTxO ever spent? Course deletion?"
+  - "What redeemer actions are available?"
+  - "Is the embedded script_ref the same for all courses or parameterized?"

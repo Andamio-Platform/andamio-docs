@@ -1,0 +1,96 @@
+# V2 Validator: Global State V2
+# Status: WELL DOCUMENTED - multiple transactions analyzed
+
+id: "general.global-state-v2"
+name: "Global State V2 Validator"
+system: "general"
+status: "documented"
+
+# From address-registry.json
+address: "addr_test1xzklyz29dtcmeed2fer9x4y7z205h5l8ng4n57trw6fgdu3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsm4xa2p"
+purpose: "spend"
+
+description: |
+  Holds user's global state token (g-prefixed) with their alias and a map of
+  local state registrations. The map tracks course enrollments and credentials.
+
+# Known from CBOR analysis
+known_facts:
+  - "Holds g-prefixed token (policy: 39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b)"
+  - "Token name = 'g' + alias"
+  - "Datum contains alias and local_state_map"
+  - "Map value changes from course_state_hash to credential_hash on claim"
+  - "~1.26-1.56 ADA minUTxO depending on map size"
+
+# Transactions that use this validator
+used_in:
+  - transaction: "general.mint-access-token"
+    role: "output"
+    notes: "Created with empty local_state_map"
+
+  - transaction: "course.student.enroll"
+    role: "input+output"
+    notes: "Spent and recreated with courseId added to map"
+    redeemer: "constructor for enrollment"
+
+  - transaction: "course.student.credential-claim"
+    role: "input+output"
+    notes: "Spent and recreated with map value changed to credential_hash"
+    redeemer: "constructor 1 (update with credential)"
+
+# Datum schema (well documented from CBOR)
+datum_schema:
+  status: "complete"
+  format: "constructor 0"
+  fields:
+    - name: "alias"
+      type: "bytes"
+      description: "User's alias"
+      example: '"manager_001"'
+    - name: "local_state_map"
+      type: "map"
+      description: "Map of courseId → state_hash"
+      key_type: "bytes (courseId)"
+      value_type: "bytes (course_state_token_hash or credential_hash)"
+      notes: |
+        - Empty on creation
+        - courseId added on enrollment with course_state_token_hash as value
+        - Value changes to credential_hash when credential is claimed
+
+# Redeemers (partial from CBOR)
+redeemers:
+  status: "partial"
+  actions:
+    - constructor: 1
+      name: "Update with credential"
+      description: "Update map value to credential hash"
+      fields:
+        - name: "course_id"
+          type: "bytes"
+        - name: "index"
+          type: "int"
+        - name: "empty_bytes"
+          type: "bytes"
+        - name: "course_state_policy"
+          type: "bytes"
+        - name: "credential_hash"
+          type: "bytes"
+      used_in: ["credential-claim"]
+
+    - constructor: "unknown"
+      name: "Enroll"
+      description: "Add courseId to map"
+      used_in: ["enroll"]
+
+# Related components
+related:
+  policy: "index-policy"
+  policy_id: "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"
+  tokens:
+    - name: "g<alias>"
+      description: "Global state token with 'g' prefix"
+
+design_notes:
+  - "local_state_map tracks all course enrollments and credentials"
+  - "Credential hash stored permanently - proof of course completion"
+  - "Can have multiple courseId entries (enrolled in multiple courses)"

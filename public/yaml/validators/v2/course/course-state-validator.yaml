@@ -1,0 +1,116 @@
+# V2 Validator: Course State Validator
+# Status: WELL DOCUMENTED - multiple transactions analyzed
+
+id: "course.course-state-validator"
+name: "Course State Validator"
+system: "course"
+status: "documented"
+
+# From address-registry.json
+address: "addr_test1xzg7rrkaypn8m64pus8q3ydenu433mzddq3a25atanz77xyey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmq88awls"
+purpose: "spend"
+
+description: |
+  Holds student course state tokens tracking enrollment and assignment progress.
+  Token name is the student alias. Datum structure changes based on assignment
+  state (pending vs completed).
+
+# Known from CBOR analysis
+known_facts:
+  - "Holds course state tokens (policy: 91e18edd20667deaa1e40e0891b99f2b18ec4d6823d553abecc5ef18)"
+  - "Policy is parameterized per course"
+  - "Token name = student alias"
+  - "Datum constructor 0 = completed, constructor 1 = pending"
+  - "~1.38-1.50 ADA minUTxO depending on datum size"
+
+# Transactions that use this validator
+used_in:
+  - transaction: "course.student.enroll"
+    role: "output"
+    notes: "Created when student enrolls, with optional assignment commitment"
+    datum: "constructor 1 (pending) or constructor 0 (no assignment)"
+
+  - transaction: "course.student.assignment-update"
+    role: "input+output"
+    notes: "Spent and recreated with updated assignment_info"
+    redeemer: "constructor 1 (update)"
+
+  - transaction: "course.teacher.assignments-assess"
+    role: "input+output"
+    notes: "Spent and recreated with assessment result"
+    redeemer: "constructor 2 (assess)"
+
+  - transaction: "course.student.credential-claim"
+    role: "input (burned)"
+    notes: "Spent and token burned when claiming credential"
+    redeemer: "constructor 3 (burn/claim)"
+
+# Datum schema (well documented from CBOR)
+datum_schema:
+  status: "complete"
+  variants:
+    - constructor: 0
+      name: "Completed"
+      description: "No pending assignment, list of completed SLT hashes"
+      fields:
+        - name: "completed_slts"
+          type: "list of bytes"
+          description: "List of completed SLT hashes"
+
+    - constructor: 1
+      name: "Pending"
+      description: "Has pending assignment awaiting assessment"
+      fields:
+        - name: "slt_hash"
+          type: "bytes"
+          description: "SLT hash of pending assignment"
+        - name: "assignment_info"
+          type: "bytes"
+          description: "Student's submission info"
+        - name: "additional"
+          type: "list"
+          description: "Additional data (empty in examples)"
+
+# Redeemers (well documented from CBOR)
+redeemers:
+  status: "complete"
+  actions:
+    - constructor: 1
+      name: "Update"
+      description: "Student updates their assignment submission"
+      fields:
+        - nested_constructor: 0
+          fields:
+            - name: "slt_hash"
+              type: "bytes"
+            - name: "assignment_info"
+              type: "bytes"
+      used_in: ["assignment-update"]
+
+    - constructor: 2
+      name: "Assess"
+      description: "Teacher assesses student's assignment"
+      fields:
+        - name: "teacher_alias"
+          type: "bytes"
+      used_in: ["assignments-assess"]
+
+    - constructor: 3
+      name: "Burn/Claim"
+      description: "Student claims credential, burns token"
+      fields: []
+      used_in: ["credential-claim"]
+
+# Related components
+related:
+  policy: "course-state-policy"
+  policy_id: "91e18edd20667deaa1e40e0891b99f2b18ec4d6823d553abecc5ef18"
+  tokens:
+    - name: "<student_alias>"
+      description: "Token name is the student's alias"
+
+cost_notes:
+  - "Pending datum (constructor 1) requires more lovelace than completed (constructor 0)"
+  - "assignment_info length affects minUTxO"
+  - "On assessment accept, datum shrinks → lovelace released to teacher"
+  - "On credential claim, ~1.38 ADA released to student"

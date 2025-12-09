@@ -1,0 +1,71 @@
+# V2 Validator: Course Governance Validator
+# Status: PLACEHOLDER - partially complete from CBOR analysis
+
+id: "course.course-governance-validator"
+name: "Course Governance Validator"
+system: "course"
+status: "placeholder"
+
+# From address-registry.json
+address: "addr_test1xpswwtj7upt9gh7txled87dc20dwmc6k294ttjq03p4x225ey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtt05jv"
+purpose: "spend"
+
+description: |
+  Manages the teacher list for a course. Holds a governance token (named after
+  the courseId) and a datum containing the list of authorized teacher aliases.
+  Spent and recreated when teachers are added/removed.
+
+# Known from CBOR analysis
+known_facts:
+  - "Holds course governance token (policy: 60e72e5ee056545fcb37f2d3f9b853daede356516ab5c80f886a652a)"
+  - "Token name = courseId (the LocalStateNFT policy ID)"
+  - "Datum contains list of teacher aliases"
+  - "Spent to verify teacher authorization in modules-manage"
+
+# Transactions that use this validator
+used_in:
+  - transaction: "course.admin.create"
+    role: "output"
+    notes: "Created when course is initialized with initial teachers"
+
+  - transaction: "course.admin.teachers-update"
+    role: "input+output"
+    notes: "Spent and recreated with updated teacher list"
+    redeemer: "bytes (courseId)"
+
+  - transaction: "course.teacher.modules-manage"
+    role: "input+output"
+    notes: "Spent to verify teacher is authorized, then recreated unchanged"
+
+# Datum schema (known from CBOR)
+datum_schema:
+  status: "complete"
+  format: "constructor 0 (inferred)"
+  fields:
+    - name: "teachers"
+      type: "list of bytes"
+      description: "List of authorized teacher aliases"
+      example: '["james", "nelsonksh"]'
+
+redeemers:
+  status: "partial"
+  known_actions:
+    - constructor: "unknown"
+      data: "bytes (courseId)"
+      used_in: ["teachers-update", "modules-manage"]
+      description: "Spend action - courseId used for validation"
+  unknown_actions:
+    - "Are there different redeemer constructors for add vs remove teachers?"
+
+# Related components
+related:
+  policy: "course-governance-policy"
+  policy_id: "60e72e5ee056545fcb37f2d3f9b853daede356516ab5c80f886a652a"
+  tokens:
+    - name: "<courseId>"
+      description: "Token name is the course's LocalStateNFT policy ID"
+
+questions:
+  - "What is the redeemer constructor number?"
+  - "Are add/remove teachers different redeemer actions or same action with different datum?"
+  - "Can governance token ever be burned (course deletion)?"

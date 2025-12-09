@@ -10,6 +10,8 @@
     "convert-swagger": "node scripts/convert-swagger-to-openapi.mjs",
     "generate-example-docs": "npm run convert-swagger",
     "generate-all-api-docs": "node scripts/generate-all-api-docs.mjs",
+    "generate-andamioscan-docs": "node scripts/generate-andamioscan-docs.mjs",
+    "build-all-docs": "node scripts/build-all-docs.mjs",
     "docs-coverage": "npx tsx scripts/docs-coverage-check.ts"
   },
   "dependencies": {
