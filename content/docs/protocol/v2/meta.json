@@ -1,8 +1,10 @@
 {
-    "title": "V2",
+    "title": "Protocol V2",
     "pages": [
-        "global-state",
-        "..."
+        "index",
+        "validators",
+        "transactions",
+        "tokens"
     ],
     "defaultOpen": false
 }

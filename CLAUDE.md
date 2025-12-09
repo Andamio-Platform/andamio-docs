@@ -528,6 +528,21 @@ Should we start with one of these, or would you prefer a different term?"
 
 Use this game whenever terminology seems unclear or when starting work on new aspects of the Andamio protocol.
 
+## V2 Protocol Documentation (In Progress)
+
+**Session started**: 2025-12-08
+
+We are building V2 protocol documentation by parsing decoded transaction CBORs from the Atlas API. Progress and context is tracked in:
+
+- `public/yaml/transactions/v2/SESSION-NOTES.md` - Full session context and how to resume
+- `public/yaml/transactions/v2/address-registry.json` - Validators, policies, observers
+- `public/yaml/transactions/v2/cost-registry.json` - Fee structures
+- `public/yaml/transactions/v2/endpoint-registry.json` - API schemas
+
+**Status**: 3/8 transactions parsed (mint-access-token, course-create, course-teachers-update)
+
+**To resume**: Read SESSION-NOTES.md, then continue parsing remaining 5 transaction CBORs
+
 # important-instruction-reminders
 Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.

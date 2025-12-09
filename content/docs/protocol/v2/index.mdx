@@ -1,0 +1,89 @@
+---
+title: "Protocol V2"
+description: "Andamio Protocol V2 - Enhanced state management, simplified roles, and migration support"
+---
+
+# Andamio Protocol V2
+
+Protocol V2 introduces architectural improvements that simplify the role structure, enhance state management, and provide a clear migration path from V1.
+
+## Key Changes from V1
+
+| Aspect | V1 | V2 |
+|--------|----|----|
+| **Transaction Types** | 29 across 8 roles | 13 across 5 roles |
+| **Role Structure** | admin, contributor, course-creator, project-creator, student, general | admin, contributor, student, general, user |
+| **State Management** | Separate state validators | Unified Global State V2 with local state registration |
+| **Migration** | N/A | Built-in V1 to V2 migration support |
+
+## V2 Architecture Overview
+
+### Simplified Role Structure
+
+V2 consolidates roles by removing `course-creator` and `project-creator` - these functions are now handled by `admin` transactions. This reduces complexity while maintaining full functionality.
+
+**Active Roles in V2:**
+- **Admin** - Instance administrators managing courses and projects
+- **Contributor** - Project participants earning rewards
+- **Student** - Course participants completing assignments
+- **General** - Protocol-wide operations (access tokens, registration)
+- **User** - Migration operations (V1 to V2 transition)
+
+### New Systems in V2
+
+1. **Local State Registration** - New `global` validator system for registering local states to the global V2 system
+2. **Global State V2** - Enhanced state management with improved tracking and coordination
+3. **Course State V2** - Upgraded course validators with better state handling
+4. **Contributor State V2** - Enhanced contributor tracking and reward distribution
+
+## Protocol Components
+
+### [Validators](/docs/protocol/v2/validators)
+
+V2 validators organized by system:
+
+| System | Validators | Purpose |
+|--------|------------|---------|
+| [Global State](/docs/protocol/v2/validators/global-state) | 2 | Core protocol state (V1 compat + V2 enhanced) |
+| [Global](/docs/protocol/v2/validators/global) | 1 | Local state registration |
+| [Index Validators](/docs/protocol/v2/validators/index-validators) | 3 | Access token minting and index references |
+| [Instance](/docs/protocol/v2/validators/instance) | 3 | Instance-level management |
+| [Course](/docs/protocol/v2/validators/course) | 4 + 3 observers | Course and assignment management |
+| [Project](/docs/protocol/v2/validators/project) | 3 + 4 observers | Contributor and treasury management |
+
+### [Transactions](/docs/protocol/v2/transactions)
+
+V2 transactions organized by role:
+
+| Role | Transactions | Key Operations |
+|------|--------------|----------------|
+| [Admin](/docs/protocol/v2/transactions/admin) | 3 | init-course, init-project (2 steps) |
+| [Contributor](/docs/protocol/v2/transactions/contributor) | 4 | mint/burn state, commit, get-rewards |
+| [Student](/docs/protocol/v2/transactions/student) | 3 | mint state, commit, burn state |
+| [General](/docs/protocol/v2/transactions/general) | 2 | access-token-mint, register-local-state |
+| [User](/docs/protocol/v2/transactions/user) | 1 | move-global-state-v1-to-v2 |
+
+### [Tokens](/docs/protocol/v2/tokens)
+
+V2 tokens organized by system:
+
+| System | Key Tokens |
+|--------|------------|
+| [Global State](/docs/protocol/v2/tokens/global-state) | access-token-user, access-token-global-state, access-token-index |
+| [Global](/docs/protocol/v2/tokens/global) | local-state-registration |
+| [Local State](/docs/protocol/v2/tokens/local-state) | local-state-nft |
+| [Instance](/docs/protocol/v2/tokens/instance) | instance-admin-token, course-nft, project-nft |
+| [Course](/docs/protocol/v2/tokens/course) | course-state-v2-token, module-token |
+| [Project](/docs/protocol/v2/tokens/project) | contributor-state-v2-token, treasury-token |
+
+## Migration from V1
+
+Users with V1 global state can migrate to V2 using the [move-global-state-v1-to-v2](/docs/protocol/v2/transactions/user/move-global-state-v1-to-v2) transaction. This preserves existing access tokens while enabling V2 features.
+
+## Source of Truth
+
+The V2 protocol is defined in the [validator-registry-v2.yaml](/yaml/validator-registry-v2.yaml) file, which serves as the central registry for all validators, redeemers, and token definitions.
+
+## Status
+
+Protocol V2 is under active development. Documentation will be updated as the protocol evolves.

@@ -1,0 +1,66 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2025-12-08",
+  "network": "preprod",
+  "notes": [
+    "Costs extracted from decoded transaction CBORs",
+    "Values are in lovelace unless noted",
+    "Min UTxO depends on datum/token size - these are observed values",
+    "Tx fees depend on script execution units - will vary"
+  ],
+  "protocolFees": {
+    "mint-access-token": {
+      "amount": 5000000,
+      "recipient": "protocol-treasury",
+      "description": "Fixed 5 ADA fee for minting access token"
+    }
+  },
+  "transactionCosts": {
+    "general.mint-access-token": {
+      "txFee": 368270,
+      "txFeeAda": "~0.37 ADA",
+      "protocolFee": 5000000,
+      "protocolFeeAda": "5 ADA",
+      "minUtxoOutputs": {
+        "index-node": {
+          "observed": [1314550, 1327480],
+          "average": 1321015,
+          "description": "Index linked list node with datum + space token"
+        },
+        "global-state-v2": {
+          "observed": [1422300],
+          "average": 1422300,
+          "description": "Global state UTxO with datum + g-token"
+        }
+      },
+      "estimatedTotalCost": {
+        "lovelace": 9383135,
+        "ada": "~9.4 ADA",
+        "breakdown": "txFee + protocolFee + 2*indexNode + globalState"
+      },
+      "executionUnits": {
+        "spend": { "mem": 87883, "steps": 29307972 },
+        "mint": { "mem": 523332, "steps": 181779764 },
+        "reward": { "mem": 86253, "steps": 34770079 }
+      },
+      "collateral": {
+        "required": 552405,
+        "description": "Total collateral for script execution"
+      }
+    }
+  },
+  "minUtxoByType": {
+    "index-node": {
+      "samples": [
+        { "tx": "general.mint-access-token", "values": [1314550, 1327480] }
+      ],
+      "estimatedRange": { "min": 1300000, "max": 1350000 }
+    },
+    "global-state-v2": {
+      "samples": [
+        { "tx": "general.mint-access-token", "values": [1422300] }
+      ],
+      "estimatedRange": { "min": 1400000, "max": 1500000 }
+    }
+  }
+}

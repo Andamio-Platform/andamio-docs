@@ -1,0 +1,392 @@
+{
+  "version": "0.1.0",
+  "lastUpdated": "2025-12-08",
+  "baseUrl": "https://atlas-api-preprod-507341199760.us-central1.run.app",
+  "notes": [
+    "TEMPORARY: Endpoint pattern will change from /tx/v2/{role}/{system}/{action} to /tx/v2/{system}/{role}/{action}",
+    "Update the 'endpoint' field for each transaction when the API pattern changes"
+  ],
+  "urlPattern": {
+    "current": "/tx/v2/{role}/{system}/{action}",
+    "upcoming": "/tx/v2/{system}/{role}/{action}"
+  },
+  "commonTypes": {
+    "Alias": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_]+$",
+      "minLength": 1,
+      "maxLength": 31,
+      "description": "Alphanumeric identifier with underscores"
+    },
+    "GYMintingPolicyId": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{56}$",
+      "description": "56-character hex minting policy ID"
+    },
+    "CourseId": {
+      "type": "GYMintingPolicyId",
+      "description": "Course NFT policy ID - identifies a specific course"
+    },
+    "SltHash": {
+      "type": "string",
+      "pattern": "^[a-fA-F0-9]{64}$",
+      "description": "64-character hex hash for SLT references"
+    },
+    "GYAddressBech32": {
+      "type": "string",
+      "description": "Cardano address in Bech32 format"
+    },
+    "WalletData": {
+      "type": "object",
+      "properties": {
+        "usedAddresses": {
+          "type": "array",
+          "items": "GYAddressBech32"
+        },
+        "changeAddress": "GYAddressBech32"
+      }
+    }
+  },
+  "transactions": {
+    "general.mint-access-token": {
+      "role": "general",
+      "system": "general",
+      "action": "mint-access-token",
+      "endpoint": "/tx/v2/general/mint-access-token",
+      "method": "POST",
+      "description": "Mint access tokens for protocol participation",
+      "requestBody": "MintAccessTokenV2TxRequest",
+      "request": {
+        "walletData": {
+          "type": "GYAddressBech32",
+          "required": true
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "admin.course-create": {
+      "role": "admin",
+      "system": "course",
+      "action": "create",
+      "endpoint": "/tx/v2/admin/course/create",
+      "method": "POST",
+      "description": "Create a new course",
+      "requestBody": "InitCourseV2TxRequest",
+      "request": {
+        "walletData": {
+          "type": "WalletData",
+          "required": false
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        },
+        "teachers": {
+          "type": "array",
+          "items": "Alias",
+          "required": true,
+          "description": "List of teacher aliases"
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        },
+        "courseId": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "The created course's policy ID"
+        }
+      }
+    },
+    "admin.course-teachers-update": {
+      "role": "admin",
+      "system": "course",
+      "action": "teachers/update",
+      "endpoint": "/tx/v2/admin/course/teachers/update",
+      "method": "POST",
+      "description": "Manage course governance and teachers",
+      "requestBody": "ManageCourseGovernanceTxRequest",
+      "request": {
+        "walletData": {
+          "type": "WalletData",
+          "required": false
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        },
+        "courseId": {
+          "type": "GYMintingPolicyId",
+          "required": true
+        },
+        "teachersToAdd": {
+          "type": "array",
+          "items": "Alias",
+          "required": true
+        },
+        "teachersToRemove": {
+          "type": "array",
+          "items": "Alias",
+          "required": true
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "teacher.course-modules-manage": {
+      "role": "teacher",
+      "system": "course",
+      "action": "modules/manage",
+      "endpoint": "/tx/v2/teacher/course/modules/manage",
+      "method": "POST",
+      "description": "Mint and manage course modules",
+      "requestBody": "ManageModulesV2TxRequest",
+      "request": {
+        "walletData": {
+          "type": "WalletData",
+          "required": false
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        },
+        "courseId": {
+          "type": "GYMintingPolicyId",
+          "required": true
+        },
+        "modulesToMint": {
+          "type": "array",
+          "required": true,
+          "items": {
+            "type": "MintModuleV2",
+            "properties": {
+              "slts": {
+                "type": "array",
+                "items": "string",
+                "required": true
+              },
+              "allowedStudents_V2": {
+                "type": "array",
+                "items": "GYMintingPolicyId",
+                "required": true
+              },
+              "prerequisiteAssignments_V2": {
+                "type": "array",
+                "items": "SltHash",
+                "required": true
+              }
+            }
+          }
+        },
+        "modulesToUpdate": {
+          "type": "array",
+          "required": true,
+          "items": {
+            "type": "UpdateModuleV2",
+            "properties": {
+              "sltHash": {
+                "type": "SltHash",
+                "required": true
+              },
+              "allowedStudents_V2": {
+                "type": "array",
+                "items": "GYMintingPolicyId",
+                "required": true
+              },
+              "prerequisiteAssignments_V2": {
+                "type": "array",
+                "items": "SltHash",
+                "required": true
+              }
+            }
+          }
+        },
+        "modulesToBurn": {
+          "type": "array",
+          "items": "SltHash",
+          "required": true
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "teacher.course-assignments-assess": {
+      "role": "teacher",
+      "system": "course",
+      "action": "assignments/assess",
+      "endpoint": "/tx/v2/teacher/course/assignments/assess",
+      "method": "POST",
+      "description": "Assess and decide on student assignments",
+      "requestBody": "DecideAssignmentV2TxRequest",
+      "request": {
+        "walletData": {
+          "type": "WalletData",
+          "required": false
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        },
+        "courseId": {
+          "type": "GYMintingPolicyId",
+          "required": true
+        },
+        "assignmentDecisions": {
+          "type": "array",
+          "required": true,
+          "items": {
+            "type": "AssignmentOutcome",
+            "properties": {
+              "outcome": {
+                "type": "enum",
+                "values": ["accept", "refuse"],
+                "required": true
+              },
+              "alias": {
+                "type": "Alias",
+                "required": true,
+                "description": "Student alias"
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "student.course-enroll": {
+      "role": "student",
+      "system": "course",
+      "action": "enroll",
+      "endpoint": "/tx/v2/student/course/enroll",
+      "method": "POST",
+      "description": "Enroll in a course by minting course state",
+      "requestBody": "MintCourseStateV2TxRequest",
+      "request": {
+        "walletData": {
+          "type": "WalletData",
+          "required": false
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        },
+        "courseId": {
+          "type": "GYMintingPolicyId",
+          "required": true
+        },
+        "commitData": {
+          "type": "object",
+          "required": false,
+          "description": "Optional initial assignment commit",
+          "properties": {
+            "sltHash": {
+              "type": "SltHash",
+              "required": true
+            },
+            "assignmentInfo": {
+              "type": "string",
+              "required": true
+            }
+          }
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "student.course-assignment-update": {
+      "role": "student",
+      "system": "course",
+      "action": "assignment/update",
+      "endpoint": "/tx/v2/student/course/assignment/update",
+      "method": "POST",
+      "description": "Commit to or update an assignment",
+      "requestBody": "AssignmentActionV2TxRequest",
+      "request": {
+        "walletData": {
+          "type": "WalletData",
+          "required": false
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        },
+        "courseId": {
+          "type": "GYMintingPolicyId",
+          "required": true
+        },
+        "assignmentInfo": {
+          "type": "string",
+          "required": true
+        },
+        "maybeNewSltHash": {
+          "type": "SltHash",
+          "required": false,
+          "description": "Optional new SLT to commit to"
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "student.course-credential-claim": {
+      "role": "student",
+      "system": "course",
+      "action": "credential/claim",
+      "endpoint": "/tx/v2/student/course/credential/claim",
+      "method": "POST",
+      "description": "Claim credential by burning course state",
+      "requestBody": "BurnCourseStateV2TxRequest",
+      "request": {
+        "walletData": {
+          "type": "WalletData",
+          "required": false
+        },
+        "alias": {
+          "type": "Alias",
+          "required": true
+        },
+        "courseId": {
+          "type": "GYMintingPolicyId",
+          "required": true
+        }
+      },
+      "response": {
+        "unsignedTxCBOR": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  }
+}

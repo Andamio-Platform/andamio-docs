@@ -1,0 +1,140 @@
+{
+  "version": "0.2.0",
+  "lastUpdated": "2025-12-08",
+  "network": "preprod",
+  "notes": [
+    "Addresses and policy IDs inferred from decoded transaction CBORs",
+    "Will be validated against each new transaction example"
+  ],
+  "policies": {
+    "index-policy": {
+      "policyId": "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b",
+      "description": "Mints access tokens and index tokens",
+      "tokenPrefixes": {
+        "g": "global state token (g + alias)",
+        "u": "user access token (u + alias)",
+        "0x20": "index linked list marker (space character)"
+      },
+      "inferredFrom": ["general.mint-access-token", "admin.course-create"]
+    },
+    "local-state-token-policy": {
+      "policyId": "1b4d9c2a523f5042f3b188cedfe07aadee1151e418bf578819dc4b5a",
+      "description": "Mints LocalStateToken for course/project registration",
+      "tokens": {
+        "LocalStateToken": "4c6f63616c5374617465546f6b656e"
+      },
+      "inferredFrom": ["admin.course-create"]
+    },
+    "course-governance-policy": {
+      "policyId": "60e72e5ee056545fcb37f2d3f9b853daede356516ab5c80f886a652a",
+      "description": "Mints course governance tokens (token name = courseId)",
+      "tokenNaming": "Token name is the course NFT policy ID",
+      "inferredFrom": ["admin.course-create"]
+    },
+    "local-state-nft-policy": {
+      "policyId": "68396f1567f5b8d813517b82e1b07e62b4d61392621d916fa5dac3e7",
+      "description": "Mints LocalStateNFT - CRITICAL: This policy ID IS the courseId",
+      "tokens": {
+        "LocalStateNFT": "4c6f63616c53746174654e4654"
+      },
+      "designNote": "The LocalStateNFT minting policy ID doubles as the course identifier (courseId). This is a critical design feature - the courseId is not a separate token but the policy that mints the course's LocalStateNFT.",
+      "inferredFrom": ["admin.course-create"]
+    }
+  },
+  "validators": {
+    "index-validator": {
+      "address": "addr_test1xqum9pmty3vt3nvxn6mxtvj8gr0k3yrgfglxe4llds5tsjewgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsrr84hd",
+      "purpose": "spend",
+      "description": "Index linked list validator - holds index tokens with {prev_alias, next_alias} datum",
+      "inferredFrom": ["general.mint-access-token"]
+    },
+    "global-state-v2": {
+      "address": "addr_test1xzklyz29dtcmeed2fer9x4y7z205h5l8ng4n57trw6fgdu3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsm4xa2p",
+      "purpose": "spend",
+      "description": "Global State V2 validator - holds g-prefixed token with {alias, local_state_information} datum",
+      "inferredFrom": ["general.mint-access-token"]
+    },
+    "local-state-nft-validator": {
+      "address": "addr_test1xzlrs55we4u7speyteuqdnw7tl7u4npzm9p2j5l9lgfu32uey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtucd7n",
+      "purpose": "spend",
+      "description": "Holds LocalStateNFT with {alias} datum",
+      "inferredFrom": ["admin.course-create"]
+    },
+    "local-state-token-validator": {
+      "address": "addr_test1xqd5m8p22gl4qshnkxyvahlq02k7uy23usvt74ugr8wykk3wgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnspgzxfx",
+      "purpose": "spend",
+      "description": "Holds LocalStateToken with {courseId} datum AND embedded course validator script_ref",
+      "hasScriptRef": true,
+      "designNote": "Courses carry their own validator as an embedded script reference. This allows course-specific validation logic.",
+      "inferredFrom": ["admin.course-create"]
+    },
+    "course-governance-validator": {
+      "address": "addr_test1xpswwtj7upt9gh7txled87dc20dwmc6k294ttjq03p4x225ey3l3jfdh9fjp5r36meser0d70vlrls0agh62ur622jmqtt05jv",
+      "purpose": "spend",
+      "description": "Holds course governance token with {teachers: [aliases]} datum",
+      "inferredFrom": ["admin.course-create"]
+    }
+  },
+  "observers": {
+    "index-observer": {
+      "stakeAddress": "stake_test17qqz7k43cxmt0qxuu5x8jnvsy75k5thzpmt2mrvsrtfa8ac9vg5z3",
+      "purpose": "withdraw",
+      "description": "Observer for index operations - receives alias as redeemer",
+      "inferredFrom": ["general.mint-access-token"]
+    },
+    "course-observer": {
+      "stakeAddress": "stake_test17zxrdv3h8h00m2ymhqfgqtkgdqz2wlxuc2ulfurjs7950msgfaf96",
+      "purpose": "withdraw",
+      "description": "Observer for course operations - receives list of tx output refs as redeemer",
+      "inferredFrom": ["admin.course-create"]
+    }
+  },
+  "wallets": {
+    "protocol-treasury-access-token": {
+      "address": "addr_test1qqasyh8kdh742htuzy5rzwgn0hewg2d3m32gle2h4w38kwgqfz280z9xhpx7fv4p7a8y7xpp2nwl9p7k39e28z7jsmfqnvhuml",
+      "fee": "5000000",
+      "description": "Treasury for access token minting (5 ADA)",
+      "inferredFrom": ["general.mint-access-token"]
+    },
+    "instance-treasury": {
+      "address": "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3",
+      "fees": {
+        "course-create": "25000000",
+        "course-teachers-update": "5000000"
+      },
+      "description": "Instance treasury for course operations",
+      "designNote": "Instance-specific treasury. Fees vary by operation type.",
+      "inferredFrom": ["admin.course-create", "admin.course-teachers-update"]
+    }
+  },
+  "referenceUtxos": {
+    "35d93ccfe17ccd6de427c66818f19eb79d729b7abd825be02441a70dfd769aff#0": {
+      "description": "Script reference (mint-access-token)",
+      "inferredFrom": ["general.mint-access-token"]
+    },
+    "35d93ccfe17ccd6de427c66818f19eb79d729b7abd825be02441a70dfd769aff#2": {
+      "description": "Script reference (mint-access-token)",
+      "inferredFrom": ["general.mint-access-token"]
+    },
+    "35d93ccfe17ccd6de427c66818f19eb79d729b7abd825be02441a70dfd769aff#3": {
+      "description": "Script reference",
+      "inferredFrom": ["admin.course-teachers-update"]
+    },
+    "35d93ccfe17ccd6de427c66818f19eb79d729b7abd825be02441a70dfd769aff#4": {
+      "description": "Script reference (course-create) - same base tx",
+      "inferredFrom": ["admin.course-create"]
+    },
+    "fbc7d62489b51e81026b2ed695417cba6a657ac5429d4bb8211bfc7d5aa667a9#0": {
+      "description": "Script reference (course-create)",
+      "inferredFrom": ["admin.course-create"]
+    },
+    "fbc7d62489b51e81026b2ed695417cba6a657ac5429d4bb8211bfc7d5aa667a9#1": {
+      "description": "Script reference (course-create)",
+      "inferredFrom": ["admin.course-create"]
+    },
+    "fc92ebcf115d39914192a816020cd47ce89253209a05f0f30e6bd9f926d11aee#3": {
+      "description": "Script reference (course-create)",
+      "inferredFrom": ["admin.course-create"]
+    }
+  }
+}
