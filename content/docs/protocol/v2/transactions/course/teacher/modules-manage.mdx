@@ -1,0 +1,100 @@
+---
+title: "Manage Modules"
+description: "Teacher mints, updates, or burns course modules"
+tx_file: "course/teacher/modules-manage.yaml"
+---
+
+# Manage Modules
+
+Teacher mints, updates, or burns course modules (SLT collections).
+
+## API Endpoint
+
+```
+POST /tx/v2/teacher/course/modules/manage
+```
+
+## Cost Breakdown
+
+| Component | Amount |
+|-----------|--------|
+| Transaction Fee | ~0.27 ADA |
+| Module Deposit | ~1.59 ADA per module |
+| Service Fee | 0 ADA |
+| **Total Wallet Delta** | **~1.86 ADA** (1 module) |
+
+Scales with number of modules: ~8.4 ADA for 5 modules, ~16.5 ADA for 10 modules.
+
+## Request Body
+
+```json
+{
+  "walletData": {
+    "usedAddresses": ["addr_test1..."],
+    "changeAddress": "addr_test1..."
+  },
+  "alias": "james",
+  "courseId": "23a6bbce3a8deca8985764e847594f6956c9dc643e3f6c8efdba04e4",
+  "modulesToMint": [
+    {
+      "slts": ["I can mint an access token.", "I can complete an assignment."],
+      "allowedStudents_V2": [],
+      "prerequisiteAssignments_V2": []
+    }
+  ],
+  "modulesToUpdate": [],
+  "modulesToBurn": []
+}
+```
+
+## Transaction Pattern
+
+**Mint and Create** - Mints module tokens, creates module UTxOs.
+
+## Inputs
+
+| ID | Type | Validator | Description |
+|----|------|-----------|-------------|
+| teacher_access_token | wallet | - | Teacher's access token for auth |
+| course_governance | script | course-governance-validator | Spent to verify teacher authorization |
+
+## Outputs
+
+| ID | Type | Validator | Value | Description |
+|----|------|-----------|-------|-------------|
+| teacher_access_token_return | wallet | - | ~1.15 ADA + access token | Teacher retains access token |
+| module_utxo | script | module-validator | ~1.59 ADA + module token | New module with SLT data |
+| course_governance_return | script | course-governance-validator | lovelace + governance token | Returned unchanged |
+
+## Minting Operations
+
+| Policy | Token | Description |
+|--------|-------|-------------|
+| module-policy | \<slt_hash\> | Module token (name = hash of SLT list) |
+
+## Module Token Naming
+
+The module token name is a 32-byte hash computed from the SLT strings:
+- Input: `["I can mint an access token.", "I can complete an assignment."]`
+- Token name: `8dcbe1b925d87e6c547bbd8071c23a712db4c32751454b0948f8c846e9246b5c`
+
+The redeemer contains the full SLT text - the hash is computed on-chain.
+
+## Module Datum
+
+```json
+{
+  "constructor": 0,
+  "fields": [
+    { "bytes": "<course_creator_pkh>" },
+    { "list": [{ "bytes": "<teacher_pkh>" }] },
+    { "list": [] }
+  ]
+}
+```
+
+## Notes
+
+- Course governance is **spent** (not just referenced) to verify teacher is authorized
+- No service fee for module management
+- Module deposits are recoverable when modules are burned

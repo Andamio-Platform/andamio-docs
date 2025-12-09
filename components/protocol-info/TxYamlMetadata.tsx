@@ -32,9 +32,13 @@ export default function TxYamlMetadata({
     const fetchTransactionData = async () => {
       try {
         setLoading(true);
-        const response = await fetch(
-          `/api/transaction?file=${encodeURIComponent(txFilePath)}&version=${version}`
-        );
+
+        // Use V2 API for v2 transactions, V1 API otherwise
+        const apiEndpoint = version === "v2"
+          ? `/api/transaction-v2?file=${encodeURIComponent(txFilePath)}&format=v1`
+          : `/api/transaction?file=${encodeURIComponent(txFilePath)}&version=${version}`;
+
+        const response = await fetch(apiEndpoint);
 
         if (!response.ok) {
           throw new Error(
@@ -44,8 +48,9 @@ export default function TxYamlMetadata({
 
         const data = await response.json();
         console.log("TxYamlMetadata received data:", data);
-        // The API returns the transaction data in data.data
-        setTxData(data.data || data);
+        // V2 API with format=v1 returns diagramData, V1 API returns data
+        const txDataResult = version === "v2" ? data.diagramData : (data.data || data);
+        setTxData(txDataResult);
         setError(null);
       } catch (err) {
         console.error("Error fetching transaction metadata:", err);

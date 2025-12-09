@@ -1,0 +1,168 @@
+---
+title: "Live Coding Agenda"
+description: "Ongoing V2 protocol exploration, cost verification, and experiments"
+---
+
+# Live Coding Agenda
+
+This page tracks our ongoing V2 protocol exploration sessions. We're building documentation by examining real transactions, verifying costs, and experimenting with on-chain data reconstruction.
+
+## Current Focus Areas
+
+### 1. Transaction Cost Verification ✅
+
+All 8 course system transactions have been parsed and costs verified against actual wallet deltas.
+
+| Transaction | Documented | Verified | Status |
+|-------------|------------|----------|--------|
+| `general.mint-access-token` | ~7.9 ADA | 7.88 ADA | ✅ Verified |
+| `course.admin.create` | ~45.3 ADA | — | Parsed |
+| `course.admin.teachers-update` | ~5.3 ADA | — | Parsed |
+| `course.teacher.modules-manage` | ~1.86 ADA | — | Parsed |
+| `course.teacher.assignments-assess` | ~0.21 ADA | 0.21 ADA | ✅ Verified |
+| `course.student.enroll` | ~2.14 ADA | 2.14 ADA | ✅ Verified |
+| `course.student.assignment-update` | ~0.33 ADA | 0.33 ADA | ✅ Verified |
+| `course.student.credential-claim` | -1.03 ADA | -1.03 ADA | ✅ Verified (refund!) |
+
+**Single Credential Loop Cost:** Student ~1.11 ADA + Teacher ~0.21 ADA = **~1.32 ADA total**
+
+**Key Learning:** UTxO recycling significantly reduces actual costs. The index linked list reuses ADA from spent nodes, so wallet delta is less than sum of new UTxO deposits.
+
+**Process:**
+1. Execute transaction on preprod
+2. Screenshot wallet delta
+3. Compare against documented cost
+4. Update docs if inconsistent
+5. Document the UTxO flow (spent vs created)
+
+See [V2 Cost Estimation](/docs/protocol/v2/cost-estimation) for current cost documentation.
+
+---
+
+### 2. On-Chain Data Reconstruction
+
+Experimenting with reconstructing database objects from on-chain transaction data.
+
+See [On-Chain Reconstruction](/docs/protocol/v2/on-chain-reconstruction) for experiments and findings.
+
+**Questions to explore:**
+- Can we rebuild course state from transaction history?
+- How do we track module creation/updates/burns?
+- What's the most efficient way to query the index linked list?
+- Can we derive teacher rosters from governance UTxO history?
+
+---
+
+### 3. V2 Transaction Parsing ✅ Complete
+
+All 8 course system transactions have been parsed from decoded CBORs.
+
+**Completed (8/8):**
+- `general/mint-access-token.yaml`
+- `course/admin/create.yaml`
+- `course/admin/teachers-update.yaml`
+- `course/teacher/modules-manage.yaml`
+- `course/teacher/assignments-assess.yaml`
+- `course/student/enroll.yaml`
+- `course/student/assignment-update.yaml`
+- `course/student/credential-claim.yaml`
+
+**MDX Documentation Generated:**
+All transactions have corresponding MDX pages at `/docs/protocol/v2/transactions/`.
+
+**API Endpoints Created:**
+- `/api/transaction-v2?file=<path>` - Get transaction YAML data
+- `/api/costs/v2` - Get cost registry (supports `?tx=`, `?loop=`, `?summary=true`)
+
+See [SESSION-NOTES.md](https://github.com/andamio/andamio-docs/blob/main/public/yaml/transactions/v2/SESSION-NOTES.md) for full context.
+
+---
+
+## Session Log
+
+### Session: 2025-12-09 (Part 2)
+
+**Accomplished:**
+- Completed all 8 course system transactions
+- Parsed: `assignments-assess`, `enroll`, `assignment-update`, `credential-claim`
+- Generated MDX documentation pages for all transactions
+- Created `/api/costs/v2` endpoint for programmatic cost access
+- Verified wallet deltas against actual transactions
+- Created V2 validator YAML placeholders at `public/yaml/validators/v2/`
+- Created `validator-registry.json` tracking documentation status
+
+**Key Discoveries:**
+- Assessment costs ~0.21 ADA (less than tx fee due to datum shrinking)
+- Credential claim gives student ~1.03 ADA refund (burned UTxO releases deposit)
+- Single credential loop: Student ~1.11 ADA + Teacher ~0.21 ADA = ~1.32 ADA
+- Course state datum: constructor 0 = completed, constructor 1 = pending
+
+**Validator Documentation Status:**
+- 2 documented (course-state-validator, global-state-v2)
+- 5 placeholder (need more CBOR analysis)
+- 2 observers (stake addresses known)
+
+### Session: 2025-12-09 (Part 1)
+
+**Accomplished:**
+- Reorganized V2 transaction files to `{system}/{role}/{tx-name}.yaml` pattern
+- Updated transaction IDs to `{system}.{role}.{action}` format
+- Parsed `course.teacher.modules-manage` transaction
+- Discovered module-policy and module-validator
+- Created "What's New in V2" documentation page
+- Created comprehensive cost estimation documentation
+- **Fixed mint-access-token cost** from ~9.1 ADA to ~7.9 ADA (UTxO recycling)
+
+**Key Discoveries:**
+- Module token names are SHA256 hashes of SLT content
+- No service fee for module management
+- Index linked list recycles UTxOs, reducing actual costs
+- LocalStateToken validator holds ~17 ADA due to embedded script_ref
+
+### Session: 2025-12-08
+
+**Accomplished:**
+- Started V2 transaction documentation
+- Created address-registry.json, cost-registry.json, endpoint-registry.json
+- Parsed mint-access-token, course-create, teachers-update transactions
+- Identified 6 validators, 5 policies, 2 observers
+
+---
+
+## Resources
+
+- **Transaction YAMLs:** `/public/yaml/transactions/v2/`
+- **Registries:** `address-registry.json`, `cost-registry.json`, `endpoint-registry.json`
+- **Example CBORs:** `/drafts/example-txs/v2/`
+- **Atlas API:** `https://atlas-api-preprod-507341199760.us-central1.run.app`
+
+---
+
+### 4. V2 Documentation Generation System
+
+Building tooling to auto-generate MDX docs from V2 YAML files.
+
+**Audit completed:** See [V2-DOCS-GENERATION-AUDIT.md](/docs/project/V2-DOCS-GENERATION-AUDIT.md)
+
+**Key Findings:**
+- V1 system works well, must not be modified
+- V2 YAMLs have different schema (CBOR analysis vs diagram rendering)
+- Need new V2-specific: types, API route, MDX generator, coverage checker
+
+**Files Created:**
+- [x] `types/v2.ts` - V2 type definitions + `transformV2ToDiagramData()` helper
+- [x] `scripts/generate-v2-tx-docs.mjs` - MDX generator (run with `node scripts/generate-v2-tx-docs.mjs`)
+- [x] `app/api/transaction-v2/route.ts` - V2 API route
+
+**Files Remaining:**
+- [ ] `scripts/docs-coverage-check-v2.ts` - Coverage validation
+
+---
+
+## Next Steps
+
+1. **Verify remaining costs** - Test `course.admin.create` (~45.3 ADA) and `teachers-update` (~5.3 ADA) on preprod
+2. **Project system transactions** - Parse contributor, treasury, escrow CBORs when available
+3. **Complete validator docs** - Fill in placeholder YAMLs as we encounter validators in new transactions
+4. **On-chain reconstruction** - Document experiments with rebuilding state from transaction history
+5. **Coverage checker** - Create `scripts/docs-coverage-check-v2.ts` for validation

@@ -1,0 +1,22 @@
+---
+title: "Admin Transactions"
+description: "Course transactions for instance administrators"
+---
+
+# Admin Transactions
+
+Transactions for instance administrators managing courses.
+
+## Transaction Overview
+
+| Transaction | Description | Wallet Delta |
+|------------|-------------|--------------|
+| [Create Course](./create) | Create a new course with initial teachers | ~45.3 ADA |
+| [Update Teachers](./teachers-update) | Add or remove teachers from a course | ~5.3 ADA |
+
+## Notes
+
+- Admin must have an access token to perform these actions
+- Course creation includes a 25 ADA service fee + ~20 ADA in UTxO deposits
+- ~17 ADA of the course creation deposit is for the embedded script reference
+- Teacher update has a 5 ADA service fee to instance treasury

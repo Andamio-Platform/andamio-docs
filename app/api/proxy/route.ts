@@ -3,8 +3,11 @@ import { openapi } from "@/lib/source";
 // Create proxy for API documentation
 // Requests are forwarded to the server URLs defined in the OpenAPI schema
 export const { GET, HEAD, PUT, POST, PATCH, DELETE } = openapi.createProxy({
-  // Allow requests to Andamio API Gateway (preprod)
-  allowedOrigins: ["https://andamio-api-preprod-308006323670.us-central1.run.app"],
+  // Allow requests to Andamio APIs (preprod)
+  allowedOrigins: [
+    "https://andamio-api-preprod-308006323670.us-central1.run.app",
+    "https://preprod.andamioscan.andamio.space",
+  ],
 
   // Override request to only forward essential headers
   overrides: {

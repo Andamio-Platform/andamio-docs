@@ -2,6 +2,10 @@
     "title": "Protocol V2",
     "pages": [
         "index",
+        "whats-new",
+        "cost-estimation",
+        "live-coding",
+        "on-chain-reconstruction",
         "validators",
         "transactions",
         "tokens"

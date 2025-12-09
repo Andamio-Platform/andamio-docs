@@ -1,0 +1,80 @@
+---
+title: "Update Teachers"
+description: "Admin updates the teacher list for a course"
+tx_file: "course/admin/teachers-update.yaml"
+---
+
+# Update Teachers
+
+Admin updates the teacher list for a course by adding or removing teachers.
+
+## API Endpoint
+
+```
+POST /tx/v2/admin/course/teachers/update
+```
+
+## Cost Breakdown
+
+| Component | Amount |
+|-----------|--------|
+| Transaction Fee | ~0.30 ADA |
+| Service Fee | 5 ADA |
+| **Total Wallet Delta** | **~5.3 ADA** |
+
+## Request Body
+
+```json
+{
+  "walletData": {
+    "usedAddresses": ["addr_test1..."],
+    "changeAddress": "addr_test1..."
+  },
+  "alias": "james",
+  "courseId": "68396f1567f5b8d813517b82e1b07e62b4d61392621d916fa5dac3e7",
+  "teachersToAdd": ["newteacher"],
+  "teachersToRemove": []
+}
+```
+
+## Transaction Pattern
+
+**Spend and Recreate** - No minting. Consumes and recreates UTxOs with updated datum.
+
+## Inputs
+
+| ID | Type | Validator | Description |
+|----|------|-----------|-------------|
+| admin_access_token | wallet | - | Admin's access token for auth |
+| local_state_nft_input | script | local-state-nft-validator | Course NFT (spent with courseId redeemer) |
+| course_governance_input | script | course-governance-validator | Governance UTxO (spent to update) |
+| admin_wallet | wallet | - | Admin wallet for fees |
+
+## Outputs
+
+| ID | Type | Validator | Value | Description |
+|----|------|-----------|-------|-------------|
+| admin_access_token | wallet | - | ~1.15 ADA + access token | Admin retains access token |
+| local_state_nft | script | local-state-nft-validator | ~1.24 ADA + LocalStateNFT | Recreated unchanged |
+| course_governance | script | course-governance-validator | ~1.36 ADA + governance token | **Updated teacher list** |
+| treasury_payment | wallet | - | 5 ADA | Service fee to instance treasury |
+
+## Datum Changes
+
+The course governance datum is updated:
+
+```
+Before: { teachers: ["james"] }
+After:  { teachers: ["james", "newteacher"] }
+```
+
+## Redeemers
+
+Both script inputs use the courseId as the redeemer data:
+- `local-state-nft-validator`: `{ bytes: "<courseId>" }`
+- `course-governance-validator`: `{ bytes: "<courseId>" }`
+
+## Notes
+
+- No observer needed for governance updates (direct spend validation)
+- MinUTxO may increase slightly if adding many teachers (larger datum)

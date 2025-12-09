@@ -7,6 +7,10 @@ description: "Andamio Protocol V2 - Enhanced state management, simplified roles,
 
 Protocol V2 introduces architectural improvements that simplify the role structure, enhance state management, and provide a clear migration path from V1.
 
+<Callout type="info">
+**New to V2?** Check out [What's New in V2](/docs/protocol/v2/whats-new) for a detailed look at batch module management, SLT hash encoding, and cost savings.
+</Callout>
+
 ## Key Changes from V1
 
 | Aspect | V1 | V2 |
@@ -38,7 +42,7 @@ V2 consolidates roles by removing `course-creator` and `project-creator` - these
 
 ## Protocol Components
 
-### [Validators](/docs/protocol/v2/validators)
+### Validators
 
 V2 validators organized by system:
 
@@ -51,19 +55,20 @@ V2 validators organized by system:
 | [Course](/docs/protocol/v2/validators/course) | 4 + 3 observers | Course and assignment management |
 | [Project](/docs/protocol/v2/validators/project) | 3 + 4 observers | Contributor and treasury management |
 
-### [Transactions](/docs/protocol/v2/transactions)
+### Transactions
 
-V2 transactions organized by role:
+V2 transactions organized by system and role:
 
-| Role | Transactions | Key Operations |
-|------|--------------|----------------|
-| [Admin](/docs/protocol/v2/transactions/admin) | 3 | init-course, init-project (2 steps) |
-| [Contributor](/docs/protocol/v2/transactions/contributor) | 4 | mint/burn state, commit, get-rewards |
-| [Student](/docs/protocol/v2/transactions/student) | 3 | mint state, commit, burn state |
-| [General](/docs/protocol/v2/transactions/general) | 2 | access-token-mint, register-local-state |
-| [User](/docs/protocol/v2/transactions/user) | 1 | move-global-state-v1-to-v2 |
+| System | Role | Transactions | Key Operations |
+|--------|------|--------------|----------------|
+| [General](/docs/protocol/v2/transactions/general) | Open | 1 | [mint-access-token](/docs/protocol/v2/transactions/general/mint-access-token) (~7.9 ADA) |
+| [Course](/docs/protocol/v2/transactions/course) | Admin | 2 | [create](/docs/protocol/v2/transactions/course/admin/create) (~45 ADA), [teachers-update](/docs/protocol/v2/transactions/course/admin/teachers-update) (~5.3 ADA) |
+| [Course](/docs/protocol/v2/transactions/course) | Teacher | 2 | [modules-manage](/docs/protocol/v2/transactions/course/teacher/modules-manage), [assignments-assess](/docs/protocol/v2/transactions/course/teacher/assignments-assess) |
+| [Course](/docs/protocol/v2/transactions/course) | Student | 3 | [enroll](/docs/protocol/v2/transactions/course/student/enroll), [assignment-update](/docs/protocol/v2/transactions/course/student/assignment-update), [credential-claim](/docs/protocol/v2/transactions/course/student/credential-claim) |
 
-### [Tokens](/docs/protocol/v2/tokens)
+**Single Credential Loop Cost:** Student ~1.11 ADA + Teacher ~0.21 ADA = **~1.32 ADA total**
+
+### Tokens
 
 V2 tokens organized by system:
 
@@ -82,8 +87,21 @@ Users with V1 global state can migrate to V2 using the [move-global-state-v1-to-
 
 ## Source of Truth
 
-The V2 protocol is defined in the [validator-registry-v2.yaml](/yaml/validator-registry-v2.yaml) file, which serves as the central registry for all validators, redeemers, and token definitions.
+V2 protocol documentation is built from multiple registry files:
+
+| Registry | Purpose |
+|----------|---------|
+| [address-registry.json](/yaml/transactions/v2/address-registry.json) | Validators, policies, observers with addresses |
+| [endpoint-registry.json](/yaml/transactions/v2/endpoint-registry.json) | API endpoints with request/response schemas |
+| [cost-registry.json](/yaml/transactions/v2/cost-registry.json) | Transaction fees, protocol fees, loop costs |
+
+**API Endpoints:**
+- `/api/transaction-v2?file=<path>&format=v1` - Transaction YAML data
+- `/api/costs/v2` - Cost registry (supports `?tx=`, `?loop=`, `?summary=true`)
 
 ## Status
 
-Protocol V2 is under active development. Documentation will be updated as the protocol evolves.
+**Course System:** ✅ Complete (8 transactions documented)
+**Project System:** 🔜 Coming soon
+
+Documentation is aligned with the [Atlas API Preprod](https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json) swagger.

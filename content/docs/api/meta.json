@@ -7,7 +7,8 @@
     "authentication",
     "node-backend-api",
     "platform-api",
-    "user"
+    "user",
+    "andamioscan"
   ],
   "defaultOpen": false
 }

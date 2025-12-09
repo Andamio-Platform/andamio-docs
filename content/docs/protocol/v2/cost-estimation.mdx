@@ -1,0 +1,213 @@
+---
+title: "V2 Cost Estimation"
+description: "Comprehensive cost breakdown for Andamio Protocol V2 transactions"
+---
+
+# V2 Transaction Cost Estimation
+
+This page provides detailed cost breakdowns for V2 protocol transactions, derived from actual preprod transaction data. Understanding these costs helps developers budget for their applications and communicate fees to end users.
+
+## Cost Components
+
+Every V2 transaction may include some or all of these cost types:
+
+| Cost Type | Description | Recoverable? |
+|-----------|-------------|--------------|
+| **Transaction Fee** | Network fee paid to stake pool operators | No |
+| **Service Fee** | Protocol fee paid to Andamio treasury | No |
+| **UTxO Deposit** | ADA locked in validator UTxOs with tokens | Yes (when tokens burned) |
+| **Min ADA** | Minimum ADA required in token-bearing UTxOs | Yes (when tokens burned) |
+
+## Transaction Cost Summary
+
+| Transaction | Tx Fee | Service Fee | Net UTxO Change | Total |
+|-------------|--------|-------------|-----------------|-------|
+| [Mint Access Token](#mint-access-token) | ~0.36 ADA | 5 ADA | ~2.5 ADA | **~7.9 ADA** |
+| [Create Course](#create-course) | ~0.55 ADA | 25 ADA | ~19.7 ADA | ~45.3 ADA |
+| [Update Teachers](#update-teachers) | ~0.30 ADA | 5 ADA | — | ~5.3 ADA |
+| [Manage Modules](#manage-modules) | ~0.27 ADA | — | ~1.59 ADA/module | ~1.86 ADA |
+
+<Callout type="info">
+**Net UTxO Change** = ADA locked in new protocol UTxOs minus ADA returned from spent UTxOs. Some transactions recycle existing UTxOs, reducing the net cost.
+</Callout>
+
+---
+
+## Detailed Breakdowns
+
+### Mint Access Token
+
+**Transaction ID:** `general.mint-access-token`
+
+The entry point to the Andamio ecosystem. Mints a user access token and creates global state.
+
+```
+Transaction Fee:        360,000 lovelace  (~0.36 ADA)
+Service Fee:          5,000,000 lovelace  (5.00 ADA) → Protocol Treasury
+─────────────────────────────────────────────────────
+Fees Subtotal:        5,360,000 lovelace  (5.36 ADA)
+```
+
+**UTxO Flow (Index Linked List):**
+
+The index validator maintains a sorted linked list of aliases. When a new user registers, their alias is inserted in the correct position:
+
+| Action | UTxO | ADA |
+|--------|------|-----|
+| **Spent** | Existing index node | -13.71 ADA (returned) |
+| **Created** | New prev node | +1.25 ADA |
+| **Created** | New next node | +1.25 ADA |
+| **Created** | Global State V2 | +1.26 ADA |
+| | **Net UTxO change** | **~2.51 ADA** |
+
+```
+Fees:                 5,360,000 lovelace  (5.36 ADA)
+Net UTxO Change:      2,510,000 lovelace  (~2.51 ADA)
+─────────────────────────────────────────────────────
+TOTAL WALLET DELTA:  ~7,870,000 lovelace  (~7.9 ADA)
+```
+
+**User Receives:**
+- Access token `u<alias>` in wallet (~1.15 ADA min UTxO)
+- Global state entry in protocol
+
+<Callout type="info">
+The existing index node being spent returns ~13.71 ADA which offsets the cost of creating new nodes. This is why the actual wallet delta (~7.9 ADA) is less than the sum of all new UTxO deposits.
+</Callout>
+
+---
+
+### Create Course
+
+**Transaction ID:** `course.admin.create`
+
+Creates a new course with initial teacher roster. This is the most expensive transaction due to the embedded script reference.
+
+```
+Transaction Fee:        545,540 lovelace  (0.546 ADA)
+Service Fee:         25,000,000 lovelace  (25.00 ADA) → Instance Treasury
+─────────────────────────────────────────────────────
+Fees Subtotal:       25,545,540 lovelace  (25.55 ADA)
+```
+
+**UTxO Deposits Created:**
+
+| Validator | Token | Deposit | Notes |
+|-----------|-------|---------|-------|
+| LocalStateNFT Validator | `LocalStateNFT` | 1,236,970 lovelace | Course identity |
+| LocalStateToken Validator | `LocalStateToken` | 17,127,940 lovelace | **Includes script_ref** |
+| Course Governance | `<courseId>` | 1,370,580 lovelace | Teacher list |
+
+```
+UTxO Deposits:       19,735,490 lovelace  (19.74 ADA)
+─────────────────────────────────────────────────────
+TOTAL COST:          45,281,030 lovelace  (~45.3 ADA)
+```
+
+<Callout type="info">
+The LocalStateToken validator UTxO contains an embedded script reference (~17 ADA), which enables course-specific validation logic. This is a one-time cost per course.
+</Callout>
+
+**Course Admin Receives:**
+- Course created with unique `courseId`
+- Governance token for managing teachers
+- Access token returned to wallet
+
+---
+
+### Update Teachers
+
+**Transaction ID:** `course.admin.teachers-update`
+
+Add or remove teachers from a course. Uses the "spend and recreate" pattern—no new UTxOs created.
+
+```
+Transaction Fee:        303,720 lovelace  (0.304 ADA)
+Service Fee:          5,000,000 lovelace  (5.000 ADA) → Instance Treasury
+─────────────────────────────────────────────────────
+TOTAL COST:           5,303,720 lovelace  (~5.3 ADA)
+```
+
+**UTxO Flow:**
+- Course governance UTxO spent and recreated with updated teacher list
+- LocalStateNFT UTxO spent and recreated (unchanged)
+- No net change in locked ADA
+
+---
+
+### Manage Modules
+
+**Transaction ID:** `course.teacher.modules-manage`
+
+Create, update, or burn course modules. **No service fee** for module management.
+
+**Single Module (2 SLTs):**
+
+```
+Transaction Fee:        271,720 lovelace  (0.272 ADA)
+Service Fee:                  0 lovelace  (0.000 ADA)
+─────────────────────────────────────────────────────
+Fees Subtotal:          271,720 lovelace  (0.272 ADA)
+```
+
+**UTxO Deposits Created:**
+
+| Validator | Token | Deposit |
+|-----------|-------|---------|
+| Module Validator | `<slt_hash>` | 1,590,390 lovelace |
+
+```
+UTxO Deposits:        1,590,390 lovelace  (1.590 ADA)
+─────────────────────────────────────────────────────
+TOTAL COST:           1,862,110 lovelace  (~1.86 ADA)
+```
+
+**Batch Operations (Estimated):**
+
+| Modules | Est. Tx Fee | Est. UTxO Deposits | Est. Total |
+|---------|-------------|-------------------|------------|
+| 1 | ~0.27 ADA | ~1.6 ADA | ~1.9 ADA |
+| 5 | ~0.35 ADA | ~8.0 ADA | ~8.4 ADA |
+| 10 | ~0.45 ADA | ~16.0 ADA | ~16.5 ADA |
+
+<Callout type="info">
+Module management has **no service fee**, making it economical for curriculum updates. The primary cost is the min ADA locked in module UTxOs.
+</Callout>
+
+---
+
+## Treasury Addresses
+
+**Protocol Treasury** (access token fees):
+```
+addr_test1qqasyh8kdh742htuzy5rzwgn0hewg2d3m32gle2h4w38kwgqfz280z9xhpx7fv4p7a8y7xpp2nwl9p7k39e28z7jsmfqnvhuml
+```
+
+**Instance Treasury** (course operation fees):
+```
+addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3
+```
+
+---
+
+## Cost Optimization Tips
+
+1. **Batch module operations** - Creating 5 modules in one transaction costs ~8.4 ADA vs ~9.3 ADA for 5 separate transactions (10% savings)
+
+2. **Plan teacher lists upfront** - Each teacher update costs ~5.3 ADA, so include all initial teachers in `course.admin.create`
+
+3. **UTxO deposits are recoverable** - When courses are closed or modules burned, the locked ADA returns to the appropriate wallet
+
+4. **No fee for module management** - Teachers can freely iterate on curriculum without service fees
+
+---
+
+## Data Source
+
+All costs derived from actual preprod transactions (December 2024). Costs may vary based on:
+- Script complexity and execution units
+- Number of inputs/outputs
+- Datum sizes
+- Network conditions
+
+See `/drafts/example-txs/v2/` for raw transaction data.

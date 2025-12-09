@@ -1,0 +1,161 @@
+---
+title: "What's New in V2"
+description: "Major improvements in Andamio Protocol V2: batch operations, optimized costs, and developer-friendly APIs"
+---
+
+# What's New in Protocol V2
+
+Protocol V2 represents a significant evolution of the Andamio protocol, delivering substantial improvements in cost efficiency, developer experience, and architectural elegance. This page highlights the key improvements that make V2 a major step forward.
+
+## Batch Module Management
+
+### The V1 Challenge
+
+In V1, managing course modules required individual transactions for each operation:
+
+```
+V1: Creating 5 modules = 5 separate transactions
+V1: Updating 3 modules = 3 separate transactions
+V1: Removing 2 modules = 2 separate transactions
+```
+
+Each transaction incurred its own fees, required separate signing, and created friction for course administrators managing curriculum changes.
+
+### The V2 Solution
+
+V2 introduces the `course.teacher.modules-manage` endpoint, which handles **all module operations in a single transaction**:
+
+```
+V2: Create 5 + Update 3 + Remove 2 = 1 transaction
+```
+
+**What you can do in one transaction:**
+- Mint new modules with their Student Learning Targets (SLTs)
+- Update existing modules (change allowed students, prerequisites)
+- Burn modules that are no longer needed
+
+This batch approach dramatically reduces costs and simplifies the developer experience.
+
+### Cost Comparison
+
+Based on actual preprod transaction data:
+
+| Operation | V1 Cost (est.) | V2 Cost (measured) | Savings |
+|-----------|----------------|-------------------|---------|
+| Create 1 module | ~0.3 ADA + fee | ~1.86 ADA total | — |
+| Create 5 modules | ~1.5 ADA + 5 fees | ~8.4 ADA total | **~10%** |
+| Create 10 modules | ~3.0 ADA + 10 fees | ~16.5 ADA total | **~15%** |
+
+*V2 costs include transaction fee (~0.27-0.45 ADA) + UTxO deposits (~1.6 ADA/module). No service fee for module management.*
+
+<Callout type="info">
+See [V2 Cost Estimation](/docs/protocol/v2/cost-estimation) for detailed breakdowns of all transaction costs, including recoverable UTxO deposits.
+</Callout>
+
+## SLT Hash Token Naming
+
+### Elegant On-Chain Encoding
+
+V2 introduces a clever approach to module identification: the **module token name is the hash of its Student Learning Targets**.
+
+```yaml
+# Example: A module with 2 SLTs
+SLTs:
+  - "I can mint an access token."
+  - "I can complete an assignment to earn a credential."
+
+Token Name: 8dcbe1b925d87e6c547bbd8071c23a712db4c32751454b0948f8c846e9246b5c
+            ↑ SHA256 hash of the SLT list
+```
+
+### Why This Matters
+
+1. **Deterministic Identification** - The same SLTs always produce the same token name
+2. **Tamper-Evident** - Any change to SLTs would change the hash, creating a different token
+3. **Efficient Lookups** - Query modules by their content hash
+4. **No Collision Risk** - 32-byte hashes provide cryptographic uniqueness
+
+### How It Works
+
+When a teacher mints a module:
+
+1. **Redeemer contains full SLT text** - The complete learning targets are passed on-chain
+2. **Hash computed on-chain** - The validator computes the hash to derive the token name
+3. **Token minted with hash name** - The module token carries its content fingerprint
+
+```yaml
+# Mint redeemer structure
+redeemer:
+  alias: "teacher_alias"
+  course_id: "<course_creator_pkh>"
+  modules:
+    - slts:
+        - "I can mint an access token."
+        - "I can complete an assignment to earn a credential."
+```
+
+## Teacher Authorization Flow
+
+V2 streamlines how teachers are authorized to manage modules:
+
+### V1 Approach
+- Course creator role separate from teacher
+- Complex permission chains
+- Multiple validator interactions
+
+### V2 Approach
+- **Course governance UTxO** holds the teacher list
+- Teacher provides **access token** as proof of identity
+- Single transaction validates teacher membership
+- Governance UTxO is spent and recreated (not just referenced)
+
+```
+Input: Teacher Access Token + Course Governance UTxO
+  ↓
+Validate: Teacher PKH is in governance datum's teacher list
+  ↓
+Output: Module UTxO + Updated Governance UTxO
+```
+
+## API Endpoint Design
+
+V2 introduces a consistent, intuitive API pattern:
+
+### URL Structure
+```
+/tx/v2/{system}/{role}/{action}
+```
+
+### Example Endpoints
+| Transaction | Endpoint |
+|-------------|----------|
+| Create course | `/tx/v2/course/admin/create` |
+| Manage modules | `/tx/v2/course/teacher/modules/manage` |
+| Enroll student | `/tx/v2/course/student/enroll` |
+| Assess assignments | `/tx/v2/course/teacher/assignments/assess` |
+
+### Request Body Pattern
+All V2 endpoints follow a consistent request structure:
+```json
+{
+  "walletData": { "usedAddresses": [...], "changeAddress": "..." },
+  "alias": "your_alias",
+  // Operation-specific fields
+}
+```
+
+## What's Coming Next
+
+As we continue documenting V2 transactions, we'll add:
+
+- **Assignment Assessment** - Batch accept/reject student submissions
+- **Student Enrollment** - Streamlined course registration
+- **Credential Claims** - Earning credentials after course completion
+
+## Migration Path
+
+Existing V1 users can migrate to V2 using the `move-global-state-v1-to-v2` transaction. See the [Migration Guide](/docs/protocol/v2/transactions/user/move-global-state-v1-to-v2) for details.
+
+---
+
+*This page is updated as we document more V2 transactions. Last updated: December 2024*

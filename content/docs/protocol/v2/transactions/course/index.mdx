@@ -1,0 +1,36 @@
+---
+title: "Course Transactions"
+description: "Transactions for the Course system"
+---
+
+# Course Transactions
+
+Transactions for the Course system, organized by role.
+
+## Roles
+
+| Role | Transactions |
+|------|-------------|
+| [Admin](./admin) | Create course, update teachers |
+| [Teacher](./teacher) | Manage modules, assess assignments |
+| [Student](./student) | Enroll, update assignments, claim credentials |
+
+## Complete Credential Loop
+
+The full course lifecycle for earning a credential:
+
+```
+Admin: Create Course (~45 ADA)
+         ↓
+Teacher: Manage Modules (~1.86 ADA per module)
+         ↓
+Student: Enroll (~2.14 ADA)
+         ↓
+Student: Update Assignment (~0.33 ADA, optional)
+         ↓
+Teacher: Assess Assignment (~0.21 ADA)
+         ↓
+Student: Claim Credential (-1.03 ADA refund)
+```
+
+**Single credential cost:** Student ~1.11 ADA + Teacher ~0.21 ADA = **~1.32 ADA total**

@@ -1,7 +1,7 @@
 {
   "title": "General",
   "pages": [
-    "access-token-mint",
-    "register-local-state"
+    "index",
+    "mint-access-token"
   ]
 }

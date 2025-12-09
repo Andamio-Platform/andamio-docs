@@ -2,10 +2,7 @@
   "title": "Transactions",
   "pages": [
     "index",
-    "general",
-    "admin",
-    "contributor",
-    "student",
-    "user"
+    "course",
+    "general"
   ]
 }

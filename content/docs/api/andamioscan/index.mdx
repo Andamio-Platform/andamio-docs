@@ -1,0 +1,86 @@
+---
+title: Andamioscan API
+description: Indexer API for querying Andamio on-chain data
+---
+
+# Andamioscan API
+
+**Version:** 1.0
+**Environment:** preprod
+
+Andamioscan is the indexer for Andamio Protocol on-chain data. It provides read-only access to indexed blockchain state including courses, students, modules, and transaction history.
+
+**Base URL:** `https://preprod.andamioscan.andamio.space`
+
+<Callout type="info">
+Andamioscan will be integrated into the unified Andamio API in a future release. The current endpoints are accessible directly at the base URL above.
+</Callout>
+
+## API Categories
+
+### Courses
+
+Query course data and enrolled students:
+
+- `GET /v2/courses` - List all courses
+- `GET /v2/courses/{course_id}` - Get specific course
+- `GET /v2/courses/{course_id}/students` - Get students in a course
+- `GET /v2/courses/{course_id}/students/{alias}` - Get specific student
+
+### Transactions
+
+Query indexed transactions:
+
+- `GET /v2/transactions` - List transactions (filter by type)
+- `GET /v2/transactions/count` - Get transaction counts by type
+- `GET /v2/transactions/{tx_hash}` - Get transaction by hash
+
+### Transaction Detail Endpoints
+
+Get decoded transaction data by type. Each endpoint links to the corresponding V2 protocol documentation:
+
+| Endpoint | Description | Related |
+|----------|-------------|---------|
+| `/v2/transactions/useraccesstoken/mint/{tx_hash}` | Access token mint | [V2 Docs](/docs/protocol/v2/transactions/general/mint-access-token) |
+| `/v2/transactions/admincourse/create/{tx_hash}` | Course creation | [V2 Docs](/docs/protocol/v2/transactions/course/admin/create) |
+| `/v2/transactions/admincourse/teachers_update/{tx_hash}` | Teacher update | [V2 Docs](/docs/protocol/v2/transactions/course/admin/teachers-update) |
+| `/v2/transactions/studentcourse/enroll/{tx_hash}` | Enrollment | [V2 Docs](/docs/protocol/v2/transactions/course/student/enroll) |
+| `/v2/transactions/studentcourse/assignment_submit/{tx_hash}` | Assignment submission | [V2 Docs](/docs/protocol/v2/transactions/course/student/enroll) |
+| `/v2/transactions/studentcourse/assignment_update/{tx_hash}` | Assignment update | [V2 Docs](/docs/protocol/v2/transactions/course/student/assignment-update) |
+| `/v2/transactions/studentcourse/credential_claim/{tx_hash}` | Credential claim | [V2 Docs](/docs/protocol/v2/transactions/course/student/credential-claim) |
+| `/v2/transactions/teachercourse/assignments_assess/{tx_hash}` | Assignment assessment | [V2 Docs](/docs/protocol/v2/transactions/course/teacher/assignments-assess) |
+| `/v2/transactions/teachercourse/modules_manage/{tx_hash}` | Module management | [V2 Docs](/docs/protocol/v2/transactions/course/teacher/modules-manage) |
+
+### Users
+
+Query user global state:
+
+- `GET /v2/user/all` - List all users
+- `GET /v2/user/global-state/{alias}` - Get user's global state with courses
+
+## Transaction Types
+
+When filtering transactions via `GET /v2/transactions?type=...`, use these type values:
+
+| Type | Description | V2 Docs |
+|------|-------------|---------|
+| `UserAccessTokenMint` | Protocol entry - mint access token | [View →](/docs/protocol/v2/transactions/general/mint-access-token) |
+| `AdminCourseCreate` | Admin creates a course | [View →](/docs/protocol/v2/transactions/course/admin/create) |
+| `AdminCourseTeachersUpdate` | Admin updates course teachers | [View →](/docs/protocol/v2/transactions/course/admin/teachers-update) |
+| `StudentCourseEnroll` | Student enrolls in course | [View →](/docs/protocol/v2/transactions/course/student/enroll) |
+| `StudentCourseAssignmentSubmit` | Student submits assignment | [View →](/docs/protocol/v2/transactions/course/student/enroll) |
+| `StudentCourseAssignmentUpdate` | Student updates submission | [View →](/docs/protocol/v2/transactions/course/student/assignment-update) |
+| `StudentCourseCredentialClaim` | Student claims credential | [View →](/docs/protocol/v2/transactions/course/student/credential-claim) |
+| `TeacherCourseAssignmentsAssess` | Teacher assesses assignments | [View →](/docs/protocol/v2/transactions/course/teacher/assignments-assess) |
+| `TeacherCourseModulesManage` | Teacher manages modules | [View →](/docs/protocol/v2/transactions/course/teacher/modules-manage) |
+
+## Swagger UI
+
+Interactive API documentation is available at:
+[https://preprod.andamioscan.andamio.space/swagger/index.html](https://preprod.andamioscan.andamio.space/swagger/index.html)
+
+## Related Documentation
+
+- [V2 Transaction Documentation](/docs/protocol/v2/transactions) - How V2 transactions work on-chain
+- [V2 Cost Estimation](/docs/protocol/v2/cost-estimation) - Transaction costs and fee structures
+- [What's New in V2](/docs/protocol/v2/whats-new) - Protocol changes and improvements

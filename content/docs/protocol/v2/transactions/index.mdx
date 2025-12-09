@@ -1,45 +1,59 @@
 ---
-title: "Protocol V2 Transactions"
-description: "Complete reference for all Andamio Protocol V2 transactions"
+title: "V2 Transactions"
+description: "Protocol V2 transaction documentation"
 ---
 
-# Protocol V2 Transactions
+# V2 Transactions
 
-The Andamio Protocol V2 introduces enhanced transaction patterns with improved state management, better gas efficiency, and clearer separation of concerns.
+Protocol V2 transaction documentation, generated from decoded CBOR analysis.
 
-## Transaction Categories
+## Systems
 
-### Admin Transactions
-Instance administrator operations for platform management:
-- [Initialize Course](/docs/protocol/v2/transactions/admin/init-course) - Set up new courses
-- [Initialize Project Step 1](/docs/protocol/v2/transactions/admin/init-project-step-1) - Begin project setup
-- [Initialize Project Step 2](/docs/protocol/v2/transactions/admin/init-project-step-2) - Complete project setup
+| System | Description | Transactions |
+|--------|-------------|--------------|
+| [General](./general) | Protocol entry point | 1 |
+| [Course](./course) | Course management and credentials | 7 |
 
-### Contributor Transactions
-Project contributor operations:
-- [Mint Project State](/docs/protocol/v2/transactions/contributor/mint-project-state) - Join a project
-- [Commit Project](/docs/protocol/v2/transactions/contributor/commit-project) - Submit contributions
-- [Get Rewards](/docs/protocol/v2/transactions/contributor/get-rewards) - Claim earned rewards
-- [Burn Project State](/docs/protocol/v2/transactions/contributor/burn-project-state) - Exit a project
+## All Transactions
 
-### Student Transactions
-Course participant operations:
-- [Mint Project State](/docs/protocol/v2/transactions/student/mint-project-state) - Start course project
-- [Commit to Assignment](/docs/protocol/v2/transactions/student/commit-to-assignment) - Submit assignments
-- [Burn Local State](/docs/protocol/v2/transactions/student/burn-local-state) - Leave platform
+| Transaction | Role | Wallet Delta |
+|------------|------|--------------|
+| [Mint Access Token](/docs/protocol/v2/transactions/general/mint-access-token) | Open | ~7.9 ADA |
+| [Create Course](/docs/protocol/v2/transactions/course/admin/create) | Admin | ~45.3 ADA |
+| [Update Teachers](/docs/protocol/v2/transactions/course/admin/teachers-update) | Admin | ~5.3 ADA |
+| [Manage Modules](/docs/protocol/v2/transactions/course/teacher/modules-manage) | Teacher | ~1.86 ADA |
+| [Assess Assignments](/docs/protocol/v2/transactions/course/teacher/assignments-assess) | Teacher | ~0.21 ADA |
+| [Enroll](/docs/protocol/v2/transactions/course/student/enroll) | Student | ~2.14 ADA |
+| [Update Assignment](/docs/protocol/v2/transactions/course/student/assignment-update) | Student | ~0.33 ADA |
+| [Claim Credential](/docs/protocol/v2/transactions/course/student/credential-claim) | Student | **-1.03 ADA** |
 
-### General Transactions
-Basic protocol operations available to all users:
-- [Access Token Mint](/docs/protocol/v2/transactions/general/access-token-mint) - Get protocol access tokens
-- [Register Local State](/docs/protocol/v2/transactions/general/register-local-state) - Register with protocol
+## Cost Summary
 
-### User Migration
-Special migration operations:
-- [Move Global State V1 to V2](/docs/protocol/v2/transactions/user/move-global-state-v1-to-v2) - Upgrade from V1
+### Service Fees (to Treasury)
 
-## V2 Improvements
+| Transaction | Fee | Recipient |
+|------------|-----|-----------|
+| Mint Access Token | 5 ADA | Protocol Treasury |
+| Create Course | 25 ADA | Instance Treasury |
+| Update Teachers | 5 ADA | Instance Treasury |
 
-- **Enhanced State Management**: Clearer state transitions and validation
-- **Better Gas Efficiency**: Optimized transaction patterns reduce costs
-- **Improved Security**: Additional validation layers and permission checks
-- **Migration Support**: Smooth transition path from V1 to V2
+### Free Operations (No Service Fee)
+
+- Manage Modules
+- Assess Assignments
+- Enroll
+- Update Assignment
+- Claim Credential
+
+## Transaction Patterns
+
+| Pattern | Description | Transactions |
+|---------|-------------|--------------|
+| Mint and Create | Mints tokens, creates UTxOs | access-token, course-create, modules-manage, enroll |
+| Spend and Recreate | Updates existing UTxOs | teachers-update, assignments-assess, assignment-update |
+| Burn and Update | Burns tokens, updates state | credential-claim |
+
+## Related APIs
+
+- **[Andamioscan API](/docs/api/andamioscan)** - Query indexed transaction data and on-chain state
+- **[Transaction Builder API](https://atlas-api-preprod-507341199760.us-central1.run.app/swagger/index.html)** - Build unsigned transactions
