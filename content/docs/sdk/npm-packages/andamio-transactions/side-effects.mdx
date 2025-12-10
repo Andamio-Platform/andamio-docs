@@ -68,18 +68,15 @@ Path parameters are extracted from the execution context:
 
 ```typescript
 {
-  endpoint: "/course-modules/{courseNftPolicyId}/{moduleCode}/status",
-  pathParams: {
-    courseNftPolicyId: "buildInputs.policy",      // From transaction inputs
-    moduleCode: "buildInputs.moduleCode",         // From side effect params
+  endpoint: "/course-modules/batch-update-status",
+  body: {
+    course_nft_policy_id: { source: "context", path: "buildInputs.courseId" },
+    modules: { source: "context", path: "buildInputs.batchUpdateBody.modules" },
   }
 }
 ```
 
-At execution time, the path is resolved:
-```
-/course-modules/abc123.../MODULE_1/status
-```
+At execution time, the body is resolved with actual values from the context.
 
 ## Body Field Mapping
 
@@ -101,8 +98,8 @@ Extract from execution context:
 
 ```typescript
 body: {
-  pendingTxHash: { source: "context", path: "txHash" },
-  courseNftPolicyId: { source: "context", path: "buildInputs.policy" }
+  pending_tx_hash: { source: "context", path: "txHash" },
+  course_nft_policy_id: { source: "context", path: "buildInputs.courseId" }
 }
 ```
 
@@ -160,9 +157,8 @@ The `COURSE_TEACHER_MODULES_MANAGE` transaction demonstrates the full pattern:
     method: "POST",
     endpoint: "/course-modules/batch-update-status",
     body: {
-      courseNftPolicyId: { source: "context", path: "buildInputs.policy" },
-      moduleCodes: { source: "context", path: "buildInputs.moduleCodes" },
-      txHash: { source: "context", path: "txHash" },
+      course_nft_policy_id: { source: "context", path: "buildInputs.courseId" },
+      modules: { source: "context", path: "buildInputs.batchUpdateBody.modules" },
     }
   }],
 
@@ -171,10 +167,9 @@ The `COURSE_TEACHER_MODULES_MANAGE` transaction demonstrates the full pattern:
     method: "POST",
     endpoint: "/course-modules/batch-confirm-transaction",
     body: {
-      courseNftPolicyId: { source: "context", path: "buildInputs.policy" },
-      moduleCodes: { source: "context", path: "buildInputs.moduleCodes" },
-      txHash: { source: "context", path: "txHash" },
-      moduleHashes: { source: "context", path: "buildInputs.moduleHashes" },
+      course_nft_policy_id: { source: "context", path: "buildInputs.courseId" },
+      tx_hash: { source: "context", path: "txHash" },
+      modules: { source: "context", path: "buildInputs.batchConfirmBody.modules" },
     }
   }]
 }
@@ -287,15 +282,24 @@ onSubmit: [{
   method: "POST",
   endpoint: "/assignment-commitments/update-status",
   body: {
-    status: {
-      source: "conditional",
-      condition: "buildInputs.assessmentResult",
-      mapping: {
-        "accept": "PENDING_TX_ASSIGNMENT_ACCEPTED",
-        "deny": "PENDING_TX_ASSIGNMENT_DENIED"
-      }
-    }
-  }
+    course_nft_policy_id: { source: "context", path: "buildInputs.courseId" },
+    module_code: { source: "context", path: "buildInputs.moduleCode" },
+    access_token_alias: { source: "context", path: "buildInputs.studentAccessTokenAlias" },
+    network_status: { source: "literal", value: "PENDING_TX_ASSIGNMENT_ACCEPTED" },
+  },
+  condition: { path: "assessmentResult", equals: "accept" },
+},
+{
+  def: "Update status for refused assessment",
+  method: "POST",
+  endpoint: "/assignment-commitments/update-status",
+  body: {
+    course_nft_policy_id: { source: "context", path: "buildInputs.courseId" },
+    module_code: { source: "context", path: "buildInputs.moduleCode" },
+    access_token_alias: { source: "context", path: "buildInputs.studentAccessTokenAlias" },
+    network_status: { source: "literal", value: "PENDING_TX_ASSIGNMENT_REFUSED" },
+  },
+  condition: { path: "assessmentResult", equals: "refuse" },
 }]
 ```
 
@@ -312,8 +316,9 @@ import {
 const context = createMockSubmissionContext({
   txHash: "abc123...",
   buildInputs: {
-    policy: "policy123",
+    courseId: "policy123...",
     moduleCode: "MODULE_1",
+    studentAccessTokenAlias: "student1",
   },
 });
 
@@ -321,10 +326,10 @@ const sideEffect = txDef.onSubmit![0];
 const result = testSideEffect(sideEffect, context);
 
 console.log(result.resolvedEndpoint);
-// => "/course-modules/policy123/MODULE_1/status"
+// => "/assignment-commitments/update-status"
 
 console.log(result.requestBody);
-// => { status: "PENDING_TX", pendingTxHash: "abc123..." }
+// => { course_nft_policy_id: "policy123...", module_code: "MODULE_1", ... }
 ```
 
 ## Related Documentation

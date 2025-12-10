@@ -61,8 +61,8 @@ Create a new course on-chain. The course NFT policy ID is returned by the transa
 import { COURSE_ADMIN_CREATE } from "@andamio/transactions";
 
 const inputs = COURSE_ADMIN_CREATE.buildTxConfig.inputSchema.parse({
-  user_access_token: accessTokenUnit,
-  initial_teacher: teacherAlias,
+  alias: userAlias,
+  initialTeacher: teacherAlias,
   // courseNftPolicyId comes from tx API response
 });
 ```
@@ -81,10 +81,10 @@ Add or remove teachers from a course governance UTxO.
 import { COURSE_ADMIN_TEACHERS_UPDATE } from "@andamio/transactions";
 
 const inputs = COURSE_ADMIN_TEACHERS_UPDATE.buildTxConfig.inputSchema.parse({
-  user_access_token: accessTokenUnit,
-  policy: courseNftPolicyId,
-  teachers_to_add: JSON.stringify(["bob", "carol"]),
-  teachers_to_remove: JSON.stringify(["dave"]),
+  alias: adminAlias,
+  courseId: courseNftPolicyId,
+  teachersToAdd: ["bob", "carol"],
+  teachersToRemove: ["dave"],
 });
 ```
 
@@ -103,23 +103,27 @@ Batch manage modules - mint new ones, update existing, or burn old ones. All in 
 ```typescript
 import {
   COURSE_TEACHER_MODULES_MANAGE,
-  formatModuleInfos,
   computeSltHash
 } from "@andamio/transactions";
 
-// Format module infos for the transaction
-const moduleInfos = formatModuleInfos(courseModules);
-
 const inputs = COURSE_TEACHER_MODULES_MANAGE.buildTxConfig.inputSchema.parse({
-  user_access_token: accessTokenUnit,
-  policy: courseNftPolicyId,
-  module_infos: moduleInfos,
+  alias: teacherAlias,
+  courseId: courseNftPolicyId,
+  modulesToMint: [
+    {
+      slts: ["I can mint an access token.", "I can complete an assignment."],
+      allowedStudents_V2: [], // Policy IDs of allowed student groups
+      prerequisiteAssignments_V2: [], // SLT hashes of prerequisites
+    },
+  ],
+  modulesToUpdate: [],
+  modulesToBurn: [],
 });
 
 // Preview module hashes before minting
-courseModules.forEach(m => {
-  const hash = computeSltHash(m.slts.map(s => s.text));
-  console.log(`${m.moduleCode}: ${hash}`);
+inputs.modulesToMint.forEach(m => {
+  const hash = computeSltHash(m.slts);
+  console.log(`Module hash: ${hash}`);
 });
 ```
 
@@ -134,25 +138,29 @@ courseModules.forEach(m => {
 
 ### COURSE_TEACHER_ASSIGNMENTS_ASSESS
 
-Assess a student's assignment submission - accept or deny.
+Assess student assignment submissions - accept or refuse. Supports batched decisions.
 
 ```typescript
 import { COURSE_TEACHER_ASSIGNMENTS_ASSESS } from "@andamio/transactions";
 
 const inputs = COURSE_TEACHER_ASSIGNMENTS_ASSESS.buildTxConfig.inputSchema.parse({
   // Transaction API params
-  user_access_token: accessTokenUnit,
-  student_alias: studentAlias,
-  policy: courseNftPolicyId,
-  // Side effect params
+  alias: teacherAlias,
+  courseId: courseNftPolicyId,
+  assignmentDecisions: [
+    { alias: "student1", outcome: "accept" },
+    { alias: "student2", outcome: "refuse" },
+  ],
+  // Side effect params (for single assessment operations)
   moduleCode: "MODULE_1",
-  assessmentResult: "accept", // or "deny"
+  studentAccessTokenAlias: "student1",
+  assessmentResult: "accept", // or "refuse"
 });
 ```
 
 **Side Effects (Conditional):**
-- `onSubmit`: Set to `PENDING_TX_ASSIGNMENT_ACCEPTED` or `PENDING_TX_ASSIGNMENT_DENIED`
-- `onConfirmation`: Finalize to `ASSIGNMENT_ACCEPTED` or `ASSIGNMENT_DENIED`
+- `onSubmit`: Set to `PENDING_TX_ASSIGNMENT_ACCEPTED` or `PENDING_TX_ASSIGNMENT_REFUSED`
+- `onConfirmation`: Finalize to `ASSIGNMENT_ACCEPTED` or `ASSIGNMENT_REFUSED`
 
 ---
 
@@ -160,22 +168,26 @@ const inputs = COURSE_TEACHER_ASSIGNMENTS_ASSESS.buildTxConfig.inputSchema.parse
 
 ### COURSE_STUDENT_ENROLL
 
-Enroll in a course with an initial assignment commitment.
+Enroll in a course with an optional initial assignment commitment.
 
 ```typescript
 import {
   COURSE_STUDENT_ENROLL,
-  computeAssignmentInfoHash
+  computeAssignmentInfoHash,
+  computeSltHash
 } from "@andamio/transactions";
 
 // Compute evidence hash
 const evidenceHash = computeAssignmentInfoHash(evidenceContent);
+const moduleHash = computeSltHash(slts);
 
 const inputs = COURSE_STUDENT_ENROLL.buildTxConfig.inputSchema.parse({
-  user_access_token: accessTokenUnit,
-  policy: courseNftPolicyId,
-  initial_slt_hash: moduleHash, // Which module to start with
-  assignment_info: evidenceHash, // Hash of evidence content
+  alias: studentAlias,
+  courseId: courseNftPolicyId,
+  commitData: {
+    sltHash: moduleHash, // 64-char module hash
+    assignmentInfo: evidenceHash, // Hash of evidence content
+  },
 });
 ```
 
@@ -184,8 +196,8 @@ const inputs = COURSE_STUDENT_ENROLL.buildTxConfig.inputSchema.parse({
 - `onConfirmation`: `POST /assignment-commitments/confirm-transaction` - Confirm to `PENDING_APPROVAL`
 
 **Key Points:**
-- `initial_slt_hash` is the module token name (use `computeSltHash(slts)`)
-- `assignment_info` is the evidence hash (use `computeAssignmentInfoHash(evidence)`)
+- `commitData.sltHash` is the module token name (use `computeSltHash(slts)`)
+- `commitData.assignmentInfo` is the evidence hash (use `computeAssignmentInfoHash(evidence)`)
 - Full evidence stored in database, only hash goes on-chain
 
 ### COURSE_STUDENT_ASSIGNMENT_UPDATE
@@ -201,10 +213,10 @@ import {
 const newEvidenceHash = computeAssignmentInfoHash(newEvidence);
 
 const inputs = COURSE_STUDENT_ASSIGNMENT_UPDATE.buildTxConfig.inputSchema.parse({
-  user_access_token: accessTokenUnit,
-  policy: courseNftPolicyId,
-  maybe_new_slt_hash: newModuleHash, // null if just updating evidence
-  assignment_info: newEvidenceHash,
+  alias: studentAlias,
+  courseId: courseNftPolicyId,
+  assignmentInfo: newEvidenceHash,
+  maybeNewSltHash: newModuleHash, // undefined if just updating evidence
   // Side effect params
   moduleCode: "MODULE_2",
   isNewCommitment: true, // false if updating same module
@@ -224,8 +236,8 @@ Claim completed credential and receive deposit refund.
 import { COURSE_STUDENT_CREDENTIAL_CLAIM } from "@andamio/transactions";
 
 const inputs = COURSE_STUDENT_CREDENTIAL_CLAIM.buildTxConfig.inputSchema.parse({
-  user_access_token: accessTokenUnit,
-  policy: courseNftPolicyId,
+  alias: studentAlias,
+  courseId: courseNftPolicyId,
 });
 ```
 

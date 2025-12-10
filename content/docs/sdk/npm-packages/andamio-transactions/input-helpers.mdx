@@ -43,7 +43,8 @@ console.log(txDef.buildTxConfig.inputHelpers);
 ```typescript
 import {
   getTransactionDefinition,
-  formatModuleInfos
+  formatModulesToMint,
+  computeSltHash
 } from "@andamio/transactions";
 import type { ListCourseModulesOutput } from "@andamio-platform/db-api";
 
@@ -56,23 +57,31 @@ const modules: ListCourseModulesOutput = await fetch(
 
 // Use helper to format the complex field
 const inputs = {
-  user_access_token: userAccessToken,
-  policy: courseNftPolicyId,
-  module_infos: formatModuleInfos(modules),  // Helper formats data
+  alias: teacherAlias,
+  courseId: courseNftPolicyId,
+  modulesToMint: formatModulesToMint(modules),  // Helper formats data
+  modulesToUpdate: [],
+  modulesToBurn: [],
 };
 
 // Validate and build
 const validated = txDef.buildTxConfig.inputSchema.parse(inputs);
+
+// Preview module hashes
+modules.forEach(m => {
+  const hash = computeSltHash(m.slts.map(s => s.sltText));
+  console.log(`${m.moduleCode}: ${hash}`);
+});
 ```
 
 ## Available Helpers
 
-### formatModuleInfos
+### formatModulesToMint (V2)
 
 Formats course modules for the `COURSE_TEACHER_MODULES_MANAGE` transaction.
 
 ```typescript
-import { formatModuleInfos } from "@andamio/transactions";
+import { formatModulesToMint, computeSltHash } from "@andamio/transactions";
 import type { ListCourseModulesOutput } from "@andamio-platform/db-api";
 
 const modules: ListCourseModulesOutput = [
@@ -81,38 +90,37 @@ const modules: ListCourseModulesOutput = [
     moduleCode: "MODULE_1",
     title: "Introduction",
     slts: [
-      { id: "1", text: "I can mint an access token." },
-      { id: "2", text: "I can complete an assignment." }
+      { id: "1", sltText: "I can mint an access token." },
+      { id: "2", sltText: "I can complete an assignment." }
     ],
     // ... other fields
   }
 ];
 
-const moduleInfosJson = formatModuleInfos(modules);
-// Returns JSON string for transaction API
+const modulesToMint = formatModulesToMint(modules);
+// Returns array of MintModuleV2 objects for transaction API
 ```
 
 **Input:** `ListCourseModulesOutput` from DB API
-**Output:** JSON string with structure:
-```json
+**Output:** Array of `MintModuleV2` objects:
+```typescript
 [
   {
-    "moduleCode": "MODULE_1",
-    "moduleTitle": "Introduction",
-    "slts": ["I can mint an access token.", "I can complete an assignment."],
-    "prerequisites": []
+    slts: ["I can mint an access token.", "I can complete an assignment."],
+    allowedStudents_V2: [], // Policy IDs of allowed student groups
+    prerequisiteAssignments_V2: [] // SLT hashes of prerequisites
   }
 ]
 ```
 
-### formatModuleInfosForMintModuleTokens (V1)
+### formatModuleInfosForMintModuleTokens (V1 Legacy)
 
 Legacy helper for V1 `MINT_MODULE_TOKENS` transaction:
 
 ```typescript
 import { formatModuleInfosForMintModuleTokens } from "@andamio/transactions";
 
-// Same signature as formatModuleInfos
+// Returns JSON string for V1 transaction API
 const moduleInfosJson = formatModuleInfosForMintModuleTokens(modules);
 ```
 

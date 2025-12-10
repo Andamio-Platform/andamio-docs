@@ -57,10 +57,12 @@ const txDef = getTransactionDefinition("COURSE_STUDENT_ENROLL");
 
 // Validate inputs before building transaction
 const inputs = {
-  user_access_token: "abc123def456...",
-  policy: "courseNftPolicyId123...",
-  initial_slt_hash: "moduleHash...",
-  assignment_info: "evidenceHash...",
+  alias: "studentAlias",
+  courseId: "abc123def456...", // 56-char hex policy ID
+  commitData: {
+    sltHash: "moduleHash64chars...", // 64-char module hash
+    assignmentInfo: "evidenceHash...",
+  },
 };
 
 try {
@@ -75,16 +77,18 @@ try {
 ### Build and Submit Transaction
 
 ```typescript
-import { getTransactionDefinition } from "@andamio/transactions";
+import { getTransactionDefinition, computeAssignmentInfoHash } from "@andamio/transactions";
 
 const txDef = getTransactionDefinition("COURSE_STUDENT_ENROLL");
 
 // 1. Validate inputs
 const inputs = txDef.buildTxConfig.inputSchema.parse({
-  user_access_token: userAccessToken,
-  policy: courseNftPolicyId,
-  initial_slt_hash: moduleHash,
-  assignment_info: evidenceHash,
+  alias: userAlias,
+  courseId: courseNftPolicyId,
+  commitData: {
+    sltHash: moduleHash, // 64-char Blake2b-256 hash
+    assignmentInfo: computeAssignmentInfoHash(evidenceContent),
+  },
 });
 
 // 2. Build transaction via Atlas Tx API
@@ -212,15 +216,15 @@ const txDef = getTransactionDefinition("COURSE_TEACHER_ASSIGNMENTS_ASSESS");
 
 // What the transaction API endpoint needs
 const apiParams = txDef.buildTxConfig.txApiSchema;
-// { user_access_token, student_alias, policy }
+// { alias, courseId, assignmentDecisions[], walletData? }
 
 // What side effects need (but API doesn't)
 const sideEffectParams = txDef.buildTxConfig.sideEffectSchema;
-// { moduleCode, assessmentResult }
+// { moduleCode, studentAccessTokenAlias, assessmentResult }
 
 // Combined validation (use this for full input validation)
 const allParams = txDef.buildTxConfig.inputSchema;
-// { user_access_token, student_alias, policy, moduleCode, assessmentResult }
+// { alias, courseId, assignmentDecisions[], walletData?, moduleCode, studentAccessTokenAlias, assessmentResult }
 ```
 
 This separation allows:
