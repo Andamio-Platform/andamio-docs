@@ -1,0 +1,42 @@
+---
+title: Getting Started
+icon: Rocket
+---
+
+import { Rocket } from "lucide-react";
+
+## Andamio Pioneer Tools
+
+1. We use Discord for daily communication. [Join the Andamio Network Discord server](https://discord.gg/abBbsGZpZ5) to connect with other pioneers and stay up to date.
+2. We use Github for project management and collaboration. On Discord or in a Live Coding session, share your Github handle, and we will add you to the Andamio Pioneers team on Github. Then, you will be able to access the [Andamio T3 App Template](https://github.com/Andamio-Platform/andamio-t3-app-template).
+3. We use Google Meet for Live Coding meetings. We record each meeting and will share both the video links and the meeting transcripts in the [Live Coding Archive](./live-coding/archive). The meeting link will be shared via Discord, and we will have a public calendar soon.
+
+## Andamio T3 App Template
+
+This is not yet deployed, or even complete! What's ready is the Course V2 System. That is what we will be testing in our first live coding sessions.
+
+### Environment Variables
+
+To use the [Andamio T3 App Template](https://github.com/Andamio-Platform/andamio-t3-app-template) locally, you will need to create a `.env` file in the root of the project. You can use the `.env.example` file as a template. Here are the current environment variables:
+
+```
+# Since the ".env" file is gitignored, you can use the ".env.example" file to
+# build a new ".env" file when you clone the repo. Keep this file up-to-date
+# when you add new variables to `.env`.
+
+# When adding additional environment variables, the schema in "/src/env.js"
+# should be updated accordingly.
+
+# Andamio Database API URL
+NEXT_PUBLIC_ANDAMIO_API_URL="https://andamio-db-api-343753432212.europe-west1.run.app/api/v0"
+
+# Cardano Network
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+
+# Andamio Access Token Policy ID
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"    
+```
+
+## Notes:
+
+- [ ] Would any Pioneers prefer an email list for updates?

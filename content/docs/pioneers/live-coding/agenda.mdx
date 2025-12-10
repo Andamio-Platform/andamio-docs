@@ -1,17 +1,33 @@
 ---
-title: "Live Coding Agenda"
+title: Live Coding Agenda
+icon: List
 description: "Ongoing V2 protocol exploration, cost verification, and experiments"
 ---
 
-# Live Coding Agenda
+import { List } from "lucide-react";
+
+# Andamio Pioneers Live Coding Agenda
 
 This page tracks our ongoing V2 protocol exploration sessions. We're building documentation by examining real transactions, verifying costs, and experimenting with on-chain data reconstruction.
 
-## Current Focus Areas
+## Today's Agenda 2025-12-10
+
+### Onboarding
+
+- Share Github handle
+- Get access to [Andamio T3 App Template](https://github.com/Andamio-Platform/andamio-t3-app-template), and run it locally
+- Submit [issues to the project repository on Github](https://github.com/Andamio-Platform/andamio-t3-app-template/issues)
+- Explore "Focus Areas" below
+
+---
+
+## Focus Areas
+
+This section will change frequently, depending on what we are currently building. Here is some of our current work.
 
 ### 1. Transaction Cost Verification ✅
 
-All 8 course system transactions have been parsed and costs verified against actual wallet deltas.
+All 8 Course System transactions have been parsed and costs verified against actual wallet deltas.
 
 | Transaction | Documented | Verified | Status |
 |-------------|------------|----------|--------|
@@ -24,12 +40,10 @@ All 8 course system transactions have been parsed and costs verified against act
 | `course.student.assignment-update` | ~0.33 ADA | 0.33 ADA | ✅ Verified |
 | `course.student.credential-claim` | -1.03 ADA | -1.03 ADA | ✅ Verified (refund!) |
 
-**Single Credential Loop Cost:** Student ~1.11 ADA + Teacher ~0.21 ADA = **~1.32 ADA total**
-
-**Key Learning:** UTxO recycling significantly reduces actual costs. The index linked list reuses ADA from spent nodes, so wallet delta is less than sum of new UTxO deposits.
+We are drafting details about some of the improvements in [What's New in V2](../../protocol/v2/whats-new.mdx).
 
 **Process:**
-1. Execute transaction on preprod
+1. Execute transaction on preprod, via T3 App Template
 2. Screenshot wallet delta
 3. Compare against documented cost
 4. Update docs if inconsistent
@@ -74,59 +88,6 @@ All transactions have corresponding MDX pages at `/docs/protocol/v2/transactions
 - `/api/transaction-v2?file=<path>` - Get transaction YAML data
 - `/api/costs/v2` - Get cost registry (supports `?tx=`, `?loop=`, `?summary=true`)
 
-See [SESSION-NOTES.md](https://github.com/andamio/andamio-docs/blob/main/public/yaml/transactions/v2/SESSION-NOTES.md) for full context.
-
----
-
-## Session Log
-
-### Session: 2025-12-09 (Part 2)
-
-**Accomplished:**
-- Completed all 8 course system transactions
-- Parsed: `assignments-assess`, `enroll`, `assignment-update`, `credential-claim`
-- Generated MDX documentation pages for all transactions
-- Created `/api/costs/v2` endpoint for programmatic cost access
-- Verified wallet deltas against actual transactions
-- Created V2 validator YAML placeholders at `public/yaml/validators/v2/`
-- Created `validator-registry.json` tracking documentation status
-
-**Key Discoveries:**
-- Assessment costs ~0.21 ADA (less than tx fee due to datum shrinking)
-- Credential claim gives student ~1.03 ADA refund (burned UTxO releases deposit)
-- Single credential loop: Student ~1.11 ADA + Teacher ~0.21 ADA = ~1.32 ADA
-- Course state datum: constructor 0 = completed, constructor 1 = pending
-
-**Validator Documentation Status:**
-- 2 documented (course-state-validator, global-state-v2)
-- 5 placeholder (need more CBOR analysis)
-- 2 observers (stake addresses known)
-
-### Session: 2025-12-09 (Part 1)
-
-**Accomplished:**
-- Reorganized V2 transaction files to `{system}/{role}/{tx-name}.yaml` pattern
-- Updated transaction IDs to `{system}.{role}.{action}` format
-- Parsed `course.teacher.modules-manage` transaction
-- Discovered module-policy and module-validator
-- Created "What's New in V2" documentation page
-- Created comprehensive cost estimation documentation
-- **Fixed mint-access-token cost** from ~9.1 ADA to ~7.9 ADA (UTxO recycling)
-
-**Key Discoveries:**
-- Module token names are SHA256 hashes of SLT content
-- No service fee for module management
-- Index linked list recycles UTxOs, reducing actual costs
-- LocalStateToken validator holds ~17 ADA due to embedded script_ref
-
-### Session: 2025-12-08
-
-**Accomplished:**
-- Started V2 transaction documentation
-- Created address-registry.json, cost-registry.json, endpoint-registry.json
-- Parsed mint-access-token, course-create, teachers-update transactions
-- Identified 6 validators, 5 policies, 2 observers
-
 ---
 
 ## Resources
@@ -141,8 +102,6 @@ See [SESSION-NOTES.md](https://github.com/andamio/andamio-docs/blob/main/public/
 ### 4. V2 Documentation Generation System
 
 Building tooling to auto-generate MDX docs from V2 YAML files.
-
-**Audit completed:** See [V2-DOCS-GENERATION-AUDIT.md](/docs/project/V2-DOCS-GENERATION-AUDIT.md)
 
 **Key Findings:**
 - V1 system works well, must not be modified
@@ -166,3 +125,4 @@ Building tooling to auto-generate MDX docs from V2 YAML files.
 3. **Complete validator docs** - Fill in placeholder YAMLs as we encounter validators in new transactions
 4. **On-chain reconstruction** - Document experiments with rebuilding state from transaction history
 5. **Coverage checker** - Create `scripts/docs-coverage-check-v2.ts` for validation
+

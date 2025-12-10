@@ -1,0 +1,9 @@
+{
+    "title": "Andamio Pioneers",
+    "icon": "Globe",
+    "pages": [
+        "getting-started",
+        "live-coding"
+    ],
+    "defaultOpen": false
+}
