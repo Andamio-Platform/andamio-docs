@@ -1,0 +1,83 @@
+---
+title: Quick Reference
+icon: Zap
+description: "Everything you need in one place"
+---
+
+import { Zap } from "lucide-react";
+
+# Andamio Pioneers Quick Reference
+
+Everything you need to get building, in one place.
+
+## Environment Variables
+
+Copy this into your `.env` file for the T3 App Template:
+
+```bash
+# Andamio Database API URL
+NEXT_PUBLIC_ANDAMIO_API_URL="https://andamio-db-api-343753432212.europe-west1.run.app/api/v0"
+
+# Andamioscan API URL
+ANDAMIOSCAN_API_URL="https://preprod.andamioscan.andamio.space"
+
+# Preprod V2 Tx API URL
+ATLAS_TX_API_URL="https://atlas-api-preprod-507341199760.us-central1.run.app"
+
+# Cardano Network
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+
+# Andamio Access Token Policy ID
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"
+```
+
+## API Documentation
+
+| API | Purpose | Swagger |
+|-----|---------|---------|
+| **Andamioscan** | On-chain data indexing | [Swagger UI](https://preprod.andamioscan.andamio.space/swagger/index.html) |
+| **Atlas TX API** | Transaction building (V2) | [API Docs](https://atlas-api-preprod-507341199760.us-central1.run.app/docs) |
+| **Andamio DB API** | Database operations | [Swagger UI](https://andamio-db-api-343753432212.europe-west1.run.app/swagger/) |
+
+These three APIs will become one unified Andamio API when V2 launches on mainnet.
+
+## Links
+
+| Resource | Link |
+|----------|------|
+| **Discord** | [Andamio Network](https://discord.gg/abBbsGZpZ5) |
+| **T3 App Template** | [GitHub](https://github.com/Andamio-Platform/andamio-t3-app-template) |
+| **Submit Issues** | [GitHub Issues](https://github.com/Andamio-Platform/andamio-t3-app-template/issues) |
+
+## NPM Packages
+
+```bash
+npm install @andamio/transactions@0.4.1
+npm install @andamio/db-api@0.4.1
+```
+
+- **@andamio/transactions** - Transaction definitions with params, side effects, and endpoints
+- **@andamio/db-api** - Types for all database API endpoints
+
+## Live Coding Schedule
+
+**Weekly Sessions (Wednesdays)**:
+- 14:00 UTC
+- 20:00 UTC
+
+**Spontaneous Sessions**: Additional building in public happens in the Andamio Discord. No obligation to join - just an open invitation.
+
+## Getting Help
+
+1. **Discord** - Primary communication channel
+2. **GitHub Issues** - For bugs, feature requests, or documentation gaps
+3. **Live Coding Sessions** - Ask questions in real-time
+
+## Wallet Setup
+
+You'll need a Cardano wallet connected to **Preprod testnet**:
+- [Eternl](https://eternl.io/) - Recommended
+- [Lace](https://www.lace.io/)
+- [Nami](https://namiwallet.io/)
+
+Get testnet ADA from the [Cardano Testnet Faucet](https://docs.cardano.org/cardano-testnets/tools/faucet/).

@@ -3,6 +3,7 @@
     "icon": "Globe",
     "pages": [
         "getting-started",
+        "quick-reference",
         "live-coding"
     ],
     "defaultOpen": false

@@ -688,6 +688,102 @@ See `SESSION-NOTES.md` for validator mapping analysis. Key gaps:
 - Name mismatches between CBOR-discovered validators and existing docs
 - Need to create `validator-registry-v2.yaml` like V1
 
+## Andamio Pioneers Session Archival
+
+When processing a new live coding transcript, follow this process:
+
+### 1. Create Session Summary
+
+Create `content/docs/pioneers/live-coding/archive/sessions/session-XXX.mdx` using this template:
+
+```mdx
+---
+title: "Session #X: [Title]"
+description: "[One-line description] - [Date]"
+---
+
+# Session #X: [Title]
+
+**Date**: [Month Day, Year]
+**Duration**: ~X hour(s)
+**Attendees**: [List names]
+
+## Summary
+[2-3 sentences describing what happened]
+
+## Key Topics
+### 1. [Topic Name]
+[Description]
+
+### 2. [Topic Name]
+[Description]
+
+## Questions Raised
+### [Question]
+[Context and current thinking]
+
+## Technical Walkthrough
+[Numbered list of what was demoed/built]
+
+## Action Items
+[Bullet list from the session]
+
+## Resources
+- [Full Transcript](./transcripts/YYYYMMDDHHMM-transcript.md)
+- [Other relevant links]
+
+## Next Session
+Weekly sessions on Wednesdays at **14:00 UTC** and **20:00 UTC**. Additional spontaneous sessions may happen in the Andamio Network Discord.
+```
+
+### 2. Store Raw Transcript
+
+Place raw transcript at `content/docs/pioneers/live-coding/archive/transcripts/YYYYMMDDHHMM-transcript.md`
+
+Filename format: `YYYYMMDDHHMM` = year, month, day, 24hr time (UTC)
+
+### 3. Update Archive Index
+
+Add row to the session summaries table in `content/docs/pioneers/live-coding/archive/index.mdx`:
+
+```markdown
+| X | YYYY-MM-DD | [Title](./sessions/session-XXX) | Brief summary |
+```
+
+### 4. Update Sessions meta.json
+
+Add new session to `content/docs/pioneers/live-coding/archive/sessions/meta.json`:
+
+```json
+{
+    "title": "Sessions",
+    "pages": [
+        "session-001",
+        "session-002"  // Add new session
+    ]
+}
+```
+
+### Session Summary Best Practices
+
+**Extract from transcript:**
+- Key discussion topics (technical AND philosophical)
+- Questions raised but not answered (these are valuable!)
+- Action items mentioned
+- Technical walkthrough steps
+- Attendee names
+
+**Keep it scannable:**
+- Summary should be 2-3 sentences max
+- Use headers liberally
+- Bullet points over paragraphs
+- Link to full transcript for details
+
+**Capture the philosophy:**
+- Andamio Pioneers explores both technical AND social/philosophical questions
+- Questions like "how should AI contributions be tracked?" are feature content, not noise
+- The "source of truth" discussion is protocol design, not just UX
+
 # important-instruction-reminders
 Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.

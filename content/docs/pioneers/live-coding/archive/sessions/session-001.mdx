@@ -1,0 +1,71 @@
+---
+title: "Session #1: Soft Launch"
+description: "Andamio Pioneers Program Soft Launch - December 10, 2025"
+---
+
+# Session #1: Soft Launch
+
+**Date**: December 10, 2025
+**Duration**: ~1 hour
+**Attendees**: James Dunseith, Newman Lanier, Lewis Nduati, Tevo Kask, Shaggyrax, Adrian, Nelson Kshetrimayum, IzzyHuman
+
+## Summary
+
+The official soft launch of the Andamio Pioneers program. We introduced the program philosophy, got everyone set up with GitHub access, and walked through getting the T3 App Template running locally. The session also touched on deeper questions about AI-assisted development and data architecture.
+
+## Key Topics
+
+### 1. Building in Public Returns
+The Pioneers program is a return to the "building in public" ethos of early Gimbal Labs (2021), where technical exploration combined with philosophical inquiry. In 2026, we're applying this approach to Andamio itself.
+
+### 2. Three APIs → One Unified API
+Currently there are three separate data sources:
+- **Andamio DB API** - Database operations
+- **Andamioscan** - On-chain data indexing (major upgrade)
+- **Atlas TX API** - Transaction building (V2)
+
+When Andamio V2 launches on mainnet in January, these will be wrapped into a single unified Andamio API.
+
+### 3. Agent-Assisted Development
+The T3 App Template was almost entirely built by Claude. The key was "painstakingly building and refining context for the agent." The repository includes machine-readable documentation (`CLAUDE.md` files) that give AI agents context for building features.
+
+### 4. NPM Packages for Developers
+Two new packages (v0.4.0) support agentic development:
+- `@andamio/transactions` - Transaction definitions with params, side effects, and endpoints
+- `@andamio/db-api` - Types for all database API endpoints
+
+## Questions Raised
+
+### How should AI contributions be tracked?
+Shaggyrax asked whether there should be a methodology to notate AI-generated vs manually-written code. No definitive answer yet - this is an open philosophical question for the community to explore.
+
+### What's the "source of truth"?
+When a course exists on-chain but not in the database (or vice versa), which is authoritative? The UX shows this tension - you can have an on-chain course that says "not in database" and needs to be imported. This reveals fundamental questions about protocol design.
+
+## Technical Walkthrough
+
+1. **GitHub Access**: Shared handles, added to Andamio Pioneers 2026 team
+2. **T3 Template**: Pulled repo, configured environment variables
+3. **Local Demo**: Ran template, showed dashboard with connected wallet
+4. **API Demo**: Created a course via the transaction API, showing the unsigned CBOR flow
+5. **Data Sync Demo**: Showed courses existing on-chain vs in database
+
+## Action Items
+
+- Add people who shared GitHub handles to the Andamio Pioneers team
+- Update transaction API docs noting `wallet_data` is optional
+- Ensure clean links to all swagger documentation
+- Post recording and notes (done!)
+- Commit to Wednesday sessions with advance notice
+
+## Resources
+
+- [Full Transcript](./transcripts/202512111500-transcript.md)
+- [T3 App Template](https://github.com/Andamio-Platform/andamio-t3-app-template)
+- [Andamioscan Swagger](https://preprod.andamioscan.andamio.space/swagger/index.html)
+- [Atlas TX API Docs](https://atlas-api-preprod-507341199760.us-central1.run.app/docs)
+- [Andamio DB API Swagger](https://andamio-db-api-343753432212.europe-west1.run.app/swagger/)
+
+## Next Session
+
+Weekly sessions on Wednesdays at **14:00 UTC** and **20:00 UTC**. Additional spontaneous sessions may happen in the Andamio Network Discord.
