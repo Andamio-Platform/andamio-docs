@@ -4,50 +4,54 @@ description: Digital trust infrastructure for local teams and global collaborati
 full: false
 ---
 
-## Who gets to issue credentials?
+## Local Authority in a Global Network
 
-In any [framework for Digital Trust Infrastructure](https://cardanofoundation.org/resource-library/introducing-digital-trust-infrastructure-bri) that specifies a need for digital credentials, we encounter a common question: "Who has authority to issue or vouch for what?" (BRI 18). 
+If decentralization promises anything, it's an emphasis on local authority. In Cardano, we often refer to the goal of [pushing power to the edges](https://www.linkedin.com/posts/input-output-global_how-do-you-explain-the-mission-of-cardano-activity-6763720366683639808-imUb/). Action happens at these "edges": on teams, in local communities, in cohorts, in organizations, and in collectives.
 
-The default answer is gatekeeping. A "trust registry" can list "authorized issuers," governance bodies can decide who joins the list, and credentials derive value from issuer authority. This works for high-stakes credentials, like professional licenses, government IDs, and university degrees.
+With Andamio, we call these "local" spaces. Andamio allows people to record learning and accomplishments in local spaces where peers can attest for each other, then to share these credentials across a global network where they unlock new opportunities.
 
-However. The most valuable credentials for the ways that globally-networked communities will work together do not exist yet. They'll come from community organizations teaching practical skills, open-source projects recognizing contributions, and teams experimenting with novel collaboration. Approval from a governance body may be necessary in some cases, but too often, it only introduces new gatekeepers.
+## Transactions = Actions
 
-Andamio offers a different path. **Anyone can issue credentials. Value is emergent, determined by the network, not by global authorities.**
+The word "active" traces to Latin *activus*—"a doing"—from the root meaning "to drive, draw out or forth, move." The opposite is "passive". In these early years of blockchain, too much of what happens "on-chain" has been passive: watching charts, trading derivatives, speculating on abstractions disconnected from anything real. 
 
-## Local Authority, Global Network
+The global Cardano community understands there's more to it than this. We are driving conversations about digital trust infrastructure and engaging broadly with the U.N. SDGs. We have an on-chain constitution and voting system, Catalyst funding that motivates builders, and infrastructure for scaling what's possible—Hydra, Midnight, Leios. It's all running on the world's pioneering Proof-of-Stake blockchain, supported by nearly 3000 stake pool operators. This is a human-powered network.
 
-If decentralization promises anything, it's an emphasis on local authority. In Cardano, we often refer to the goal of [pushing power to the edges](https://www.linkedin.com/posts/input-output-global_how-do-you-explain-the-mission-of-cardano-activity-6763720366683639808-imUb/). Action happens in small spaces: teams, cohorts, organizations, collectives. While AI draws people into agentic bubbles and social media algorithms optimize for engagement, Andamio empowers small groups to share knowledge, allocate resources, and solve locally-relevant problems.
+And yet, a lot of this action isn't recorded on-chain. We're only beginning to empower local communities, and only beginning to see what decentralization actually solves: people in local places need more options than centralized systems provide.
 
-A blockchain transaction is an attestation that something happened and is true. Changing on-chain data requires a human or agent to sign, and signing requires sufficient reason. Andamio makes it easier for people to add attestations to what they have learned and accomplished in local spaces where validation is straightforward, then share these attestations across a global network where they unlock new opportunities.
+To send value on a blockchain, someone must sign a transaction that authorizes the movement of tokens. On Cardano, we can write specific rules about how value is sent and how critical data is updated. Andamio uses this capability to record local interactions and issue credentials that attest to real-world actions. When someone completes a course module, submits project work, or earns a credential, a transaction records that action on-chain. Each transaction is an attestation of real participation in real communities.
 
-## Building Great Teams
+At launch, Andamio facilitates two local systems: **Course** and **Project**. Each defines rules encoded in smart contracts that validate whether transactions are legitimate. But you might not agree with our rules. Andamio allows anyone to add their own local systems to the network, with their own rules, validated by their own communities.
 
-We wrap the concept of local-ness in the idea of "teams." A team is any group of people who come together to collaborate—always local in some way: to a place, a company, an online collective.
+## A Network with Users
 
-The world needs greater levels of trust. The problems we face require collaboration. Andamio provides infrastructure that integrates with existing platforms while giving collectives of people the tools to build new ones. Andamio allows users to carry a professional identity across platforms, projects, and communities—building reputation based on real commitments and interactions.
+AI tools make it easier than ever to build beautiful applications. The hard part isn't building—it's finding users.
 
-## What Andamio Provides
+Andamio is infrastructure with where active, engaged people are already participating: contributors earning credentials, teams forming around projects, communities teaching and learning. Users carry a professional identity across local spaces, building reputation based on real commitments. When you build on Andamio, you're not starting from zero. You're connecting to a global network of active participants who bring their talents and attention with them.
 
-Andamio is a blockchain-based protocol built on the principle: **flexible rules, standards as truth anchors.**
+## Open and Extensible
 
-Every organization defines its own requirements for earning credentials—there's no central authority deciding what's valid. But the infrastructure provides non-negotiable foundations: verifiable credentials are interoperable, tamper-evident, and cryptographically signed. Standards don't tell you *what* to credential or *who* can issue. They tell you *how* to create credentials that are verifiable, portable, and trustworthy.
+Andamio is built on the principle of **flexible local rules, minimal global truth anchors.**
 
-This is the difference between infrastructure and platform. Platforms have gatekeepers. Infrastructure has standards.
+Local rules are up to you. Global standards ensure that whatever you build is interoperable, tamper-evident, and cryptographically signed. Standards don't tell you *what* to credential or *who* can issue. They tell you *how* to create credentials that work everywhere.
+
+In an age of synthetic content—AI-generated text, deepfakes, bot networks—human attestation matters more than ever. Andamio provides infrastructure for signatures that mean something: real people vouching for real work, recorded on-chain, verifiable by anyone.
 
 Andamio primitives:
-- **Credential issuance and verification** — anyone can attest, effectiveness emerges from use
-- **Localized access control** — teams define their own requirements and governance
-- **Discoverability and resource sharing** — credentials unlock opportunities across the network
-- **Human attestation infrastructure** — signatures that matter in an age of synthetic content
+- **Local credentialing** — communities define what credentials mean and who earns them
+- **Global discoverability** — credentials and opportunities are visible across the network
+- **Token-gated access control** — on-chain credentials unlock roles, resources, and permissions
+- **APIs for integration** — connect Andamio to any platform, workflow, or application
 
 ## Reading This Paper
 
-Andamio builds verifiable trust by addressing connected problems of purpose, participation, and proof. These problems are outlined in [Section 1: Trust](./01-trust-protocol).
+This paper explains how Andamio builds verifiable trust through local action and global connection.
 
-The building blocks of the protocol—local solution infrastructure, global connection, and access tokens—are outlined in [Section 2: Building Blocks](./02-building-blocks).
+[Section 1: Trust](./01-trust-protocol) addresses the connected problems of purpose, participation, and proof that any trust infrastructure must solve.
 
-Trust is built through participation cycles: people connect to opportunities, collaborate on projects, and earn credentials. These cycles are outlined in [Section 3: Cycles](./03-cycles).
+[Section 2: Building Blocks](./02-building-blocks) describes the protocol's foundations: local solution infrastructure, global connection, and access tokens.
 
-When communities complete a participation cycle, they're ready for what comes next. New projects launch. Specialists find the next opportunity. Initiatives start among new collaborators. This process is explored in [Section 4: Problem Solving](./04-problem-solving).
+[Section 3: Cycles](./03-cycles) explains how trust is built through participation: connecting to opportunities, collaborating on projects, and earning credentials.
 
-When groups solving problems overlap, an ecosystem emerges. The Andamio vision for this ecosystem is outlined in [Section 5: Ecosystem](./05-ecosystem).
+[Section 4: Problem Solving](./04-problem-solving) shows what happens after a participation cycle completes—new projects, new collaborators, new initiatives.
+
+[Section 5: Ecosystem](./05-ecosystem) presents our vision for what emerges when groups solving problems overlap: an ecosystem of active communities building verifiable trust.
