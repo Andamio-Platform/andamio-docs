@@ -173,3 +173,155 @@ Building tooling to auto-generate MDX docs from V2 YAML files.
 4. **On-chain reconstruction** - Document experiments with rebuilding state from transaction history
 5. **Coverage checker** - Create `scripts/docs-coverage-check-v2.ts` for validation
 
+
+### Example #1: Mint one Module (∆ = -1.86)
+
+```json
+{
+  "alias": "james",
+  "courseId": "6f4d8bb9cad4e3379788a205f453fe298e1ff09ea62601c11ba01568",
+  "modulesToMint": [
+    {
+      "slts": [
+        "I can A"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    }
+  ],
+  "modulesToUpdate": [],
+  "modulesToBurn": []
+}
+```
+
+### Example #2: Mint four Modules (∆ -6.69)
+- 1.59 per minted token, independent of number of SLTs
+
+### Example #3: Mint 12 Tokens (∆ -19.6)
+
+```json
+{
+  "alias": "james",
+  "courseId": "23a6bbce3a8deca8985764e847594f6956c9dc643e3f6c8efdba04e4",
+  "modulesToMint": [
+    {
+      "slts": [
+        "I can A",
+        "I can AA",
+        "I can AAA",
+        "I can AAAA",
+        "I can AAAAA too"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can B"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can C"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can D"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can A",
+        "I can AA",
+        "I can AAAAA too"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can E"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can F"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can G"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can W too"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can X"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can Y"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    },
+    {
+      "slts": [
+        "I can Z"
+      ],
+      "allowedStudents_V2": [
+        "43e0b6a044a44d8dd38a37d24584767ea414cdeea8f9e917570b5d17"
+      ],
+      "prerequisiteAssignments_V2": []
+    }
+  ],
+  "modulesToUpdate": [],
+  "modulesToBurn": []
+}
+```
