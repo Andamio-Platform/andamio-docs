@@ -8,11 +8,37 @@ import { List } from "lucide-react";
 
 # Andamio Pioneers Live Coding Agenda
 
-This page tracks our ongoing V2 protocol exploration sessions. We're building documentation by examining real transactions, verifying costs, and experimenting with on-chain data reconstruction.
+## Today's Agenda 2025-12-17
 
-## Today's Agenda 2025-12-10
+### Opening Round
+- How are you showing up?
+- What questions do you have?
 
-### Onboarding
+### How Live Coding Works
+
+The purpose of live coding is to create a space for live, collaborative exploration.
+
+The agenda emerges as we work together, following this feedback loop:
+
+1. Your questions
+2. Building in public
+3. Assign challenges
+
+We will open each session with a check-in round where people can share the questions they have. Then, we'll build in public to answer these questions. Usually, this raises new questions! This is why "interruptions" are encouraged.
+
+In each session, we'll assign a hands-on challenge. Here as well, the expectation is that new questions will arise from your work. Bring those questions back to the group next time, and we'll explore them together.
+
+### 1. Your Questions
+
+Take notes during session
+
+### 2. What we're building
+
+- Andamio Database API
+- T3 App template testing
+- Transaction loops
+
+### 3. Your Challenge: Run the Andamio T3 App Template Locally
 
 - Share Github handle
 - Get access to [Andamio T3 App Template](https://github.com/Andamio-Platform/andamio-t3-app-template), and run it locally
@@ -25,7 +51,19 @@ This page tracks our ongoing V2 protocol exploration sessions. We're building do
 
 This section will change frequently, depending on what we are currently building. Here is some of our current work.
 
-### 1. Transaction Cost Verification ✅
+### 1. Andamio Database API Review
+
+Reviewing the Andamio Database API for V2 integration and documentation.
+
+**Key Areas:**
+- API endpoint structure and consistency
+- Confirm that `system` and `role` tags are used correctly
+- T3 App Template coverage of API endpoints
+- Documentation coverage
+
+---
+
+### 2. Transaction Cost Verification ✅
 
 All 8 Course System transactions have been parsed and costs verified against actual wallet deltas.
 
@@ -53,7 +91,7 @@ See [V2 Cost Estimation](/docs/protocol/v2/cost-estimation) for current cost doc
 
 ---
 
-### 2. On-Chain Data Reconstruction
+### 3. On-Chain Data Reconstruction
 
 Experimenting with reconstructing database objects from on-chain transaction data.
 
@@ -67,7 +105,7 @@ See [On-Chain Reconstruction](/docs/protocol/v2/on-chain-reconstruction) for exp
 
 ---
 
-### 3. V2 Transaction Parsing ✅ Complete
+### 4. V2 Transaction Parsing ✅ Complete
 
 All 8 course system transactions have been parsed from decoded CBORs.
 
@@ -90,7 +128,7 @@ All transactions have corresponding MDX pages at `/docs/protocol/v2/transactions
 
 ---
 
-### 5. Action Items (from Session #1)
+### 6. Action Items (from Session #1)
 
 - [ ] **API docs**: Add note that `wallet_data` object is optional when building transactions (alias is sufficient)
 - [ ] **GitHub**: Add remaining pioneers to the Andamio Pioneers 2026 team
@@ -106,7 +144,7 @@ All transactions have corresponding MDX pages at `/docs/protocol/v2/transactions
 
 ---
 
-### 4. V2 Documentation Generation System
+### 5. V2 Documentation Generation System
 
 Building tooling to auto-generate MDX docs from V2 YAML files.
 
