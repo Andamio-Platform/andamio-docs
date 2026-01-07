@@ -1347,7 +1347,7 @@
   },
   "servers": [
     {
-      "url": "https://preprod.andamioscan.andamio.space",
+      "url": "https://preprod.andamioscan.io/api",
       "description": "Andamioscan API (preprod)"
     }
   ]

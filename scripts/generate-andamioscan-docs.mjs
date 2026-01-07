@@ -26,8 +26,8 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 // Configuration
 const CONFIG = {
   // Swagger source
-  swaggerUrl: 'https://preprod.andamioscan.andamio.space/swagger/doc.json',
-  swaggerUiUrl: 'https://preprod.andamioscan.andamio.space/swagger/index.html',
+  swaggerUrl: 'https://preprod.andamioscan.io/swagger/doc.json',
+  swaggerUiUrl: 'https://preprod.andamioscan.io/api',
 
   // Local paths (relative for fumadocs-openapi compatibility)
   swaggerPath: './data/andamioscan-swagger.json',
@@ -42,7 +42,7 @@ const CONFIG = {
   outputDirAbs: path.join(ROOT_DIR, 'content/docs/api/andamioscan'),
 
   // API info
-  baseUrl: 'https://preprod.andamioscan.andamio.space',
+  baseUrl: 'https://preprod.andamioscan.io/api',
   environment: 'preprod',
   version: '1.0',
 };

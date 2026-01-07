@@ -6,7 +6,7 @@ export const { GET, HEAD, PUT, POST, PATCH, DELETE } = openapi.createProxy({
   // Allow requests to Andamio APIs (preprod)
   allowedOrigins: [
     "https://andamio-api-preprod-308006323670.us-central1.run.app",
-    "https://preprod.andamioscan.andamio.space",
+    "https://preprod.andamioscan.io",
   ],
 
   // Override request to only forward essential headers

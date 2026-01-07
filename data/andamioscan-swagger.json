@@ -7,8 +7,8 @@
     "contact": {},
     "version": "1.0"
   },
-  "host": "preprod.andamioscan.andamio.space",
-  "basePath": "/",
+  "host": "preprod.andamioscan.io",
+  "basePath": "/api",
   "paths": {
     "/v2/courses": {
       "get": {

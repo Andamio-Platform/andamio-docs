@@ -16,7 +16,7 @@ description: |
 
 # Known from CBOR analysis
 known_facts:
-  - "Holds g-prefixed token (policy: 39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b)"
+  - "Holds g-prefixed token (policy: 4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c)"
   - "Token name = 'g' + alias"
   - "Datum contains alias and local_state_map"
   - "Map value changes from course_state_hash to credential_hash on claim"
@@ -85,7 +85,7 @@ redeemers:
 # Related components
 related:
   policy: "index-policy"
-  policy_id: "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"
+  policy_id: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
   tokens:
     - name: "g<alias>"
       description: "Global state token with 'g' prefix"

@@ -8,7 +8,7 @@
   ],
   "policies": {
     "index-policy": {
-      "policyId": "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b",
+      "policyId": "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c",
       "description": "Mints access tokens and index tokens",
       "tokenPrefixes": {
         "g": "global state token (g + alias)",

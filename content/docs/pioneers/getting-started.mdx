@@ -19,35 +19,28 @@ This is not yet deployed, or even complete! What's ready is the Course V2 System
 
 To use the [Andamio T3 App Template](https://github.com/Andamio-Platform/andamio-t3-app-template) locally, you will need to create a `.env` file in the root of the project. You can use the `.env.example` file as a template. Here are the current environment variables:
 
-```
-# Since the ".env" file is gitignored, you can use the ".env.example" file to
-# build a new ".env" file when you clone the repo. Keep this file up-to-date
-# when you add new variables to `.env`.
-
-# When adding additional environment variables, the schema in "/src/env.js"
-# should be updated accordingly.
-
+```bash
 # Andamio Database API URL
 NEXT_PUBLIC_ANDAMIO_API_URL="https://andamio-db-api-343753432212.europe-west1.run.app/api/v0"
 
-# Andamioscan API URL
-ANDAMIOSCAN_API_URL="https://preprod.andamioscan.andamio.space"
+# Andamioscan API URL (on-chain data)
+ANDAMIOSCAN_API_URL="https://preprod.andamioscan.io/api"
 
-# Preprod V2 Tx API URL
+# Atlas Transaction API (V2 transaction building)
 ATLAS_TX_API_URL="https://atlas-api-preprod-507341199760.us-central1.run.app"
 
 # Cardano Network
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 
 # Andamio Access Token Policy ID
-NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"    
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
 ```
 
 ## Current API "Subsystems"
 
 ### Andamioscan (Indexer) API
 
-[https://preprod.andamioscan.andamio.space/swagger/index.html](https://preprod.andamioscan.andamio.space/swagger/index.html)
+[https://preprod.andamioscan.io/api](https://preprod.andamioscan.io/api)
 
 ### Andamio Transaction API
 

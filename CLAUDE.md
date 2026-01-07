@@ -164,7 +164,7 @@ The Andamio platform has multiple API sub-services that will eventually be unifi
 | Service | Description | Swagger URL | Local Schema |
 |---------|-------------|-------------|--------------|
 | **Andamio API Gateway** | Auth, user management, platform services | [Swagger UI](https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html) | `data/andamio-api-gateway.json` |
-| **Andamioscan** | Indexer for on-chain data queries | [Swagger UI](https://preprod.andamioscan.andamio.space/swagger/index.html) | `data/andamioscan-swagger.json` |
+| **Andamioscan** | Indexer for on-chain data queries | [Swagger UI](https://preprod.andamioscan.io/api) | `data/andamioscan-swagger.json` |
 | **Atlas TX Builder** | V2 transaction building | [Swagger UI](https://atlas-api-preprod-507341199760.us-central1.run.app/swagger/index.html) | `public/yaml/transactions/v2/atlas-api-swagger.json` |
 
 ### Build All Documentation

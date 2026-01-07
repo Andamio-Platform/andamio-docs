@@ -146,7 +146,7 @@ outputs:
 mints:
   - id: mint_access_tokens
     policy: index-policy
-    policyId: "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"
+    policyId: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
     redeemer:
       data: "bytes (alias)"
     tokens:
@@ -177,7 +177,7 @@ withdraws:
 # ==============================================================================
 registry:
   index-policy:
-    policyId: "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b"
+    policyId: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
   index-validator:
     address: "addr_test1xqum9pmty3vt3nvxn6mxtvj8gr0k3yrgfglxe4llds5tsjewgsna4f55vq42rfstp7wl7r0wxflwdmezp8jpf9w83gnsrr84hd"
   global-state-v2:

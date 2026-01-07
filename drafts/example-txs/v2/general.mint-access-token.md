@@ -35,7 +35,7 @@
         "amount": {
           "coin": "1249900",
           "multiasset": {
-            "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b": {
+            "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c": {
               "20": "1"
             }
           }
@@ -50,7 +50,7 @@
         "amount": {
           "coin": "1245590",
           "multiasset": {
-            "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b": {
+            "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c": {
               "20": "1"
             }
           }
@@ -74,7 +74,7 @@
         "amount": {
           "coin": "1262830",
           "multiasset": {
-            "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b": {
+            "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c": {
               "67746573745f31323334": "1"
             }
           }
@@ -107,7 +107,7 @@
         "amount": {
           "coin": "49925797",
           "multiasset": {
-            "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b": {
+            "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c": {
               "75746573745f31323334": "1"
             }
           }
@@ -136,7 +136,7 @@
     "validity_start_interval": null,
     "mint": [
       [
-        "39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b",
+        "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c",
         {
           "20": "1",
           "67746573745f31323334": "1",
@@ -217,7 +217,7 @@
   "is_valid": true,
   "auxiliary_data": {
     "metadata": {
-      "721": "{\"map\":[{\"k\":{\"string\":\"39b2876b2458b8cd869eb665b24740df6890684a3e6cd7ff6c28b84b\"},\"v\":{\"map\":[{\"k\":{\"string\":\"utest_1234\"},\"v\":{\"map\":[{\"k\":{\"string\":\"name\"},\"v\":{\"string\":\"Andamio Access Token\"}},{\"k\":{\"string\":\"alias\"},\"v\":{\"string\":\"test_1234\"}},{\"k\":{\"string\":\"image\"},\"v\":{\"list\":[{\"string\":\"ipfs://bafybeihjgnthktrxhoqr4mncmsjnn76ok44ffrdx6seidzo7\"},{\"string\":\"efx4h2sgg4\"}]}},{\"k\":{\"string\":\"mediaType\"},\"v\":{\"string\":\"image/*\"}},{\"k\":{\"string\":\"description\"},\"v\":{\"list\":[{\"string\":\"First Edition\"}]}},{\"k\":{\"string\":\"era\"},\"v\":{\"string\":\"Foundation Era\"}},{\"k\":{\"string\":\"app\"},\"v\":{\"string\":\"https://app.andamio.io\"}},{\"k\":{\"string\":\"files\"},\"v\":{\"list\":[{\"map\":[{\"k\":{\"string\":\"mediaType\"},\"v\":{\"string\":\"image/*\"}},{\"k\":{\"string\":\"src\"},\"v\":{\"list\":[{\"string\":\"ipfs://bafybeihjgnthktrxhoqr4mncmsjnn76ok44ffrdx6seidzo7\"},{\"string\":\"efx4h2sgg4\"}]}}]}]}}]}}]}}]}"
+      "721": "{\"map\":[{\"k\":{\"string\":\"4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c\"},\"v\":{\"map\":[{\"k\":{\"string\":\"utest_1234\"},\"v\":{\"map\":[{\"k\":{\"string\":\"name\"},\"v\":{\"string\":\"Andamio Access Token\"}},{\"k\":{\"string\":\"alias\"},\"v\":{\"string\":\"test_1234\"}},{\"k\":{\"string\":\"image\"},\"v\":{\"list\":[{\"string\":\"ipfs://bafybeihjgnthktrxhoqr4mncmsjnn76ok44ffrdx6seidzo7\"},{\"string\":\"efx4h2sgg4\"}]}},{\"k\":{\"string\":\"mediaType\"},\"v\":{\"string\":\"image/*\"}},{\"k\":{\"string\":\"description\"},\"v\":{\"list\":[{\"string\":\"First Edition\"}]}},{\"k\":{\"string\":\"era\"},\"v\":{\"string\":\"Foundation Era\"}},{\"k\":{\"string\":\"app\"},\"v\":{\"string\":\"https://app.andamio.io\"}},{\"k\":{\"string\":\"files\"},\"v\":{\"list\":[{\"map\":[{\"k\":{\"string\":\"mediaType\"},\"v\":{\"string\":\"image/*\"}},{\"k\":{\"string\":\"src\"},\"v\":{\"list\":[{\"string\":\"ipfs://bafybeihjgnthktrxhoqr4mncmsjnn76ok44ffrdx6seidzo7\"},{\"string\":\"efx4h2sgg4\"}]}}]}]}}]}}]}}]}"
     },
     "native_scripts": null,
     "plutus_scripts": null,

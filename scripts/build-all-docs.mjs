@@ -47,7 +47,7 @@ const API_SOURCES = [
   },
   {
     name: 'Andamioscan',
-    swaggerUrl: 'https://preprod.andamioscan.andamio.space/swagger/doc.json',
+    swaggerUrl: 'https://preprod.andamioscan.io/swagger/doc.json',
     localPath: './data/andamioscan-swagger.json',
     generateScript: 'generate-andamioscan-docs',
     enabled: true,
