@@ -1,0 +1,253 @@
+# V2 Transaction: Instance Owner Course Create
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/instance/owner/course/create
+
+name: InstanceOwnerCourseCreateV2
+id: instance.owner.course.create
+
+metadata:
+  role: "owner"
+  system: "instance"
+  description: "Create a new course by minting LocalStateNFT, LocalStateToken, and governance token"
+  api_endpoint: "/v2/tx/instance/owner/course/create"
+
+request_body:
+  description: "CreateCourseTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Owner's access token alias"
+      example: "james"
+    teachers:
+      type: "string[]"
+      required: true
+      description: "List of teacher aliases who will have teacher responsibilities"
+      example: ["james"]
+    initiator_data:
+      type: object
+      required: false
+      description: "Optional wallet configuration"
+      properties:
+        used_addresses: "string[] - Addresses to use for inputs"
+        change_address: "string - Address for change outputs"
+
+response:
+  description: "UnsignedTxResponseInitCourse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+    course_id:
+      type: string
+      description: "Policy ID of the LocalStateNFT - THIS IS THE courseId"
+      note: "Critical design: The courseId equals the LocalStateNFT minting policy ID"
+
+costs:
+  txFee: 525841
+  protocolFee: 25000000
+  protocolFeeDestination: instance-treasury
+  minUtxo:
+    local-state-nft-output: 1236970
+    local-state-token-output: 16584880
+    course-governance-output: 1314550
+    user-token-output: 1146460
+  executionUnits:
+    mint_0:
+      mem: 135954
+      steps: 49073463
+    mint_1:
+      mem: 256248
+      steps: 79073308
+    mint_2:
+      mem: 40269
+      steps: 15919167
+    reward_0:
+      mem: 249464
+      steps: 79675701
+
+inputs:
+  - id: wallet-input
+    type: wallet
+    address: "{user_wallet}"
+    description: "User's wallet providing ADA for fees and min UTxO"
+
+  - id: access-token-utxo
+    type: reference-in-redeemer
+    description: "User's access token UTxO - referenced in observer redeemer to prove identity"
+    note: "Not spent, but its reference (txHash#index + 00 suffix) is passed to the observer"
+
+reference_inputs:
+  - id: ref-0
+    utxo: "57701f1a1870c1786524f0462b608e1fb8f597694c49c18cea058032812c7937#4"
+    description: "Script reference"
+
+  - id: ref-1
+    utxo: "5fe4495c1d6786a43813585ebd2e901c485cef5a5e4fa8d33d7c5bcf3b22e1bc#0"
+    description: "Script reference"
+
+  - id: ref-2
+    utxo: "5fe4495c1d6786a43813585ebd2e901c485cef5a5e4fa8d33d7c5bcf3b22e1bc#1"
+    description: "Script reference"
+
+  - id: ref-3
+    utxo: "cc1e834f7340ff94ff2ef8a1141c5dd7c7b68dae713e4a932c458016bead3ba1#3"
+    description: "Script reference"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "User's access token returned to wallet"
+
+  - id: local-state-nft-output
+    type: script
+    validator: local-state-nft-validator
+    address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    value:
+      - "~1236970 lovelace"
+      - "1 {courseId-policy}.LocalStateNFT"
+    datum:
+      type: inline
+      format: "bytes"
+      value: "{owner_alias}"
+      example: "6a616d6573 = 'james'"
+    description: "LocalStateNFT held at validator with owner alias as datum"
+
+  - id: local-state-token-output
+    type: script
+    validator: local-state-token-validator
+    address: "addr_test1xzg75rsctuuehzam9dwefsuh6sfzkzgddlw9w822q4xu3uvju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsqymejt5"
+    value:
+      - "~16584880 lovelace"
+      - "1 local-state-token-policy.LocalStateToken"
+    datum:
+      type: inline
+      format: "bytes"
+      value: "{courseId}"
+      example: "f4e603c8b5baef8874f525aff364a1205e0627cee968a291e2689313"
+    script_ref: "Contains embedded course validator script"
+    description: "LocalStateToken with courseId datum AND embedded script_ref for course operations"
+
+  - id: course-governance-output
+    type: script
+    validator: course-governance-validator
+    address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+    value:
+      - "~1314550 lovelace"
+      - "1 course-governance-policy.{courseId}"
+    datum:
+      type: inline
+      format: "list"
+      fields:
+        - teachers: "[{teacher_aliases}]"
+      example: "[\"james\"]"
+    description: "Governance token with teachers list datum"
+
+  - id: protocol-fee
+    type: wallet
+    label: instance-treasury
+    address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"
+    value:
+      - "25000000 lovelace"
+    description: "25 ADA protocol fee to instance treasury"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet (multiple UTxOs in practice)"
+
+mints:
+  - id: local-state-token-mint
+    policy: local-state-token-policy
+    policyId: "91ea0e185f399b8bbb2b5d94c397d4122b090d6fdc571d4a054dc8f1"
+    redeemer:
+      tag: "Mint"
+      index: 1
+      data: "{courseId as bytes}"
+      example: "f4e603c8b5baef8874f525aff364a1205e0627cee968a291e2689313"
+    tokens:
+      - quantity: 1
+        name: "LocalStateToken"
+        hex: "4c6f63616c5374617465546f6b656e"
+        description: "Course registration token"
+
+  - id: course-governance-mint
+    policy: course-governance-policy
+    policyId: "ba4a7babce6f840e817faf82cb8094aecdca1920909d4b6386832236"
+    redeemer:
+      tag: "Mint"
+      index: 0
+      data: "list containing constructor 0 with courseId and another policy ID"
+    tokens:
+      - quantity: 1
+        name: "{courseId}"
+        description: "Governance token - name is the course NFT policy ID"
+
+  - id: local-state-nft-mint
+    policy: "{courseId-policy}"
+    policyId: "f4e603c8b5baef8874f525aff364a1205e0627cee968a291e2689313"
+    redeemer:
+      tag: "Mint"
+      index: 2
+      data: "constructor 0, empty fields"
+    tokens:
+      - quantity: 1
+        name: "LocalStateNFT"
+        hex: "4c6f63616c53746174654e4654"
+        description: "Course NFT - minting policy ID IS the courseId"
+    note: "CRITICAL: This policy ID becomes the courseId returned by the API"
+
+withdraws:
+  - id: course-observer
+    validator: course-observer
+    stakeAddress: "stake_test17pek8grmjp2rq7su9fra6kwx2awh2jezqfr2x9z3fsg9n3qwaazza"
+    redeemer:
+      tag: "Reward"
+      index: 0
+      data: "list containing access token UTxO reference (txHash#index + 00 suffix)"
+      example: "[f7d56e16391931b31e79abf4b679a70154b0a1759965360430af6cb70990afc000]"
+    amount: 0
+    description: "Observer validates ownership via access token UTxO reference"
+
+design_notes:
+  courseId_pattern: |
+    The courseId returned by the API is the policy ID of the LocalStateNFT.
+    This is a critical design feature - the course identifier is the minting policy itself.
+
+  embedded_script: |
+    The LocalStateToken output contains an embedded script_ref.
+    This is the course validator script, allowing course-specific validation logic.
+
+  token_naming: |
+    - LocalStateNFT: Literal "LocalStateNFT" (hex: 4c6f63616c53746174654e4654)
+    - LocalStateToken: Literal "LocalStateToken" (hex: 4c6f63616c5374617465546f6b656e)
+    - Governance token: Name is the courseId (NFT policy ID)
+
+registry:
+  validators:
+    local-state-nft-validator:
+      address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    local-state-token-validator:
+      address: "addr_test1xzg75rsctuuehzam9dwefsuh6sfzkzgddlw9w822q4xu3uvju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsqymejt5"
+    course-governance-validator:
+      address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+  policies:
+    local-state-token-policy:
+      policyId: "91ea0e185f399b8bbb2b5d94c397d4122b090d6fdc571d4a054dc8f1"
+    course-governance-policy:
+      policyId: "ba4a7babce6f840e817faf82cb8094aecdca1920909d4b6386832236"
+    local-state-nft-policy:
+      policyId: "{parameterized per course}"
+      note: "Policy ID becomes the courseId"
+  observers:
+    course-observer:
+      stakeAddress: "stake_test17pek8grmjp2rq7su9fra6kwx2awh2jezqfr2x9z3fsg9n3qwaazza"
+  wallets:
+    instance-treasury:
+      address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"

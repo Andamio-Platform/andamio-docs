@@ -1,0 +1,212 @@
+# V2 Transaction: Course Teacher Modules Manage
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/course/teacher/modules/manage
+
+name: CourseTeacherModulesManageV2
+id: course.teacher.modules.manage
+
+metadata:
+  role: "teacher"
+  system: "course"
+  description: "Mint, update, or burn course modules. Module token names are hashes of SLT lists."
+  api_endpoint: "/v2/tx/course/teacher/modules/manage"
+
+request_body:
+  description: "ManageModulesTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Teacher's access token alias"
+      example: "james"
+    course_id:
+      type: string
+      required: true
+      description: "Course NFT policy ID (56 char hex)"
+      example: "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841"
+    modules_to_mint:
+      type: "ModuleToMint[]"
+      required: true
+      description: "List of modules to create"
+      item_schema:
+        allowed_course_state_ids:
+          type: "string[]"
+          required: false
+          description: "Policy IDs of allowed enrollment tokens. Empty = all enrolled students."
+          default: "All enrolled students for this course_id"
+        prereq_slt_hashes:
+          type: "string[]"
+          required: true
+          description: "List of prerequisite module hashes. Empty = no prerequisites."
+        slts:
+          type: "string[]"
+          required: true
+          description: "Non-empty list of Student Learning Targets"
+          example: ["I can buckle my bike helmet.", "I can signal a turn with my left hand."]
+    modules_to_update:
+      type: "ModuleToUpdate[]"
+      required: true
+      description: "List of modules to update (change prereqs or allowed_course_state_ids)"
+    modules_to_burn:
+      type: "string[]"
+      required: true
+      description: "List of module token hashes to burn"
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 292353
+  protocolFee: 0
+  protocolFeeDestination: null
+  minUtxo:
+    module-output-with-prereq: 1741240
+    module-output-no-prereq: 1590390
+    user-token-output: 1146460
+  executionUnits:
+    mint_0:
+      mem: 369663
+      steps: 131766031
+  note: "Costs scale with number of modules and SLT string lengths"
+
+inputs:
+  - id: wallet-input
+    type: wallet
+    address: "{user_wallet}"
+    description: "User's wallet providing ADA for fees and min UTxO"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "Teacher's access token UTxO - proves identity"
+
+reference_inputs:
+  - id: governance-ref
+    utxo: "7c5f522d87d340be46ad970a7956fdb984d5682dcbea92887cf4fd46bae7d40b#3"
+    description: "Course governance UTxO - read to verify teacher is in teacher list"
+
+  - id: script-ref
+    utxo: "957a855b5ae7fefe3d13c051f2f3234674c765c7cf986244ae5a2a5960d59fd4#4"
+    description: "Script reference for module policy"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "Teacher's access token returned to wallet"
+
+  - id: module-outputs
+    type: script
+    validator: module-validator
+    address: "addr_test1xqzw2kpqlejkfsxufrym6mu46x80qx6dt9kwp6nvpjs2rsze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq0575cy"
+    value:
+      - "~1590390-1741240 lovelace (varies by datum size)"
+      - "1 module-policy.{slt_hash}"
+    datum:
+      type: inline
+      format: "constructor 0"
+      fields:
+        - name: "courseId"
+          type: "bytes"
+          description: "Course NFT policy ID"
+        - name: "allowed_course_state_ids"
+          type: "list of bytes"
+          description: "Policy IDs of allowed enrollment tokens (defaults to course enrollment policy)"
+        - name: "prereq_slt_hashes"
+          type: "list of bytes"
+          description: "Module hashes that must be completed first (empty = no prereqs)"
+      example:
+        constructor: 0
+        fields:
+          - "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841"
+          - ["dfe7461540b4a8dd2e76617a4d5f0a86ac830f0755ffa554122689ea"]
+          - ["356be366236f712c2397b3c151ae8ed4656e2574aabfb637ef44ae8345ce9b9a"]
+    description: "One output per minted module at module-validator"
+    note: "Multiple modules = multiple outputs at same validator address"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet"
+
+mints:
+  - id: module-mint
+    policy: module-policy
+    policyId: "04e55820fe6564c0dc48c9bd6f95d18ef01b4d596ce0ea6c0ca0a1c0"
+    redeemer:
+      tag: "Mint"
+      index: 0
+      format: "constructor 0"
+      fields:
+        - name: "teacher_alias"
+          type: "bytes"
+          description: "Teacher's alias (hex-encoded)"
+          example: "6a616d6573 = 'james'"
+        - name: "courseId"
+          type: "bytes"
+          description: "Course NFT policy ID"
+        - name: "slt_lists"
+          type: "list of (list of bytes)"
+          description: "List of SLT string lists, one per module being minted"
+          note: "Token name = hash of each SLT list, computed on-chain"
+    tokens:
+      - quantity: 1
+        name: "{hash of SLT list}"
+        description: "Module token - 32-byte hash (64 hex chars) of the SLT strings"
+    example_tokens:
+      - name: "1a1166644e67e773c312578bc6e665f0109f5917b8505c2b0284531c36fdab1a"
+        slts: ["I can buckle my bike helmet.", "I can signal a turn...", "I can safely ride a bike."]
+      - name: "4279e732da1161832b9fb9ff164bf0d99f7d04f497069f93829ce7cfb034f65e"
+        slts: ["I can grease a bike chain.", "I can adjust my brakes.", "I can fix an old bike."]
+
+withdraws: null
+
+design_notes:
+  token_naming: |
+    Module token names are 32-byte hashes (64 hex characters) computed from the SLT string list.
+    The hash is computed on-chain by the validator from the redeemer data.
+    This makes token names tamper-evident - changing SLTs would change the hash.
+
+  authorization: |
+    Teacher authorization is verified by reading the governance UTxO via reference input.
+    The redeemer contains the teacher alias, which must be in the governance teacher list.
+    No script inputs are spent - only minting occurs.
+
+  allowed_course_state_ids_default: |
+    When allowed_course_state_ids is empty in the request, the API populates it with
+    the course's enrollment policy ID. This means all enrolled students can commit.
+    This field enables future features for restricting module access.
+
+  prereq_system: |
+    prereq_slt_hashes contains hashes of modules that must be completed before
+    a student can commit to this module. Empty list = open to all access token holders.
+    Non-empty list = student must have completed those modules first.
+
+  batch_operations: |
+    Multiple modules can be minted, updated, or burned in a single transaction.
+    Each minted module creates a separate output at the module-validator.
+
+  no_protocol_fee: |
+    Unlike course creation, module management has no protocol fee to treasury.
+
+registry:
+  validators:
+    module-validator:
+      address: "addr_test1xqzw2kpqlejkfsxufrym6mu46x80qx6dt9kwp6nvpjs2rsze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq0575cy"
+  policies:
+    module-policy:
+      policyId: "04e55820fe6564c0dc48c9bd6f95d18ef01b4d596ce0ea6c0ca0a1c0"
+    course-enrollment-policy:
+      policyId: "dfe7461540b4a8dd2e76617a4d5f0a86ac830f0755ffa554122689ea"
+      note: "Default allowed_course_state_ids for this course"

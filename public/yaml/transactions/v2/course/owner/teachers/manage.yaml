@@ -1,0 +1,201 @@
+# V2 Transaction: Course Owner Teachers Manage
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/course/owner/teachers/manage
+
+name: CourseOwnerTeachersManageV2
+id: course.owner.teachers.manage
+
+metadata:
+  role: "owner"
+  system: "course"
+  description: "Add or remove teachers from a course by updating the Course Governance UTxO"
+  api_endpoint: "/v2/tx/course/owner/teachers/manage"
+
+request_body:
+  description: "ManageTeachersTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Owner's access token alias"
+      example: "james"
+    course_id:
+      type: string
+      required: true
+      description: "Course NFT policy ID (56 char hex)"
+      example: "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841"
+    teachers_to_add:
+      type: "string[]"
+      required: true
+      description: "List of teacher aliases to add"
+      example: ["nelsonksh"]
+    teachers_to_remove:
+      type: "string[]"
+      required: true
+      description: "List of teacher aliases to remove"
+      example: ["james"]
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 299869
+  protocolFee: 5000000
+  protocolFeeDestination: instance-treasury
+  minUtxo:
+    local-state-nft-output: 1236970
+    course-governance-output: 1331790
+    user-token-output: 1146460
+  executionUnits:
+    spend_0:
+      mem: 343469
+      steps: 108933499
+    spend_1:
+      mem: 263825
+      steps: 87573804
+
+inputs:
+  - id: local-state-nft-input
+    type: script
+    validator: local-state-nft-validator
+    address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    redeemer:
+      tag: "Spend"
+      index: 0
+      data: "{courseId as bytes}"
+      example: "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841"
+    description: "LocalStateNFT UTxO - spent to verify ownership"
+
+  - id: course-governance-input
+    type: script
+    validator: course-governance-validator
+    address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+    redeemer:
+      tag: "Spend"
+      index: 1
+      data: "{courseId as bytes}"
+      example: "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841"
+    datum:
+      type: inline
+      format: "list"
+      description: "Current teachers list (before update)"
+      example: "[\"james\"]"
+    description: "Course governance UTxO - spent to update teachers list"
+
+  - id: wallet-inputs
+    type: wallet
+    address: "{user_wallet}"
+    description: "User's wallet providing ADA for fees"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "User's access token UTxO - proves ownership identity"
+
+reference_inputs:
+  - id: ref-0
+    utxo: "57701f1a1870c1786524f0462b608e1fb8f597694c49c18cea058032812c7937#3"
+    description: "Script reference for local-state-nft-validator"
+
+  - id: ref-1
+    utxo: "cc1e834f7340ff94ff2ef8a1141c5dd7c7b68dae713e4a932c458016bead3ba1#3"
+    description: "Script reference for course-governance-validator"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "User's access token returned to wallet"
+
+  - id: local-state-nft-output
+    type: script
+    validator: local-state-nft-validator
+    address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    value:
+      - "~1236970 lovelace"
+      - "1 {courseId-policy}.LocalStateNFT"
+    datum:
+      type: inline
+      format: "bytes"
+      value: "{owner_alias}"
+      example: "6a616d6573 = 'james'"
+    description: "LocalStateNFT recreated at same validator (unchanged)"
+
+  - id: course-governance-output
+    type: script
+    validator: course-governance-validator
+    address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+    value:
+      - "~1331790 lovelace"
+      - "1 course-governance-policy.{courseId}"
+    datum:
+      type: inline
+      format: "list"
+      fields:
+        - teachers: "[{updated_teacher_aliases}]"
+      example: "[\"nelsonksh\"]"
+      note: "Datum reflects the updated teachers list after add/remove operations"
+    description: "Course governance UTxO recreated with updated teachers list"
+
+  - id: protocol-fee
+    type: wallet
+    label: instance-treasury
+    address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"
+    value:
+      - "5000000 lovelace"
+    description: "5 ADA protocol fee to instance treasury"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet (multiple UTxOs in practice)"
+
+mints: null
+
+withdraws: null
+
+design_notes:
+  spend_and_recreate: |
+    This is a "spend and recreate" transaction pattern - no minting occurs.
+    Two script UTxOs are spent and recreated with updated data.
+
+  ownership_verification: |
+    The LocalStateNFT is spent and recreated to verify ownership.
+    Both validators receive the courseId as their redeemer.
+
+  datum_update: |
+    The governance UTxO datum changes from the old teacher list to the new list.
+    Teachers are represented by their access token aliases (hex-encoded strings).
+
+  teacher_permissions: |
+    Teachers in the governance list gain ability to:
+    - Manage course modules (mint, update, burn)
+    - Assess student assignment submissions (accept/refuse)
+
+  no_observer: |
+    Unlike course.create, this transaction does not use an observer.
+    Ownership is verified through the LocalStateNFT spend.
+
+registry:
+  validators:
+    local-state-nft-validator:
+      address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    course-governance-validator:
+      address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+  policies:
+    course-governance-policy:
+      policyId: "ba4a7babce6f840e817faf82cb8094aecdca1920909d4b6386832236"
+  wallets:
+    instance-treasury:
+      address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"

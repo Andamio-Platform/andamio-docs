@@ -1,0 +1,316 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-01-08",
+  "swaggerSource": "https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json",
+  "totalTransactions": 17,
+  "summary": {
+    "pending-review": 8,
+    "not-analyzed": 9,
+    "verified": 0
+  },
+  "reviewNote": "8 transactions analyzed from CBOR but API is being updated. Re-verify against live API before marking as verified.",
+  "systems": {
+    "global": {
+      "description": "Global system transactions (entry points)",
+      "transactions": 1
+    },
+    "instance": {
+      "description": "Instance-level transactions (course/project creation)",
+      "transactions": 2
+    },
+    "course": {
+      "description": "Course management system",
+      "transactions": 6
+    },
+    "project": {
+      "description": "Project management system",
+      "transactions": 8
+    }
+  },
+  "transactions": [
+    {
+      "id": "global.general.access-token.mint",
+      "endpoint": "/v2/tx/global/general/access-token/mint",
+      "method": "POST",
+      "system": "global",
+      "role": "general",
+      "description": "Mint access tokens for protocol participation",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/global/general/access-token/mint.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/global/general/access-token-mint.ts",
+        "mdx": "content/docs/protocol/v2/transactions/global/general/access-token/mint.mdx"
+      },
+      "notes": "Entry point for all protocol participation. 5 ADA fee to treasury."
+    },
+    {
+      "id": "instance.owner.course.create",
+      "endpoint": "/v2/tx/instance/owner/course/create",
+      "method": "POST",
+      "system": "instance",
+      "role": "owner",
+      "description": "Create a new course",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/instance/owner/course/create.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/instance/course-create.ts",
+        "mdx": "content/docs/protocol/v2/transactions/instance/owner/course/create.mdx"
+      },
+      "notes": "Creates LocalStateNFT, LocalStateToken, and governance token. courseId = LocalStateNFT policy ID. 25 ADA fee to instance-treasury."
+    },
+    {
+      "id": "instance.owner.project.create",
+      "endpoint": "/v2/tx/instance/owner/project/create",
+      "method": "POST",
+      "system": "instance",
+      "role": "owner",
+      "description": "Create a new project",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/instance/owner/project/create.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/instance/project-create.ts",
+        "mdx": "content/docs/protocol/v2/transactions/instance/owner/project/create.mdx"
+      },
+      "notes": "Complex: 6 mints, 2 observers, stake registration. Creates LocalStateNFT (projectId = policy ID), LocalStateToken, governance, treasury-script, project-state, treasury. Reuses governance-validator/policy from courses. course_prereqs validates required module completion. 25 ADA fee to instance-treasury."
+    },
+    {
+      "id": "course.owner.teachers.manage",
+      "endpoint": "/v2/tx/course/owner/teachers/manage",
+      "method": "POST",
+      "system": "course",
+      "role": "owner",
+      "description": "Add or remove teachers from a course",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/course/owner/teachers/manage.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/course/owner/teachers-manage.ts",
+        "mdx": "content/docs/protocol/v2/transactions/course/owner/teachers/manage.mdx"
+      },
+      "notes": "Spend and recreate pattern. Two script inputs spent (LocalStateNFT, governance). No minting. 5 ADA fee to instance-treasury."
+    },
+    {
+      "id": "course.teacher.modules.manage",
+      "endpoint": "/v2/tx/course/teacher/modules/manage",
+      "method": "POST",
+      "system": "course",
+      "role": "teacher",
+      "description": "Mint, update, or burn course modules",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/course/teacher/modules/manage.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/course/teacher/modules-manage.ts",
+        "mdx": "content/docs/protocol/v2/transactions/course/teacher/modules/manage.mdx"
+      },
+      "notes": "Token name = 32-byte hash of SLT list. Module datum: {courseId, allowed_course_state_ids, prereq_slt_hashes}. No protocol fee. Authorization via governance UTxO reference input."
+    },
+    {
+      "id": "course.teacher.assignments.assess",
+      "endpoint": "/v2/tx/course/teacher/assignments/assess",
+      "method": "POST",
+      "system": "course",
+      "role": "teacher",
+      "description": "Assess student assignment submissions",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/course/teacher/assignments/assess.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/course/teacher/assignments-assess.ts",
+        "mdx": "content/docs/protocol/v2/transactions/course/teacher/assignments/assess.mdx"
+      },
+      "legacyFiles": {
+        "yaml": "public/yaml/transactions/v2/course/teacher/assignments-assess.yaml",
+        "note": "Legacy path - new YAML at assignments/assess.yaml"
+      },
+      "notes": "Spend and recreate pattern. On accept: constructor 1 -> constructor 0, slt_hash moves to completed_modules. Redeemer constructor 2 with teacher_alias. Can batch multiple decisions. No protocol fee."
+    },
+    {
+      "id": "course.student.enroll",
+      "endpoint": "/v2/tx/course/student/enroll",
+      "method": "POST",
+      "system": "course",
+      "role": "student",
+      "description": "Enroll in a course",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/course/student/enroll.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/course/student/enroll.ts",
+        "mdx": "content/docs/protocol/v2/transactions/course/student/enroll.mdx"
+      },
+      "notes": "Spends global state + mints course-state token. Course-state-policy is parameterized per course. Datum constructor 0 = no active commitment, constructor 1 = has active commitment. No protocol fee. UX will always include commit_data for first assignment during enrollment."
+    },
+    {
+      "id": "course.student.assignment.action",
+      "endpoint": "/v2/tx/course/student/assignment/action",
+      "method": "POST",
+      "system": "course",
+      "role": "student",
+      "description": "Commit to or update an assignment",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "legacyFiles": {
+        "yaml": "public/yaml/transactions/v2/course/student/assignment-update.yaml",
+        "note": "Path mismatch - needs migration to course/student/assignment/action.yaml"
+      },
+      "notes": "Student spends and recreates course state UTxO"
+    },
+    {
+      "id": "course.student.credential.claim",
+      "endpoint": "/v2/tx/course/student/credential/claim",
+      "method": "POST",
+      "system": "course",
+      "role": "student",
+      "description": "Claim credential by burning course state",
+      "status": "pending-review",
+      "lastAnalyzed": "2026-01-08",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/course/student/credential/claim.yaml",
+        "ts": "packages/andamio-transactions/src/definitions/v2/course/student/credential-claim.ts",
+        "mdx": "content/docs/protocol/v2/transactions/course/student/credential/claim.mdx"
+      },
+      "legacyFiles": {
+        "yaml": "public/yaml/transactions/v2/course/student/credential-claim.yaml",
+        "note": "Legacy path - new YAML at credential/claim.yaml"
+      },
+      "notes": "BURNS course-state token (qty: -1), updates global state local_state_information (enrollment_hash -> credential_hash). Three redeemers: course-state spend (constr 3), global-state spend (constr 1, flag=0), course-state-policy burn (constr 4). No protocol fee."
+    },
+    {
+      "id": "project.owner.managers.manage",
+      "endpoint": "/v2/tx/project/owner/managers/manage",
+      "method": "POST",
+      "system": "project",
+      "role": "owner",
+      "description": "Add or remove project managers",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Similar pattern to course teachers management"
+    },
+    {
+      "id": "project.owner.contributor-blacklist.manage",
+      "endpoint": "/v2/tx/project/owner/contributor-blacklist/manage",
+      "method": "POST",
+      "system": "project",
+      "role": "owner",
+      "description": "Manage contributor blacklist",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Prevents specific contributors from joining project"
+    },
+    {
+      "id": "project.manager.tasks.manage",
+      "endpoint": "/v2/tx/project/manager/tasks/manage",
+      "method": "POST",
+      "system": "project",
+      "role": "manager",
+      "description": "Create, update, or remove tasks",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Batch task management similar to modules-manage"
+    },
+    {
+      "id": "project.manager.tasks.assess",
+      "endpoint": "/v2/tx/project/manager/tasks/assess",
+      "method": "POST",
+      "system": "project",
+      "role": "manager",
+      "description": "Assess contributor task submissions",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Similar pattern to assignments-assess"
+    },
+    {
+      "id": "project.contributor.enroll",
+      "endpoint": "/v2/tx/project/contributor/enroll",
+      "method": "POST",
+      "system": "project",
+      "role": "contributor",
+      "description": "Join a project as contributor",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Similar pattern to course enrollment"
+    },
+    {
+      "id": "project.contributor.task.commit",
+      "endpoint": "/v2/tx/project/contributor/task/commit",
+      "method": "POST",
+      "system": "project",
+      "role": "contributor",
+      "description": "Commit to a task",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Locks deposit, reserves task"
+    },
+    {
+      "id": "project.contributor.task.action",
+      "endpoint": "/v2/tx/project/contributor/task/action",
+      "method": "POST",
+      "system": "project",
+      "role": "contributor",
+      "description": "Update task submission or withdraw",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Similar pattern to assignment-action"
+    },
+    {
+      "id": "project.contributor.credential.claim",
+      "endpoint": "/v2/tx/project/contributor/credential/claim",
+      "method": "POST",
+      "system": "project",
+      "role": "contributor",
+      "description": "Claim project credential",
+      "status": "not-analyzed",
+      "lastAnalyzed": null,
+      "files": {
+        "yaml": null,
+        "ts": null,
+        "mdx": null
+      },
+      "notes": "Burns project state, stores credential hash"
+    }
+  ]
+}

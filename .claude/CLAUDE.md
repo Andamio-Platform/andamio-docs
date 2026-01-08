@@ -2,6 +2,24 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Skills System
+
+Specialized tasks are organized into skills located in `.claude/skills/`. Each skill folder contains:
+- `SKILL.md` - Instructions for invoking the skill
+- Supporting docs - Context and reference materials for the skill
+
+### Available Skills
+
+| Skill | Description | Folder |
+|-------|-------------|--------|
+| **analyze-transaction** | Parse and document V2 transaction CBORs from Atlas API | `.claude/skills/analyze-transaction/` |
+| **transaction-audit** | Orchestrate V2 CBOR analysis, track progress against swagger | `.claude/skills/transaction-audit/` |
+| **v2-docs-audit** | Orchestrate V2 MDX documentation coverage and quality | `.claude/skills/v2-docs-audit/` |
+| **v2-docs-review** | Review individual V2 transaction MDX for completeness | `.claude/skills/v2-docs-review/` |
+| **glossary-game** | Collaborative terminology validation and refinement | `.claude/skills/glossary-game/` |
+
+When working on tasks that match a skill's domain, read the skill's `SKILL.md` for specific instructions and supporting docs for context.
+
 ## Development Commands
 
 - `npm run dev` - Start development server with Turbo (http://localhost:3000)
@@ -352,341 +370,68 @@ All diagram images in `public/diagrams/` have corresponding MDX documentation fi
 - Using dots instead of dashes in filenames (e.g., `course-creator-accept.assignment.png` should be `course-creator-accept-assignment.png`)
 - Mismatched transaction/validator names between YAML sources and generated images
 
-## Transaction Token Reference Pattern
+## V1 Transaction Documentation
 
-Transaction YAML files use a dot notation system to reference tokens and validators defined in `public/yaml/validator-registry-v1.yaml`. This creates clean separation between logical references and blockchain implementation details.
+V1 transaction YAML files use a dot notation system to reference tokens and validators. For detailed patterns and audit workflows, see the **transaction-audit** skill in `.claude/skills/transaction-audit/`.
 
-### Token Reference Format
-- **Pattern**: `<system>.<token-name>` maps to registry path: `systems > <system> > tokens > <token-name>`
-- **Examples**: `global-state.access-token-user`, `course.course-nft`, `project.contributor-state-token`
-
-### Required Header
-All transaction files should include this comment:
-```yaml
-# Token references use dot notation to map to validator-registry-v1.yaml
-# Format: <system>.<token-name> maps to registry path: systems > <system> > tokens > <token-name>
-```
-
-### Value Field Format
-All value fields must use bullet-point list format:
-```yaml
-value:
-  - "5000000 lovelace"
-  - "1 global-state.access-token-user"
-```
-
-### Minting Operations Format
-Transaction files with minting operations must follow this exact structure:
-
-```yaml
-mints:
-  - id: mint_operation_id
-    policy: "system.validator-name"  # Use dot notation for validator reference
-    redeemer:
-      action: "ActionName"
-      # Additional redeemer fields as needed
-    tokens:
-      - "1 system.token-name"  # Use dot notation for token reference
-      - "1 system.other-token"  # Multiple tokens as YAML list
-```
-
-**Key Rules**:
-- `policy` field: Always use dot notation referencing the minting validator (e.g., `course.module-policy`)
-- `tokens` field: Always use dot notation for token references (e.g., `course.module-token`)
-- `tokens` must always be a YAML list format, even for single tokens
-- Never use policy ID placeholders in mints section - those are only for actual asset-id values in registry
-
-### UTXO Conservation Rule
-If there's an input token, it must appear in outputs unless it's being burned. Always add wallet outputs for input tokens that aren't consumed.
-
-## Registry Usage Field Management
-
-**CRITICAL**: When working on transaction files, ALWAYS update the corresponding token usage fields in `public/yaml/validator-registry-v1.yaml`:
-
-### Usage Field Definitions
-- **`minted-in`**: Token appears with positive value in `mints:` section
-- **`used-in`**: Token appears in `inputs:` section 
-- **`referenced-in`**: Token appears in `reference_inputs:` section
-- **`burned-in`**: Token appears with negative value in `mints:` section
-
-### Required Process for Each Transaction
-1. **Fix transaction file** (token references, format, patterns)
-2. **Verify registry alignment** (all token references exist in registry)
-3. **Update usage fields** (add transaction name to appropriate minted-in/used-in/referenced-in/burned-in lists)
-
-### Example Updates
-```yaml
-# Before
-access-token-user:
-  used-in: 
-    - "contributor-mint-project-state"
-
-# After adding new transaction
-access-token-user:
-  used-in:
-    - "contributor-mint-project-state"
-    - "course-creator-accept-assignment"
-```
-
-### Completed Transaction Usage Updates
-The following transactions have been fully processed with usage field updates:
-- ✅ `access-token-mint` (already complete)
-- ✅ `admin-add-course-creators` 
-- ✅ `admin-add-project-creators`
-- ✅ `admin-init-course`
-- ✅ `admin-init-project-step-1` and `admin-init-project-step-2`
-- ✅ `admin-rm-course-creators` and `admin-rm-project-creators`
-- ✅ All 6 contributor transactions (mint/burn/commit/unlock/get-rewards/add-info)
-- ✅ `course-creator-accept-assignment`
+Key files:
+- `public/yaml/validator-registry-v1.yaml` - Central source of truth for validators and tokens
+- `public/yaml/transactions/` - Transaction YAML files organized by role
 
 ## Documentation Linking System
 
-A comprehensive linking system has been established to connect all documentation components. This system ensures consistent cross-references between transactions, validators, and tokens.
+Documentation follows standardized URL patterns for predictable linking:
 
-### Documentation URL Patterns
+### URL Patterns
+- **Transactions**: `/docs/protocol/v1/transactions/<role>/<transaction-name>`
+- **Tokens**: `/docs/protocol/v1/tokens/<system>/<token-name>`
+- **Validators**: `/docs/protocol/v1/validators/<system>/<validator-name>`
 
-All documentation follows standardized URL patterns for predictable linking:
-
-#### **Transaction Documentation**
-- **Pattern**: `/docs/protocol/v1/transactions/<role>/<transaction-name>`
-- **Examples**:
-  - `/docs/protocol/v1/transactions/admin/add-course-creators`
-  - `/docs/protocol/v1/transactions/contributor/mint-project-state`
-  - `/docs/protocol/v1/transactions/student/burn-local-state`
-  - `/docs/protocol/v1/transactions/general/access-token-mint`
-
-#### **Token Documentation**
-- **Pattern**: `/docs/protocol/v1/tokens/<system>/<token-name>`
-- **Examples**:
-  - `/docs/protocol/v1/tokens/global-state/access-token-user`
-  - `/docs/protocol/v1/tokens/course/course-state-token`
-  - `/docs/protocol/v1/tokens/project/treasury-token`
-
-#### **Validator Documentation**
-- **Pattern**: `/docs/protocol/v1/validators/<system>/<validator-name>` or `/docs/protocol/v1/validators/<system>/observers/<observer-name>`
-- **Examples**:
-  - `/docs/protocol/v1/validators/global-state/global-state`
-  - `/docs/protocol/v1/validators/course/assignment-validator`
-  - `/docs/protocol/v1/validators/project/observers/treasury-cbor-obs`
-
-### File Organization Structure
-
-The documentation file structure matches the URL patterns:
+### File Organization
 
 ```
 content/docs/protocol/v1/
-├── transactions/
-│   ├── admin/               # Instance admin transactions (7 files)
-│   ├── contributor/         # Contributor transactions (6 files)
-│   ├── course-creator/      # Course creator transactions (3 files)
-│   ├── project-creator/     # Project creator transactions (6 files)
-│   ├── student/            # Student transactions (5 files)
-│   └── general/            # General transactions (1 file)
-├── tokens/
-│   ├── global-state/       # Global state tokens (3 files)
-│   ├── index-validators/   # Index validator tokens (2 files)
-│   ├── instance/          # Instance tokens (10 files)
-│   ├── course/            # Course tokens (6 files)
-│   └── project/           # Project tokens (7 files)
-└── validators/
-    ├── global-state/      # Global state validators + observers/
-    ├── index-validators/  # Index validators + observers/
-    ├── instance/         # Instance validators
-    ├── course/           # Course validators + observers/
-    └── project/          # Project validators + observers/
+├── transactions/          # Organized by role (admin/, contributor/, student/, etc.)
+├── tokens/                # Organized by system (global-state/, course/, project/, etc.)
+└── validators/            # Organized by system with observers/ subdirectories
+
+public/yaml/transactions/  # V1 YAML files organized by role
 ```
 
-### Transaction File Organization
+### Registry-Based Links
 
-Transaction YAML files are organized by role with dot notation IDs:
+The validator registry (`public/yaml/validator-registry-v1.yaml`) contains:
+- `doc` fields mapping validators to documentation paths
+- Token usage tracking (`minted-in`, `used-in`, `referenced-in`, `burned-in`)
 
-```
-public/yaml/transactions/
-├── admin/                 # admin.* transaction IDs
-├── contributor/           # contributor.* transaction IDs  
-├── course-creator/        # course-creator.* transaction IDs
-├── project-creator/       # project-creator.* transaction IDs
-├── student/              # student.* transaction IDs
-└── general/              # general.* transaction IDs
-```
+For detailed token reference patterns and registry management, see the **transaction-audit** skill.
 
-**Key Conventions**:
-- **File Names**: Role prefix removed (e.g., `add-course-creators.yaml` not `admin-add-course-creators.yaml`)
-- **Transaction IDs**: Use dot notation (e.g., `admin.add-course-creators`)
-- **MDX tx_file References**: Point to role-based paths (e.g., `"admin/add-course-creators.yaml"`)
+## Glossary and Terminology
 
-### Registry-Based Documentation Links
+For collaborative terminology validation and refinement, see the **glossary-game** skill in `.claude/skills/glossary-game/`.
 
-The validator registry (`public/yaml/validator-registry-v1.yaml`) contains `doc` fields that define the documentation path for each validator:
-
-```yaml
-validators:
-  global-state:
-    name: "Global State"
-    doc: "protocol/v1/validators/global-state/global-state"  # Maps to URL
-    purpose: "spend"
-```
-
-**Documentation Patterns**:
-- **Individual validators**: Get their own `.mdx` files
-- **Observer validators**: Located in `observers/` subdirectories  
-- **Combined validators**: Related validators/policies documented together in "scripts" files (e.g., `course-state-scripts.mdx` covers both `course-state-validator` and `course-state-policy`)
-
-### Token Usage Tracking
-
-Each token in the registry tracks its usage across transactions:
-
-```yaml
-tokens:
-  access-token-user:
-    asset-id: "<access_token_policyid>.222<alias>"
-    minted-in: "access-token-mint"           # Transaction that creates the token
-    used-in: ["contributor-mint-project-state", ...]  # Transactions that consume the token
-    referenced-in: []                        # Transactions that reference the token
-    burned-in: null                         # Transactions that destroy the token
-```
-
-This enables automatic cross-linking between token documentation and transaction documentation.
-
-### Cross-Reference Implementation
-
-The documentation system supports bidirectional linking:
-
-1. **From Transactions**: Link to validators used and tokens consumed/minted
-2. **From Validators**: Link to transactions that use the validator
-3. **From Tokens**: Link to transactions in minted-in, used-in, referenced-in, and burned-in lists
-4. **Registry Integration**: All references are maintained in the central registry for consistency
-
-This linking system provides comprehensive navigation between all protocol components, making the documentation highly interconnected and discoverable.
-
-## Concept Validation Game
-
-The Concept Validation Game is a collaborative learning exercise for iteratively refining and validating Claude's understanding of Andamio terms and concepts. The working glossary is located at `docs/reference/GLOSSARY.md`.
-
-### How the Game Works
-
-1. **Agent Presents**: Claude shares current understanding of a term/concept including definition and characteristics
-2. **Human Validates/Corrects**: Human provides feedback with corrections and additional context
-3. **Agent Updates**: Claude incorporates feedback and updates understanding
-4. **Iteration**: Process repeats to refine understanding further
-
-### Starting the Game
-
-- **Human Chooses**: "Let's run an example with [term/concept]"
-- **Agent Suggests**: Claude identifies concepts that need validation
-- **Organic Discovery**: During conversation when uncertainty arises about a term
-
-### Best Practices for Claude
-
-- **Be honest about confidence levels**: "I'm uncertain about..."
-- **Look for patterns**: "I notice this term appears with..."
-- **Ask about relationships**: "How does [TERM A] relate to [TERM B]?"
-- **Surface inconsistencies**: "I see this used two different ways..."
-- **Update docs in real-time** while context is fresh
-- **Ask clarifying questions** when uncertain
-- **Provide context-specific corrections** rather than just saying "wrong"
-- **Build iteratively** through multiple short rounds
-
-### Example Opening
-
-"I'd like to validate my understanding of your terminology. I've noticed some terms that could use clarification:
-1. **[Term]** - I see this used frequently but am unsure if it means X or Y
-2. **[Term]** - This seems to have a specific meaning in your context
-3. **[Term]** - I've seen inconsistent usage of this
-
-Should we start with one of these, or would you prefer a different term?"
-
-### Benefits
-
-- **Accuracy Improvement**: Corrects misunderstandings and knowledge gaps
-- **Contextualization**: Learns Andamio-specific meanings and nuances
-- **Confidence Calibration**: Better understanding of certainty levels
-- **Knowledge Audit**: Surfaces what Claude understands correctly vs incorrectly
-- **Real-time Documentation**: Updates happen while context is fresh
-
-Use this game whenever terminology seems unclear or when starting work on new aspects of the Andamio protocol.
+Key files:
+- `docs/reference/GLOSSARY.md` - Team-facing working glossary (can include private sections)
+- `content/docs/glossary.mdx` - Public-facing glossary (core concepts only)
 
 ## V2 Protocol Documentation
 
-**Session started**: 2025-12-08
-**Last updated**: 2025-12-09
-
-V2 protocol documentation built by parsing decoded transaction CBORs from the Atlas API.
-
-### Status: Phase 1 Complete ✅
-
-**8/8 Course System Transactions Documented:**
-- `general/mint-access-token` - Protocol entry point (~7.9 ADA)
-- `course/admin/create` - Create course (~45 ADA)
-- `course/admin/teachers-update` - Update teachers (~5.3 ADA)
-- `course/teacher/modules-manage` - Mint modules (~1.86 ADA)
-- `course/teacher/assignments-assess` - Assess assignments (~0.21 ADA)
-- `course/student/enroll` - Enroll in course (~2.14 ADA)
-- `course/student/assignment-update` - Update submission (~0.33 ADA)
-- `course/student/credential-claim` - Claim credential (-1.03 ADA refund)
+V2 protocol documentation is built by parsing decoded transaction CBORs from the Atlas API. For detailed analysis workflows, see the **analyze-transaction** skill in `.claude/skills/analyze-transaction/`.
 
 ### Key Files
 
 **Registry Files** (source of truth):
 - `public/yaml/transactions/v2/SESSION-NOTES.md` - Full session context, validator mapping, swagger sync workflow
 - `public/yaml/transactions/v2/address-registry.json` - Validators, policies, observers
-- `public/yaml/transactions/v2/address-names.json` - Friendly names for diagram display
 - `public/yaml/transactions/v2/cost-registry.json` - Fee structures with loop costs
 - `public/yaml/transactions/v2/endpoint-registry.json` - API schemas (aligned with swagger)
-- `public/yaml/transactions/v2/atlas-api-swagger.json` - Local copy of Atlas API swagger
 
 **Public Docs**:
-- `content/docs/protocol/v2/transactions/` - MDX documentation pages (8 transactions)
+- `content/docs/protocol/v2/transactions/` - MDX documentation pages
 
 **API Endpoints**:
-- `/api/transaction-v2?file=<path>&format=v1` - Get transaction YAML data (format=v1 for diagram compatibility)
-- `/api/costs/v2` - Get cost registry (supports `?tx=`, `?loop=`, `?summary=true`)
-
-### V2 YAML Structure
-
-All V2 transaction YAML files follow this structure:
-```yaml
-name: "Transaction Name"
-id: "system.role.action"
-
-metadata:
-  role: "admin|teacher|student|general"
-  system: "course|general"
-  description: "..."
-  api_endpoint: "/tx/v2/..."
-
-inputs:
-  - id: input_name
-    type: script|wallet
-    validator: "validator-name"  # For script types
-    label: "wallet-name"         # For wallet types (e.g., "student-wallet")
-    # ...
-
-outputs:
-  - id: output_name
-    type: script|wallet
-    validator: "validator-name"  # Preferred over raw address
-    label: "wallet-name"         # For wallet types
-    # ...
-```
-
-The `transformV2ToDiagramData()` function in `types/v2.ts` prefers `validator` or `label` over raw addresses for diagram display.
-
-### Swagger Sync Workflow
-
-When the Atlas API swagger updates:
-1. Download: `curl -s "https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json" -o public/yaml/transactions/v2/atlas-api-swagger.json`
-2. Check for new endpoints: `jq '.paths | keys | map(select(contains("/tx/v2/")))' atlas-api-swagger.json`
-3. Update `endpoint-registry.json` if schemas changed
-4. Update MDX docs request body sections
-5. See `SESSION-NOTES.md` for full workflow details
-
-### Next Phase: Validator Documentation
-
-See `SESSION-NOTES.md` for validator mapping analysis. Key gaps:
-- Missing docs: `local-state-token-validator`, `course-governance-validator`
-- Name mismatches between CBOR-discovered validators and existing docs
-- Need to create `validator-registry-v2.yaml` like V1
+- `/api/transaction-v2?file=<path>&format=v1` - Get transaction YAML data
+- `/api/costs/v2` - Get cost registry
 
 ## Andamio Pioneers Session Archival
 
@@ -784,13 +529,11 @@ Add new session to `content/docs/pioneers/live-coding/archive/sessions/meta.json
 - Questions like "how should AI contributions be tracked?" are feature content, not noise
 - The "source of truth" discussion is protocol design, not just UX
 
-# important-instruction-reminders
-Do what has been asked; nothing more, nothing less.
-NEVER create files unless they're absolutely necessary for achieving your goal.
-ALWAYS prefer editing an existing file to creating a new one.
-NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
-- docs/reference/GLOSSARY.md is a team-facing document and can include "private" sections. However content/docs/glossary.mdx is public facing and only includes  - Core Protocol Concepts (Access Token, SSOI, Credentials, Local State, Global State, Validators, Contributors, Student, Project Creator, Project, Project
-   Treasury, Prerequisites, Escrow Validator)
-  - Technical Architecture (Protocol V2, Transaction API, Transaction Sponsorship, Service Fees, SDK)
-  - Acronyms & Abbreviations (streamlined list)
-- Glossary Game and Concept Game mean the same thing. When playing, assume the player is a team member and can discuss both private and public glossary docs.
+# Important Reminders
+
+- Do what has been asked; nothing more, nothing less
+- NEVER create files unless absolutely necessary for achieving your goal
+- ALWAYS prefer editing an existing file to creating a new one
+- NEVER proactively create documentation files (*.md) or README files unless explicitly requested
+- When a task matches a skill's domain, read the skill's `SKILL.md` first for specialized instructions
+- Glossary Game and Concept Game mean the same thing - see `.claude/skills/glossary-game/` for details

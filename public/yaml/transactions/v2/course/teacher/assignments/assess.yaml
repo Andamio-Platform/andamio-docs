@@ -1,0 +1,217 @@
+# V2 Transaction: Course Teacher Assignments Assess
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/course/teacher/assignments/assess
+
+name: CourseTeacherAssignmentsAssessV2
+id: course.teacher.assignments.assess
+
+metadata:
+  role: "teacher"
+  system: "course"
+  description: "Assess student assignment submissions (accept or refuse)"
+  api_endpoint: "/v2/tx/course/teacher/assignments/assess"
+
+request_body:
+  description: "AssessAssignmentsTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Teacher's access token alias"
+      example: "james"
+    course_id:
+      type: string
+      required: true
+      description: "Course NFT policy ID (56 char hex)"
+      example: "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841"
+    assignment_decisions:
+      type: array
+      required: true
+      description: "Array of assessment decisions (can batch multiple)"
+      items:
+        alias:
+          type: string
+          required: true
+          description: "Student's alias being assessed"
+          example: "student_001"
+        outcome:
+          type: string
+          required: true
+          enum: ["accept", "refuse"]
+          description: "Assessment decision"
+          example: "accept"
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 276274
+  protocolFee: 0
+  protocolFeeDestination: null
+  minUtxo:
+    teacher-token-output: 1146460
+    course-state-output: 1379200
+  executionUnits:
+    spend_0_course_state:
+      mem: 269063
+      steps: 90746011
+  note: "No protocol fee for assessments. Datum shrinks on accept (drops assignment_info), so minUTxO may decrease slightly."
+
+inputs:
+  - id: wallet-inputs
+    type: wallet
+    address: "{teacher_wallet}"
+    description: "Teacher's wallet providing ADA for fees"
+
+  - id: teacher-access-token
+    type: wallet
+    address: "{teacher_wallet}"
+    value:
+      - "1 index-policy.u{teacher_alias}"
+    description: "Teacher's access token UTxO - proves identity"
+
+  - id: course-state-input
+    type: script
+    validator: course-state-validator
+    address: "addr_test1xr07w3s4gz623hfwwesh5n2lp2r2eqc0qa2llf25zgngn6je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq95w7js"
+    value:
+      - "lovelace"
+      - "1 course-state-policy.{student_alias}"
+    datum:
+      type: inline
+      format: "constructor 1"
+      description: "Student's pending assignment state"
+      fields:
+        - name: "slt_hash"
+          type: "bytes"
+          description: "Module being worked on"
+        - name: "assignment_info"
+          type: "bytes"
+          description: "Hash of evidence submitted by student"
+        - name: "completed_modules"
+          type: "list"
+          description: "Previously completed module hashes"
+    redeemer:
+      tag: "Spend"
+      index: 0
+      format: "constructor 2"
+      fields:
+        - name: "teacher_alias"
+          type: "bytes"
+          description: "Teacher's alias for authorization"
+      example:
+        constructor: 2
+        fields:
+          - "6a616d6573"
+    description: "Student's course state UTxO - spent to assess assignment"
+
+reference_inputs:
+  - id: script-ref
+    utxo: "7c5f522d87d340be46ad970a7956fdb984d5682dcbea92887cf4fd46bae7d40b#2"
+    description: "Script reference for course-state-validator"
+
+  - id: governance-ref
+    utxo: "7c5f522d87d340be46ad970a7956fdb984d5682dcbea92887cf4fd46bae7d40b#3"
+    description: "Course governance UTxO - referenced to verify teacher authorization"
+
+outputs:
+  - id: teacher-token-return
+    type: wallet
+    address: "{teacher_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{teacher_alias}"
+    description: "Teacher's access token returned to wallet"
+
+  - id: course-state-output
+    type: script
+    validator: course-state-validator
+    address: "addr_test1xr07w3s4gz623hfwwesh5n2lp2r2eqc0qa2llf25zgngn6je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq95w7js"
+    value:
+      - "~1379200 lovelace"
+      - "1 course-state-policy.{student_alias}"
+    datum:
+      type: inline
+      format_on_accept: "constructor 0"
+      format_on_refuse: "constructor 1"
+      description: "Updated student course state"
+      fields_on_accept:
+        - name: "completed_modules"
+          type: "list"
+          description: "List of completed module hashes (slt_hash added)"
+      fields_on_refuse:
+        - name: "slt_hash"
+          type: "bytes"
+          description: "Module still being worked on"
+        - name: "assignment_info"
+          type: "bytes"
+          description: "Updated to empty or new submission"
+        - name: "completed_modules"
+          type: "list"
+          description: "Previously completed module hashes (unchanged)"
+      example_on_accept:
+        constructor: 0
+        fields:
+          - ["356be366236f712c2397b3c151ae8ed4656e2574aabfb637ef44ae8345ce9b9a"]
+    description: "Course state recreated with updated assignment status"
+
+  - id: change
+    type: wallet
+    address: "{teacher_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to teacher wallet (may be multiple UTxOs)"
+
+mints: null
+
+withdraws: null
+
+design_notes:
+  spend_and_recreate_pattern: |
+    This transaction spends the student's course state UTxO and recreates it with
+    updated datum. No tokens are minted or burned - just state transition.
+
+  datum_transformation_on_accept: |
+    Before: Constructor 1 (slt_hash, assignment_info, completed_modules)
+    After:  Constructor 0 (completed_modules with slt_hash added)
+
+    The accepted module hash moves from the "active" fields to the completed list.
+    The assignment_info is dropped (no longer needed once accepted).
+
+  datum_transformation_on_refuse: |
+    Before: Constructor 1 (slt_hash, assignment_info, completed_modules)
+    After:  Constructor 1 (slt_hash, empty_or_new_assignment_info, completed_modules)
+
+    Student can then update their submission and resubmit.
+
+  redeemer_constructor_2: |
+    Constructor 2 with teacher's alias indicates the "Assess" action.
+    The alias is verified against the governance UTxO to ensure the user
+    is authorized as a teacher for this course.
+
+  teacher_authorization: |
+    Authorization is verified via reference input to the course governance UTxO
+    (7c5f522d87d340be46ad970a7956fdb984d5682dcbea92887cf4fd46bae7d40b#3).
+    This UTxO contains the list of authorized teacher aliases.
+
+  batching_support: |
+    The assignment_decisions array allows assessing multiple students in one transaction.
+    Each student's course-state UTxO is spent and recreated with the appropriate datum change.
+
+  no_protocol_fee: |
+    Unlike course/project creation, assessments have no protocol fee.
+    Teachers only pay network transaction fees.
+
+registry:
+  validators:
+    course-state-validator:
+      address: "addr_test1xr07w3s4gz623hfwwesh5n2lp2r2eqc0qa2llf25zgngn6je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq95w7js"
+      note: "Holds student course state tokens - redeemer constructor 2 for assess"
+  policies:
+    course-state-policy:
+      policyId: "{parameterized per course}"
+      example: "dfe7461540b4a8dd2e76617a4d5f0a86ac830f0755ffa554122689ea"

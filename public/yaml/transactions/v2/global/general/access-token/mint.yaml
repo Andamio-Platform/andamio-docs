@@ -1,0 +1,229 @@
+# V2 Transaction: Mint Access Token
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/global/general/access-token/mint
+
+name: MintAccessTokenV2
+id: global.general.access-token.mint
+
+metadata:
+  system: "global"
+  role: "general"
+  action: "access-token/mint"
+  description: "User mints access tokens for protocol participation"
+  api_endpoint: "/v2/tx/global/general/access-token/mint"
+
+# ==============================================================================
+# REQUEST BODY (from Atlas API)
+# ==============================================================================
+request:
+  initiator_data:
+    type: "GYAddressBech32"
+    required: true
+    description: "User's wallet address"
+  alias:
+    type: "string"
+    required: true
+    minLength: 1
+    maxLength: 31
+    pattern: "alphanumeric"
+    description: "Unique alias for the user (1-31 chars)"
+
+# ==============================================================================
+# COSTS (observed from CBOR)
+# ==============================================================================
+costs:
+  txFee: 352377               # ~0.35 ADA - varies with execution units
+  protocolFee: 5000000        # 5 ADA - fixed fee to protocol treasury
+  minUtxo:
+    index_node: 1254210       # ~1.25 ADA per index linked list node
+    global_state: 1262830     # ~1.26 ADA for global state UTxO
+  executionUnits:
+    spend: { mem: 87883, steps: 29307972 }
+    mint: { mem: 489711, steps: 171491728 }
+    reward: { mem: 119104, steps: 47060811 }
+  collateral: 528566          # Required collateral
+
+# ==============================================================================
+# INPUTS
+# ==============================================================================
+inputs:
+  - id: index_node_spend
+    type: script
+    validator: index-validator
+    address: "addr_test1xpr4scfcv75202jspdw40g8gwlcp4rnrcym9g62cnvfqv0yju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsqkhmv8z"
+    redeemer:
+      tag: "Spend"
+      index: 0
+      action: "UpdateIndex"
+      data: "{constructor: 0, fields: []}"
+    description: "Index UTxO being updated for linked list insertion"
+
+  - id: user_utxo
+    type: wallet
+    description: "User's UTxO for fees and collateral"
+
+# ==============================================================================
+# REFERENCE INPUTS
+# ==============================================================================
+reference_inputs:
+  - id: script_ref_0
+    utxo: "57701f1a1870c1786524f0462b608e1fb8f597694c49c18cea058032812c7937#0"
+    description: "Script reference for index validator"
+
+  - id: script_ref_2
+    utxo: "57701f1a1870c1786524f0462b608e1fb8f597694c49c18cea058032812c7937#2"
+    description: "Script reference for observer"
+
+# ==============================================================================
+# OUTPUTS
+# ==============================================================================
+outputs:
+  # Index linked list node 1 (updated previous pointer)
+  - id: index_node_1
+    type: script
+    validator: index-validator
+    address: "addr_test1xpr4scfcv75202jspdw40g8gwlcp4rnrcym9g62cnvfqv0yju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsqkhmv8z"
+    value:
+      lovelace: 1254210
+      tokens:
+        - policy: index-policy
+          name: "0x20"
+          quantity: 1
+    datum:
+      constructor: 0
+      fields:
+        - prev_alias: "powner1"      # hex: 706f776e657231
+        - next_alias: "{alias}"      # hex: 736f6d65616c696173 (somealias)
+
+  # Index linked list node 2 (new node for this alias)
+  - id: index_node_2
+    type: script
+    validator: index-validator
+    address: "addr_test1xpr4scfcv75202jspdw40g8gwlcp4rnrcym9g62cnvfqv0yju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsqkhmv8z"
+    value:
+      lovelace: 1258520
+      tokens:
+        - policy: index-policy
+          name: "0x20"
+          quantity: 1
+    datum:
+      constructor: 0
+      fields:
+        - prev_alias: "{alias}"      # hex: 736f6d65616c696173 (somealias)
+        - next_alias: "teacher1"     # hex: 7465616368657231
+
+  # Protocol treasury payment
+  - id: treasury_payment
+    type: wallet
+    label: protocol-treasury
+    address: "addr_test1qz02cdjmf04d9dc2dk3s50y98zkm99yjgt7hyygykdfh3347uqpl75w90lk96ht83c2t4w7zrwrmr7z924q822svc3hstlm4js"
+    value:
+      lovelace: 5000000
+    description: "5 ADA protocol fee"
+
+  # Global State V2 output
+  - id: global_state
+    type: script
+    validator: global-state-v2
+    address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+    value:
+      lovelace: 1262830
+      tokens:
+        - policy: index-policy
+          name: "g{alias}"           # hex: 67736f6d65616c696173 (gsomealias)
+          quantity: 1
+    datum:
+      constructor: 0
+      fields:
+        - alias: "{alias}"           # hex: 736f6d65616c696173 (somealias)
+        - local_state_map: "map []"  # empty on creation
+
+  # User receives access token
+  - id: user_access_token
+    type: wallet
+    label: user
+    value:
+      lovelace: "change"
+      tokens:
+        - policy: index-policy
+          name: "u{alias}"           # hex: 75736f6d65616c696173 (usomealias)
+          quantity: 1
+    description: "User receives their access token"
+
+  # User change outputs (variable count)
+  - id: user_change
+    type: wallet
+    label: user
+    value:
+      lovelace: "remaining change"
+    description: "Additional change outputs as needed"
+
+# ==============================================================================
+# MINTS
+# ==============================================================================
+mints:
+  - id: mint_tokens
+    policy: index-policy
+    policyId: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
+    redeemer:
+      tag: "Mint"
+      index: 0
+      data: "bytes({alias})"         # hex: 736f6d65616c696173 (somealias)
+    tokens:
+      - name: "0x20"
+        name_hex: "20"
+        quantity: 1
+        description: "Index linked list marker (space character)"
+      - name: "g{alias}"
+        name_hex: "67{alias_hex}"    # 67736f6d65616c696173
+        quantity: 1
+        description: "Global state token (g prefix + alias)"
+      - name: "u{alias}"
+        name_hex: "75{alias_hex}"    # 75736f6d65616c696173
+        quantity: 1
+        description: "User access token (u prefix + alias)"
+
+# ==============================================================================
+# WITHDRAWALS (Observer)
+# ==============================================================================
+withdraws:
+  - id: index_observer
+    validator: index-observer
+    stakeAddress: "stake_test17qp59906g6p9zdv3lhfe25qg8wc8fdy55gwvfecj5mtvklsnff2kf"
+    redeemer:
+      tag: "Reward"
+      index: 0
+      data: "bytes({alias})"         # hex: 736f6d65616c696173 (somealias)
+    amount: 0
+    description: "Observer validates the index update operation"
+
+# ==============================================================================
+# METADATA (CIP-25 NFT)
+# ==============================================================================
+metadata_721:
+  policy: index-policy
+  policyId: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
+  asset: "u{alias}"
+  fields:
+    name: "Andamio Access Token"
+    alias: "{alias}"
+    image: "ipfs://bafybeihjgnthktrxhoqr4mncmsjnn76ok44ffrdx6seidzo7efx4h2sgg4"
+    mediaType: "image/*"
+    description: "First Edition"
+    era: "Foundation Era"
+    app: "https://app.andamio.io"
+
+# ==============================================================================
+# REGISTRY (validators/policies used in this transaction)
+# ==============================================================================
+registry:
+  index-policy:
+    policyId: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
+  index-validator:
+    address: "addr_test1xpr4scfcv75202jspdw40g8gwlcp4rnrcym9g62cnvfqv0yju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsqkhmv8z"
+  global-state-v2:
+    address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+  index-observer:
+    stakeAddress: "stake_test17qp59906g6p9zdv3lhfe25qg8wc8fdy55gwvfecj5mtvklsnff2kf"
+  protocol-treasury:
+    address: "addr_test1qz02cdjmf04d9dc2dk3s50y98zkm99yjgt7hyygykdfh3347uqpl75w90lk96ht83c2t4w7zrwrmr7z924q822svc3hstlm4js"
