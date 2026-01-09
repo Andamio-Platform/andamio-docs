@@ -1,64 +1,39 @@
 ---
-title: "Transactions"
-description: "Protocol v1 transaction reference organized by actor type"
+title: "Transactions (Deprecated)"
+description: "V1 transactions have been deprecated in favor of V2"
 ---
 
-# Protocol v1 Transactions
+# V1 Transactions - Deprecated
 
-This section provides comprehensive documentation for all Andamio protocol v1 transactions, organized by the type of actor who can initiate them.
+<Callout type="warn">
+**V1 transactions are deprecated.** The Andamio protocol has migrated to V2, which provides a simplified transaction model with improved security and lower costs.
+</Callout>
 
-## Transaction Categories
+## Migration to V2
 
-### General
-Universal transactions available to all users:
-- [Access Token Mint](/docs/protocol/v1/transactions/general/access-token-mint) - Mint access tokens for protocol participation
+All V1 transaction functionality has been replaced by V2 endpoints:
 
-### Instance Admin
-System initialization and access management (7 transactions):
-- [Initialize Course](/docs/protocol/v1/transactions/admin/init-course) - Initialize a new course
-- [Add Course Creators](/docs/protocol/v1/transactions/admin/add-course-creators) - Grant course creation permissions
-- [Remove Course Creators](/docs/protocol/v1/transactions/admin/remove-course-creators) - Revoke course creation permissions
-- [Initialize Project Step 1](/docs/protocol/v1/transactions/admin/init-project-step-1) - Begin project initialization
-- [Initialize Project Step 2](/docs/protocol/v1/transactions/admin/init-project-step-2) - Complete project initialization
-- [Add Project Creators](/docs/protocol/v1/transactions/admin/add-project-creators) - Grant project creation permissions
-- [Remove Project Creators](/docs/protocol/v1/transactions/admin/remove-project-creators) - Revoke project creation permissions
+| V1 Transaction | V2 Replacement |
+|----------------|----------------|
+| Access Token Mint | [Global Access Token Mint](/docs/protocol/v2/transactions/global/general/access-token/mint) |
+| Init Course | [Course Create](/docs/protocol/v2/transactions/instance/owner/course/create) |
+| Init Project | [Project Create](/docs/protocol/v2/transactions/instance/owner/project/create) |
+| Add/Remove Course Creators | [Teachers Manage](/docs/protocol/v2/transactions/course/owner/teachers/manage) |
+| Mint Module Tokens | [Modules Manage](/docs/protocol/v2/transactions/course/teacher/modules/manage) |
+| Mint Local State | [Assignment Commit](/docs/protocol/v2/transactions/course/student/assignment/commit) |
+| Commit to Assignment | [Assignment Commit](/docs/protocol/v2/transactions/course/student/assignment/commit) |
+| Update Assignment | [Assignment Update](/docs/protocol/v2/transactions/course/student/assignment/update) |
+| Accept/Deny Assignment | [Assignments Assess](/docs/protocol/v2/transactions/course/teacher/assignments/assess) |
+| Burn Local State | [Credential Claim](/docs/protocol/v2/transactions/course/student/credential/claim) |
 
-### Project Creator
-Project and treasury management (6 transactions):
-- [Treasury Add Funds](/docs/protocol/v1/transactions/project-creator/treasury-add-funds) - Add funds to treasury
-- [Mint Treasury Token](/docs/protocol/v1/transactions/project-creator/mint-treasury-token) - Initialize project treasury
-- [Manage Treasury Token](/docs/protocol/v1/transactions/project-creator/manage-treasury-token) - Distribute treasury funds
-- [Accept Project](/docs/protocol/v1/transactions/project-creator/accept-project) - Approve contributor applications
-- [Deny Project](/docs/protocol/v1/transactions/project-creator/deny-project) - Reject contributor applications
-- [Refuse Project](/docs/protocol/v1/transactions/project-creator/refuse-project) - Decline project proposals
+## Key V2 Improvements
 
-### Contributor
-Project participation lifecycle (6 transactions):
-- [Mint Project State](/docs/protocol/v1/transactions/contributor/mint-project-state) - Create project participation token
-- [Commit Project](/docs/protocol/v1/transactions/contributor/commit-project) - Join a project as contributor
-- [Add Info](/docs/protocol/v1/transactions/contributor/add-info) - Create or update contributor profile
-- [Get Rewards](/docs/protocol/v1/transactions/contributor/get-rewards) - Claim project completion rewards
-- [Unlock Project](/docs/protocol/v1/transactions/contributor/unlock-project) - Leave a project
-- [Burn Project State](/docs/protocol/v1/transactions/contributor/burn-project-state) - Remove project participation token
+- **Unified enrollment + commitment**: Students now enroll and commit to assignments in a single transaction
+- **Simplified role structure**: Owner, Teacher/Manager, Student/Contributor
+- **Lower fees**: Optimized transaction sizes reduce costs
+- **Better batching**: Teachers can assess multiple assignments in one transaction
+- **Credential system**: Credential hashes stored permanently in global state
 
-### Course Creator
-Course content and assignment management (3 transactions):
-- [Mint Module Tokens](/docs/protocol/v1/transactions/course-creator/mint-module-tokens) - Create course modules
-- [Accept Assignment](/docs/protocol/v1/transactions/course-creator/accept-assignment) - Approve student submissions
-- [Deny Assignment](/docs/protocol/v1/transactions/course-creator/deny-assignment) - Reject student submissions
+## V2 Documentation
 
-### Student
-Course enrollment and assignment workflow (5 transactions):
-- [Mint Local State](/docs/protocol/v1/transactions/student/mint-local-state) - Enroll in a course
-- [Commit to Assignment](/docs/protocol/v1/transactions/student/commit-to-assignment) - Start working on assignment
-- [Update Assignment](/docs/protocol/v1/transactions/student/update-assignment) - Submit assignment updates
-- [Leave Assignment](/docs/protocol/v1/transactions/student/leave-assignment) - Withdraw from assignment
-- [Burn Local State](/docs/protocol/v1/transactions/student/burn-local-state) - Complete course and move to global state
-
----
-
-## Transaction Overview
-
-The Andamio protocol uses a role-based transaction system where different types of users (actors) can perform specific operations. Each transaction type includes detailed metadata about required tokens, estimated fees, and whether multi-signature approval is needed.
-
-All transactions operate on UTxO-based state management and include comprehensive validation logic to ensure protocol integrity and proper state transitions.
+See the [V2 Transactions](/docs/protocol/v2/transactions) documentation for the current protocol.

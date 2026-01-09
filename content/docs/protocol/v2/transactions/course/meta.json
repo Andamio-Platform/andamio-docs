@@ -2,7 +2,7 @@
   "title": "Course",
   "pages": [
     "index",
-    "admin",
+    "owner",
     "teacher",
     "student"
   ]

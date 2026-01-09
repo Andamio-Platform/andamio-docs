@@ -1,0 +1,144 @@
+---
+title: "Modules Manage"
+description: "Mint, update, or burn course modules"
+tx_file: "course/teacher/modules/manage.yaml"
+---
+
+# Course Teacher Modules Manage
+
+Mint, update, or burn course modules (SLT collections). Teachers can batch multiple operations in a single transaction.
+
+## API Endpoint
+
+```
+POST /v2/tx/course/teacher/modules/manage
+```
+
+## Cost Summary
+
+| Cost Type | Amount | Notes |
+|-----------|--------|-------|
+| Transaction Fee | ~0.27 ADA | Network fee |
+| Module Deposit | ~1.59 ADA | Per module minted |
+| Protocol Fee | 0 ADA | No service fee |
+| **Total (1 module)** | ~1.86 ADA | Scales linearly |
+
+**Scaling**: ~8.4 ADA for 5 modules, ~16.5 ADA for 10 modules.
+
+## Request Body
+
+```json
+{
+  "alias": "james",
+  "course_id": "23a6bbce3a8deca8985764e847594f6956c9dc643e3f6c8efdba04e4",
+  "modules_to_mint": [
+    {
+      "slts": ["I can mint an access token.", "I can complete an assignment."],
+      "allowed_students_v2": [],
+      "prerequisite_assignments_v2": []
+    }
+  ],
+  "modules_to_update": [],
+  "modules_to_burn": []
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | string | Yes | Teacher's access token alias |
+| `course_id` | string | Yes | Course NFT policy ID (56 char hex) |
+| `modules_to_mint` | object[] | Yes | Modules to create (empty = none) |
+| `modules_to_update` | object[] | Yes | Modules to update (empty = none) |
+| `modules_to_burn` | string[] | Yes | Module hashes to burn (empty = none) |
+
+## Transaction Pattern
+
+**Mint and Create** - Mints module tokens, creates module UTxOs. Governance is spent to verify authorization.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                   MODULES MANAGE TRANSACTION                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  INPUTS                          OUTPUTS                        │
+│  ──────                          ───────                        │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Governance      │───────────▶│ Governance      │            │
+│  │ (teacher list)  │  SPEND     │ (unchanged)     │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Wallet          │───────────▶│ Module UTxO     │  NEW       │
+│  │ (u-token + ADA) │            │ (~1.59 ADA +    │            │
+│  └─────────────────┘            │  module token)  │            │
+│                                  └─────────────────┘            │
+│  MINTS                                                          │
+│  ─────                           ┌─────────────────┐            │
+│  module-policy:                  │ User Wallet     │            │
+│  • +1 \{slt_hash\}              │ (u-token +      │            │
+│                                  │  change)        │            │
+│                                  └─────────────────┘            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Inputs
+
+| Input | Type | Validator | Description |
+|-------|------|-----------|-------------|
+| Governance | Script | governance-validator | Spent to verify teacher authorization |
+| Access Token | Wallet | - | Teacher's u-token |
+| Wallet UTxOs | Wallet | - | ADA for fees/deposits |
+
+## Outputs
+
+| Output | Validator | Value | Description |
+|--------|-----------|-------|-------------|
+| Governance | governance-validator | lovelace + token | Returned unchanged |
+| Module UTxO | module-validator | ~1.59 ADA + module token | New module (per mint) |
+| User Wallet | wallet | u-token + change | Access token returned |
+
+## Minting Operations
+
+| Policy | Token Name | Quantity | Description |
+|--------|------------|----------|-------------|
+| module-policy | \{slt_hash\} | +1 | Module token (name = hash of SLT list) |
+
+## Module Token Naming
+
+The module token name is a 32-byte hash computed from the SLT strings:
+
+```
+Input:  ["I can mint an access token.", "I can complete an assignment."]
+Output: 8dcbe1b925d87e6c547bbd8071c23a712db4c32751454b0948f8c846e9246b5c
+```
+
+The redeemer contains the full SLT text - the hash is computed on-chain.
+
+## Module Datum
+
+```
+Constructor 0:
+├── course_id: "\{course_id\}"
+├── allowed_course_state_ids: []
+└── prereq_slt_hashes: []
+```
+
+## Reference Inputs
+
+| UTxO | Description |
+|------|-------------|
+| LocalStateToken | Course's LocalStateToken (contains validator script_ref) |
+
+## Key Notes
+
+- Governance is **spent** (not just referenced) to verify teacher authorization
+- No protocol fee for module management
+- Module deposits are recoverable when modules are burned
+- Teacher must be listed in the governance datum
+
+## See Also
+
+- [Teachers Manage](/docs/protocol/v2/transactions/course/owner/teachers/manage) - Manage teacher list
+- [Assignment Commit](/docs/protocol/v2/transactions/course/student/assignment/commit) - Student enrolls and commits
+- [Assignments Assess](/docs/protocol/v2/transactions/course/teacher/assignments/assess) - Assess submissions

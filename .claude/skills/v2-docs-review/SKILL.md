@@ -227,7 +227,7 @@ Points to YAML source (relative to `public/yaml/transactions/v2/`):
 
 | Transaction | MDX Path | tx_file |
 |-------------|----------|---------|
-| course.student.enroll | course/student/enroll.mdx | course/student/enroll.yaml |
+| course.student.assignment.commit | course/student/assignment/commit.mdx | course/student/assignment/commit.yaml |
 | course.teacher.assignments.assess | course/teacher/assignments/assess.mdx | course/teacher/assignments/assess.yaml |
 | global.general.access-token.mint | global/general/access-token/mint.mdx | global/general/access-token/mint.yaml |
 </path-rules>

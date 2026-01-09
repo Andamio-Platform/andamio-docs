@@ -277,16 +277,16 @@
         }
       }
     },
-    "course.student.enroll": {
+    "course.student.assignment.commit": {
       "role": "student",
       "system": "course",
-      "action": "enroll",
-      "endpoint": "/tx/v2/student/course/enroll",
+      "action": "assignment/commit",
+      "endpoint": "/v2/tx/course/student/assignment/commit",
       "method": "POST",
-      "description": "Enroll in a course by minting course state",
-      "requestBody": "MintCourseStateV2TxRequest",
+      "description": "Enroll in a course (if not enrolled) and commit to an assignment. Replaces the old enroll endpoint - commitment is now required.",
+      "requestBody": "EnrollCourseTxRequest",
       "request": {
-        "walletData": {
+        "initiator_data": {
           "type": "WalletData",
           "required": false
         },
@@ -294,32 +294,28 @@
           "type": "Alias",
           "required": true
         },
-        "courseId": {
+        "course_id": {
           "type": "GYMintingPolicyId",
           "required": true
         },
-        "commitData": {
-          "type": "object",
-          "required": false,
-          "description": "Optional initial assignment commit",
-          "properties": {
-            "sltHash": {
-              "type": "SltHash",
-              "required": true
-            },
-            "assignmentInfo": {
-              "type": "string",
-              "required": true
-            }
-          }
+        "slt_hash": {
+          "type": "SltHash",
+          "required": true,
+          "description": "Module token hash to commit to"
+        },
+        "assignment_info": {
+          "type": "string",
+          "required": true,
+          "description": "Evidence hash for the assignment"
         }
       },
       "response": {
-        "unsignedTxCBOR": {
+        "unsigned_tx": {
           "type": "string",
           "required": true
         }
-      }
+      },
+      "deprecates": "course.student.enroll"
     },
     "course.student.assignment-update": {
       "role": "student",

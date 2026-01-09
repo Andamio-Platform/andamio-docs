@@ -116,7 +116,7 @@ File paths MUST match the API endpoint structure:
 
 ### Examples:
 - `/v2/tx/global/general/access-token/mint` → `global/general/access-token/mint.yaml`
-- `/v2/tx/course/student/enroll` → `course/student/enroll.yaml`
+- `/v2/tx/course/student/assignment/commit` → `course/student/assignment/commit.yaml`
 - `/v2/tx/project/contributor/task/commit` → `project/contributor/task/commit.yaml`
 
 ### Base Paths:

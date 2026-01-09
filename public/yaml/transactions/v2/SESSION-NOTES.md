@@ -1,11 +1,31 @@
 # V2 Transaction Documentation Session Notes
 
-**Last Updated**: 2025-12-09
-**Status**: Complete (8/8 transactions parsed)
+**Last Updated**: 2026-01-09
+**Status**: In Progress (9 transactions parsed, API restructured)
 
 ## What We're Doing
 
 Building V2 protocol documentation by parsing decoded transaction CBORs from the Atlas API preprod environment. Each transaction reveals validators, policies, and patterns that we cross-validate across the full set.
+
+## API Restructuring (2026-01-09)
+
+The Atlas API was restructured with the following changes:
+
+### Endpoints Removed
+- `/v2/tx/course/student/enroll` - Enrollment without commitment no longer supported
+
+### New Endpoints
+- `/v2/tx/course/student/assignment/commit` - Replaces enroll, commitment is REQUIRED
+
+### Renamed Endpoints
+- `/v2/tx/course/student/assignment/action` → `/v2/tx/course/student/assignment/update`
+
+### Key Design Change
+Students can no longer enroll in a course without committing to an assignment. The new `assignment/commit` endpoint:
+1. Enrolls the student if not already enrolled (mints course-state token)
+2. Creates an active commitment (constructor 1 datum with slt_hash + assignment_info)
+
+This eliminates "enrolled but idle" states and ensures every student enters a course with intent.
 
 ## Directory Structure
 
@@ -18,19 +38,30 @@ public/yaml/transactions/v2/
 ├── cost-registry.json
 ├── endpoint-registry.json
 ├── SESSION-NOTES.md
-├── general/
-│   └── mint-access-token.yaml
+├── global/
+│   └── general/
+│       └── access-token/
+│           └── mint.yaml
+├── instance/
+│   └── owner/
+│       ├── course/
+│       │   └── create.yaml
+│       └── project/
+│           └── create.yaml
 └── course/
-    ├── admin/
-    │   ├── create.yaml
-    │   └── teachers-update.yaml
+    ├── owner/
+    │   └── teachers/
+    │       └── manage.yaml
     ├── teacher/
-    │   ├── modules-manage.yaml
-    │   └── assignments-assess.yaml
+    │   ├── modules/
+    │   │   └── manage.yaml
+    │   └── assignments/
+    │       └── assess.yaml
     └── student/
-        ├── enroll.yaml
-        ├── assignment-update.yaml
-        └── credential-claim.yaml
+        ├── assignment/
+        │   └── commit.yaml        ← Replaces enroll (2026-01-09)
+        ├── assignment-update.yaml  ← Legacy path
+        └── credential-claim.yaml   ← Legacy path
 ```
 
 ## Files Created This Session
@@ -41,23 +72,25 @@ public/yaml/transactions/v2/
 - `cost-registry.json` - Transaction fees, protocol fees, min UTxO by output type
 
 ### Transaction YAMLs
-- `general/mint-access-token.yaml` ✅ (general.mint-access-token)
-- `course/admin/create.yaml` ✅ (course.admin.create)
-- `course/admin/teachers-update.yaml` ✅ (course.admin.teachers-update)
-- `course/teacher/modules-manage.yaml` ✅ (course.teacher.modules-manage)
-- `course/student/enroll.yaml` ✅ (course.student.enroll)
-- `course/teacher/assignments-assess.yaml` ✅ (course.teacher.assignments-assess)
-- `course/student/assignment-update.yaml` ✅ (course.student.assignment-update)
-- `course/student/credential-claim.yaml` ✅ (course.student.credential-claim)
+- `global/general/access-token/mint.yaml` ✅ (global.general.access-token.mint)
+- `instance/owner/course/create.yaml` ✅ (instance.owner.course.create)
+- `instance/owner/project/create.yaml` ✅ (instance.owner.project.create)
+- `course/owner/teachers/manage.yaml` ✅ (course.owner.teachers.manage)
+- `course/teacher/modules/manage.yaml` ✅ (course.teacher.modules.manage)
+- `course/teacher/assignments/assess.yaml` ✅ (course.teacher.assignments.assess)
+- `course/student/assignment/commit.yaml` ✅ (course.student.assignment.commit) - Replaces enroll
+- `course/student/assignment-update.yaml` ✅ (course.student.assignment.update) - legacy path
+- `course/student/credential-claim.yaml` ✅ (course.student.credential.claim) - legacy path
 
 ## Completed Work (2025-12-09)
 
 ### Transaction Documentation ✅
-All 8 transactions documented with MDX pages at `content/docs/protocol/v2/transactions/`:
+7 active transactions documented with MDX pages at `content/docs/protocol/v2/transactions/`:
 - `general/mint-access-token.mdx`
 - `course/admin/create.mdx`, `teachers-update.mdx`
 - `course/teacher/modules-manage.mdx`, `assignments-assess.mdx`
-- `course/student/enroll.mdx`, `assignment-update.mdx`, `credential-claim.mdx`
+- `course/student/assignment-update.mdx`, `credential-claim.mdx`
+- Note: `course/student/assignment/commit.mdx` pending (replaces removed enroll.mdx)
 
 ### Cost API Endpoint ✅
 Created `/api/costs/v2` endpoint serving cost-registry.json:
@@ -84,12 +117,12 @@ All costs verified against actual transactions:
 | CBOR Validator Name | Used In Tx Docs | Existing Doc Path | Status |
 |---------------------|-----------------|-------------------|--------|
 | `index-validator` | mint-access-token | `validators/index-validators/index-scripts.mdx` | ⚠️ Name mismatch |
-| `global-state-v2` | mint-access-token, enroll, credential-claim | `validators/global-state/global-state-v2.mdx` | ✅ Match |
+| `global-state-v2` | mint-access-token, assignment-commit, credential-claim | `validators/global-state/global-state-v2.mdx` | ✅ Match |
 | `local-state-nft-validator` | course-create, teachers-update | `validators/global/local-state-registration.mdx` | ⚠️ Different concept? |
 | `local-state-token-validator` | course-create | - | ❌ Missing doc |
 | `course-governance-validator` | course-create, teachers-update, modules-manage | - | ❌ Missing doc |
 | `module-validator` | modules-manage | `validators/course/module-ref-validator.mdx` | ⚠️ Name mismatch |
-| `course-state-validator` | enroll, assess, update, claim | `validators/course/course-state-v2-validator.mdx` | ⚠️ Name mismatch |
+| `course-state-validator` | assignment-commit, assess, update, claim | `validators/course/course-state-v2-validator.mdx` | ⚠️ Name mismatch |
 
 ### CBOR-Discovered Observers vs Existing Docs
 
@@ -125,7 +158,7 @@ These validators are referenced in V2 transaction docs but lack dedicated docume
 | local-state-token-validator | `...pgzxfx` | Course LocalStateToken + embedded script_ref |
 | course-governance-validator | `...tt05jv` | Teacher list management |
 | module-validator | `...5egxwn` | Holds module tokens with SLT data |
-| course-state-validator | `...88awls` | Holds student course state tokens |
+| course-state-validator | `...3trp4k` | Holds student course state tokens |
 
 ### Policies Identified
 | Name | Policy ID Prefix | Tokens |
@@ -177,13 +210,15 @@ These validators are referenced in V2 transaction docs but lack dedicated docume
   - Redeemer contains full SLT text (hash computed on-chain)
   - No protocol fee to treasury in simple case
 
-### Pattern: Student Enrollment
-- `student-enroll`: Mints course state token, updates global state with enrollment
-  - Spends global state UTxO (not just reference) to update local_state_map
+### Pattern: Assignment Commit (formerly Student Enrollment)
+- `assignment-commit`: Mints course state token (if new), commits to assignment
+  - Spends global state UTxO to update local_state_information map
   - Course state token name = student alias
   - Course state policy is parameterized per course
-  - Optional assignment commit data in mint redeemer
-  - No service fee for enrollment
+  - Commitment is REQUIRED (slt_hash + assignment_info)
+  - Course state datum is always constructor 1 (has active commitment)
+  - No service fee for enrollment/commitment
+  - If already enrolled, spends existing course state and recreates with new commitment
 
 ### Pattern: Assignment Assessment
 - `assignments-assess`: Spend and recreate - no minting
@@ -276,18 +311,20 @@ This appears to be a "script reference" transaction holding validator scripts fo
 
 4. **meta.json files** - Add new page to navigation
 
-### Current Schema Alignment (2025-12-09)
+### Current Schema Alignment (2026-01-09)
 
 | Endpoint | Swagger | MDX | Status |
 |----------|---------|-----|--------|
-| `/tx/v2/general/mint-access-token` | `walletData: string` | ✅ Updated | ✅ |
-| `/tx/v2/admin/course/create` | `teachers[]` | ✅ Match | ✅ |
-| `/tx/v2/admin/course/teachers/update` | `teachersToAdd/Remove[]` | ✅ Match | ✅ |
-| `/tx/v2/teacher/course/modules/manage` | `modulesToMint/Update/Burn` | ✅ Match | ✅ |
-| `/tx/v2/teacher/course/assignments/assess` | `assignmentDecisions[]` | ✅ Match | ✅ |
-| `/tx/v2/student/course/enroll` | `commitData` (optional) | ✅ Match | ✅ |
-| `/tx/v2/student/course/assignment/update` | `maybeNewSltHash` | ✅ Updated | ✅ |
-| `/tx/v2/student/course/credential/claim` | `alias, courseId` | ✅ Match | ✅ |
+| `/v2/tx/global/general/access-token/mint` | `alias, initiator_data` | Pending | ⚠️ |
+| `/v2/tx/instance/owner/course/create` | `alias, teachers[]` | Pending | ⚠️ |
+| `/v2/tx/instance/owner/project/create` | `alias, managers[], course_prereqs, deposit_value` | Pending | ⚠️ |
+| `/v2/tx/course/owner/teachers/manage` | `alias, course_id, teachers_to_add/remove[]` | Pending | ⚠️ |
+| `/v2/tx/course/teacher/modules/manage` | `alias, course_id, modules_to_mint/update/burn` | Pending | ⚠️ |
+| `/v2/tx/course/teacher/assignments/assess` | `alias, course_id, assignment_decisions[]` | Pending | ⚠️ |
+| `/v2/tx/course/student/assignment/commit` | `alias, course_id, slt_hash, assignment_info` | **NEW** | ✅ YAML |
+| `/v2/tx/course/student/assignment/update` | `alias, course_id, assignment_info` | Pending | ⚠️ |
+| `/v2/tx/course/student/credential/claim` | `alias, course_id` | Pending | ⚠️ |
+| ~~`/v2/tx/course/student/enroll`~~ | REMOVED | DEPRECATED | ❌ |
 
 ## Commands to Check State
 

@@ -1,20 +1,20 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-01-08",
+  "version": "1.3.0",
+  "lastUpdated": "2026-01-09",
   "docsPath": "content/docs/protocol/v2/transactions",
   "summary": {
-    "documented": 8,
-    "missing": 9,
-    "path-mismatch": 7,
-    "needs-review": 8,
+    "documented": 9,
+    "missing": 7,
+    "path-mismatch": 0,
+    "needs-review": 9,
     "reviewed": 0,
     "verified": 0
   },
   "notes": [
-    "Initial audit based on existing MDX files",
-    "Most documented transactions have path mismatches (legacy structure)",
-    "All project transactions are missing documentation",
-    "Content may be outdated - API endpoints and field names need verification"
+    "2026-01-09: Removed deprecated /enroll endpoints (course and project). Enrollment now via /assignment/commit and /task/commit.",
+    "2026-01-09: Migrated all non-project MDX files to correct paths matching API URL structure.",
+    "2026-01-09: Created missing MDX: assignment/commit.mdx, instance/owner/project/create.mdx",
+    "All project transactions are missing documentation (awaiting CBOR analysis)"
   ],
   "transactions": [
     {
@@ -23,15 +23,12 @@
       "system": "global",
       "role": "general",
       "expectedPath": "global/general/access-token/mint.mdx",
-      "currentPath": "general/mint-access-token.mdx",
-      "status": "path-mismatch",
-      "lastReviewed": null,
+      "currentPath": "global/general/access-token/mint.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
       "yamlSource": "public/yaml/transactions/v2/global/general/access-token/mint.yaml",
-      "issues": [
-        "Path mismatch: general/ vs global/general/access-token/",
-        "Filename mismatch: mint-access-token vs mint"
-      ],
-      "notes": "Entry point transaction. 5 ADA protocol fee."
+      "issues": [],
+      "notes": "Entry point transaction. 5 ADA protocol fee. Path migrated 2026-01-09."
     },
     {
       "id": "instance.owner.course.create",
@@ -39,15 +36,12 @@
       "system": "instance",
       "role": "owner",
       "expectedPath": "instance/owner/course/create.mdx",
-      "currentPath": "course/admin/create.mdx",
-      "status": "path-mismatch",
-      "lastReviewed": null,
+      "currentPath": "instance/owner/course/create.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
       "yamlSource": "public/yaml/transactions/v2/instance/owner/course/create.yaml",
-      "issues": [
-        "Path mismatch: course/admin/ vs instance/owner/course/",
-        "Role mismatch: admin vs owner"
-      ],
-      "notes": "Creates LocalStateNFT, LocalStateToken, governance. 25 ADA fee."
+      "issues": [],
+      "notes": "Creates LocalStateNFT, LocalStateToken, governance. 100+10×N ADA fee. Path migrated 2026-01-09."
     },
     {
       "id": "instance.owner.project.create",
@@ -55,14 +49,12 @@
       "system": "instance",
       "role": "owner",
       "expectedPath": "instance/owner/project/create.mdx",
-      "currentPath": null,
-      "status": "missing",
-      "lastReviewed": null,
+      "currentPath": "instance/owner/project/create.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
       "yamlSource": "public/yaml/transactions/v2/instance/owner/project/create.yaml",
-      "issues": [
-        "No documentation exists"
-      ],
-      "notes": "Complex: 6 mints, 2 observers. 25 ADA fee."
+      "issues": [],
+      "notes": "Complex: 6 mints, 2 observers, stake registration. 100+10×N ADA fee. MDX created 2026-01-09."
     },
     {
       "id": "course.owner.teachers.manage",
@@ -70,15 +62,12 @@
       "system": "course",
       "role": "owner",
       "expectedPath": "course/owner/teachers/manage.mdx",
-      "currentPath": "course/admin/teachers-update.mdx",
-      "status": "path-mismatch",
-      "lastReviewed": null,
+      "currentPath": "course/owner/teachers/manage.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
       "yamlSource": "public/yaml/transactions/v2/course/owner/teachers/manage.yaml",
-      "issues": [
-        "Path mismatch: course/admin/ vs course/owner/teachers/",
-        "Filename mismatch: teachers-update vs manage"
-      ],
-      "notes": "Spend and recreate pattern. 5 ADA fee."
+      "issues": [],
+      "notes": "Spend and recreate pattern. 10 ADA fee. Path migrated 2026-01-09."
     },
     {
       "id": "course.teacher.modules.manage",
@@ -86,14 +75,12 @@
       "system": "course",
       "role": "teacher",
       "expectedPath": "course/teacher/modules/manage.mdx",
-      "currentPath": "course/teacher/modules-manage.mdx",
-      "status": "path-mismatch",
-      "lastReviewed": null,
+      "currentPath": "course/teacher/modules/manage.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
       "yamlSource": "public/yaml/transactions/v2/course/teacher/modules/manage.yaml",
-      "issues": [
-        "Filename mismatch: modules-manage vs modules/manage"
-      ],
-      "notes": "Mint/update/burn modules. No protocol fee."
+      "issues": [],
+      "notes": "Mint/update/burn modules. No protocol fee. Path migrated 2026-01-09."
     },
     {
       "id": "course.teacher.assignments.assess",
@@ -101,46 +88,38 @@
       "system": "course",
       "role": "teacher",
       "expectedPath": "course/teacher/assignments/assess.mdx",
-      "currentPath": "course/teacher/assignments-assess.mdx",
-      "status": "path-mismatch",
-      "lastReviewed": null,
-      "yamlSource": "public/yaml/transactions/v2/course/teacher/assignments/assess.yaml",
-      "issues": [
-        "Filename mismatch: assignments-assess vs assignments/assess"
-      ],
-      "notes": "Accept or refuse submissions. Batching supported."
-    },
-    {
-      "id": "course.student.enroll",
-      "endpoint": "/v2/tx/course/student/enroll",
-      "system": "course",
-      "role": "student",
-      "expectedPath": "course/student/enroll.mdx",
-      "currentPath": "course/student/enroll.mdx",
+      "currentPath": "course/teacher/assignments/assess.mdx",
       "status": "needs-review",
-      "lastReviewed": null,
-      "yamlSource": "public/yaml/transactions/v2/course/student/enroll.yaml",
-      "issues": [
-        "API endpoint in MDX uses old format (/tx/v2/student/course/enroll)",
-        "Request body field names may be outdated"
-      ],
-      "notes": "Path is correct. Content needs review against current YAML."
+      "lastReviewed": "2026-01-09",
+      "yamlSource": "public/yaml/transactions/v2/course/teacher/assignments/assess.yaml",
+      "issues": [],
+      "notes": "Accept or refuse submissions. Batching supported. Path migrated 2026-01-09."
     },
     {
-      "id": "course.student.assignment.action",
-      "endpoint": "/v2/tx/course/student/assignment/action",
+      "id": "course.student.assignment.commit",
+      "endpoint": "/v2/tx/course/student/assignment/commit",
       "system": "course",
       "role": "student",
-      "expectedPath": "course/student/assignment/action.mdx",
-      "currentPath": "course/student/assignment-update.mdx",
-      "status": "path-mismatch",
-      "lastReviewed": null,
-      "yamlSource": null,
-      "issues": [
-        "Path mismatch: assignment-update vs assignment/action",
-        "No YAML source yet (not analyzed)"
-      ],
-      "notes": "Student updates submission. YAML analysis pending."
+      "expectedPath": "course/student/assignment/commit.mdx",
+      "currentPath": "course/student/assignment/commit.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
+      "yamlSource": "public/yaml/transactions/v2/course/student/assignment/commit.yaml",
+      "issues": [],
+      "notes": "Replaces enroll endpoint. Commitment is required. MDX created 2026-01-09."
+    },
+    {
+      "id": "course.student.assignment.update",
+      "endpoint": "/v2/tx/course/student/assignment/update",
+      "system": "course",
+      "role": "student",
+      "expectedPath": "course/student/assignment/update.mdx",
+      "currentPath": "course/student/assignment/update.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
+      "yamlSource": "public/yaml/transactions/v2/course/student/assignment/update.yaml",
+      "issues": [],
+      "notes": "For updating assignment_info on existing commitment. Path migrated 2026-01-09."
     },
     {
       "id": "course.student.credential.claim",
@@ -148,14 +127,12 @@
       "system": "course",
       "role": "student",
       "expectedPath": "course/student/credential/claim.mdx",
-      "currentPath": "course/student/credential-claim.mdx",
-      "status": "path-mismatch",
-      "lastReviewed": null,
+      "currentPath": "course/student/credential/claim.mdx",
+      "status": "needs-review",
+      "lastReviewed": "2026-01-09",
       "yamlSource": "public/yaml/transactions/v2/course/student/credential/claim.yaml",
-      "issues": [
-        "Filename mismatch: credential-claim vs credential/claim"
-      ],
-      "notes": "Burns course-state token, stores credential hash."
+      "issues": [],
+      "notes": "Burns course-state token, stores credential hash. Student gains ~1.03 ADA. Path migrated 2026-01-09."
     },
     {
       "id": "project.owner.managers.manage",
@@ -222,22 +199,6 @@
       "notes": "Task assessment. Similar to assignments-assess."
     },
     {
-      "id": "project.contributor.enroll",
-      "endpoint": "/v2/tx/project/contributor/enroll",
-      "system": "project",
-      "role": "contributor",
-      "expectedPath": "project/contributor/enroll.mdx",
-      "currentPath": null,
-      "status": "missing",
-      "lastReviewed": null,
-      "yamlSource": null,
-      "issues": [
-        "No documentation exists",
-        "No YAML source yet"
-      ],
-      "notes": "Project enrollment. Similar to course enroll."
-    },
-    {
       "id": "project.contributor.task.commit",
       "endpoint": "/v2/tx/project/contributor/task/commit",
       "system": "project",
@@ -251,7 +212,7 @@
         "No documentation exists",
         "No YAML source yet"
       ],
-      "notes": "Task commitment with deposit."
+      "notes": "Replaces /project/contributor/enroll. Handles enrollment + task commitment (commitment required)."
     },
     {
       "id": "project.contributor.task.action",

@@ -1,0 +1,189 @@
+# V2 Transaction: Course Student Assignment Update
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/course/student/assignment/update
+
+name: CourseStudentAssignmentUpdateV2
+id: course.student.assignment.update
+
+metadata:
+  role: "student"
+  system: "course"
+  description: "Student updates their assignment submission (assignment_info) while keeping the same SLT hash commitment"
+  api_endpoint: "/v2/tx/course/student/assignment/update"
+
+request_body:
+  description: "UpdateAssignmentTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Student's access token alias"
+      example: "student_001"
+    assignment_info:
+      type: string
+      required: true
+      description: "Updated assignment submission information"
+      example: "Some new assignment information."
+    course_id:
+      type: string
+      required: true
+      description: "Course NFT policy ID (56 char hex)"
+      example: "e276a1f2729f06036299998f046765ffdde7ad8fd47f689690fbe2b1"
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 269587
+  txFeeAda: "~0.27 ADA"
+  protocolFee: 0
+  protocolFeeNote: "No service fee for assignment updates"
+  minUtxo:
+    course-state-output: 2000000
+    user-token-output: 1172320
+  executionUnits:
+    spend_course_state:
+      mem: 148069
+      steps: 55154815
+  collateral: 404381
+  walletDelta:
+    lovelace: 330000
+    ada: "~0.33 ADA"
+    breakdown: "txFee (~0.27) + minUtxoDelta (~0.06)"
+    note: "MinUTxO increases when datum grows (longer assignment_info = more lovelace locked)"
+
+inputs:
+  - id: user-access-token
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1172320 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "Student's access token UTxO - proves identity"
+
+  - id: course-state-input
+    type: script
+    validator: course-state-validator
+    address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
+    value:
+      - "lovelace"
+      - "1 course-state-policy.{alias}"
+    datum:
+      type: inline
+      constructor: 1
+      description: "Active commitment state (before update)"
+      fields:
+        - slt_hash: "{32-byte hash of SLT list}"
+        - assignment_info: "{old_assignment_info}"
+        - completed_modules: "[]"
+    redeemer:
+      tag: "Spend"
+      index: 1
+      action: "StudentUpdate"
+      data:
+        constructor: 1
+        fields:
+          - slt_hash: "{32-byte hash - must match existing commitment}"
+          - assignment_info: "{new_assignment_info}"
+      example: "{constructor:1, fields:[{bytes:slt_hash},{bytes:assignment_info_hex}]}"
+    description: "Course state UTxO being updated"
+
+  - id: wallet-input
+    type: wallet
+    address: "{user_wallet}"
+    description: "Additional wallet UTxO for fees"
+
+reference_inputs:
+  - id: course-validator-ref
+    utxo: "0d1344689b1a2d2eafad032d9b5e36f899092751274b659cf8600a978bcbe10e#2"
+    description: "Script reference for course-state-validator (or course LocalStateToken with embedded script_ref)"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1172320 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "Student's access token returned to wallet"
+
+  - id: course-state-output
+    type: script
+    validator: course-state-validator
+    address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
+    value:
+      - "~2000000 lovelace"
+      - "1 course-state-policy.{alias}"
+    datum:
+      type: inline
+      constructor: 1
+      description: "Active commitment state (after update)"
+      fields:
+        - slt_hash: "{unchanged - same 32-byte hash}"
+        - assignment_info: "{new_assignment_info}"
+        - completed_modules: "[]"
+      example:
+        constructor: 1
+        fields:
+          - slt_hash: "10dde6f0936b3dba3339356838e59b1af0f511a777a8701c49d941351b3abcf0"
+          - assignment_info: "536f6d65206e65772061737369676e6d656e7420696e666f726d6174696f6e2e"
+          - assignment_info_decoded: "Some new assignment information."
+          - completed_modules: "[]"
+    description: "Updated course state with new assignment_info"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to student wallet (may be multiple UTxOs)"
+
+mints: null
+
+withdraws: null
+
+design_notes:
+  spend_and_recreate: |
+    This is a "spend and recreate" pattern - no minting occurs.
+    The course state UTxO is spent and recreated with updated assignment_info.
+
+  slt_hash_unchanged: |
+    The SLT hash CANNOT be changed via update. The redeemer must include
+    the same slt_hash that's in the existing datum. To commit to a different
+    module, use assignment/commit instead.
+
+  redeemer_structure: |
+    Redeemer is constructor 1 (StudentUpdate action):
+    - fields[0]: slt_hash bytes (must match existing commitment)
+    - fields[1]: assignment_info bytes (new value)
+
+    This is NOT nested - it's a flat structure with 2 fields.
+
+  datum_persistence: |
+    The datum stays as constructor 1 (active commitment).
+    Only the assignment_info field changes.
+    completed_modules list is preserved (empty in this example).
+
+  no_protocol_fee: |
+    No service fee is charged for assignment updates.
+    Student only pays network transaction fee.
+
+  identity_verification: |
+    Student's u-prefixed access token must be included in the transaction
+    to prove ownership of the course state being updated.
+
+registry:
+  validators:
+    course-state-validator:
+      address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
+  policies:
+    index-policy:
+      policyId: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
+    course-state-policy:
+      policyId: "{parameterized per course}"
+      examplePolicyId: "c529f25e9bf856c63c46c69755de140320d11e55ea84bcf5125c7e84"
+      note: "Each course has its own course-state-policy"

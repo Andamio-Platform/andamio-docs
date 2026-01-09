@@ -12,7 +12,7 @@
   ],
   "treasuries": {
     "protocol-treasury": {
-      "address": "addr_test1qqasyh8kdh742htuzy5rzwgn0hewg2d3m32gle2h4w38kwgqfz280z9xhpx7fv4p7a8y7xpp2nwl9p7k39e28z7jsmfqnvhuml",
+      "address": "addr_test1qz02cdjmf04d9dc2dk3s50y98zkm99yjgt7hyygykdfh3347uqpl75w90lk96ht83c2t4w7zrwrmr7z924q822svc3hstlm4js",
       "description": "Receives fees from access token minting"
     },
     "instance-treasury": {
@@ -27,13 +27,18 @@
       "recipient": "protocol-treasury"
     },
     "course-create": {
-      "amount": 25000000,
-      "ada": "25 ADA",
-      "recipient": "instance-treasury"
+      "formula": "100 ADA base + 10 ADA × number of teachers",
+      "example": { "1-teacher": "110 ADA", "3-teachers": "130 ADA" },
+      "recipient": "instance-treasury",
+      "upcoming": {
+        "note": "First teacher will be free in upcoming update",
+        "newFormula": "100 ADA base + 10 ADA × (teachers - 1)",
+        "newExample": { "1-teacher": "100 ADA", "3-teachers": "120 ADA" }
+      }
     },
     "course-teachers-update": {
-      "amount": 5000000,
-      "ada": "5 ADA",
+      "amount": 10000000,
+      "ada": "10 ADA",
       "recipient": "instance-treasury"
     },
     "course-modules-manage": {
@@ -65,6 +70,16 @@
       "ada": "0 ADA",
       "recipient": null,
       "note": "No service fee for credential claims"
+    },
+    "project-create": {
+      "formula": "100 ADA base + 10 ADA × number of managers",
+      "example": { "1-manager": "110 ADA", "2-managers": "120 ADA" },
+      "recipient": "instance-treasury",
+      "upcoming": {
+        "note": "First manager will be free in upcoming update",
+        "newFormula": "100 ADA base + 10 ADA × (managers - 1)",
+        "newExample": { "1-manager": "100 ADA", "2-managers": "110 ADA" }
+      }
     }
   },
   "transactionCosts": {
@@ -103,51 +118,51 @@
       "collateral": 535863
     },
     "course.admin.create": {
-      "txFee": 545540,
-      "txFeeAda": "~0.55 ADA",
-      "serviceFee": 25000000,
-      "serviceFeeAda": "25 ADA",
+      "txFee": 527195,
+      "txFeeAda": "~0.53 ADA",
+      "serviceFeeFormula": "100 ADA base + 10 ADA × teachers",
+      "serviceFeeExample": "1 teacher = 110 ADA",
       "serviceFeeRecipient": "instance-treasury",
       "utxoDeposits": {
         "local-state-nft-validator": 1236970,
-        "local-state-token-validator": 17127940,
-        "course-governance-validator": 1370580,
-        "total": 19735490,
-        "notes": "LocalStateToken includes embedded script_ref (~17 ADA)"
+        "local-state-token-validator": 16584880,
+        "course-governance-validator": 1331790,
+        "total": 19153640,
+        "notes": "LocalStateToken includes embedded script_ref (~16.5 ADA)"
       },
       "totalCost": {
-        "lovelace": 45281030,
-        "ada": "~45.3 ADA",
-        "breakdown": "txFee (0.55) + serviceFee (25.0) + utxoDeposits (19.74)"
+        "formula": "txFee + serviceFee + utxoDeposits",
+        "example": "1 teacher: ~0.53 + 110 + 19.15 = ~130 ADA",
+        "note": "Total scales with number of teachers (+10 ADA each)"
       },
       "executionUnits": {
-        "mint-0": { "mem": 191933, "steps": 63639216 },
-        "mint-1": { "mem": 37605, "steps": 15243857 },
-        "mint-2": { "mem": 262136, "steps": 80738200 },
-        "reward": { "mem": 275167, "steps": 88606345 }
+        "mint_0_local_state_nft": { "mem": 27223, "steps": 10486084 },
+        "mint_1_local_state_token": { "mem": 140680, "steps": 50525266 },
+        "mint_2_governance": { "mem": 256248, "steps": 79073308 },
+        "reward_0_course_observer": { "mem": 252894, "steps": 81944948 }
       },
-      "collateral": 818310
+      "collateral": 790793
     },
     "course.admin.teachers-update": {
-      "txFee": 303720,
+      "txFee": 300669,
       "txFeeAda": "~0.30 ADA",
-      "serviceFee": 5000000,
-      "serviceFeeAda": "5 ADA",
+      "serviceFee": 10000000,
+      "serviceFeeAda": "10 ADA",
       "serviceFeeRecipient": "instance-treasury",
       "utxoDeposits": {
         "total": 0,
         "notes": "Spend-and-recreate pattern - no new UTxOs"
       },
       "totalCost": {
-        "lovelace": 5303720,
-        "ada": "~5.3 ADA",
-        "breakdown": "txFee (0.30) + serviceFee (5.0)"
+        "lovelace": 10300669,
+        "ada": "~10.3 ADA",
+        "breakdown": "txFee (0.30) + serviceFee (10.0)"
       },
       "executionUnits": {
-        "spend-0": { "mem": 320174, "steps": 106547053 },
-        "spend-1": { "mem": 280091, "steps": 95872261 }
+        "spend_0_local_state_nft": { "mem": 327793, "steps": 104422332 },
+        "spend_1_governance": { "mem": 266153, "steps": 88243753 }
       },
-      "collateral": 455580
+      "collateral": 451004
     },
     "course.teacher.modules-manage": {
       "txFee": 271720,
@@ -221,6 +236,42 @@
         "verified": true
       },
       "notes": "NEGATIVE = student gains ADA. Burned course state UTxO releases enrollment deposit."
+    },
+    "instance.owner.project.create": {
+      "txFee": 1298574,
+      "txFeeAda": "~1.30 ADA",
+      "serviceFeeFormula": "100 ADA base + 10 ADA × managers",
+      "serviceFeeExample": "2 managers = 120 ADA",
+      "serviceFeeRecipient": "instance-treasury",
+      "stakeRegistration": 2000000,
+      "stakeRegistrationAda": "2 ADA",
+      "utxoDeposits": {
+        "local-state-nft-validator": 1236970,
+        "local-state-token-validator": 15447040,
+        "governance-validator": 1357650,
+        "treasury-script-validator": 20162180,
+        "project-state-validator": 1439540,
+        "treasury-validator": "variable (deposit_value + minUtxo)",
+        "total": "~40 ADA + deposit_value",
+        "notes": "LocalStateToken includes embedded script_ref (~15 ADA), TreasuryScript includes embedded script_ref (~20 ADA)"
+      },
+      "totalCost": {
+        "formula": "txFee + serviceFee + stakeReg + utxoDeposits + deposit_value",
+        "example": "2 managers: ~1.3 + 120 + 2 + 40 + deposit = ~163 ADA + deposit",
+        "note": "Total scales with number of managers (+10 ADA each)"
+      },
+      "executionUnits": {
+        "mint_0_treasury_script": { "mem": 587159, "steps": 188113819 },
+        "mint_1_project_state": { "mem": 223828, "steps": 74368575 },
+        "mint_2_treasury_token": { "mem": 145406, "steps": 51977069 },
+        "mint_3_governance": { "mem": 875713, "steps": 262559223 },
+        "mint_4_local_state_token": { "mem": 358218, "steps": 109781507 },
+        "mint_5_local_state_nft": { "mem": 65229, "steps": 27863007 },
+        "cert_0": { "mem": 20513, "steps": 5189996 },
+        "withdraw_0_project_observer": { "mem": 409830, "steps": 129547187 },
+        "withdraw_1_prereq_observer": { "mem": 528908, "steps": 176027517 }
+      },
+      "notes": "Complex transaction with 6 mints, 2 observers, stake registration. Includes treasury system with embedded script references. Service fee uses same formula as course-create (100 + 10×participants)."
     }
   },
   "minUtxoByType": {

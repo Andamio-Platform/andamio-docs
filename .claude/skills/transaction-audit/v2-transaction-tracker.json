@@ -1,14 +1,17 @@
 {
-  "version": "1.0.0",
-  "lastUpdated": "2026-01-08",
+  "version": "1.3.0",
+  "lastUpdated": "2026-01-09",
+  "lastSwaggerSync": "2026-01-09",
   "swaggerSource": "https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json",
-  "totalTransactions": 17,
+  "totalTransactions": 16,
   "summary": {
-    "pending-review": 8,
-    "not-analyzed": 9,
+    "pending-review": 0,
+    "analyzed": 9,
+    "needs-reanalysis": 0,
+    "not-analyzed": 7,
     "verified": 0
   },
-  "reviewNote": "8 transactions analyzed from CBOR but API is being updated. Re-verify against live API before marking as verified.",
+  "reviewNote": "2026-01-09: Removed deprecated /enroll endpoints from tracker. Enrollment now handled by /assignment/commit (course) and /task/commit (project).",
   "systems": {
     "global": {
       "description": "Global system transactions (entry points)",
@@ -19,12 +22,12 @@
       "transactions": 2
     },
     "course": {
-      "description": "Course management system",
-      "transactions": 6
+      "description": "Course management system (excludes deprecated enroll)",
+      "transactions": 5
     },
     "project": {
-      "description": "Project management system",
-      "transactions": 8
+      "description": "Project management system (excludes deprecated enroll)",
+      "transactions": 7
     }
   },
   "transactions": [
@@ -35,8 +38,8 @@
       "system": "global",
       "role": "general",
       "description": "Mint access tokens for protocol participation",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
         "yaml": "public/yaml/transactions/v2/global/general/access-token/mint.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/global/general/access-token-mint.ts",
@@ -51,14 +54,14 @@
       "system": "instance",
       "role": "owner",
       "description": "Create a new course",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
         "yaml": "public/yaml/transactions/v2/instance/owner/course/create.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/instance/course-create.ts",
         "mdx": "content/docs/protocol/v2/transactions/instance/owner/course/create.mdx"
       },
-      "notes": "Creates LocalStateNFT, LocalStateToken, and governance token. courseId = LocalStateNFT policy ID. 25 ADA fee to instance-treasury."
+      "notes": "Creates LocalStateNFT, LocalStateToken, and governance token. courseId = LocalStateNFT policy ID. Fee formula: 100 ADA base + 10 ADA per teacher."
     },
     {
       "id": "instance.owner.project.create",
@@ -67,14 +70,14 @@
       "system": "instance",
       "role": "owner",
       "description": "Create a new project",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
         "yaml": "public/yaml/transactions/v2/instance/owner/project/create.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/instance/project-create.ts",
         "mdx": "content/docs/protocol/v2/transactions/instance/owner/project/create.mdx"
       },
-      "notes": "Complex: 6 mints, 2 observers, stake registration. Creates LocalStateNFT (projectId = policy ID), LocalStateToken, governance, treasury-script, project-state, treasury. Reuses governance-validator/policy from courses. course_prereqs validates required module completion. 25 ADA fee to instance-treasury."
+      "notes": "Complex: 6 mints, 2 observers, stake registration. Creates LocalStateNFT (projectId = policy ID), LocalStateToken, governance, treasury-script, project-state, treasury. Reuses governance-validator/policy from courses. course_prereqs validates required module completion. Fee formula: 100 ADA base + 10 ADA per manager."
     },
     {
       "id": "course.owner.teachers.manage",
@@ -83,14 +86,14 @@
       "system": "course",
       "role": "owner",
       "description": "Add or remove teachers from a course",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
         "yaml": "public/yaml/transactions/v2/course/owner/teachers/manage.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/owner/teachers-manage.ts",
         "mdx": "content/docs/protocol/v2/transactions/course/owner/teachers/manage.mdx"
       },
-      "notes": "Spend and recreate pattern. Two script inputs spent (LocalStateNFT, governance). No minting. 5 ADA fee to instance-treasury."
+      "notes": "Spend and recreate pattern. Two script inputs spent (LocalStateNFT, governance). No minting. 10 ADA fee to instance-treasury."
     },
     {
       "id": "course.teacher.modules.manage",
@@ -99,8 +102,8 @@
       "system": "course",
       "role": "teacher",
       "description": "Mint, update, or burn course modules",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
         "yaml": "public/yaml/transactions/v2/course/teacher/modules/manage.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/teacher/modules-manage.ts",
@@ -115,8 +118,8 @@
       "system": "course",
       "role": "teacher",
       "description": "Assess student assignment submissions",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
         "yaml": "public/yaml/transactions/v2/course/teacher/assignments/assess.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/teacher/assignments-assess.ts",
@@ -129,40 +132,40 @@
       "notes": "Spend and recreate pattern. On accept: constructor 1 -> constructor 0, slt_hash moves to completed_modules. Redeemer constructor 2 with teacher_alias. Can batch multiple decisions. No protocol fee."
     },
     {
-      "id": "course.student.enroll",
-      "endpoint": "/v2/tx/course/student/enroll",
+      "id": "course.student.assignment.commit",
+      "endpoint": "/v2/tx/course/student/assignment/commit",
       "method": "POST",
       "system": "course",
       "role": "student",
-      "description": "Enroll in a course",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "description": "Enroll in a course and commit to an assignment",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
-        "yaml": "public/yaml/transactions/v2/course/student/enroll.yaml",
-        "ts": "packages/andamio-transactions/src/definitions/v2/course/student/enroll.ts",
-        "mdx": "content/docs/protocol/v2/transactions/course/student/enroll.mdx"
-      },
-      "notes": "Spends global state + mints course-state token. Course-state-policy is parameterized per course. Datum constructor 0 = no active commitment, constructor 1 = has active commitment. No protocol fee. UX will always include commit_data for first assignment during enrollment."
-    },
-    {
-      "id": "course.student.assignment.action",
-      "endpoint": "/v2/tx/course/student/assignment/action",
-      "method": "POST",
-      "system": "course",
-      "role": "student",
-      "description": "Commit to or update an assignment",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
-      "files": {
-        "yaml": null,
+        "yaml": "public/yaml/transactions/v2/course/student/assignment/commit.yaml",
         "ts": null,
         "mdx": null
       },
+      "notes": "Replaces old enroll endpoint. Commitment is now REQUIRED - no more 'enroll without commitment'. Mints course-state token if not enrolled, spends global state to add enrollment. Course-state datum is always constructor 1 (has commitment)."
+    },
+    {
+      "id": "course.student.assignment.update",
+      "endpoint": "/v2/tx/course/student/assignment/update",
+      "method": "POST",
+      "system": "course",
+      "role": "student",
+      "description": "Update an existing assignment submission",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
+      "files": {
+        "yaml": "public/yaml/transactions/v2/course/student/assignment/update.yaml",
+        "ts": null,
+        "mdx": "content/docs/protocol/v2/transactions/course/student/assignment/update.mdx"
+      },
       "legacyFiles": {
         "yaml": "public/yaml/transactions/v2/course/student/assignment-update.yaml",
-        "note": "Path mismatch - needs migration to course/student/assignment/action.yaml"
+        "note": "Legacy path - migrated to assignment/update.yaml"
       },
-      "notes": "Student spends and recreates course state UTxO"
+      "notes": "Spend-and-recreate pattern. Student updates assignment_info while keeping same SLT hash commitment. No protocol fee. Redeemer constructor 1 with slt_hash + new assignment_info."
     },
     {
       "id": "course.student.credential.claim",
@@ -171,8 +174,8 @@
       "system": "course",
       "role": "student",
       "description": "Claim credential by burning course state",
-      "status": "pending-review",
-      "lastAnalyzed": "2026-01-08",
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
         "yaml": "public/yaml/transactions/v2/course/student/credential/claim.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/student/credential-claim.ts",
@@ -249,28 +252,12 @@
       "notes": "Similar pattern to assignments-assess"
     },
     {
-      "id": "project.contributor.enroll",
-      "endpoint": "/v2/tx/project/contributor/enroll",
-      "method": "POST",
-      "system": "project",
-      "role": "contributor",
-      "description": "Join a project as contributor",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
-      "files": {
-        "yaml": null,
-        "ts": null,
-        "mdx": null
-      },
-      "notes": "Similar pattern to course enrollment"
-    },
-    {
       "id": "project.contributor.task.commit",
       "endpoint": "/v2/tx/project/contributor/task/commit",
       "method": "POST",
       "system": "project",
       "role": "contributor",
-      "description": "Commit to a task",
+      "description": "Enroll in project and commit to a task",
       "status": "not-analyzed",
       "lastAnalyzed": null,
       "files": {
@@ -278,7 +265,7 @@
         "ts": null,
         "mdx": null
       },
-      "notes": "Locks deposit, reserves task"
+      "notes": "Replaces old enroll endpoint. Like course/assignment/commit, this now handles both enrollment AND task commitment. Commitment is REQUIRED - no separate enroll step."
     },
     {
       "id": "project.contributor.task.action",

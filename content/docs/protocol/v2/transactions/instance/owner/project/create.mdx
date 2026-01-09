@@ -1,0 +1,194 @@
+---
+title: "Project Create"
+description: "Create a new project with treasury, managers, and course prerequisites"
+tx_file: "instance/owner/project/create.yaml"
+---
+
+# Instance Owner Project Create
+
+Create a new project with a treasury system, managers, and optional course prerequisites. This is the most complex transaction in the Andamio protocol, involving 6 minting operations, 2 observers, and stake registration.
+
+## API Endpoint
+
+```
+POST /v2/tx/instance/owner/project/create
+```
+
+## Cost Summary
+
+| Cost Type | Amount | Notes |
+|-----------|--------|-------|
+| Transaction Fee | ~1.30 ADA | Network fee (high due to complexity) |
+| Protocol Fee | 100 + 10×managers ADA | 2 managers = 120 ADA |
+| Stake Registration | 2 ADA | One-time deposit |
+| UTxO Deposits | ~40 ADA | Includes embedded script refs |
+| Treasury Deposit | \{deposit_value\} | User-specified initial funds |
+| **Total (2 managers, 200 ADA deposit)** | ~363 ADA | Formula: ~1.3 + 120 + 2 + 40 + 200 |
+
+**Upcoming Change**: First manager will be free (100 ADA base + 10×(managers-1))
+
+## Request Body
+
+```json
+{
+  "alias": "james",
+  "managers": ["james", "nelsonksh"],
+  "course_prereqs": [
+    ["7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841",
+     ["356be366236f712c2397b3c151ae8ed4656e2574aabfb637ef44ae8345ce9b9a"]]
+  ],
+  "deposit_value": [["lovelace", 200000000]]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | string | Yes | Owner's access token alias |
+| `managers` | string[] | Yes | List of manager aliases |
+| `course_prereqs` | [[course_id, [slt_hash]]] | Yes | Course prerequisites (empty = none) |
+| `deposit_value` | [[asset_unit, amount]] | Yes | Initial treasury deposit (empty = none) |
+
+## Response
+
+```json
+{
+  "project_id": "f4e603c8b5baef8874f525aff364a1205e0627cee968a291e2689313",
+  "unsigned_tx": "84a800..."
+}
+```
+
+The `project_id` is the LocalStateNFT minting policy ID - this IS the project identifier.
+
+## Transaction Pattern
+
+**Complex Mint Pattern** - This transaction creates the entire project infrastructure in one atomic operation.
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    PROJECT CREATE TRANSACTION                               │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  INPUTS                              OUTPUTS                                │
+│  ──────                              ───────                                │
+│  ┌─────────────────┐                ┌─────────────────┐                    │
+│  │ Wallet          │                │ LocalStateNFT   │ → Owner identity   │
+│  │ (u-token + ADA) │                ├─────────────────┤                    │
+│  └─────────────────┘                │ LocalStateToken │ → Project validator│
+│                                     ├─────────────────┤                    │
+│  MINTS (6 total)                    │ Governance      │ → Manager list     │
+│  ──────────────                     ├─────────────────┤                    │
+│  1. TreasuryScriptV2                │ TreasuryScript  │ → Treasury ref     │
+│  2. ProjectState token              ├─────────────────┤                    │
+│  3. Treasury token                  │ ProjectState    │ → Blacklist/meta   │
+│  4. Governance token                ├─────────────────┤                    │
+│  5. LocalStateToken                 │ Treasury        │ → Holds funds      │
+│  6. LocalStateNFT                   ├─────────────────┤                    │
+│                                     │ Instance Fee    │ → 120 ADA (2 mgrs) │
+│  OBSERVERS (2)                      ├─────────────────┤                    │
+│  ────────────                       │ User Wallet     │ → u-token + change │
+│  • project-observer                 └─────────────────┘                    │
+│  • project-prereq-observer                                                 │
+│                                                                             │
+│  CERTS (1)                                                                  │
+│  ─────────                                                                  │
+│  • StakeRegistration (2 ADA deposit)                                       │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+## Outputs (7)
+
+| Output | Validator | Value | Description |
+|--------|-----------|-------|-------------|
+| LocalStateNFT | local-state-nft-validator | ~1.24 ADA + NFT | Owner alias datum |
+| LocalStateToken | local-state-token-validator | ~15.4 ADA + token | Has embedded script_ref |
+| Governance | governance-validator | ~1.36 ADA + token | Manager list datum |
+| TreasuryScript | treasury-script-validator | ~20.2 ADA + token | Has embedded script_ref |
+| ProjectState | project-state-validator | ~1.44 ADA + token | Blacklist datum |
+| Treasury | treasury-validator | deposit + token | Holds project funds |
+| Instance Fee | instance-treasury | 100+10×N ADA | Protocol fee |
+
+## Minting Operations (6)
+
+| # | Policy | Token | Quantity | Purpose |
+|---|--------|-------|----------|---------|
+| 0 | treasury-script-policy | TreasuryScriptV2 | +1 | Treasury script holder |
+| 1 | project-state-policy | \{credential_hash\} | +1 | Project state tracking |
+| 2 | treasury-token-policy | \{treasury_hash\} | +1 | Treasury funds marker |
+| 3 | governance-policy | \{projectId\} | +1 | Governance (shared policy) |
+| 4 | local-state-token-policy | LocalStateToken | +1 | Instance token (shared) |
+| 5 | local-state-nft-policy | LocalStateNFT | +1 | Policy ID = projectId |
+
+## Observers (Withdrawals)
+
+| Observer | Purpose |
+|----------|---------|
+| project-observer | Validates owner's access token |
+| project-prereq-observer | Validates course prerequisite completion |
+
+## Certificates
+
+| Certificate | Type | Deposit |
+|-------------|------|---------|
+| StakeRegistration | Script credential | 2 ADA |
+
+The stake credential hash becomes the project-state token name.
+
+## Key Architectural Notes
+
+### Shared vs Project-Specific Components
+
+**Shared with Courses:**
+- `local-state-nft-validator` (same address)
+- `local-state-token-validator` (same address)
+- `governance-validator` (same address)
+- `governance-policy` (same policy)
+- `local-state-token-policy` (same policy)
+
+**Project-Specific:**
+- `treasury-script-validator` (new)
+- `treasury-validator` (new)
+- `project-state-validator` (new)
+- `treasury-script-policy` (new)
+- `project-state-policy` (new)
+- `treasury-token-policy` (new)
+
+### ProjectId Pattern
+
+Like courses, the **projectId IS the LocalStateNFT minting policy ID**. This parameterized policy ensures uniqueness and ties project identity to the NFT.
+
+### Treasury System
+
+Projects have a two-part treasury:
+1. **TreasuryScript**: Holds the `TreasuryScriptV2` token + embedded treasury validator reference (~20 ADA)
+2. **Treasury**: Holds actual funds with a treasury token (variable based on deposit)
+
+### Course Prerequisites
+
+The `course_prereqs` field allows requiring completion of specific course modules before contributors can join:
+
+```json
+"course_prereqs": [
+  ["courseId_1", ["module_hash_1", "module_hash_2"]],
+  ["courseId_2", ["module_hash_3"]]
+]
+```
+
+The `project-prereq-observer` validates these requirements at runtime.
+
+## Comparison: Course vs Project Create
+
+| Aspect | Course Create | Project Create |
+|--------|---------------|----------------|
+| Mints | 3 (NFT, Token, Governance) | 6 (+ Treasury×3) |
+| Observers | 1 (course-observer) | 2 (+ prereq-observer) |
+| Stake Registration | No | Yes |
+| Treasury System | No | Yes |
+| Prerequisites | No | Yes (course modules) |
+| Estimated Cost | ~130 ADA | ~163 ADA + deposit |
+
+## See Also
+
+- [Course Create](/docs/protocol/v2/transactions/instance/owner/course/create) - Similar but simpler
+- [Managers Manage](/docs/protocol/v2/transactions/project/owner/managers/manage) - Add/remove managers
+- [Task Commit](/docs/protocol/v2/transactions/project/contributor/task/commit) - Contributor enrollment

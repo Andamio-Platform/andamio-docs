@@ -228,7 +228,7 @@ See `.claude/skills/analyze-transaction/example-tx.md` for a complete worked exa
 | course.admin.teachers-update | course/admin/teachers-update.yaml | Update course teachers |
 | course.teacher.modules-manage | course/teacher/modules-manage.yaml | Mint/update/burn modules |
 | course.teacher.assignments-assess | course/teacher/assignments-assess.yaml | Assess student submissions |
-| course.student.enroll | course/student/enroll.yaml | Student enrolls in course |
+| course.student.assignment.commit | course/student/assignment/commit.yaml | Student enrolls and commits to assignment |
 | course.student.assignment-update | course/student/assignment-update.yaml | Student updates submission |
 | course.student.credential-claim | course/student/credential-claim.yaml | Claim credential (burn) |
 

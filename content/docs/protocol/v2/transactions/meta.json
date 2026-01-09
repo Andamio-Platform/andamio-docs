@@ -2,7 +2,8 @@
   "title": "Transactions",
   "pages": [
     "index",
-    "course",
-    "general"
+    "global",
+    "instance",
+    "course"
   ]
 }

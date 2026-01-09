@@ -1,0 +1,147 @@
+---
+title: "Access Token Mint"
+description: "Mint access tokens for protocol participation"
+tx_file: "global/general/access-token/mint.yaml"
+---
+
+# Global General Access Token Mint
+
+Mint access tokens to participate in the Andamio protocol. This is the entry point for all users.
+
+## API Endpoint
+
+```
+POST /v2/tx/global/general/access-token/mint
+```
+
+## Cost Summary
+
+| Cost Type | Amount | Notes |
+|-----------|--------|-------|
+| Transaction Fee | ~0.36 ADA | Network fee |
+| Protocol Fee | 5 ADA | Fee to protocol treasury |
+| UTxO Deposits | ~2.51 ADA | Index nodes + global state |
+| **Total Wallet Delta** | ~7.9 ADA | Entry point cost |
+
+## Request Body
+
+```json
+{
+  "walletData": "addr_test1...",
+  "alias": "myalias"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `walletData` | string | Yes | Bech32 address (simple string, not object) |
+| `alias` | string | Yes | Unique alias (1-31 chars) |
+
+**Note**: For this endpoint, `walletData` is a simple Bech32 address string, not an object. Other V2 endpoints use the object format with `usedAddresses` and `changeAddress`.
+
+## Transaction Pattern
+
+**Mint and Create** - Mints 3 tokens, creates index nodes and global state UTxOs.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  ACCESS TOKEN MINT TRANSACTION                  │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  INPUTS                          OUTPUTS                        │
+│  ──────                          ───────                        │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Index Spend     │───────────▶│ Index Node 1    │            │
+│  │ (index UTxO)    │  SPEND     │ (~1.25 ADA)     │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Index Node Prev │───────────▶│ Index Node 2    │            │
+│  │ (update pointer)│  SPEND     │ (~1.25 ADA)     │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Wallet          │───────────▶│ Protocol        │  5 ADA     │
+│  │ (user UTxO)     │            │ Treasury        │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  MINTS (3 tokens)               ┌─────────────────┐            │
+│  ────────────────               │ Global State    │            │
+│  index-policy:                  │ (~1.26 ADA +    │            │
+│  • 0x20 (space)                 │  g-token)       │            │
+│  • g\{alias\}                   └─────────────────┘            │
+│  • u\{alias\}                                                     │
+│                                  ┌─────────────────┐            │
+│                                  │ User Wallet     │            │
+│                                  │ (~1.15 ADA +    │            │
+│                                  │  u-token)       │            │
+│                                  └─────────────────┘            │
+│                                                                 │
+│  OBSERVER                                                       │
+│  ────────                                                       │
+│  • index-observer (withdraw-0)                                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Inputs
+
+| Input | Type | Validator | Description |
+|-------|------|-----------|-------------|
+| Index Spend | Script | index-validator | Index UTxO for linked list insertion |
+| Index Node Prev | Script | index-validator | Previous node (to update next pointer) |
+| User UTxO | Wallet | - | User's UTxO for collateral/fees |
+
+## Outputs (5)
+
+| Output | Validator | Value | Description |
+|--------|-----------|-------|-------------|
+| Index Node 1 | index-validator | ~1.25 ADA + space token | Index linked list node |
+| Index Node 2 | index-validator | ~1.25 ADA + space token | Index linked list node |
+| Protocol Treasury | wallet | 5 ADA | Service fee |
+| Global State | global-state-v2 | ~1.26 ADA + g-token | User's global state |
+| User Wallet | wallet | ~1.15 ADA + u-token | User receives access token |
+
+## Minting Operations (3)
+
+| Policy | Token Name | Quantity | Purpose |
+|--------|------------|----------|---------|
+| index-policy | 0x20 (space) | +1 | Index linked list marker |
+| index-policy | g\{alias\} | +1 | Global state token (g prefix) |
+| index-policy | u\{alias\} | +1 | User access token (u prefix) |
+
+## Token Prefixes
+
+The index-policy mints tokens with different prefixes:
+- **`u`** - User access token (held in wallet)
+- **`g`** - Global state token (locked at validator)
+- **`0x20`** (space) - Index linked list marker
+
+## Global State Datum
+
+```
+Constructor 0:
+├── alias: "{user_alias}"
+└── local_state_information: Map (empty)
+```
+
+The `local_state_information` map is empty initially and gets populated when enrolling in courses.
+
+## Observers (Withdrawals)
+
+| Observer | Purpose |
+|----------|---------|
+| index-observer | Validates index linked list operations |
+
+## Key Notes
+
+- This is the **entry point** for all protocol participation
+- Alias must be unique across the protocol (enforced by linked list)
+- 5 ADA service fee goes to protocol treasury
+- Access token is required for all subsequent transactions
+- The g-token and u-token share the same policy but different names
+
+## See Also
+
+- [Course Create](/docs/protocol/v2/transactions/instance/owner/course/create) - Create a course (requires access token)
+- [Project Create](/docs/protocol/v2/transactions/instance/owner/project/create) - Create a project (requires access token)

@@ -1,11 +1,6 @@
 {
-  "title": "Transactions",
+  "title": "Transactions (Deprecated)",
   "pages": [
-    "general",
-    "admin", 
-    "project-creator",
-    "contributor",
-    "course-creator",
-    "student"
+    "index"
   ]
 }

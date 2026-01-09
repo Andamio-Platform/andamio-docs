@@ -52,8 +52,14 @@ response:
       description: "CBOR-encoded unsigned transaction"
 
 costs:
-  txFee: 1300064
-  protocolFee: 25000000
+  txFee: 1298574
+  protocolFee: 120000000
+  protocolFeeFormula: "100 ADA base + 10 ADA × number of managers"
+  protocolFeeExample: "2 managers = 100 + (2 × 10) = 120 ADA"
+  protocolFeeUpcoming:
+    note: "First manager will be free in upcoming update"
+    newFormula: "100 ADA base + 10 ADA × (managers - 1)"
+    newExample: "1 manager = 100 ADA, 2 managers = 110 ADA"
   protocolFeeDestination: instance-treasury
   stakeRegistration: 2000000
   minUtxo:
@@ -241,7 +247,7 @@ outputs:
   - id: treasury-output
     type: script
     validator: treasury-validator
-    address: "addr_test1xrtfd00c7yuxnzmy6f295pelajs7dratp2v763exc3n6rd2e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeutuek"
+    address: "addr_test1xrrte4getxntj3k4n450psfgsm53vjuyhpncv5u8xp2fmd6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeguy9v"
     value:
       - "{deposit_value lovelace}"
       - "1 treasury-token-policy.{treasury_token_name}"
@@ -258,8 +264,8 @@ outputs:
     label: instance-treasury
     address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"
     value:
-      - "25000000 lovelace"
-    description: "25 ADA protocol fee to instance treasury (same as course.create)"
+      - "{protocolFee} lovelace"
+    description: "Protocol fee = 100 ADA base + 10 ADA per manager (e.g., 2 managers = 120 ADA)"
 
   - id: change
     type: wallet
@@ -371,7 +377,7 @@ certs:
     type: StakeRegistration
     credential:
       type: Script
-      hash: "d696bdf8f138698b64d2545a073feca1e68fab0a99ed4726c467a1b5"
+      hash: "c6bcd51959a6b946d59d68f0c12886e9164b84b86786538730549db7"
     deposit: 2000000
     description: "Registers stake credential for project state - credential hash = project-state token name"
 
@@ -464,7 +470,7 @@ registry:
       address: "addr_test1xqcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03g6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq54qulh"
       note: "NEW - project-specific"
     treasury-validator:
-      address: "addr_test1xrtfd00c7yuxnzmy6f295pelajs7dratp2v763exc3n6rd2e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeutuek"
+      address: "addr_test1xrrte4getxntj3k4n450psfgsm53vjuyhpncv5u8xp2fmd6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeguy9v"
       note: "NEW - holds project treasury funds"
   policies:
     treasury-script-policy:

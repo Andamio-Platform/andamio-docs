@@ -2,8 +2,7 @@
   "title": "Student",
   "pages": [
     "index",
-    "enroll",
-    "assignment-update",
-    "credential-claim"
+    "assignment",
+    "credential"
   ]
 }

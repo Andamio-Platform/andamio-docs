@@ -44,27 +44,33 @@ response:
       note: "Critical design: The courseId equals the LocalStateNFT minting policy ID"
 
 costs:
-  txFee: 525841
-  protocolFee: 25000000
+  txFee: 527195
+  protocolFee: 110000000
+  protocolFeeFormula: "100 ADA base + 10 ADA × number of teachers"
+  protocolFeeExample: "1 teacher = 100 + (1 × 10) = 110 ADA"
+  protocolFeeUpcoming:
+    note: "First teacher will be free in upcoming update"
+    newFormula: "100 ADA base + 10 ADA × (teachers - 1)"
+    newExample: "1 teacher = 100 ADA, 3 teachers = 120 ADA"
   protocolFeeDestination: instance-treasury
   minUtxo:
     local-state-nft-output: 1236970
     local-state-token-output: 16584880
-    course-governance-output: 1314550
+    course-governance-output: 1331790
     user-token-output: 1146460
   executionUnits:
-    mint_0:
-      mem: 135954
-      steps: 49073463
-    mint_1:
+    mint_0_local_state_nft:
+      mem: 27223
+      steps: 10486084
+    mint_1_local_state_token:
+      mem: 140680
+      steps: 50525266
+    mint_2_governance:
       mem: 256248
       steps: 79073308
-    mint_2:
-      mem: 40269
-      steps: 15919167
-    reward_0:
-      mem: 249464
-      steps: 79675701
+    reward_0_course_observer:
+      mem: 252894
+      steps: 81944948
 
 inputs:
   - id: wallet-input
@@ -152,8 +158,8 @@ outputs:
     label: instance-treasury
     address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"
     value:
-      - "25000000 lovelace"
-    description: "25 ADA protocol fee to instance treasury"
+      - "{protocolFee} lovelace"
+    description: "Protocol fee = 100 ADA base + 10 ADA per teacher (e.g., 1 teacher = 110 ADA)"
 
   - id: change
     type: wallet

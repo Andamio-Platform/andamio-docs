@@ -23,7 +23,7 @@ Protocol V2 transaction documentation, generated from decoded CBOR analysis.
 | [Update Teachers](/docs/protocol/v2/transactions/course/admin/teachers-update) | Admin | ~5.3 ADA |
 | [Manage Modules](/docs/protocol/v2/transactions/course/teacher/modules-manage) | Teacher | ~1.86 ADA |
 | [Assess Assignments](/docs/protocol/v2/transactions/course/teacher/assignments-assess) | Teacher | ~0.21 ADA |
-| [Enroll](/docs/protocol/v2/transactions/course/student/enroll) | Student | ~2.14 ADA |
+| [Assignment Commit](/docs/protocol/v2/transactions/course/student/assignment/commit) | Student | ~2.14 ADA |
 | [Update Assignment](/docs/protocol/v2/transactions/course/student/assignment-update) | Student | ~0.33 ADA |
 | [Claim Credential](/docs/protocol/v2/transactions/course/student/credential-claim) | Student | **-1.03 ADA** |
 
@@ -41,7 +41,7 @@ Protocol V2 transaction documentation, generated from decoded CBOR analysis.
 
 - Manage Modules
 - Assess Assignments
-- Enroll
+- Assignment Commit
 - Update Assignment
 - Claim Credential
 
@@ -49,7 +49,7 @@ Protocol V2 transaction documentation, generated from decoded CBOR analysis.
 
 | Pattern | Description | Transactions |
 |---------|-------------|--------------|
-| Mint and Create | Mints tokens, creates UTxOs | access-token, course-create, modules-manage, enroll |
+| Mint and Create | Mints tokens, creates UTxOs | access-token, course-create, modules-manage, assignment-commit |
 | Spend and Recreate | Updates existing UTxOs | teachers-update, assignments-assess, assignment-update |
 | Burn and Update | Burns tokens, updates state | credential-claim |
 

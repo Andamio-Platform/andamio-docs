@@ -1,0 +1,302 @@
+# V2 Transaction: Course Student Assignment Commit
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/course/student/assignment/commit
+# Date: 2026-01-09
+
+name: CourseStudentAssignmentCommitV2
+id: course.student.assignment.commit
+
+metadata:
+  role: "student"
+  system: "course"
+  description: "Enroll in a course and commit to an assignment. If student is not enrolled, this transaction mints a course-state token and adds enrollment to global state. Commitment is required - enrollment without commitment is not supported."
+  api_endpoint: "/v2/tx/course/student/assignment/commit"
+
+request_body:
+  description: "EnrollCourseTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Student's access token alias (1-31 chars, alphanumeric + underscores)"
+      example: "student_001"
+    course_id:
+      type: string
+      required: true
+      description: "Course NFT policy ID (56 char hex)"
+      example: "e276a1f2729f06036299998f046765ffdde7ad8fd47f689690fbe2b1"
+    slt_hash:
+      type: string
+      required: true
+      description: "Module token name (64 char hex) to commit to"
+      example: "10dde6f0936b3dba3339356838e59b1af0f511a777a8701c49d941351b3abcf0"
+    assignment_info:
+      type: string
+      required: true
+      description: "Evidence hash or description for the assignment"
+      example: "some assignment evidence hash"
+    initiator_data:
+      type: object
+      required: false
+      description: "Optional wallet data"
+      fields:
+        used_addresses:
+          type: array
+          description: "Array of wallet addresses"
+        change_address:
+          type: string
+          description: "Change address"
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 358771
+  protocolFee: 0
+  protocolFeeDestination: null
+  minUtxo:
+    user-token-output: 1172320
+    global-state-output: 1836060
+    course-state-output: 2000000
+  executionUnits:
+    spend_global_state:
+      mem: 227771
+      steps: 80578706
+    mint_course_state:
+      mem: 293286
+      steps: 94655280
+  note: "No protocol fee for enrollment/commitment. Costs scale with datum size."
+
+inputs:
+  - id: global-state-input
+    type: script
+    validator: global-state-v2
+    address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+    value:
+      - "lovelace"
+      - "1 index-policy.g{alias}"
+    datum:
+      type: inline
+      description: "Current global state with alias and local_state_information map"
+    redeemer:
+      tag: "Spend"
+      index: 2
+      format: "constructor 0"
+      fields:
+        - name: "course_id"
+          type: "bytes"
+          value: "e276a1f2729f06036299998f046765ffdde7ad8fd47f689690fbe2b1"
+          description: "Course NFT policy ID"
+        - name: "flag"
+          type: "int"
+          value: -1
+          description: "Flag value (-1 for enrollment)"
+        - name: "empty"
+          type: "bytes"
+          value: ""
+          description: "Empty bytes"
+        - name: "course_state_policy"
+          type: "bytes"
+          value: "c529f25e9bf856c63c46c69755de140320d11e55ea84bcf5125c7e84"
+          description: "Course state minting policy ID (parameterized per course)"
+    description: "Student's global state UTxO - spent to add enrollment info"
+
+  - id: wallet-inputs
+    type: wallet
+    address: "{user_wallet}"
+    description: "User's wallet UTxOs providing ADA for fees and min UTxO"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "Student's access token UTxO - proves identity"
+
+reference_inputs:
+  - id: script-ref-global-state
+    utxo: "0d1344689b1a2d2eafad032d9b5e36f899092751274b659cf8600a978bcbe10e#2"
+    description: "Script reference for global-state-v2"
+
+  - id: local-state-token-ref
+    utxo: "2ac1be2d55cf5097eaa1b24d871c60bbbeb178b7fc5a3f2cfda5c7a99fb7ff8e#2"
+    description: "Course's LocalStateToken - contains course validator script_ref"
+
+  - id: script-ref-course-state-policy
+    utxo: "957a855b5ae7fefe3d13c051f2f3234674c765c7cf986244ae5a2a5960d59fd4#1"
+    description: "Script reference for course-state-policy"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1172320 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "Student's access token returned to wallet"
+
+  - id: global-state-output
+    type: script
+    validator: global-state-v2
+    address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+    value:
+      - "~1836060 lovelace"
+      - "1 index-policy.g{alias}"
+    datum:
+      type: inline
+      format: "constructor 0"
+      fields:
+        - name: "alias"
+          type: "bytes"
+          description: "Student's alias"
+        - name: "local_state_information"
+          type: "map"
+          description: "Map of course_id -> enrollment_hash (updated with new enrollment)"
+      example:
+        constructor: 0
+        fields:
+          - "73747564656e745f303031"  # "student_001"
+          - map:
+              "e276a1f2729f06036299998f046765ffdde7ad8fd47f689690fbe2b1": "d7f6161435a81709441443c76d771c8348ae4b5d3a45d4acf34a3dd644b3532a"
+              "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841": "ea8ee941b7902d03f8c9015204e1eb54733ac3f6e07137cd4a61a0e199969944"
+    description: "Global state recreated with new enrollment added to local_state_information map"
+
+  - id: course-state-output
+    type: script
+    validator: course-state-validator
+    address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
+    value:
+      - "~2000000 lovelace"
+      - "1 course-state-policy.{alias}"
+    datum:
+      type: inline
+      format: "constructor 1"
+      description: "Constructor 1 = has active commitment"
+      fields:
+        - name: "slt_hash"
+          type: "bytes"
+          value: "10dde6f0936b3dba3339356838e59b1af0f511a777a8701c49d941351b3abcf0"
+          description: "Module currently being worked on"
+        - name: "assignment_info"
+          type: "bytes"
+          value: "736f6d652061737369676e6d656e742065766964656e63652068617368"
+          description: "Evidence hash submitted by student ('some assignment evidence hash')"
+        - name: "completed_modules"
+          type: "list"
+          value: []
+          description: "Empty list - no modules completed yet"
+      example:
+        constructor: 1
+        fields:
+          - "10dde6f0936b3dba3339356838e59b1af0f511a777a8701c49d941351b3abcf0"
+          - "736f6d652061737369676e6d656e742065766964656e63652068617368"
+          - []
+    description: "Course state created with active assignment commitment"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet (multiple UTxOs)"
+
+mints:
+  - id: course-state-mint
+    policy: course-state-policy
+    policyId: "c529f25e9bf856c63c46c69755de140320d11e55ea84bcf5125c7e84"
+    policyNote: "Parameterized per course - different policy ID for each course"
+    redeemer:
+      tag: "Mint"
+      index: 0
+      format: "constructor 0"
+      fields:
+        - name: "alias"
+          type: "bytes"
+          value: "73747564656e745f303031"
+          description: "Student's alias (becomes token name)"
+        - name: "credentials"
+          type: "list"
+          value: []
+          description: "Empty list for new enrollment"
+        - name: "commit_data"
+          type: "constructor 0"
+          description: "Commitment data (required)"
+          nested:
+            format: "constructor 0"
+            fields:
+              - name: "slt_hash"
+                type: "bytes"
+                value: "10dde6f0936b3dba3339356838e59b1af0f511a777a8701c49d941351b3abcf0"
+              - name: "assignment_info"
+                type: "bytes"
+                value: "736f6d652061737369676e6d656e742065766964656e63652068617368"
+    tokens:
+      - quantity: 1
+        name: "student_001"
+        nameHex: "73747564656e745f303031"
+        description: "Course state token - name is student alias"
+    example_redeemer:
+      constructor: 0
+      fields:
+        - "73747564656e745f303031"
+        - []
+        - constructor: 0
+          fields:
+            - constructor: 0
+              fields:
+                - "10dde6f0936b3dba3339356838e59b1af0f511a777a8701c49d941351b3abcf0"
+                - "736f6d652061737369676e6d656e742065766964656e63652068617368"
+
+withdraws: null
+
+design_notes:
+  replaces_enroll_endpoint: |
+    This endpoint replaces the old /v2/tx/course/student/enroll endpoint.
+    The key change: commitment is now REQUIRED. Students cannot enroll without
+    committing to an assignment. This eliminates "enrolled but idle" states.
+
+  enrollment_flow: |
+    When a student is NOT enrolled in the course:
+    1. Mint a course-state token with the student's alias as token name
+    2. Spend and recreate global state, adding course_id -> enrollment_hash to the map
+    3. Create course-state UTxO with commitment data (constructor 1 datum)
+
+  already_enrolled_flow: |
+    When a student IS already enrolled but has no active commitment:
+    - This endpoint spends the existing course-state UTxO (constructor 0)
+    - Recreates it with a new commitment (constructor 1)
+    - No minting occurs in this case
+
+  course_state_datum: |
+    Constructor 0 = enrolled, no active commitment (completed_modules list only)
+    Constructor 1 = enrolled, has active commitment (slt_hash + assignment_info + completed_modules)
+
+  course_state_policy_parameterized: |
+    Each course has its own course-state-policy. The policy ID is derived from the
+    course's LocalStateNFT (courseId). This ensures course-state tokens are
+    course-specific and can only be minted by students enrolling in that course.
+
+  no_protocol_fee: |
+    Unlike course/project creation, enrollment/commitment has no protocol fee.
+    Students only pay network transaction fees (~0.36 ADA).
+
+  local_state_information_map: |
+    The global state datum tracks all course enrollments for a user.
+    Each enrollment adds an entry: course_id -> derived_enrollment_hash.
+    The enrollment_hash is derived from the student's commitment data.
+
+registry:
+  validators:
+    global-state-v2:
+      address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+    course-state-validator:
+      address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
+      note: "Updated address - holds student course state tokens"
+  policies:
+    course-state-policy:
+      policyId: "c529f25e9bf856c63c46c69755de140320d11e55ea84bcf5125c7e84"
+      note: "Example - parameterized per course, token name = student alias"

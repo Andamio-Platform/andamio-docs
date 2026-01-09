@@ -43,20 +43,20 @@ response:
       description: "CBOR-encoded unsigned transaction"
 
 costs:
-  txFee: 299869
-  protocolFee: 5000000
+  txFee: 300669
+  protocolFee: 10000000
   protocolFeeDestination: instance-treasury
   minUtxo:
     local-state-nft-output: 1236970
-    course-governance-output: 1331790
+    course-governance-output: 1357650
     user-token-output: 1146460
   executionUnits:
-    spend_0:
-      mem: 343469
-      steps: 108933499
-    spend_1:
-      mem: 263825
-      steps: 87573804
+    spend_0_local_state_nft:
+      mem: 327793
+      steps: 104422332
+    spend_1_governance:
+      mem: 266153
+      steps: 88243753
 
 inputs:
   - id: local-state-nft-input
@@ -135,7 +135,7 @@ outputs:
     validator: course-governance-validator
     address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
     value:
-      - "~1331790 lovelace"
+      - "~1357650 lovelace"
       - "1 course-governance-policy.{courseId}"
     datum:
       type: inline
@@ -151,8 +151,8 @@ outputs:
     label: instance-treasury
     address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"
     value:
-      - "5000000 lovelace"
-    description: "5 ADA protocol fee to instance treasury"
+      - "10000000 lovelace"
+    description: "10 ADA protocol fee to instance treasury"
 
   - id: change
     type: wallet

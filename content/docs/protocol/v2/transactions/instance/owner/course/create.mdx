@@ -1,0 +1,146 @@
+---
+title: "Course Create"
+description: "Create a new course with initial teachers"
+tx_file: "instance/owner/course/create.yaml"
+---
+
+# Instance Owner Course Create
+
+Create a new course with initial teachers. This transaction mints 3 tokens and creates the course infrastructure.
+
+## API Endpoint
+
+```
+POST /v2/tx/instance/owner/course/create
+```
+
+## Cost Summary
+
+| Cost Type | Amount | Notes |
+|-----------|--------|-------|
+| Transaction Fee | ~0.55 ADA | Network fee |
+| Protocol Fee | 100 + 10×teachers ADA | 2 teachers = 120 ADA |
+| UTxO Deposits | ~19.74 ADA | Includes embedded script ref (~17 ADA) |
+| **Total (2 teachers)** | ~140 ADA | Formula: ~0.55 + 120 + 19.74 |
+
+## Request Body
+
+```json
+{
+  "alias": "james",
+  "teachers": ["james", "teacher2"]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | string | Yes | Owner's access token alias |
+| `teachers` | string[] | Yes | List of teacher aliases |
+
+## Response
+
+```json
+{
+  "course_id": "23a6bbce3a8deca8985764e847594f6956c9dc643e3f6c8efdba04e4",
+  "unsigned_tx": "84a800..."
+}
+```
+
+The `course_id` is the LocalStateNFT minting policy ID - this IS the course identifier.
+
+## Transaction Pattern
+
+**Mint and Create** - Mints 3 tokens and creates 3 new script UTxOs.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    COURSE CREATE TRANSACTION                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  INPUTS                          OUTPUTS                        │
+│  ──────                          ───────                        │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Wallet          │───────────▶│ LocalStateNFT   │            │
+│  │ (u-token + ADA) │            │ (~1.24 ADA)     │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  MINTS (3 total)                ┌─────────────────┐            │
+│  ──────────────                 │ LocalStateToken │            │
+│  1. LocalStateToken             │ (~17 ADA +      │            │
+│  2. Governance token            │  script_ref)    │            │
+│  3. LocalStateNFT               └─────────────────┘            │
+│                                                                 │
+│  OBSERVER                       ┌─────────────────┐            │
+│  ────────                       │ Governance      │            │
+│  • course-observer              │ (~1.31 ADA +    │            │
+│                                 │  teacher list)  │            │
+│                                  └─────────────────┘            │
+│                                                                 │
+│                                  ┌─────────────────┐            │
+│                                  │ Instance Fee    │  120 ADA   │
+│                                  │ (treasury)      │            │
+│                                  └─────────────────┘            │
+│                                                                 │
+│                                  ┌─────────────────┐            │
+│                                  │ User Wallet     │            │
+│                                  │ (u-token +      │            │
+│                                  │  change)        │            │
+│                                  └─────────────────┘            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Outputs (5)
+
+| Output | Validator | Value | Description |
+|--------|-----------|-------|-------------|
+| LocalStateNFT | local-state-nft-validator | ~1.24 ADA + NFT | Course registration NFT |
+| LocalStateToken | local-state-token-validator | ~17.13 ADA + token | Has embedded script_ref |
+| Governance | governance-validator | ~1.31 ADA + token | Teacher list datum |
+| Instance Fee | instance-treasury | 100+10×N ADA | Protocol fee |
+| User Wallet | wallet | u-token + change | Access token returned |
+
+## Minting Operations (3)
+
+| # | Policy | Token | Quantity | Purpose |
+|---|--------|-------|----------|---------|
+| 0 | local-state-token-policy | LocalStateToken | +1 | Course state token |
+| 1 | governance-policy | \{courseId\} | +1 | Governance (name = courseId) |
+| 2 | local-state-nft-policy | LocalStateNFT | +1 | Policy ID = courseId |
+
+## Observers (Withdrawals)
+
+| Observer | Purpose |
+|----------|---------|
+| course-observer | Validates course creation |
+
+## Key Architectural Notes
+
+### CourseId Pattern
+
+The **courseId IS the LocalStateNFT minting policy ID**. This parameterized policy ensures uniqueness and ties course identity to the NFT.
+
+### Embedded Script Reference
+
+The LocalStateToken UTxO contains the course validator as a script reference, requiring ~17 ADA deposit. This enables efficient reference for subsequent transactions.
+
+### Governance Token Naming
+
+The governance token is named after the courseId it governs, creating a direct link between governance and course.
+
+## Comparison: Course vs Project Create
+
+| Aspect | Course Create | Project Create |
+|--------|---------------|----------------|
+| Mints | 3 | 6 |
+| Observers | 1 | 2 |
+| Stake Registration | No | Yes |
+| Treasury System | No | Yes |
+| Prerequisites | No | Yes (course modules) |
+| Estimated Cost | ~140 ADA | ~363 ADA + deposit |
+
+## See Also
+
+- [Teachers Manage](/docs/protocol/v2/transactions/course/owner/teachers/manage) - Add/remove teachers
+- [Modules Manage](/docs/protocol/v2/transactions/course/teacher/modules/manage) - Create course modules
+- [Project Create](/docs/protocol/v2/transactions/instance/owner/project/create) - Create a project

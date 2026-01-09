@@ -1,6 +1,6 @@
 {
-  "version": "0.10.0",
-  "lastUpdated": "2026-01-08",
+  "version": "0.11.0",
+  "lastUpdated": "2026-01-09",
   "network": "preprod",
   "notes": [
     "Addresses and policy IDs inferred from decoded transaction CBORs",
@@ -88,8 +88,8 @@
       "address": "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy",
       "purpose": "spend",
       "description": "Global State V2 validator - holds g-prefixed token with {alias, local_state_information} datum",
-      "redeemerSchema": "Constructor 0 = enrollment (flag=-1), Constructor 1 = credential claim (flag=0, includes credential_hash)",
-      "inferredFrom": ["global.general.access-token.mint", "course.student.enroll", "course.student.credential.claim"]
+      "redeemerSchema": "Constructor 0 = enrollment (flag=-1), Constructor 1 = credential claim (flag=0, includes course_id, course_state_policy, credential_hash)",
+      "inferredFrom": ["global.general.access-token.mint", "course.student.enroll", "course.student.assignment.commit", "course.student.credential.claim"]
     },
     "local-state-nft-validator": {
       "address": "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g",
@@ -118,12 +118,12 @@
       "inferredFrom": ["course.teacher.modules.manage"]
     },
     "course-state-validator": {
-      "address": "addr_test1xr07w3s4gz623hfwwesh5n2lp2r2eqc0qa2llf25zgngn6je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq95w7js",
+      "address": "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k",
       "purpose": "spend",
       "description": "Holds student course state tokens with assignment commitment data",
       "datumSchema": "Constructor 0 = no active commitment (completed_modules list), Constructor 1 = has active commitment (slt_hash, assignment_info, completed_modules)",
-      "redeemerSchema": "Constructor 0 = student action, Constructor 2 = teacher assess (with teacher_alias), Constructor 3 = claim credential (empty)",
-      "inferredFrom": ["course.student.enroll", "course.teacher.assignments.assess", "course.student.credential.claim"]
+      "redeemerSchema": "Constructor 0 = student action, Constructor 1 = student update (slt_hash + new assignment_info), Constructor 2 = teacher assess (with teacher_alias), Constructor 3 = claim credential (empty)",
+      "inferredFrom": ["course.student.assignment.commit", "course.student.assignment.update", "course.teacher.assignments.assess", "course.student.credential.claim"]
     },
     "treasury-script-validator": {
       "address": "addr_test1xqxe8wzl6xt4usymulrrpqrqanrkydycgaxyus76fjp6tt2e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq5mh58d",
@@ -139,7 +139,7 @@
       "inferredFrom": ["instance.owner.project.create"]
     },
     "treasury-validator": {
-      "address": "addr_test1xrtfd00c7yuxnzmy6f295pelajs7dratp2v763exc3n6rd2e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeutuek",
+      "address": "addr_test1xrrte4getxntj3k4n450psfgsm53vjuyhpncv5u8xp2fmd6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeguy9v",
       "purpose": "spend",
       "description": "Holds project treasury funds with treasury token",
       "inferredFrom": ["instance.owner.project.create"]
@@ -181,12 +181,19 @@
     "instance-treasury": {
       "address": "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3",
       "fees": {
-        "course-create": "25000000",
-        "course-teachers-update": "5000000"
+        "course-create": {
+          "formula": "100 ADA base + 10 ADA × teachers",
+          "example": "1 teacher = 110 ADA"
+        },
+        "course-teachers-update": "10000000",
+        "project-create": {
+          "formula": "100 ADA base + 10 ADA × managers",
+          "example": "2 managers = 120 ADA"
+        }
       },
-      "description": "Instance treasury for course operations",
-      "designNote": "Instance-specific treasury. Fees vary by operation type.",
-      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage"]
+      "description": "Instance treasury for course and project operations",
+      "designNote": "Instance-specific treasury. Course and project creation fees scale with number of teachers/managers (100 ADA base + 10 ADA each). UPCOMING: First teacher/manager will be free.",
+      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage", "instance.owner.project.create"]
     }
   },
   "referenceUtxos": {
@@ -281,7 +288,20 @@
     },
     "957a855b5ae7fefe3d13c051f2f3234674c765c7cf986244ae5a2a5960d59fd4#1": {
       "description": "Script reference for course-state-policy",
-      "inferredFrom": ["course.student.enroll"]
+      "inferredFrom": ["course.student.enroll", "course.student.assignment.commit", "course.student.credential.claim"]
+    },
+    "0d1344689b1a2d2eafad032d9b5e36f899092751274b659cf8600a978bcbe10e#2": {
+      "description": "Script reference for course-state-validator",
+      "inferredFrom": ["course.student.assignment.commit", "course.student.assignment.update", "course.teacher.assignments.assess", "course.student.credential.claim"]
+    },
+    "0d1344689b1a2d2eafad032d9b5e36f899092751274b659cf8600a978bcbe10e#3": {
+      "description": "Course governance UTxO - referenced to verify teacher authorization",
+      "inferredFrom": ["course.teacher.assignments.assess"]
+    },
+    "2ac1be2d55cf5097eaa1b24d871c60bbbeb178b7fc5a3f2cfda5c7a99fb7ff8e#2": {
+      "description": "Course LocalStateToken UTxO - contains course validator script_ref",
+      "note": "Each course has its own LocalStateToken that embeds the course-specific validator",
+      "inferredFrom": ["course.student.assignment.commit"]
     }
   }
 }

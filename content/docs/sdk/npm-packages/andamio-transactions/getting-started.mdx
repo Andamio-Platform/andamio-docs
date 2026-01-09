@@ -27,15 +27,15 @@ npm install zod
 ```typescript
 import { getTransactionDefinition } from "@andamio/transactions";
 
-const txDef = getTransactionDefinition("COURSE_STUDENT_ENROLL");
+const txDef = getTransactionDefinition("COURSE_STUDENT_ASSIGNMENT_COMMIT");
 
 // Access protocol specification
 console.log(txDef.protocolSpec.yamlPath);
-// "/yaml/transactions/v2/course/student/enroll.yaml"
+// "/yaml/transactions/v2/course/student/assignment/commit.yaml"
 
 // Access build configuration
 console.log(txDef.buildTxConfig.builder.endpoint);
-// "/tx/v2/student/course/enroll"
+// "/tx/v2/course/student/assignment/commit"
 
 // Access estimated costs
 console.log(txDef.buildTxConfig.estimatedCost);

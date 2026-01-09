@@ -49,17 +49,23 @@ response:
       description: "CBOR-encoded unsigned transaction"
 
 costs:
-  txFee: 276274
+  txFee: 273429
+  txFeeAda: "~0.27 ADA"
   protocolFee: 0
   protocolFeeDestination: null
   minUtxo:
     teacher-token-output: 1146460
-    course-state-output: 1379200
+    course-state-output: 2000000
   executionUnits:
-    spend_0_course_state:
-      mem: 269063
-      steps: 90746011
-  note: "No protocol fee for assessments. Datum shrinks on accept (drops assignment_info), so minUTxO may decrease slightly."
+    spend_course_state:
+      mem: 232649
+      steps: 80421498
+  collateral: 410144
+  walletDelta:
+    lovelace: 210000
+    ada: "~0.21 ADA"
+    breakdown: "txFee (~0.27) - minUtxoRefund (~0.06)"
+    note: "Teacher may get small refund when datum shrinks (pending→completed drops assignment_info)"
 
 inputs:
   - id: wallet-inputs
@@ -77,7 +83,7 @@ inputs:
   - id: course-state-input
     type: script
     validator: course-state-validator
-    address: "addr_test1xr07w3s4gz623hfwwesh5n2lp2r2eqc0qa2llf25zgngn6je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq95w7js"
+    address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
     value:
       - "lovelace"
       - "1 course-state-policy.{student_alias}"
@@ -111,11 +117,11 @@ inputs:
 
 reference_inputs:
   - id: script-ref
-    utxo: "7c5f522d87d340be46ad970a7956fdb984d5682dcbea92887cf4fd46bae7d40b#2"
+    utxo: "0d1344689b1a2d2eafad032d9b5e36f899092751274b659cf8600a978bcbe10e#2"
     description: "Script reference for course-state-validator"
 
   - id: governance-ref
-    utxo: "7c5f522d87d340be46ad970a7956fdb984d5682dcbea92887cf4fd46bae7d40b#3"
+    utxo: "0d1344689b1a2d2eafad032d9b5e36f899092751274b659cf8600a978bcbe10e#3"
     description: "Course governance UTxO - referenced to verify teacher authorization"
 
 outputs:
@@ -130,9 +136,9 @@ outputs:
   - id: course-state-output
     type: script
     validator: course-state-validator
-    address: "addr_test1xr07w3s4gz623hfwwesh5n2lp2r2eqc0qa2llf25zgngn6je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq95w7js"
+    address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
     value:
-      - "~1379200 lovelace"
+      - "~2000000 lovelace"
       - "1 course-state-policy.{student_alias}"
     datum:
       type: inline
@@ -195,7 +201,7 @@ design_notes:
 
   teacher_authorization: |
     Authorization is verified via reference input to the course governance UTxO
-    (7c5f522d87d340be46ad970a7956fdb984d5682dcbea92887cf4fd46bae7d40b#3).
+    (0d1344689b1a2d2eafad032d9b5e36f899092751274b659cf8600a978bcbe10e#3).
     This UTxO contains the list of authorized teacher aliases.
 
   batching_support: |
@@ -209,9 +215,12 @@ design_notes:
 registry:
   validators:
     course-state-validator:
-      address: "addr_test1xr07w3s4gz623hfwwesh5n2lp2r2eqc0qa2llf25zgngn6je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq95w7js"
+      address: "addr_test1xrzjnuj7n0u9d33ugmrfw4w7zspjp5g72h4gf084zfw8apze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq3trp4k"
       note: "Holds student course state tokens - redeemer constructor 2 for assess"
   policies:
+    index-policy:
+      policyId: "4758613867a8a7aa500b5d57a0e877f01a8e63c1365469589b12063c"
     course-state-policy:
       policyId: "{parameterized per course}"
-      example: "dfe7461540b4a8dd2e76617a4d5f0a86ac830f0755ffa554122689ea"
+      examplePolicyId: "c529f25e9bf856c63c46c69755de140320d11e55ea84bcf5125c7e84"
+      note: "Each course has its own course-state-policy"
