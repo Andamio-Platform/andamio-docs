@@ -1,0 +1,224 @@
+# V2 Transaction: Project Manager Tasks Assess
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/project/manager/tasks/assess
+
+name: ProjectManagerTasksAssessV2
+id: project.manager.tasks.assess
+
+metadata:
+  role: "manager"
+  system: "project"
+  description: "Assess contributor task submissions (accept/reject)"
+  api_endpoint: "/v2/tx/project/manager/tasks/assess"
+
+request_body:
+  description: "TasksAssessTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Manager's access token alias"
+      example: "james"
+    project_id:
+      type: string
+      required: true
+      description: "Project NFT policy ID (56 char hex)"
+      example: "3b20d771fff69738127691ec3aea3803cdae1b1292ed1e1ca62a5f30"
+    contributor_state_id:
+      type: string
+      required: true
+      description: "Contributor state policy ID"
+      example: "c69d2d5d5889edda8aa30550c340303ff7c9e74dd01c028528e24495"
+    task_decisions:
+      type: array
+      required: true
+      description: "List of assessment decisions"
+      items:
+        alias:
+          type: string
+          description: "Contributor alias being assessed"
+          example: "student_001"
+        outcome:
+          type: string
+          enum: ["accept", "reject"]
+          description: "Assessment outcome"
+          example: "accept"
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 350026
+  protocolFee: 0
+  protocolFeeDestination: null
+  protocolFeeNote: "No protocol fee for task assessment"
+  minUtxo:
+    contributor-state-output: 14500000
+    user-token-output: 1146460
+  executionUnits:
+    spend_0_contributor_state:
+      mem: 108572
+      steps: 36341379
+    reward_0_task_assess_observer:
+      mem: 351341
+      steps: 121839683
+  collateral: 525039
+  note: "No minting - spend and recreate with observer pattern"
+
+inputs:
+  - id: contributor-state-input
+    type: script
+    validator: contributor-state-validator
+    address: "addr_test1xrrf6t2atzy7mk525vz4ps6qxqll0j08fhgpcq599r3yf92e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq63d6dc"
+    utxo: "5d73ba5601f4ddfdeb8a1e405be7877dabff480d02e033464a109fffe96010e2#2"
+    redeemer:
+      tag: "Spend"
+      index: 0
+      data: "{constructor: 2, fields: []}"
+      description: "Constructor 2 = assess action"
+    description: "Contributor state UTxO with active task commitment"
+
+  - id: wallet-inputs
+    type: wallet
+    address: "{user_wallet}"
+    description: "Manager's wallet providing ADA for fees"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "Manager's access token UTxO"
+
+reference_inputs:
+  - id: ref-0
+    utxo: "3206c0ae47250b0007d4f24bab437a1e529cf59a07999ef73adfcb47e6e475a9#2"
+    description: "Script reference"
+
+  - id: ref-1
+    utxo: "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#2"
+    description: "Script reference for task-assess-observer"
+
+  - id: ref-2
+    utxo: "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#3"
+    description: "Script reference for contributor-state-validator"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "Manager's access token returned to wallet"
+
+  - id: contributor-state-output
+    type: script
+    validator: contributor-state-validator
+    address: "addr_test1xrrf6t2atzy7mk525vz4ps6qxqll0j08fhgpcq599r3yf92e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq63d6dc"
+    value:
+      - "~14500000 lovelace"
+      - "1 contributor-state-policy.{contributor_alias}"
+    datum:
+      type: inline
+      format: "constructor 0"
+      description: "Constructor 0 = no active commitment (task completed)"
+      fields:
+        - completed_tasks:
+            type: "list"
+            description: "List of completed task entries"
+            items:
+              - project_content: "bytes (cleared after completion)"
+              - metadata: "bytes"
+              - lovelace_amount: "integer (reward amount)"
+      example: "{constructor:0, fields:[{list:[{constructor:0, fields:[{bytes:''},{bytes:''},{int:12500000}]}]}]}"
+    description: "Contributor state updated with completed task"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to manager wallet (multiple UTxOs)"
+
+mints: null
+# No minting - spend and recreate pattern
+# Contributor-state token already exists from task-commit
+
+withdraws:
+  - id: task-assess-observer-withdraw
+    validator: task-assess-observer
+    stakeAddress: "stake_test17qpcdvvgr78x0zwtk7dsesd58pem996zru6l9l06gdmq6ls0c8cyw"
+    redeemer:
+      tag: "Reward"
+      index: 0
+      data: "{constructor: 1, fields: [stakeCredHash, projectId, managerAlias, decisions_list]}"
+      structure:
+        constructor: 1
+        fields:
+          - stakeCredHash: "bytes - project stake credential hash"
+          - projectId: "bytes - project policy ID"
+          - managerAlias: "bytes - manager alias"
+          - decisions_list: "list of {contributor_state_id, contributor_alias, outcome}"
+      example: "{constructor:1, fields:['ea8669c0...', '3b20d771...', 'james', [{csId, 'student_001', {constructor:0}}]]}"
+    amount: 0
+    description: "Observer validates task assessment operation"
+
+design_notes:
+  analogous_to_course_assess: |
+    This transaction is the project equivalent of course/teacher/assignments/assess.
+    Manager assesses contributor task submissions, similar to teacher assessing student assignments.
+
+  no_minting: |
+    Unlike task-commit which mints, task-assess does NOT mint.
+    The contributor-state token already exists from the initial enrollment.
+    This is purely a spend-and-recreate operation.
+
+  datum_transition: |
+    Input datum: Constructor 1 (has active commitment)
+      - task_definition + task_info + completed_tasks
+    Output datum: Constructor 0 (no active commitment)
+      - completed_tasks list with the newly completed task added
+
+  spend_redeemer: |
+    Constructor 2 = assess action for contributor-state-validator
+    This is the same pattern as course-state-validator where:
+    - Constructor 0 = contributor action
+    - Constructor 1 = update
+    - Constructor 2 = assess (manager/teacher)
+    - Constructor 3 = claim/burn
+
+  observer_redeemer: |
+    Constructor 1 with fields:
+    - Stake credential hash (project-specific)
+    - Project ID
+    - Manager alias (for authorization check)
+    - List of decisions, each with:
+      - contributor_state_id
+      - contributor_alias
+      - outcome (constructor 0 = accept, likely constructor 1 = reject)
+
+  completed_task_entry: |
+    After acceptance, the task is recorded in completed_tasks list with:
+    - project_content: cleared (empty bytes)
+    - metadata: empty bytes
+    - lovelace_amount: the reward amount (12500000 in this example)
+    The actual reward disbursement may happen separately.
+
+  batch_assessments: |
+    Multiple task decisions can be included in a single transaction.
+    The task_decisions array allows batching multiple accept/reject decisions.
+
+registry:
+  validators:
+    contributor-state-validator:
+      address: "addr_test1xrrf6t2atzy7mk525vz4ps6qxqll0j08fhgpcq599r3yf92e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq63d6dc"
+      note: "Parameterized per project"
+  observers:
+    task-assess-observer:
+      stakeAddress: "stake_test17qpcdvvgr78x0zwtk7dsesd58pem996zru6l9l06gdmq6ls0c8cyw"
+      note: "Validates task assessment operations"

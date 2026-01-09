@@ -1,0 +1,43 @@
+---
+title: "Contributor Transactions"
+description: "Project contributor transactions - task commitment and completion"
+---
+
+# Contributor Transactions
+
+Project contributors can commit to and complete tasks. Contributors must meet the project's prerequisite requirements (typically holding credentials from specified courses).
+
+## Available Transactions
+
+| Transaction | Description |
+|-------------|-------------|
+| [Task Commit](./task/commit) | Enroll in project and commit to a task |
+| [Credential Claim](./credential/claim) | Claim credential by burning contributor state |
+
+## Contributor Role
+
+Contributors are users who work on project tasks. To become a contributor:
+
+1. **Meet Prerequisites**: Hold the required course credentials
+2. **Commit to Task**: Use task-commit to enroll and commit in one transaction
+3. **Submit Evidence**: Provide `task_info` as proof of work
+4. **Await Decision**: Managers assess the submission
+
+## Key Concepts
+
+### Prerequisites via `contributor_state_id`
+
+Projects define prerequisites using `contributor_state_id` - a policy ID representing the credential a contributor must hold. This is a compact way to verify course completion without listing individual SLT hashes.
+
+### First Enrollment Mints Token
+
+When a contributor commits to their first task in a project, the transaction mints a contributor-state token. Subsequent commits update this token rather than minting new ones.
+
+### Global State Credential
+
+Upon enrollment, the project credential is added to the contributor's global state credentials map. This enables cross-project credential verification.
+
+## See Also
+
+- [Tasks Manage](/docs/protocol/v2/transactions/project/manager/tasks/manage) - How managers create tasks
+- [Project Create](/docs/protocol/v2/transactions/instance/owner/project/create) - How projects are created

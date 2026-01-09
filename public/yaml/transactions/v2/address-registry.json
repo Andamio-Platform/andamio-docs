@@ -1,5 +1,5 @@
 {
-  "version": "0.11.0",
+  "version": "0.14.0",
   "lastUpdated": "2026-01-09",
   "network": "preprod",
   "notes": [
@@ -75,6 +75,15 @@
       "description": "Mints treasury tokens held in treasury-validator",
       "tokenNaming": "Token name is a hash",
       "inferredFrom": ["instance.owner.project.create"]
+    },
+    "contributor-state-policy": {
+      "policyId": "{parameterized per project}",
+      "examplePolicyId": "c69d2d5d5889edda8aa30550c340303ff7c9e74dd01c028528e24495",
+      "description": "Mints contributor state tokens for project enrollment - different policy per project",
+      "tokenNaming": "Token name is contributor alias (ensures one enrollment per contributor per project)",
+      "redeemerSchema": "Constructor 0 = mint (enroll with task commitment), Constructor 3 = burn (credential claim with completed tasks proof)",
+      "designNote": "Each project has its own contributor-state-policy. The mint redeemer includes prerequisite proof (list of courseId + completed SLTs). Similar pattern to course-state-policy for courses.",
+      "inferredFrom": ["project.contributor.task.commit", "project.contributor.credential.claim"]
     }
   },
   "validators": {
@@ -88,14 +97,14 @@
       "address": "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy",
       "purpose": "spend",
       "description": "Global State V2 validator - holds g-prefixed token with {alias, local_state_information} datum",
-      "redeemerSchema": "Constructor 0 = enrollment (flag=-1), Constructor 1 = credential claim (flag=0, includes course_id, course_state_policy, credential_hash)",
-      "inferredFrom": ["global.general.access-token.mint", "course.student.enroll", "course.student.assignment.commit", "course.student.credential.claim"]
+      "redeemerSchema": "Constructor 0 = enrollment (flag=-1), Constructor 1 = credential claim (flag=0, includes policy_id, state_policy, credential_hash)",
+      "inferredFrom": ["global.general.access-token.mint", "course.student.enroll", "course.student.assignment.commit", "course.student.credential.claim", "project.contributor.task.commit", "project.contributor.credential.claim"]
     },
     "local-state-nft-validator": {
       "address": "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g",
       "purpose": "spend",
       "description": "Holds LocalStateNFT with {owner_alias} datum",
-      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage"]
+      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage", "project.owner.managers.manage"]
     },
     "local-state-token-validator": {
       "address": "addr_test1xzg75rsctuuehzam9dwefsuh6sfzkzgddlw9w822q4xu3uvju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsqymejt5",
@@ -108,8 +117,8 @@
     "course-governance-validator": {
       "address": "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw",
       "purpose": "spend",
-      "description": "Holds course governance token with {teachers: [aliases]} datum",
-      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage"]
+      "description": "Holds governance token with {participants: [aliases]} datum - SHARED between courses (teachers) and projects (managers)",
+      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage", "instance.owner.project.create", "project.owner.managers.manage"]
     },
     "module-validator": {
       "address": "addr_test1xqzw2kpqlejkfsxufrym6mu46x80qx6dt9kwp6nvpjs2rsze040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq0575cy",
@@ -136,13 +145,39 @@
       "address": "addr_test1xqcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03g6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq54qulh",
       "purpose": "spend",
       "description": "Holds project state token with {projectId, blacklist, metadata} datum",
-      "inferredFrom": ["instance.owner.project.create"]
+      "datumSchema": "Constructor 0: [projectId (bytes), blacklist (list of alias bytes), metadata (bytes)]",
+      "redeemerSchema": "Constructor 0 = empty redeemer (action validated by observer)",
+      "inferredFrom": ["instance.owner.project.create", "project.owner.contributor-blacklist.manage"]
     },
     "treasury-validator": {
-      "address": "addr_test1xrrte4getxntj3k4n450psfgsm53vjuyhpncv5u8xp2fmd6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeguy9v",
+      "address": "addr_test1xzs6fg33zkkce7au3zghej4r7qxtg4cra7uesdxxswz4d0je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lque8ppm",
       "purpose": "spend",
       "description": "Holds project treasury funds with treasury token",
-      "inferredFrom": ["instance.owner.project.create"]
+      "inferredFrom": ["instance.owner.project.create"],
+      "lastUpdated": "2026-01-09"
+    },
+    "task-escrow-validator": {
+      "address": "{parameterized per project}",
+      "exampleAddresses": [
+        "addr_test1xpk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dn6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lquww3xp",
+        "addr_test1xr4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9he6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqqcp7an"
+      ],
+      "purpose": "spend",
+      "description": "Holds task escrow UTxOs and treasury deposits for task operations",
+      "datumSchema": "List of task content hashes",
+      "redeemerSchema": "Constructor 0 = empty (action validated by observer)",
+      "note": "Treasury-token name = contributor_state_id (prerequisite policy ID). Address varies per project - same stake credential but different payment credentials.",
+      "inferredFrom": ["project.manager.tasks.manage", "project.contributor.task.commit"]
+    },
+    "contributor-state-validator": {
+      "address": "{parameterized per project}",
+      "exampleAddress": "addr_test1xrrf6t2atzy7mk525vz4ps6qxqll0j08fhgpcq599r3yf92e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq63d6dc",
+      "purpose": "spend",
+      "description": "Holds contributor state tokens with task commitment data",
+      "datumSchema": "Constructor 0 = no active commitment (completed_tasks list), Constructor 1 = has active commitment (task_definition, task_info, completed_tasks)",
+      "redeemerSchema": "Constructor 0 = contributor action, Constructor 1 = update, Constructor 2 = assess (manager), Constructor 3 = claim/burn",
+      "designNote": "Each project has its own contributor-state-validator. Similar pattern to course-state-validator for courses. Token name = contributor alias.",
+      "inferredFrom": ["project.contributor.task.commit", "project.manager.tasks.assess", "project.contributor.credential.claim"]
     }
   },
   "observers": {
@@ -169,6 +204,36 @@
       "purpose": "withdraw",
       "description": "Validates course prerequisites - receives {output_refs, course_prereqs_map} as redeemer",
       "inferredFrom": ["instance.owner.project.create"]
+    },
+    "project-state-observer": {
+      "stakeAddress": "stake_test17qcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03gctd8038",
+      "purpose": "withdraw",
+      "description": "Validates project state updates (blacklist, etc.) - receives {projectId, stakeCredHash} as redeemer",
+      "redeemerSchema": "Constructor 1: [projectId (bytes), project-state token name (bytes)]",
+      "inferredFrom": ["project.owner.contributor-blacklist.manage"]
+    },
+    "task-escrow-observer": {
+      "stakeAddress": "stake_test17pk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dncvtvrsx",
+      "purpose": "withdraw",
+      "description": "Validates task add/remove operations - receives task parameters and manager alias",
+      "redeemerSchema": "Constructor 1 (add): [tasks_list, alias]; tasks have [content, expiration, lovelace, native_assets]",
+      "inferredFrom": ["project.manager.tasks.manage"]
+    },
+    "task-commit-observer": {
+      "stakeAddress": "stake_test17r4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9hece6faza",
+      "purpose": "withdraw",
+      "description": "Validates contributor task commitment operations",
+      "redeemerSchema": "Constructor 0: [alias, task_definition, empty_list, task_info]; task_definition has [project_content, expiration_time, lovelace_amount, native_assets]",
+      "note": "Different observer from task-escrow-observer - this validates contributor commits, not manager task management",
+      "inferredFrom": ["project.contributor.task.commit"]
+    },
+    "task-assess-observer": {
+      "stakeAddress": "stake_test17qpcdvvgr78x0zwtk7dsesd58pem996zru6l9l06gdmq6ls0c8cyw",
+      "purpose": "withdraw",
+      "description": "Validates task assessment operations (accept/reject)",
+      "redeemerSchema": "Constructor 1: [stakeCredHash, projectId, managerAlias, decisions_list]; decisions have [contributor_state_id, contributor_alias, outcome]",
+      "note": "Manager assesses contributor task submissions - similar to course.teacher.assignments.assess",
+      "inferredFrom": ["project.manager.tasks.assess"]
     }
   },
   "wallets": {
@@ -189,11 +254,12 @@
         "project-create": {
           "formula": "100 ADA base + 10 ADA × managers",
           "example": "2 managers = 120 ADA"
-        }
+        },
+        "project-managers-update": "10000000"
       },
       "description": "Instance treasury for course and project operations",
-      "designNote": "Instance-specific treasury. Course and project creation fees scale with number of teachers/managers (100 ADA base + 10 ADA each). UPCOMING: First teacher/manager will be free.",
-      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage", "instance.owner.project.create"]
+      "designNote": "Instance-specific treasury. Course and project creation fees scale with number of teachers/managers (100 ADA base + 10 ADA each). Update operations are flat 10 ADA. UPCOMING: First teacher/manager will be free.",
+      "inferredFrom": ["instance.owner.course.create", "course.owner.teachers.manage", "instance.owner.project.create", "project.owner.managers.manage"]
     }
   },
   "referenceUtxos": {
@@ -262,8 +328,8 @@
       "inferredFrom": ["instance.owner.project.create"]
     },
     "3206c0ae47250b0007d4f24bab437a1e529cf59a07999ef73adfcb47e6e475a9#0": {
-      "description": "Script reference for project.create",
-      "inferredFrom": ["instance.owner.project.create"]
+      "description": "Script reference for project-state-observer",
+      "inferredFrom": ["instance.owner.project.create", "project.owner.contributor-blacklist.manage"]
     },
     "3206c0ae47250b0007d4f24bab437a1e529cf59a07999ef73adfcb47e6e475a9#1": {
       "description": "Script reference for project.create",
@@ -302,6 +368,22 @@
       "description": "Course LocalStateToken UTxO - contains course validator script_ref",
       "note": "Each course has its own LocalStateToken that embeds the course-specific validator",
       "inferredFrom": ["course.student.assignment.commit"]
+    },
+    "957a855b5ae7fefe3d13c051f2f3234674c765c7cf986244ae5a2a5960d59fd4#1": {
+      "description": "Script reference for contributor-state-policy",
+      "inferredFrom": ["project.contributor.task.commit"]
+    },
+    "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#2": {
+      "description": "Script reference for task-commit-observer",
+      "inferredFrom": ["project.contributor.task.commit"]
+    },
+    "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#4": {
+      "description": "Script reference for task-escrow-validator",
+      "inferredFrom": ["project.contributor.task.commit"]
+    },
+    "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#5": {
+      "description": "Script reference for global-state-v2",
+      "inferredFrom": ["project.contributor.task.commit"]
     }
   }
 }

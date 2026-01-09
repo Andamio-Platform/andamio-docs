@@ -383,6 +383,343 @@
           "required": true
         }
       }
+    },
+    "instance.owner.project.create": {
+      "role": "owner",
+      "system": "instance",
+      "action": "project/create",
+      "endpoint": "/v2/tx/instance/owner/project/create",
+      "method": "POST",
+      "description": "Create a new project with treasury, managers, and optional course prerequisites",
+      "requestBody": "CreateProjectTxRequest",
+      "request": {
+        "alias": {
+          "type": "Alias",
+          "required": true,
+          "description": "Owner's access token alias"
+        },
+        "managers": {
+          "type": "array",
+          "items": "Alias",
+          "required": true,
+          "description": "List of manager aliases"
+        },
+        "course_prereqs": {
+          "type": "array",
+          "items": "[GYMintingPolicyId, [SltHash]]",
+          "required": true,
+          "description": "Course prerequisite requirements: [[course_id, [module_hashes]]]"
+        },
+        "deposit_value": {
+          "type": "array",
+          "items": "[asset_unit, amount]",
+          "required": true,
+          "description": "Initial treasury deposit as [[unit, amount]] pairs. Empty = no deposit."
+        },
+        "initiator_data": {
+          "type": "WalletData",
+          "required": false
+        }
+      },
+      "response": {
+        "project_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Project NFT policy ID - THIS IS the projectId"
+        },
+        "unsigned_tx": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "project.owner.managers.manage": {
+      "role": "owner",
+      "system": "project",
+      "action": "managers/manage",
+      "endpoint": "/v2/tx/project/owner/managers/manage",
+      "method": "POST",
+      "description": "Add or remove managers from a project by updating the governance UTxO",
+      "requestBody": "ManageManagersTxRequest",
+      "request": {
+        "alias": {
+          "type": "Alias",
+          "required": true,
+          "description": "Owner's access token alias"
+        },
+        "project_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Project NFT policy ID (56 char hex)"
+        },
+        "managers_to_add": {
+          "type": "array",
+          "items": "Alias",
+          "required": true,
+          "description": "List of manager aliases to add"
+        },
+        "managers_to_remove": {
+          "type": "array",
+          "items": "Alias",
+          "required": true,
+          "description": "List of manager aliases to remove"
+        }
+      },
+      "response": {
+        "unsigned_tx": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "project.owner.contributor-blacklist.manage": {
+      "role": "owner",
+      "system": "project",
+      "action": "contributor-blacklist/manage",
+      "endpoint": "/v2/tx/project/owner/contributor-blacklist/manage",
+      "method": "POST",
+      "description": "Add or remove contributors from a project's blacklist",
+      "requestBody": "ManageContributorBlacklistTxRequest",
+      "request": {
+        "alias": {
+          "type": "Alias",
+          "required": true,
+          "description": "Owner's access token alias"
+        },
+        "project_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Project NFT policy ID (56 char hex)"
+        },
+        "aliases_to_add": {
+          "type": "array",
+          "items": "Alias",
+          "required": true,
+          "description": "List of contributor aliases to add to blacklist"
+        },
+        "aliases_to_remove": {
+          "type": "array",
+          "items": "Alias",
+          "required": true,
+          "description": "List of contributor aliases to remove from blacklist"
+        }
+      },
+      "response": {
+        "unsigned_tx": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "notes": "No protocol fee charged for blacklist management"
+    },
+    "project.manager.tasks.manage": {
+      "role": "manager",
+      "system": "project",
+      "action": "tasks/manage",
+      "endpoint": "/v2/tx/project/manager/tasks/manage",
+      "method": "POST",
+      "description": "Add or remove project tasks, optionally fund treasury",
+      "requestBody": "ManageTasksTxRequest",
+      "request": {
+        "alias": {
+          "type": "Alias",
+          "required": true,
+          "description": "Manager's access token alias"
+        },
+        "project_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Project NFT policy ID (56 char hex)"
+        },
+        "contributor_state_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Prerequisite credential policy ID - contributors must hold token from this policy"
+        },
+        "tasks_to_add": {
+          "type": "array",
+          "required": true,
+          "items": {
+            "type": "TaskDefinition",
+            "properties": {
+              "project_content": {
+                "type": "string",
+                "required": true,
+                "description": "Task content hash or identifier"
+              },
+              "expiration_time": {
+                "type": "integer",
+                "required": true,
+                "description": "Expiration timestamp in milliseconds"
+              },
+              "lovelace_amount": {
+                "type": "integer",
+                "required": true,
+                "description": "ADA reward in lovelace"
+              },
+              "native_assets": {
+                "type": "array",
+                "required": true,
+                "description": "Additional token rewards (never includes lovelace)"
+              }
+            }
+          },
+          "description": "Tasks to create"
+        },
+        "tasks_to_remove": {
+          "type": "array",
+          "required": true,
+          "description": "Tasks to remove (must match existing task parameters)"
+        },
+        "deposit_value": {
+          "type": "array",
+          "required": false,
+          "description": "Optional treasury deposit as [[unit, amount]] pairs"
+        },
+        "aliases_to_remove": {
+          "type": "array",
+          "required": false,
+          "description": "IGNORED - not used"
+        }
+      },
+      "response": {
+        "unsigned_tx": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "notes": "No minting occurs - uses existing treasury-tokens from project.create"
+    },
+    "project.contributor.task.commit": {
+      "role": "contributor",
+      "system": "project",
+      "action": "task/commit",
+      "endpoint": "/v2/tx/project/contributor/task/commit",
+      "method": "POST",
+      "description": "Enroll in a project (if not enrolled) and commit to a task",
+      "requestBody": "TaskCommitTxRequest",
+      "request": {
+        "alias": {
+          "type": "Alias",
+          "required": true,
+          "description": "Contributor's access token alias"
+        },
+        "project_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Project NFT policy ID (56 char hex)"
+        },
+        "contributor_state_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Contributor state policy ID (from project prerequisites)"
+        },
+        "task_hash": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{64}$",
+          "required": true,
+          "description": "Hash of the task to commit to (64 char hex)"
+        },
+        "task_info": {
+          "type": "string",
+          "required": true,
+          "description": "Evidence/info for the task submission"
+        }
+      },
+      "response": {
+        "unsigned_tx": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "notes": "MINTS contributor-state token on first enrollment. Combines enrollment + task commitment in a single transaction. Similar pattern to course.student.assignment.commit."
+    },
+    "project.manager.tasks.assess": {
+      "role": "manager",
+      "system": "project",
+      "action": "tasks/assess",
+      "endpoint": "/v2/tx/project/manager/tasks/assess",
+      "method": "POST",
+      "description": "Assess contributor task submissions (accept/reject)",
+      "requestBody": "TasksAssessTxRequest",
+      "request": {
+        "alias": {
+          "type": "Alias",
+          "required": true,
+          "description": "Manager's access token alias"
+        },
+        "project_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Project NFT policy ID (56 char hex)"
+        },
+        "contributor_state_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Contributor state policy ID"
+        },
+        "task_decisions": {
+          "type": "array",
+          "required": true,
+          "description": "List of assessment decisions",
+          "items": {
+            "type": "TaskDecision",
+            "properties": {
+              "alias": {
+                "type": "Alias",
+                "required": true,
+                "description": "Contributor alias being assessed"
+              },
+              "outcome": {
+                "type": "enum",
+                "values": ["accept", "reject"],
+                "required": true,
+                "description": "Assessment outcome"
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "unsigned_tx": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "notes": "No minting - spend and recreate pattern. Similar to course.teacher.assignments.assess. Supports batching multiple decisions."
+    },
+    "project.contributor.credential.claim": {
+      "role": "contributor",
+      "system": "project",
+      "action": "credential/claim",
+      "endpoint": "/v2/tx/project/contributor/credential/claim",
+      "method": "POST",
+      "description": "Claim project credential by burning contributor state token",
+      "requestBody": "CredentialClaimTxRequest",
+      "request": {
+        "alias": {
+          "type": "Alias",
+          "required": true,
+          "description": "Contributor's access token alias"
+        },
+        "project_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Project NFT policy ID (56 char hex)"
+        },
+        "contributor_state_id": {
+          "type": "GYMintingPolicyId",
+          "required": true,
+          "description": "Contributor state policy ID"
+        }
+      },
+      "response": {
+        "unsigned_tx": {
+          "type": "string",
+          "required": true
+        }
+      },
+      "notes": "BURNS contributor-state token. 1 ADA protocol fee. Contributor gets NET GAIN from released deposit. Credential hash stored in global state."
     }
   }
 }

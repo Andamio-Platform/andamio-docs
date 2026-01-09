@@ -1,0 +1,264 @@
+# V2 Transaction: Project Manager Tasks Manage
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/project/manager/tasks/manage
+
+name: ProjectManagerTasksManageV2
+id: project.manager.tasks.manage
+
+metadata:
+  role: "manager"
+  system: "project"
+  description: "Add or remove project tasks, optionally fund treasury"
+  api_endpoint: "/v2/tx/project/manager/tasks/manage"
+
+request_body:
+  description: "ManageTasksTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Manager's access token alias"
+      example: "james"
+    project_id:
+      type: string
+      required: true
+      description: "Project NFT policy ID (56 char hex)"
+      example: "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba"
+    contributor_state_id:
+      type: string
+      required: true
+      description: "Prerequisite credential policy ID - contributors must hold a token from this policy to commit"
+      example: "7c542d1ee32de598727b1fae859afa08d4eafcab9eadfcdcbb22bd97"
+    tasks_to_add:
+      type: "object[]"
+      required: true
+      description: "Tasks to create (empty = none)"
+      item_fields:
+        project_content:
+          type: string
+          description: "Task content hash or identifier"
+        expiration_time:
+          type: integer
+          description: "Task expiration timestamp (milliseconds)"
+        lovelace_amount:
+          type: integer
+          description: "ADA reward in lovelace"
+        native_assets:
+          type: "array"
+          description: "Additional token rewards (never includes lovelace)"
+      example:
+        - project_content: "somearbitraryhashletsfigureitout"
+          expiration_time: 1768577592000
+          lovelace_amount: 12500000
+          native_assets: []
+    tasks_to_remove:
+      type: "object[]"
+      required: true
+      description: "Tasks to remove (must match existing task parameters exactly)"
+      example:
+        - project_content: "anothertaskhash"
+          expiration_time: 1768577592000
+          lovelace_amount: 5000000
+          native_assets: [["fe8efd6bb0dfafd5c7ed9764c9ee11d0580bfab2553f94743d8ef48e.7457696e64736f72", 4]]
+    deposit_value:
+      type: "array"
+      required: false
+      description: "Optional treasury deposit as [[unit, amount]] pairs"
+      example: [["lovelace", 175000000], ["fe8efd6bb0dfafd5c7ed9764c9ee11d0580bfab2553f94743d8ef48e.7457696e64736f72", 4]]
+    aliases_to_remove:
+      type: "array"
+      required: false
+      description: "IGNORED - not used in current implementation"
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 430739
+  protocolFee: 0
+  protocolFeeDestination: null
+  protocolFeeNote: "No protocol fee for task management"
+  minUtxo:
+    task-escrow-output: 5000000
+    treasury-deposit-output: "varies with deposit_value"
+    user-token-output: 1146460
+  executionUnits:
+    spend_5_task_escrow:
+      mem: 61128
+      steps: 27602412
+    reward_0_task_escrow_observer:
+      mem: 599713
+      steps: 217647277
+  collateral: 646109
+  note: "Execution units scale with number of tasks added/removed"
+
+inputs:
+  - id: task-escrow-input
+    type: script
+    validator: task-escrow-validator
+    address: "addr_test1xpk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dn6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lquww3xp"
+    redeemer:
+      tag: "Spend"
+      index: 5
+      data: "{constructor: 0, fields: []}"
+      description: "Empty redeemer - action determined by observer"
+    datum:
+      type: inline
+      format: "list"
+      description: "List of task content hashes (before update)"
+    description: "Existing task escrow UTxO - spent to update task list"
+
+  - id: wallet-inputs
+    type: wallet
+    address: "{user_wallet}"
+    description: "User's wallet providing ADA for fees and optional deposit"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "Manager's access token UTxO - proves manager identity"
+
+reference_inputs:
+  - id: ref-0
+    utxo: "bf7de2943e1941574b69ad5eb4ee13e981ebe8535d3f2bcced35ee3d7086861f#3"
+    description: "Script reference for task-escrow-validator"
+
+  - id: ref-1
+    utxo: "bf7de2943e1941574b69ad5eb4ee13e981ebe8535d3f2bcced35ee3d7086861f#4"
+    description: "Script reference for task-escrow-observer"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "Manager's access token returned to wallet"
+
+  - id: treasury-deposit-output
+    type: script
+    validator: task-escrow-validator
+    address: "addr_test1xpk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dn6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lquww3xp"
+    value:
+      - "{deposit_value lovelace}"
+      - "{deposit_value native_assets}"
+    datum: null
+    description: "Optional treasury deposit (only if deposit_value provided)"
+    conditional: "Only present if deposit_value is non-empty"
+
+  - id: task-escrow-output
+    type: script
+    validator: task-escrow-validator
+    address: "addr_test1xpk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dn6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lquww3xp"
+    value:
+      - "{task lovelace_amount}"
+      - "1 treasury-token-policy.{contributor_state_id}"
+    datum:
+      type: inline
+      format: "list"
+      fields:
+        - task_hashes: "[{hash of task parameters}]"
+      example: "[33668fb12ca84cb6676e84a29aaa1a7bee46f156c7c2a88f86ad400e829e34cb]"
+      note: "Task content hash computed from project_content + expiration + rewards"
+    description: "Task escrow UTxO with updated task list"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet (multiple UTxOs in practice)"
+
+mints: null
+# CRITICAL: Tasks do NOT mint new tokens!
+# Treasury-tokens were minted during project.create
+# Task management moves existing tokens between UTxOs
+
+withdraws:
+  - id: task-escrow-observer-withdraw
+    validator: task-escrow-observer
+    stakeAddress: "stake_test17pk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dncvtvrsx"
+    redeemer:
+      tag: "Reward"
+      index: 0
+      data: "{constructor: 1, fields: [tasks_list, alias]}"
+      structure:
+        constructor: 1
+        description: "Add tasks action"
+        fields:
+          - name: tasks_list
+            type: "list"
+            items:
+              constructor: 0
+              fields:
+                - project_content: "bytes (task content hash/identifier)"
+                - expiration_time: "integer (milliseconds)"
+                - lovelace_amount: "integer"
+                - native_assets: "list of [policy.asset, quantity]"
+          - name: alias
+            type: "bytes"
+            description: "Manager's alias"
+      example: "{constructor:1, fields:[{list:[{constructor:0, fields:['somearbitraryhashletsfigureitout', 1768577592000, 12500000, []]}]}, 'james']}"
+    amount: 0
+    description: "Observer validates task add/remove operations"
+
+design_notes:
+  no_minting: |
+    CRITICAL: Unlike course modules, tasks do NOT mint tokens!
+    The treasury-token was already minted during project.create.
+    Task management moves the existing token between escrow UTxOs.
+
+  token_naming_pattern: |
+    Treasury-token name = contributor_state_id (prerequisite policy ID).
+    This links each task escrow to its prerequisite requirements.
+    Contributors must hold a token from the contributor_state_id policy to commit.
+
+  task_datum_structure: |
+    Task datum is a list of hashes, where each hash represents a task.
+    The hash is computed from: project_content + expiration_time + lovelace_amount + native_assets.
+    Adding a task adds its hash to the list; removing a task removes its hash.
+
+  deposit_pattern: |
+    Treasury deposits go to the SAME validator as task escrows.
+    Deposits have no datum; task escrows have the task hash list datum.
+    Both share the task-escrow-validator address.
+
+  observer_actions: |
+    Constructor 0 = remove tasks (suspected, needs verification)
+    Constructor 1 = add tasks (confirmed from this CBOR)
+    The observer receives the full task parameters to validate operations.
+
+  reward_structure: |
+    lovelace_amount: ADA portion of task reward (REQUIRED)
+    native_assets: Additional tokens (can be empty, NEVER includes lovelace)
+    Total reward is held in the task escrow UTxO.
+
+  prerequisite_design: |
+    contributor_state_id is a policy ID (not a list of SLTs).
+    This is more efficient than listing all prerequisite SLT hashes.
+    The policy typically represents a course-state credential.
+
+  ux_recommendation: |
+    deposit_value should cover sum of all task rewards.
+    Not enforced on-chain, but ensures treasury has funds for rewards.
+
+registry:
+  validators:
+    task-escrow-validator:
+      address: "addr_test1xpk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dn6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lquww3xp"
+      note: "Holds both treasury deposits and task escrow UTxOs"
+  observers:
+    task-escrow-observer:
+      stakeAddress: "stake_test17pk6rqehsp8av8yan6qztzncwf4ltue74em8960l3ng9dncvtvrsx"
+      note: "Validates task add/remove operations"
+  policies:
+    treasury-token-policy:
+      policyId: "b3c8215adf6d521fca3ec5c1f82e2cfd92bcf1fc5ae921a4f3cd5c82"
+      note: "Token name = contributor_state_id (prerequisite policy ID)"

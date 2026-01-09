@@ -1,0 +1,239 @@
+---
+title: "Tasks Manage"
+description: "Add or remove project tasks, optionally fund treasury"
+tx_file: "project/manager/tasks/manage.yaml"
+---
+
+# Project Manager Tasks Manage
+
+Add or remove project tasks. Managers can batch multiple operations in a single transaction, optionally funding the project treasury at the same time.
+
+## API Endpoint
+
+```
+POST /v2/tx/project/manager/tasks/manage
+```
+
+## Cost Summary
+
+| Cost Type | Amount | Notes |
+|-----------|--------|-------|
+| Transaction Fee | ~0.43 ADA | Network fee (scales with task count) |
+| Protocol Fee | 0 ADA | No service fee |
+| Task Escrow | varies | Holds the task reward amount |
+
+## Request Body
+
+```json
+{
+  "alias": "james",
+  "project_id": "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba",
+  "contributor_state_id": "7c542d1ee32de598727b1fae859afa08d4eafcab9eadfcdcbb22bd97",
+  "tasks_to_add": [
+    {
+      "project_content": "somearbitraryhashletsfigureitout",
+      "expiration_time": 1768577592000,
+      "lovelace_amount": 12500000,
+      "native_assets": []
+    }
+  ],
+  "tasks_to_remove": [],
+  "deposit_value": [
+    ["lovelace", 175000000],
+    ["fe8efd6bb0dfafd5c7ed9764c9ee11d0580bfab2553f94743d8ef48e.7457696e64736f72", 4]
+  ]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | string | Yes | Manager's access token alias |
+| `project_id` | string | Yes | Project NFT policy ID (56 char hex) |
+| `contributor_state_id` | string | Yes | Prerequisite credential policy ID |
+| `tasks_to_add` | object[] | Yes | Tasks to create (empty = none) |
+| `tasks_to_remove` | object[] | Yes | Tasks to remove (empty = none) |
+| `deposit_value` | array | No | Optional treasury deposit |
+
+## Task Definition Fields
+
+Each task in `tasks_to_add` has the following structure:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `project_content` | string | Yes | Task content hash or identifier |
+| `expiration_time` | integer | Yes | Expiration timestamp (milliseconds since epoch) |
+| `lovelace_amount` | integer | Yes | ADA reward in lovelace (e.g., 12500000 = 12.5 ADA) |
+| `native_assets` | array | Yes | Additional token rewards (empty = ADA only) |
+
+## Transaction Pattern
+
+**Spend and Recreate with Observer** - Unlike course modules, tasks do **NOT** mint new tokens!
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    TASKS MANAGE TRANSACTION                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  INPUTS                           OUTPUTS                        │
+│  ──────                           ───────                        │
+│  ┌─────────────────┐             ┌─────────────────┐            │
+│  │ Task Escrow     │────────────▶│ Task Escrow     │            │
+│  │ (treasury-token │   SPEND     │ (updated datum) │            │
+│  │  + task datum)  │             └─────────────────┘            │
+│  └─────────────────┘                                            │
+│                                   ┌─────────────────┐            │
+│  ┌─────────────────┐             │ Treasury Deposit│  OPTIONAL  │
+│  │ Wallet          │────────────▶│ (if deposit_    │            │
+│  │ (u-token + ADA) │             │  value provided)│            │
+│  └─────────────────┘             └─────────────────┘            │
+│                                                                  │
+│  MINTS: NONE                      ┌─────────────────┐            │
+│  ─────────────                    │ User Wallet     │            │
+│  Treasury-tokens were             │ (u-token +      │            │
+│  minted during project.create     │  change)        │            │
+│                                   └─────────────────┘            │
+│                                                                  │
+│  OBSERVER VALIDATION                                             │
+│  ───────────────────                                            │
+│  task-escrow-observer validates add/remove operations            │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Critical Design**: Treasury-tokens are NOT minted per-task. They were minted during `project.create` and are reused across all task operations. This is fundamentally different from course modules which mint a new token per module.
+
+## Key Concepts
+
+### Token Naming: Treasury-Token = Prerequisite
+
+The treasury-token name equals the `contributor_state_id`:
+
+```
+Treasury-token: b3c8215a....{contributor_state_id}
+                            └─────────────────────┘
+                            Token name = prerequisite policy ID
+```
+
+This links each task escrow to its prerequisite requirements directly in the token itself.
+
+### Reward Structure: `lovelace_amount` vs `native_assets`
+
+Task rewards are defined in two separate fields:
+
+- **`lovelace_amount`**: The ADA portion of the reward (in lovelace)
+- **`native_assets`**: Additional tokens beyond ADA (can be empty)
+
+**Important**: `native_assets` should **never** include lovelace. ADA is always specified separately in `lovelace_amount`.
+
+```json
+{
+  "lovelace_amount": 50000000,
+  "native_assets": [
+    ["fe8efd6bb0dfafd5c7ed9764c9ee11d0580bfab2553f94743d8ef48e.7457696e64736f72", 10]
+  ]
+}
+```
+
+### Prerequisites: `contributor_state_id`
+
+The `contributor_state_id` defines who can commit to tasks. This is a **policy ID** that represents the credential a contributor must hold.
+
+**Design Optimization**: Rather than embedding a long list of SLT hashes (like course modules do with `prerequisite_slts`), projects use `contributor_state_id` as a compact reference. This single policy ID encapsulates "contributor has completed course X" - the on-chain logic verifies they hold the appropriate course-state credential.
+
+```json
+{
+  "contributor_state_id": "7c542d1ee32de598727b1fae859afa08d4eafcab9eadfcdcbb22bd97"
+}
+```
+
+This means: "Only contributors holding a token from policy `7c542d...` can commit to tasks in this escrow."
+
+### Task Datum Structure
+
+The task escrow datum is a list of task hashes:
+
+```
+Datum: [task_hash_1, task_hash_2, ...]
+```
+
+Each hash is computed from the task parameters (content, expiration, rewards). Adding a task appends its hash; removing a task removes its hash.
+
+### Optional Treasury Funding: `deposit_value`
+
+Managers can optionally fund the project treasury when creating tasks:
+
+```json
+{
+  "deposit_value": [
+    ["lovelace", 175000000],
+    ["fe8efd6bb0dfafd5c7ed9764c9ee11d0580bfab2553f94743d8ef48e.7457696e64736f72", 4]
+  ]
+}
+```
+
+This deposits 175 ADA + 4 tokens into the treasury alongside the task operations. If not funding, use an empty array: `"deposit_value": []`
+
+**UX Recommendation**: Any interface built on this transaction should encourage (or require) that `deposit_value` covers at least the sum of all task rewards being created. For example, if creating 3 tasks with rewards of 50, 75, and 100 ADA, the deposit should be at least 225 ADA.
+
+This is **not enforced on-chain** - tasks can be created without sufficient treasury funds. However, requiring adequate funding upfront provides a better user experience: contributors can trust that rewards are available when they complete work, rather than discovering an underfunded treasury after submission.
+
+### Ignored Field: `aliases_to_remove`
+
+The `aliases_to_remove` field exists in the schema but is not used. It can be safely ignored.
+
+## Inputs
+
+| Input | Type | Validator | Description |
+|-------|------|-----------|-------------|
+| Task Escrow | Script | task-escrow-validator | Existing task escrow UTxO |
+| Access Token | Wallet | - | Manager's u-token |
+| Wallet UTxOs | Wallet | - | ADA for fees and deposits |
+
+## Outputs
+
+| Output | Validator | Value | Description |
+|--------|-----------|-------|-------------|
+| Task Escrow | task-escrow-validator | reward + treasury-token | Updated task list |
+| Treasury Deposit | task-escrow-validator | deposit_value | Optional deposit (no datum) |
+| User Wallet | wallet | u-token + change | Access token returned |
+
+## Observer Validation
+
+The `task-escrow-observer` validates all task operations:
+
+```
+Redeemer: {
+  constructor: 1,  // Add tasks
+  fields: [
+    [  // List of tasks
+      {
+        content: "somearbitraryhashletsfigureitout",
+        expiration: 1768577592000,
+        lovelace: 12500000,
+        native_assets: []
+      }
+    ],
+    "james"  // Manager alias
+  ]
+}
+```
+
+## Reference Inputs
+
+| UTxO | Description |
+|------|-------------|
+| `bf7de...#3` | Script reference for task-escrow-validator |
+| `bf7de...#4` | Script reference for task-escrow-observer |
+
+## Key Notes
+
+- **No minting** - Treasury-tokens were minted at project creation
+- **No protocol fee** - Only network transaction fee applies
+- **Batch operations** - Add and remove multiple tasks in one transaction
+- **Combined deposit** - Fund treasury while managing tasks
+
+## See Also
+
+- [Project Create](/docs/protocol/v2/transactions/instance/owner/project/create) - Create a new project (mints treasury-tokens)
+- [Managers Manage](/docs/protocol/v2/transactions/project/owner/managers/manage) - Manage project managers
+- [Blacklist Manage](/docs/protocol/v2/transactions/project/owner/contributor-blacklist/manage) - Manage contributor blacklist

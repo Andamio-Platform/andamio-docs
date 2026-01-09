@@ -1,0 +1,223 @@
+# V2 Transaction: Project Owner Contributor Blacklist Manage
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/project/owner/contributor-blacklist/manage
+
+name: ProjectOwnerContributorBlacklistManageV2
+id: project.owner.contributor-blacklist.manage
+
+metadata:
+  role: "owner"
+  system: "project"
+  description: "Add or remove contributors from a project's blacklist"
+  api_endpoint: "/v2/tx/project/owner/contributor-blacklist/manage"
+
+request_body:
+  description: "ManageContributorBlacklistTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Owner's access token alias"
+      example: "james"
+    project_id:
+      type: string
+      required: true
+      description: "Project NFT policy ID (56 char hex)"
+      example: "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba"
+    aliases_to_add:
+      type: "string[]"
+      required: true
+      description: "List of contributor aliases to add to blacklist"
+      example: ["user1"]
+    aliases_to_remove:
+      type: "string[]"
+      required: true
+      description: "List of contributor aliases to remove from blacklist"
+      example: []
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 344679
+  protocolFee: 0
+  protocolFeeDestination: null
+  protocolFeeNote: "No protocol fee for blacklist management"
+  minUtxo:
+    local-state-nft-output: 1236970
+    project-state-output: 1469710
+    user-token-output: 1146460
+  executionUnits:
+    spend_1_local_state_nft:
+      mem: 265885
+      steps: 87614845
+    spend_2_project_state:
+      mem: 81041
+      steps: 39799780
+    reward_0_project_state_observer:
+      mem: 360969
+      steps: 112494489
+  collateral: 517019
+
+inputs:
+  - id: local-state-nft-input
+    type: script
+    validator: local-state-nft-validator
+    address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    redeemer:
+      tag: "Spend"
+      index: 1
+      data: "{projectId as bytes}"
+      example: "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba"
+    description: "LocalStateNFT UTxO - spent to verify project ownership"
+
+  - id: project-state-input
+    type: script
+    validator: project-state-validator
+    address: "addr_test1xqcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03g6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq54qulh"
+    redeemer:
+      tag: "Spend"
+      index: 2
+      data: "{constructor: 0, fields: []}"
+      description: "Empty redeemer - action determined by observer"
+    datum:
+      type: inline
+      format: "constructor 0"
+      fields:
+        - projectId: "bytes (28 bytes hex)"
+        - blacklist: "list of aliases (before update)"
+        - metadata: "bytes (empty or metadata)"
+      example: "[projectId, [], '']"
+    description: "Project state UTxO - spent to update blacklist"
+
+  - id: wallet-inputs
+    type: wallet
+    address: "{user_wallet}"
+    description: "User's wallet providing ADA for fees"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "User's access token UTxO - proves ownership identity"
+
+reference_inputs:
+  - id: ref-0
+    utxo: "3206c0ae47250b0007d4f24bab437a1e529cf59a07999ef73adfcb47e6e475a9#0"
+    description: "Script reference for project-state-observer"
+
+  - id: ref-1
+    utxo: "57701f1a1870c1786524f0462b608e1fb8f597694c49c18cea058032812c7937#3"
+    description: "Script reference for local-state-nft-validator"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "User's access token returned to wallet"
+
+  - id: local-state-nft-output
+    type: script
+    validator: local-state-nft-validator
+    address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    value:
+      - "~1236970 lovelace"
+      - "1 {projectId-policy}.LocalStateNFT"
+    datum:
+      type: inline
+      format: "bytes"
+      value: "{owner_alias}"
+      example: "6a616d6573 = 'james'"
+    description: "LocalStateNFT recreated at same validator (unchanged)"
+
+  - id: project-state-output
+    type: script
+    validator: project-state-validator
+    address: "addr_test1xqcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03g6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq54qulh"
+    value:
+      - "~1469710 lovelace"
+      - "1 project-state-policy.{stakeCredHash}"
+    datum:
+      type: inline
+      format: "constructor 0"
+      fields:
+        - projectId: "bytes (28 bytes hex)"
+        - blacklist: "list of aliases (after update)"
+        - metadata: "bytes (empty or metadata)"
+      example: "[1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba, [7573657231], '']"
+      note: "Datum reflects the updated blacklist after add/remove operations. 7573657231 = 'user1'"
+    description: "Project state UTxO recreated with updated blacklist"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet (multiple UTxOs in practice)"
+
+mints: null
+
+withdraws:
+  - id: project-state-observer-withdraw
+    validator: project-state-observer
+    stakeAddress: "stake_test17qcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03gctd8038"
+    redeemer:
+      tag: "Reward"
+      index: 0
+      data: "{constructor: 1, fields: [projectId, stakeCredHash]}"
+      example: "{constructor: 1, fields: ['1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba', '6da18337804fd61c9d9e80258a78726bf5f33eae7672e9ff8cd056cf']}"
+      description: "Observer redeemer with projectId and project-state token name"
+    amount: 0
+    description: "Observer validates the blacklist update operation"
+
+design_notes:
+  spend_and_recreate_with_observer: |
+    This is a "spend and recreate with observer" transaction pattern.
+    Two script UTxOs are spent and recreated with updated data.
+    An observer validates the operation via withdrawal.
+
+  ownership_verification: |
+    The LocalStateNFT is spent and recreated to verify project ownership.
+    The local-state-nft-validator receives the projectId as its redeemer.
+
+  observer_validation: |
+    The project-state-observer validates the blacklist update.
+    It receives {projectId, stakeCredHash} as redeemer to identify the project.
+    The observer ensures only authorized updates occur.
+
+  datum_update: |
+    The project-state UTxO datum changes from the old blacklist to the new list.
+    Blacklisted contributors are identified by their access token aliases (hex-encoded strings).
+    Constructor 0 format: [projectId, [blacklist_aliases], metadata]
+
+  blacklist_effect: |
+    Contributors on the blacklist cannot:
+    - Accept tasks in this project
+    - Submit work for assessment
+    - Claim rewards from this project
+
+  no_protocol_fee: |
+    Unlike project creation and manager updates, blacklist management has NO protocol fee.
+    Only the transaction fee is charged.
+
+registry:
+  validators:
+    local-state-nft-validator:
+      address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    project-state-validator:
+      address: "addr_test1xqcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03g6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq54qulh"
+  observers:
+    project-state-observer:
+      stakeAddress: "stake_test17qcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03gctd8038"
+      note: "Validates project state updates including blacklist changes"
+  policies:
+    project-state-policy:
+      policyId: "31cc37c36b2e07b686d60c7f1b79ba35ff73effb7d01f0faf9c0f8a3"

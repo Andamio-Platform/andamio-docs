@@ -1,0 +1,214 @@
+# V2 Transaction: Project Owner Managers Manage
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/project/owner/managers/manage
+
+name: ProjectOwnerManagersManageV2
+id: project.owner.managers.manage
+
+metadata:
+  role: "owner"
+  system: "project"
+  description: "Add or remove managers from a project by updating the governance UTxO"
+  api_endpoint: "/v2/tx/project/owner/managers/manage"
+
+request_body:
+  description: "ManageManagersTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Owner's access token alias"
+      example: "james"
+    project_id:
+      type: string
+      required: true
+      description: "Project NFT policy ID (56 char hex)"
+      example: "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba"
+    managers_to_add:
+      type: "string[]"
+      required: true
+      description: "List of manager aliases to add"
+      example: ["user1"]
+    managers_to_remove:
+      type: "string[]"
+      required: true
+      description: "List of manager aliases to remove"
+      example: ["james"]
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 298863
+  protocolFee: 10000000
+  protocolFeeDestination: instance-treasury
+  minUtxo:
+    local-state-nft-output: 1236970
+    governance-output: 1357650
+    user-token-output: 1146460
+  executionUnits:
+    spend_2_local_state_nft:
+      mem: 311977
+      steps: 102604429
+    spend_3_governance:
+      mem: 273941
+      steps: 93398707
+  note: "Same cost structure as course.owner.teachers.manage - 10 ADA protocol fee"
+
+inputs:
+  - id: local-state-nft-input
+    type: script
+    validator: local-state-nft-validator
+    address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    redeemer:
+      tag: "Spend"
+      index: 2
+      data: "{projectId as bytes}"
+      example: "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba"
+    description: "LocalStateNFT UTxO - spent to verify project ownership"
+
+  - id: governance-input
+    type: script
+    validator: governance-validator
+    address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+    redeemer:
+      tag: "Spend"
+      index: 3
+      data: "{projectId as bytes}"
+      example: "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba"
+    datum:
+      type: inline
+      format: "list"
+      description: "Current managers list (before update)"
+      example: "[\"james\", \"nelsonksh\"]"
+    description: "Project governance UTxO - spent to update managers list"
+
+  - id: wallet-inputs
+    type: wallet
+    address: "{user_wallet}"
+    description: "User's wallet providing ADA for fees"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "User's access token UTxO - proves ownership identity"
+
+reference_inputs:
+  - id: ref-0
+    utxo: "57701f1a1870c1786524f0462b608e1fb8f597694c49c18cea058032812c7937#3"
+    description: "Script reference for local-state-nft-validator"
+
+  - id: ref-1
+    utxo: "cc1e834f7340ff94ff2ef8a1141c5dd7c7b68dae713e4a932c458016bead3ba1#3"
+    description: "Script reference for governance-validator"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1146460 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "User's access token returned to wallet"
+
+  - id: local-state-nft-output
+    type: script
+    validator: local-state-nft-validator
+    address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    value:
+      - "~1236970 lovelace"
+      - "1 {projectId-policy}.LocalStateNFT"
+    datum:
+      type: inline
+      format: "bytes"
+      value: "{owner_alias}"
+      example: "6a616d6573 = 'james'"
+    description: "LocalStateNFT recreated at same validator (unchanged)"
+
+  - id: governance-output
+    type: script
+    validator: governance-validator
+    address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+    value:
+      - "~1357650 lovelace"
+      - "1 governance-policy.{projectId}"
+    datum:
+      type: inline
+      format: "list"
+      fields:
+        - managers: "[{updated_manager_aliases}]"
+      example: "[\"nelsonksh\", \"user1\"]"
+      note: "Datum reflects the updated managers list after add/remove operations"
+    description: "Project governance UTxO recreated with updated managers list"
+
+  - id: protocol-fee
+    type: wallet
+    label: instance-treasury
+    address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"
+    value:
+      - "10000000 lovelace"
+    description: "10 ADA protocol fee to instance treasury"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet (multiple UTxOs in practice)"
+
+mints: null
+
+withdraws: null
+
+design_notes:
+  spend_and_recreate: |
+    This is a "spend and recreate" transaction pattern - no minting occurs.
+    Two script UTxOs are spent and recreated with updated data.
+
+  ownership_verification: |
+    The LocalStateNFT is spent and recreated to verify project ownership.
+    Both validators receive the projectId as their redeemer.
+
+  datum_update: |
+    The governance UTxO datum changes from the old managers list to the new list.
+    Managers are represented by their access token aliases (hex-encoded strings).
+
+  manager_permissions: |
+    Managers in the governance list gain ability to:
+    - Manage project tasks (mint, update, burn)
+    - Assess contributor task submissions (accept/refuse)
+    - Manage treasury operations
+
+  no_observer: |
+    Unlike project.create, this transaction does not use an observer.
+    Ownership is verified through the LocalStateNFT spend.
+
+  shared_governance_validator: |
+    This transaction uses the SAME governance validator and policy as courses.
+    The governance-validator handles both course teachers and project managers.
+    Token name in both cases is the courseId or projectId.
+
+  identical_to_teachers_manage: |
+    This transaction follows the IDENTICAL pattern to course.owner.teachers.manage.
+    Same validators, same protocol fee (10 ADA), same reference inputs.
+
+registry:
+  validators:
+    local-state-nft-validator:
+      address: "addr_test1xpluky2stsckzgwldqn7ke6vw8ygcj5awefw56u7ye2t6dje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqd8z70g"
+    governance-validator:
+      address: "addr_test1xzay57ateehcgr5p07hc9juqjjhvmjseyzgf6jmrs6pjydje040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqk499tw"
+      note: "SHARED with courses - handles both teachers and managers"
+  policies:
+    governance-policy:
+      policyId: "ba4a7babce6f840e817faf82cb8094aecdca1920909d4b6386832236"
+      note: "SHARED with courses - token name is courseId or projectId"
+  wallets:
+    instance-treasury:
+      address: "addr_test1qpuptlg3kgtcq0rq8rq0z7w8pp0j7p98whvsg4wp6c0mngu7nalltfu076ak2qfw0p2ghn5svge4pm78gpfr6rl8rtrszh0nq3"

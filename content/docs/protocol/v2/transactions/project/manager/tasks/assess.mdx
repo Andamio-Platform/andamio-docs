@@ -1,0 +1,215 @@
+---
+title: "Tasks Assess"
+description: "Assess contributor task submissions (accept/reject)"
+tx_file: "project/manager/tasks/assess.yaml"
+---
+
+# Project Manager Tasks Assess
+
+Assess contributor task submissions. Managers can accept or reject completed task work, similar to how teachers assess student assignments in courses.
+
+## API Endpoint
+
+```
+POST /v2/tx/project/manager/tasks/assess
+```
+
+## Cost Summary
+
+| Cost Type | Amount | Notes |
+|-----------|--------|-------|
+| Transaction Fee | ~0.35 ADA | Network fee (scales with decisions) |
+| Protocol Fee | 0 ADA | No service fee |
+
+## Request Body
+
+```json
+{
+  "alias": "james",
+  "project_id": "3b20d771fff69738127691ec3aea3803cdae1b1292ed1e1ca62a5f30",
+  "contributor_state_id": "c69d2d5d5889edda8aa30550c340303ff7c9e74dd01c028528e24495",
+  "task_decisions": [
+    {
+      "alias": "student_001",
+      "outcome": "accept"
+    }
+  ]
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | string | Yes | Manager's access token alias |
+| `project_id` | string | Yes | Project NFT policy ID (56 char hex) |
+| `contributor_state_id` | string | Yes | Contributor state policy ID |
+| `task_decisions` | object[] | Yes | List of assessment decisions |
+
+### Task Decision Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `alias` | string | Contributor alias being assessed |
+| `outcome` | string | Either `"accept"` or `"reject"` |
+
+## Transaction Pattern
+
+**Spend and Recreate with Observer** - No minting, just updates existing contributor state.
+
+```
++---------------------------------------------------------------------+
+|                    TASKS ASSESS TRANSACTION                          |
++---------------------------------------------------------------------+
+|                                                                      |
+|  INPUTS                           OUTPUTS                            |
+|  ------                           -------                            |
+|  +------------------+             +------------------+               |
+|  | Contributor      |------------>| Contributor      |               |
+|  | State            |   SPEND     | State            |               |
+|  | (active commit)  |   (2)       | (task completed) |               |
+|  +------------------+             +------------------+               |
+|                                                                      |
+|  +------------------+             +------------------+               |
+|  | Wallet           |------------>| User Wallet      |               |
+|  | (u-token + ADA)  |             | (u-token +       |               |
+|  +------------------+             |  change)         |               |
+|                                   +------------------+               |
+|  MINTS: NONE                                                         |
+|  -----------                                                         |
+|  Contributor-state token already exists                              |
+|                                                                      |
+|  OBSERVER VALIDATION                                                 |
+|  -------------------                                                 |
+|  task-assess-observer validates assessment operation                 |
+|                                                                      |
++---------------------------------------------------------------------+
+```
+
+**Critical Design**: This transaction does NOT mint tokens. The contributor-state token was minted during `task-commit` and is simply updated here.
+
+## Key Concepts
+
+### Datum Transition
+
+The contributor state datum changes from "has active commitment" to "task completed":
+
+**Input Datum** (Constructor 1):
+```
+{
+  constructor: 1,
+  fields: [
+    task_definition,  // the committed task
+    task_info,        // submission evidence
+    completed_tasks   // list of prior completions
+  ]
+}
+```
+
+**Output Datum** (Constructor 0):
+```
+{
+  constructor: 0,
+  fields: [
+    completed_tasks   // includes the newly completed task
+  ]
+}
+```
+
+### Completed Task Entry
+
+After acceptance, the task is recorded in the `completed_tasks` list with:
+- `project_content`: cleared (empty bytes)
+- `metadata`: empty bytes
+- `lovelace_amount`: the reward amount from the task
+
+### Spend Redeemer
+
+The contributor-state-validator uses constructor-based redeemers:
+- **Constructor 0**: Contributor action
+- **Constructor 1**: Update submission
+- **Constructor 2**: Assess (manager)
+- **Constructor 3**: Claim/burn
+
+For assessment, the redeemer is simply `{constructor: 2, fields: []}`.
+
+### Batch Assessments
+
+Multiple task decisions can be included in a single transaction:
+
+```json
+{
+  "task_decisions": [
+    { "alias": "contributor_1", "outcome": "accept" },
+    { "alias": "contributor_2", "outcome": "reject" },
+    { "alias": "contributor_3", "outcome": "accept" }
+  ]
+}
+```
+
+This allows efficient batching of multiple assessments.
+
+## Inputs
+
+| Input | Type | Validator | Description |
+|-------|------|-----------|-------------|
+| Contributor State | Script | contributor-state-validator | Contributor's state with active commitment |
+| Access Token | Wallet | - | Manager's u-token |
+| Wallet UTxOs | Wallet | - | ADA for fees |
+
+## Outputs
+
+| Output | Validator | Value | Description |
+|--------|-----------|-------|-------------|
+| Contributor State | contributor-state-validator | contributor-state-token + ~14.5 ADA | Updated with completed task |
+| User Wallet | wallet | u-token + change | Manager's token returned |
+
+## Observer Validation
+
+The `task-assess-observer` validates the assessment operation:
+
+```
+Redeemer: {
+  constructor: 1,
+  fields: [
+    "ea8669c0...",           // stake credential hash
+    "3b20d771...",           // project_id
+    "james",                 // manager alias
+    [                        // decisions list
+      {
+        contributor_state_id: "c69d2d5d...",
+        contributor_alias: "student_001",
+        outcome: { constructor: 0 }  // accept
+      }
+    ]
+  ]
+}
+```
+
+The observer verifies:
+- Manager is authorized for the project
+- Contributor state matches the project
+- Task commitment is valid for assessment
+
+## Reference Inputs
+
+| UTxO | Description |
+|------|-------------|
+| `3206c0ae...#2` | Script reference |
+| `aae8f2e8...#2` | Script reference for task-assess-observer |
+| `aae8f2e8...#3` | Script reference for contributor-state-validator |
+
+## Key Notes
+
+- **No minting** - Updates existing contributor-state token
+- **No protocol fee** - Only network transaction fee
+- **Batch support** - Multiple decisions in one transaction
+- **Analogous to courses** - Same pattern as teacher assignment assessment
+
+## Reward Disbursement
+
+**Note**: This transaction updates the contributor state to mark the task as completed. The actual reward disbursement (transferring the task's `lovelace_amount` to the contributor) may occur in a separate transaction or be handled by the treasury system.
+
+## See Also
+
+- [Tasks Manage](/docs/protocol/v2/transactions/project/manager/tasks/manage) - Create and manage project tasks
+- [Task Commit](/docs/protocol/v2/transactions/project/contributor/task/commit) - Contributor commits to a task
+- [Assignments Assess](/docs/protocol/v2/transactions/course/teacher/assignments/assess) - Analogous course transaction

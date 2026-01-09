@@ -1,17 +1,17 @@
 {
-  "version": "1.3.0",
+  "version": "1.4.0",
   "lastUpdated": "2026-01-09",
   "lastSwaggerSync": "2026-01-09",
   "swaggerSource": "https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json",
   "totalTransactions": 16,
   "summary": {
     "pending-review": 0,
-    "analyzed": 9,
+    "analyzed": 15,
     "needs-reanalysis": 0,
-    "not-analyzed": 7,
+    "not-analyzed": 1,
     "verified": 0
   },
-  "reviewNote": "2026-01-09: Removed deprecated /enroll endpoints from tracker. Enrollment now handled by /assignment/commit (course) and /task/commit (project).",
+  "reviewNote": "2026-01-09: Completed analysis of all project transactions. Only project.contributor.task.action remains.",
   "systems": {
     "global": {
       "description": "Global system transactions (entry points)",
@@ -27,7 +27,9 @@
     },
     "project": {
       "description": "Project management system (excludes deprecated enroll)",
-      "transactions": 7
+      "transactions": 7,
+      "analyzed": 6,
+      "not-analyzed": 1
     }
   },
   "transactions": [
@@ -194,14 +196,14 @@
       "system": "project",
       "role": "owner",
       "description": "Add or remove project managers",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
-        "yaml": null,
+        "yaml": "public/yaml/transactions/v2/project/owner/managers/manage.yaml",
         "ts": null,
         "mdx": null
       },
-      "notes": "Similar pattern to course teachers management"
+      "notes": "Spend and recreate pattern. Two script inputs spent (LocalStateNFT, governance). 10 ADA fee to instance-treasury. Identical to course teachers-manage."
     },
     {
       "id": "project.owner.contributor-blacklist.manage",
@@ -210,14 +212,14 @@
       "system": "project",
       "role": "owner",
       "description": "Manage contributor blacklist",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
-        "yaml": null,
+        "yaml": "public/yaml/transactions/v2/project/owner/contributor-blacklist/manage.yaml",
         "ts": null,
         "mdx": null
       },
-      "notes": "Prevents specific contributors from joining project"
+      "notes": "Spend and recreate pattern. Updates blacklist in project-state datum. Uses project-owner-obs observer."
     },
     {
       "id": "project.manager.tasks.manage",
@@ -226,14 +228,14 @@
       "system": "project",
       "role": "manager",
       "description": "Create, update, or remove tasks",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
-        "yaml": null,
+        "yaml": "public/yaml/transactions/v2/project/manager/tasks/manage.yaml",
         "ts": null,
-        "mdx": null
+        "mdx": "content/docs/protocol/v2/transactions/project/manager/tasks/manage.mdx"
       },
-      "notes": "Batch task management similar to modules-manage"
+      "notes": "Batch task management. Mints task-escrow tokens (parameterized per project). Token name = 32-byte SLT hash. Uses task-manage-observer. No protocol fee."
     },
     {
       "id": "project.manager.tasks.assess",
@@ -242,14 +244,14 @@
       "system": "project",
       "role": "manager",
       "description": "Assess contributor task submissions",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
-        "yaml": null,
+        "yaml": "public/yaml/transactions/v2/project/manager/tasks/assess.yaml",
         "ts": null,
-        "mdx": null
+        "mdx": "content/docs/protocol/v2/transactions/project/manager/tasks/assess.mdx"
       },
-      "notes": "Similar pattern to assignments-assess"
+      "notes": "Spend-and-recreate pattern. Uses task-assess-observer (constr 2). Can batch multiple decisions. No minting (spend and recreate). No protocol fee."
     },
     {
       "id": "project.contributor.task.commit",
@@ -258,14 +260,14 @@
       "system": "project",
       "role": "contributor",
       "description": "Enroll in project and commit to a task",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
-        "yaml": null,
+        "yaml": "public/yaml/transactions/v2/project/contributor/task/commit.yaml",
         "ts": null,
-        "mdx": null
+        "mdx": "content/docs/protocol/v2/transactions/project/contributor/task/commit.mdx"
       },
-      "notes": "Replaces old enroll endpoint. Like course/assignment/commit, this now handles both enrollment AND task commitment. Commitment is REQUIRED - no separate enroll step."
+      "notes": "MINTS contributor-state token + updates global state + updates task-escrow. Uses task-commit-observer. Prerequisite check via contributor_state_id (course credential). No protocol fee. ~14.5 ADA deposit held in contributor-state."
     },
     {
       "id": "project.contributor.task.action",
@@ -290,14 +292,14 @@
       "system": "project",
       "role": "contributor",
       "description": "Claim project credential",
-      "status": "not-analyzed",
-      "lastAnalyzed": null,
+      "status": "analyzed",
+      "lastAnalyzed": "2026-01-09",
       "files": {
-        "yaml": null,
+        "yaml": "public/yaml/transactions/v2/project/contributor/credential/claim.yaml",
         "ts": null,
-        "mdx": null
+        "mdx": "content/docs/protocol/v2/transactions/project/contributor/credential/claim.mdx"
       },
-      "notes": "Burns project state, stores credential hash"
+      "notes": "BURNS contributor-state token (qty: -1). 1 ADA protocol fee to instance-treasury. NET GAIN ~13 ADA (releases ~14.5 ADA deposit minus fees). Updates global state with credential hash."
     }
   ]
 }

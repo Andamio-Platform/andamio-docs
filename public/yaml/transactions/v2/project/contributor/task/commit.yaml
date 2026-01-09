@@ -1,0 +1,329 @@
+# V2 Transaction: Project Contributor Task Commit
+# Source: Decoded from CBOR transaction
+# API: POST /v2/tx/project/contributor/task/commit
+
+name: ProjectContributorTaskCommitV2
+id: project.contributor.task.commit
+
+metadata:
+  role: "contributor"
+  system: "project"
+  description: "Enroll in a project (if not enrolled) and commit to a task"
+  api_endpoint: "/v2/tx/project/contributor/task/commit"
+
+request_body:
+  description: "TaskCommitTxRequest"
+  fields:
+    alias:
+      type: string
+      required: true
+      description: "Contributor's access token alias"
+      example: "student_001"
+    project_id:
+      type: string
+      required: true
+      description: "Project NFT policy ID (56 char hex)"
+      example: "3b20d771fff69738127691ec3aea3803cdae1b1292ed1e1ca62a5f30"
+    contributor_state_id:
+      type: string
+      required: true
+      description: "Contributor state policy ID (from project prerequisites)"
+      example: "c69d2d5d5889edda8aa30550c340303ff7c9e74dd01c028528e24495"
+    task_hash:
+      type: string
+      required: true
+      description: "Hash of the task to commit to (64 char hex)"
+      example: "33668fb12ca84cb6676e84a29aaa1a7bee46f156c7c2a88f86ad400e829e34cb"
+    task_info:
+      type: string
+      required: true
+      description: "Evidence/info for the task submission"
+      example: "Some task completion info."
+
+response:
+  description: "UnsignedTxResponse"
+  fields:
+    unsigned_tx:
+      type: string
+      description: "CBOR-encoded unsigned transaction"
+
+costs:
+  txFee: 512467
+  protocolFee: 0
+  protocolFeeDestination: null
+  protocolFeeNote: "No protocol fee for task commitment"
+  minUtxo:
+    contributor-state-output: 14500000
+    task-escrow-output: 5000000
+    global-state-output: 2111900
+    user-token-output: 1172320
+  executionUnits:
+    spend_1_global_state:
+      mem: 227336
+      steps: 79871977
+    spend_3_task_escrow:
+      mem: 52740
+      steps: 22351458
+    spend_4_task_escrow_deposit:
+      mem: 56934
+      steps: 24976935
+    mint_0_contributor_state:
+      mem: 239239
+      steps: 89832851
+    reward_0_task_commit_observer:
+      mem: 595449
+      steps: 225026770
+  collateral: 768701
+  note: "Includes contributor-state token mint on first enrollment"
+
+inputs:
+  - id: global-state-input
+    type: script
+    validator: global-state-v2
+    address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+    redeemer:
+      tag: "Spend"
+      index: 1
+      data: "{constructor: 0, fields: [projectId, -1, '', contributor_state_id]}"
+      structure:
+        constructor: 0
+        fields:
+          - projectId: "bytes - project policy ID"
+          - flag: "-1 (enrollment flag)"
+          - empty: "bytes (empty)"
+          - contributor_state_id: "bytes - contributor state policy ID"
+      example: "{constructor:0, fields:['3b20d771fff69738127691ec3aea3803cdae1b1292ed1e1ca62a5f30', -1, '', 'c69d2d5d5889edda8aa30550c340303ff7c9e74dd01c028528e24495']}"
+    description: "Global state UTxO - spent to add project credential to contributor's map"
+
+  - id: task-escrow-input
+    type: script
+    validator: task-escrow-validator
+    address: "addr_test1xr4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9he6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqqcp7an"
+    redeemer:
+      tag: "Spend"
+      index: 3
+      data: "{constructor: 0, fields: []}"
+      description: "Empty redeemer - action validated by observer"
+    description: "Task escrow UTxO - spent to update task commitment status"
+
+  - id: task-escrow-deposit-input
+    type: script
+    validator: task-escrow-validator
+    address: "addr_test1xr4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9he6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqqcp7an"
+    redeemer:
+      tag: "Spend"
+      index: 4
+      data: "{constructor: 0, fields: []}"
+    description: "Task escrow deposit UTxO - funds for contributor-state creation"
+
+  - id: wallet-inputs
+    type: wallet
+    address: "{user_wallet}"
+    description: "Contributor's wallet providing ADA for fees"
+
+  - id: access-token-utxo
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "1 index-policy.u{alias}"
+    description: "Contributor's access token UTxO"
+
+reference_inputs:
+  - id: ref-0
+    utxo: "957a855b5ae7fefe3d13c051f2f3234674c765c7cf986244ae5a2a5960d59fd4#1"
+    description: "Script reference for contributor-state-policy"
+
+  - id: ref-1
+    utxo: "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#2"
+    description: "Script reference"
+
+  - id: ref-2
+    utxo: "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#4"
+    description: "Script reference"
+
+  - id: ref-3
+    utxo: "aae8f2e874289c1c961a09728288832668f709c8b2efe91b6a26cd041924c37a#5"
+    description: "Script reference"
+
+outputs:
+  - id: user-token-return
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "~1172320 lovelace"
+      - "1 index-policy.u{alias}"
+    description: "Contributor's access token returned to wallet"
+
+  - id: global-state-output
+    type: script
+    validator: global-state-v2
+    address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+    value:
+      - "~2111900 lovelace"
+      - "1 index-policy.g{alias}"
+    datum:
+      type: inline
+      format: "constructor 0"
+      fields:
+        - alias: "bytes"
+        - credentials_map: "map of {policyId -> credential_hash}"
+      example: "{constructor:0, fields:['student_001', {projectId -> credentialHash, ...}]}"
+      note: "Project credential added to contributor's global credentials map"
+    description: "Global state updated with new project credential"
+
+  - id: contributor-state-output
+    type: script
+    validator: contributor-state-validator
+    address: "addr_test1xrrf6t2atzy7mk525vz4ps6qxqll0j08fhgpcq599r3yf92e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq63d6dc"
+    value:
+      - "~14500000 lovelace"
+      - "1 contributor-state-policy.{alias}"
+    datum:
+      type: inline
+      format: "constructor 1"
+      description: "Constructor 1 = has active task commitment"
+      fields:
+        - task_definition:
+            type: "constructor 0"
+            fields:
+              - project_content: "bytes (task content hash)"
+              - expiration_time: "integer (milliseconds)"
+              - lovelace_amount: "integer"
+              - native_assets: "list"
+        - task_info: "bytes (submission evidence)"
+        - completed_tasks: "list (empty on first commit)"
+      example: "{constructor:1, fields:[{task_def...}, 'Some task completion info.', []]}"
+    description: "NEW contributor state UTxO with active task commitment"
+
+  - id: task-escrow-output
+    type: script
+    validator: task-escrow-validator
+    address: "addr_test1xr4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9he6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqqcp7an"
+    value:
+      - "~5000000 lovelace"
+      - "1 treasury-token-policy.{contributor_state_id}"
+    datum:
+      type: inline
+      format: "list"
+      description: "Updated task hash list (committed task may be removed)"
+      example: "[12eaa258ea60deaac17cdbbe3e1240a6157cba0352d71893c3856f6fc47e79f2]"
+    description: "Task escrow UTxO recreated with updated state"
+
+  - id: task-escrow-deposit-output
+    type: script
+    validator: task-escrow-validator
+    address: "addr_test1xr4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9he6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqqcp7an"
+    value:
+      - "~5000000 lovelace"
+    datum: null
+    description: "Task escrow deposit recreated (no datum, no token)"
+
+  - id: change
+    type: wallet
+    address: "{user_wallet}"
+    value:
+      - "remaining lovelace"
+    description: "Change returned to user wallet (multiple UTxOs)"
+
+mints:
+  - id: contributor-state-mint
+    policy: contributor-state-policy
+    policyId: "c69d2d5d5889edda8aa30550c340303ff7c9e74dd01c028528e24495"
+    redeemer:
+      tag: "Mint"
+      index: 0
+      data: "{constructor: 0, fields: [alias, [], prereqs_list, prereqs_map]}"
+      structure:
+        constructor: 0
+        fields:
+          - alias: "bytes - contributor alias"
+          - empty_list: "list (empty)"
+          - prereqs_list: "list of {courseId, slt_hashes, metadata}"
+          - prereqs_map: "map of courseId -> slt_hashes"
+      description: "Mint redeemer includes prerequisite verification data"
+    tokens:
+      - quantity: 1
+        name: "{alias}"
+        hex_name: "73747564656e745f303031"
+        description: "Contributor state token (name = contributor alias)"
+    description: "Mints contributor-state token on first project enrollment"
+
+withdraws:
+  - id: task-commit-observer-withdraw
+    validator: task-commit-observer
+    stakeAddress: "stake_test17r4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9hece6faza"
+    redeemer:
+      tag: "Reward"
+      index: 0
+      data: "{constructor: 0, fields: [alias, task_definition, [], task_info]}"
+      structure:
+        constructor: 0
+        fields:
+          - alias: "bytes - contributor alias"
+          - task_definition:
+              type: "constructor 0"
+              fields:
+                - project_content: "bytes"
+                - expiration_time: "integer"
+                - lovelace_amount: "integer"
+                - native_assets: "list"
+          - empty_list: "list (empty)"
+          - task_info: "bytes - submission evidence"
+      example: "{constructor:0, fields:['student_001', {task...}, [], 'Some task completion info.']}"
+    amount: 0
+    description: "Observer validates task commitment operation"
+
+design_notes:
+  analogous_to_course_enrollment: |
+    This transaction is the project equivalent of course/student/assignment/commit.
+    It combines enrollment (if needed) with task commitment in a single transaction.
+
+  mints_contributor_state_token: |
+    Unlike tasks/manage which doesn't mint, task-commit DOES mint a contributor-state token.
+    Token name = contributor alias, similar to course-state tokens.
+    The mint redeemer includes prerequisite verification (course credentials).
+
+  global_state_update: |
+    The global-state-v2 UTxO is spent and recreated with the project credential added.
+    Redeemer flag = -1 indicates enrollment action.
+    The credentials map gains a new entry: {projectId -> credentialHash}
+
+  contributor_state_datum: |
+    Constructor 0 = no active commitment (just enrolled, completed tasks list)
+    Constructor 1 = has active commitment (task_definition + task_info + completed_tasks)
+    Similar to course-state datum structure.
+
+  parameterized_task_escrow: |
+    Note: The task-escrow-validator address varies per project!
+    This transaction uses addr_test1xr4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9he...
+    which is different from the tasks/manage transaction.
+    The stake credential part is the same, but payment credential differs.
+
+  prerequisite_verification: |
+    The mint redeemer includes prerequisite proof:
+    - List of {courseId, completed_slts, metadata} entries
+    - Map of courseId -> completed_slts
+    This proves the contributor has the required course credentials.
+
+  deposit_output: |
+    A separate deposit output (5 ADA, no token, no datum) is created.
+    This may be a commitment deposit recoverable on task completion.
+
+registry:
+  validators:
+    global-state-v2:
+      address: "addr_test1xr2ujzcqsq0pwfua3qnjxy4444kw5dng593gn7e4jflyaauju93gql04ja36fs0af42vadhn8jhre6u2pm2vjltgyfsq764wdy"
+    contributor-state-validator:
+      address: "addr_test1xrrf6t2atzy7mk525vz4ps6qxqll0j08fhgpcq599r3yf92e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq63d6dc"
+      note: "Holds contributor state tokens with task commitment data"
+    task-escrow-validator:
+      address: "addr_test1xr4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9he6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqqcp7an"
+      note: "Project-specific task escrow (address varies per project)"
+  observers:
+    task-commit-observer:
+      stakeAddress: "stake_test17r4gv6wqt6vk54k6hydzvucvszqe70ntg90y3efsfan9hece6faza"
+      note: "Validates task commitment operations"
+  policies:
+    contributor-state-policy:
+      policyId: "c69d2d5d5889edda8aa30550c340303ff7c9e74dd01c028528e24495"
+      note: "Token name = contributor alias; parameterized per project"

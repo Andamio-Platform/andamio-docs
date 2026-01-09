@@ -1,7 +1,7 @@
 # V2 Transaction Documentation Session Notes
 
 **Last Updated**: 2026-01-09
-**Status**: In Progress (9 transactions parsed, API restructured)
+**Status**: In Progress (15 transactions parsed, API restructured, project transactions documented)
 
 ## What We're Doing
 
@@ -48,6 +48,21 @@ public/yaml/transactions/v2/
 │       │   └── create.yaml
 │       └── project/
 │           └── create.yaml
+├── project/
+│   ├── owner/
+│   │   ├── managers/
+│   │   │   └── manage.yaml
+│   │   └── contributor-blacklist/
+│   │       └── manage.yaml
+│   ├── manager/
+│   │   └── tasks/
+│   │       ├── manage.yaml
+│   │       └── assess.yaml       ← NEW (2026-01-09)
+│   └── contributor/
+│       ├── task/
+│       │   └── commit.yaml
+│       └── credential/
+│           └── claim.yaml        ← NEW (2026-01-09)
 └── course/
     ├── owner/
     │   └── teachers/
@@ -75,6 +90,12 @@ public/yaml/transactions/v2/
 - `global/general/access-token/mint.yaml` ✅ (global.general.access-token.mint)
 - `instance/owner/course/create.yaml` ✅ (instance.owner.course.create)
 - `instance/owner/project/create.yaml` ✅ (instance.owner.project.create)
+- `project/owner/managers/manage.yaml` ✅ (project.owner.managers.manage)
+- `project/owner/contributor-blacklist/manage.yaml` ✅ (project.owner.contributor-blacklist.manage)
+- `project/manager/tasks/manage.yaml` ✅ (project.manager.tasks.manage)
+- `project/manager/tasks/assess.yaml` ✅ (project.manager.tasks.assess) - NEW 2026-01-09
+- `project/contributor/task/commit.yaml` ✅ (project.contributor.task.commit)
+- `project/contributor/credential/claim.yaml` ✅ (project.contributor.credential.claim) - NEW 2026-01-09
 - `course/owner/teachers/manage.yaml` ✅ (course.owner.teachers.manage)
 - `course/teacher/modules/manage.yaml` ✅ (course.teacher.modules.manage)
 - `course/teacher/assignments/assess.yaml` ✅ (course.teacher.assignments.assess)
@@ -175,18 +196,31 @@ These validators are referenced in V2 transaction docs but lack dedicated docume
 |------|---------------------|---------|
 | index-observer | `stake_test17qqz7k43...` | mint-access-token |
 | course-observer | `stake_test17zxrdv3h8...` | course-create |
+| project-observer | `stake_test17patezang...` | project-create |
+| project-prereq-observer | `stake_test17pxv9jccd...` | project-create |
+| project-state-observer | `stake_test17qcucd7rd...` | project-blacklist-manage |
+| task-escrow-observer | `stake_test17pk6rqehs...` | project-tasks-manage |
+| task-commit-observer | `stake_test17r4gv6wqt...` | project-task-commit |
+| task-assess-observer | `stake_test17qpcdvvgr...` | project-tasks-assess |
 
 ### Fee Structure
 | Operation | Tx Fee | Protocol Fee | Treasury |
 |-----------|--------|--------------|----------|
 | mint-access-token | ~0.37 ADA | 5 ADA | protocol-treasury |
-| course-create | ~0.54 ADA | 25 ADA | instance-treasury |
-| course-teachers-update | ~0.31 ADA | 5 ADA | instance-treasury |
-| modules-manage | ~0.27 ADA | none observed | - |
-| student-enroll | ~0.40 ADA | none observed | - |
-| assignments-assess | ~0.28 ADA | none observed | - |
-| assignment-update | ~0.28 ADA | none observed | - |
-| credential-claim | ~0.35 ADA | none observed | - |
+| course-create | ~0.54 ADA | 100+10×teachers ADA | instance-treasury |
+| course-teachers-update | ~0.31 ADA | 10 ADA | instance-treasury |
+| project-create | ~1.30 ADA | 100+10×managers ADA | instance-treasury |
+| project-managers-manage | ~0.30 ADA | 10 ADA | instance-treasury |
+| project-blacklist-manage | ~0.34 ADA | 0 ADA | - |
+| project-tasks-manage | ~0.43 ADA | 0 ADA | - |
+| project-task-commit | ~0.51 ADA | 0 ADA | - |
+| project-tasks-assess | ~0.35 ADA | 0 ADA | - |
+| project-credential-claim | ~0.35 ADA | 1 ADA | instance-treasury |
+| modules-manage | ~0.27 ADA | 0 ADA | - |
+| student-enroll | ~0.40 ADA | 0 ADA | - |
+| assignments-assess | ~0.28 ADA | 0 ADA | - |
+| assignment-update | ~0.28 ADA | 0 ADA | - |
+| credential-claim | ~0.35 ADA | 0 ADA | - |
 
 ## Gaps to Address After All 8 Transactions
 
@@ -200,9 +234,75 @@ These validators are referenced in V2 transaction docs but lack dedicated docume
 ### Pattern: Mint and Create
 - `mint-access-token`: Mints 3 tokens, creates index nodes + global state
 - `course-create`: Mints 3 tokens, creates LocalStateNFT + LocalStateToken + governance
+- `project-create`: Mints 6 tokens, creates LocalStateNFT + LocalStateToken + governance + treasury-script + project-state + treasury
+  - Uses 2 observers (project-observer + prereq-observer)
+  - Registers stake credential for project treasury
+  - REUSES course governance validator/policy for managers (same as teachers)
+  - Course prerequisites validated via prereq-observer redeemer
 
 ### Pattern: Spend and Recreate
 - `course-teachers-update`: No minting, consumes and recreates UTxOs with updated datum
+- `project-managers-manage`: IDENTICAL pattern to course-teachers-update
+  - Same governance validator (shared between courses and projects)
+  - Same 10 ADA protocol fee to instance-treasury
+  - Same reference inputs (local-state-nft-validator + governance-validator scripts)
+
+### Pattern: Spend and Recreate with Observer
+- `project-blacklist-manage`: Spend and recreate with observer validation
+  - Spends local-state-nft-validator + project-state-validator
+  - Recreates both UTxOs with updated blacklist in project-state datum
+  - Uses project-state-observer (withdrawal) for validation
+  - Observer redeemer: {constructor: 1, fields: [projectId, stakeCredHash]}
+  - NO protocol fee (unlike managers-manage)
+  - ~0.34 ADA transaction fee only
+
+### Pattern: Task Management (No Minting!)
+- `project-tasks-manage`: CRITICAL - Does NOT mint tokens!
+  - Treasury-tokens were minted during project.create
+  - Spends task-escrow-validator, recreates with updated datum
+  - Uses task-escrow-observer for validation
+  - Observer redeemer: {constructor: 1, fields: [tasks_list, alias]}
+  - Token name = contributor_state_id (prerequisite policy)
+  - Optional deposit_value to fund treasury alongside task operations
+  - ~0.43 ADA transaction fee, no protocol fee
+
+### Pattern: Task Commit (Contributor Enrollment)
+- `project-task-commit`: Project equivalent of course enrollment
+  - MINTS contributor-state token (unlike tasks-manage!)
+  - Token name = contributor alias
+  - Updates global-state-v2 with project credential
+  - Spends task-escrow + deposit UTxOs
+  - Creates contributor-state output with task commitment
+  - Uses task-commit-observer for validation
+  - Observer redeemer: {constructor: 0, fields: [alias, task_definition, [], task_info]}
+  - Mint redeemer includes prerequisite verification (course credentials)
+  - Parameterized validators: addresses vary per project
+  - ~0.51 ADA transaction fee, no protocol fee
+
+### Pattern: Task Assessment
+- `project-tasks-assess`: Project equivalent of course assignment assessment
+  - NO minting - spend and recreate pattern
+  - Manager spends contributor-state UTxO
+  - Datum changes: constructor 1 (active) → constructor 0 (completed)
+  - Completed task added to completed_tasks list
+  - Uses task-assess-observer for validation
+  - Spend redeemer: {constructor: 2, fields: []} - constructor 2 = assess
+  - Observer redeemer: {constructor: 1, fields: [stakeCredHash, projectId, alias, decisions_list]}
+  - Can batch multiple assessment decisions
+  - ~0.35 ADA transaction fee, no protocol fee
+
+### Pattern: Project Credential Claim (Burn)
+- `project-credential-claim`: Project equivalent of course credential claim
+  - Contributor-state token BURNED (quantity = -1)
+  - Global state updated with credential hash
+  - Spends global-state-v2 + contributor-state UTxOs
+  - Global state redeemer: {constructor: 1, fields: [projectId, 0, '', csId, credential_hash]}
+  - Contributor state redeemer: {constructor: 1, fields: []} - claim action
+  - Mint redeemer: {constructor: 3, fields: [alias, completed_tasks]} - burn proof
+  - 1 ADA protocol fee to instance-treasury
+  - NET GAIN for contributor: ~13+ ADA (deposit released - fees)
+  - No observer - direct validator logic
+  - Credential hash permanently stored in global state
 
 ### Pattern: Module Minting
 - `modules-manage`: Mints module tokens to module-validator, spends governance to verify teacher authorization
@@ -324,6 +424,9 @@ This appears to be a "script reference" transaction holding validator scripts fo
 | `/v2/tx/course/student/assignment/commit` | `alias, course_id, slt_hash, assignment_info` | **NEW** | ✅ YAML |
 | `/v2/tx/course/student/assignment/update` | `alias, course_id, assignment_info` | Pending | ⚠️ |
 | `/v2/tx/course/student/credential/claim` | `alias, course_id` | Pending | ⚠️ |
+| `/v2/tx/project/contributor/task/commit` | `alias, project_id, contributor_state_id, task_hash, task_info` | **NEW** | ✅ YAML + MDX |
+| `/v2/tx/project/manager/tasks/assess` | `alias, project_id, contributor_state_id, task_decisions[]` | **NEW** | ✅ YAML + MDX |
+| `/v2/tx/project/contributor/credential/claim` | `alias, project_id, contributor_state_id` | **NEW** | ✅ YAML + MDX |
 | ~~`/v2/tx/course/student/enroll`~~ | REMOVED | DEPRECATED | ❌ |
 
 ## Commands to Check State

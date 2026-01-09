@@ -52,7 +52,7 @@ response:
       description: "CBOR-encoded unsigned transaction"
 
 costs:
-  txFee: 1298574
+  txFee: 1300865
   protocolFee: 120000000
   protocolFeeFormula: "100 ADA base + 10 ADA × number of managers"
   protocolFeeExample: "2 managers = 100 + (2 × 10) = 120 ADA"
@@ -69,26 +69,35 @@ costs:
     governance-output: 1357650
     treasury-script-output: 20162180
     project-state-output: 1439540
-    treasury-output: "{deposit_value + minUtxo}"
+    treasury-output: 5000000
+    treasury-output-note: "5 ADA min + deposit_value"
   executionUnits:
+    # Mint redeemers ordered by policy ID (alphabetically)
     mint_0_treasury_script:
       mem: 587159
       steps: 188113819
+      policyId: "0d93b85fd1975e409be7c6308060ecc7623498474c4e43da4c83a5ad"
     mint_1_project_state:
       mem: 223828
       steps: 74368575
-    mint_2_treasury_token:
-      mem: 145406
-      steps: 51977069
-    mint_3_governance:
+      policyId: "31cc37c36b2e07b686d60c7f1b79ba35ff73effb7d01f0faf9c0f8a3"
+    mint_2_local_state_nft:
+      mem: 47457
+      steps: 20978121
+      policyId: "{projectId}"
+      note: "Parameterized policy - projectId becomes this policy"
+    mint_3_treasury_token:
+      mem: 150132
+      steps: 53428872
+      policyId: "b3c8215adf6d521fca3ec5c1f82e2cfd92bcf1fc5ae921a4f3cd5c82"
+    mint_4_governance:
       mem: 875713
       steps: 262559223
-    mint_4_local_state_token:
+      policyId: "ba4a7babce6f840e817faf82cb8094aecdca1920909d4b6386832236"
+    mint_5_local_state_token:
       mem: 358218
       steps: 109781507
-    mint_5_local_state_nft:
-      mem: 65229
-      steps: 27863007
+      policyId: "91ea0e185f399b8bbb2b5d94c397d4122b090d6fdc571d4a054dc8f1"
     cert_0:
       mem: 20513
       steps: 5189996
@@ -96,8 +105,8 @@ costs:
       mem: 409830
       steps: 129547187
     withdraw_1_prereq_observer:
-      mem: 528908
-      steps: 176027517
+      mem: 532338
+      steps: 178296764
   note: "Complex transaction with 6 mints, 2 observers, stake registration. Costs scale with prereqs and deposit complexity."
 
 inputs:
@@ -247,9 +256,9 @@ outputs:
   - id: treasury-output
     type: script
     validator: treasury-validator
-    address: "addr_test1xrrte4getxntj3k4n450psfgsm53vjuyhpncv5u8xp2fmd6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeguy9v"
+    address: "addr_test1xzs6fg33zkkce7au3zghej4r7qxtg4cra7uesdxxswz4d0je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lque8ppm"
     value:
-      - "{deposit_value lovelace}"
+      - "5000000 lovelace (min) + deposit_value"
       - "1 treasury-token-policy.{treasury_token_name}"
     datum:
       type: inline
@@ -257,7 +266,7 @@ outputs:
       description: "Treasury transactions list (empty on creation)"
       example: "[]"
     description: "Project treasury holding deposited funds"
-    note: "Treasury token name is a hash"
+    note: "Treasury token name is a 32-byte hash"
 
   - id: protocol-fee
     type: wallet
@@ -275,6 +284,7 @@ outputs:
     description: "Change returned to user wallet (multiple UTxOs in practice)"
 
 mints:
+  # Mint redeemers are ordered by policy ID (alphabetically)
   - id: treasury-script-mint
     policy: treasury-script-policy
     policyId: "0d93b85fd1975e409be7c6308060ecc7623498474c4e43da4c83a5ad"
@@ -287,7 +297,10 @@ mints:
           type: "bytes"
         - name: "token_info"
           type: "list"
-          description: "List of {policy_ids, token_name} for minting"
+          description: "List containing {policy_ids, token_name} for minting"
+      example:
+        projectId: "562910c35ecfa2a4abaa529e7289f47904e081bcab68e58b8a03353b"
+        token_info: "[{policies: [projectId], name: TreasuryScriptV2}]"
     tokens:
       - quantity: 1
         name: "TreasuryScriptV2"
@@ -307,22 +320,44 @@ mints:
         - name: "credential_hash"
           type: "bytes"
           description: "Stake credential hash (becomes token name)"
+      example:
+        projectId: "562910c35ecfa2a4abaa529e7289f47904e081bcab68e58b8a03353b"
+        credential_hash: "a1a4a23115ad8cfbbc88917ccaa3f00cb45703efb99834c6838556be"
     tokens:
       - quantity: 1
         name: "{credential_hash}"
+        nameExample: "a1a4a23115ad8cfbbc88917ccaa3f00cb45703efb99834c6838556be"
         description: "Project state token - name is stake credential hash"
+
+  - id: local-state-nft-mint
+    policy: local-state-nft-policy
+    policyId: "{parameterized - becomes projectId}"
+    policyIdExample: "562910c35ecfa2a4abaa529e7289f47904e081bcab68e58b8a03353b"
+    redeemer:
+      tag: "Mint"
+      index: 2
+      format: "constructor 0"
+      fields: []
+    tokens:
+      - quantity: 1
+        name: "LocalStateNFT"
+        nameHex: "4c6f63616c53746174654e4654"
+        description: "LocalStateNFT - policy ID IS the projectId"
+    note: "CRITICAL: This policy ID becomes the projectId returned by the API"
 
   - id: treasury-token-mint
     policy: treasury-token-policy
     policyId: "b3c8215adf6d521fca3ec5c1f82e2cfd92bcf1fc5ae921a4f3cd5c82"
     redeemer:
       tag: "Mint"
-      index: 2
+      index: 3
       format: "list"
-      description: "List of {projectId, treasury_token_name} entries"
+      description: "List containing {projectId, treasury_token_name} entries"
+      example: "[{projectId: 562910c..., treasury_token: cc6d5ca...}]"
     tokens:
       - quantity: 1
         name: "{treasury_token_hash}"
+        nameExample: "cc6d5ca3cc1254b04cd3b061be4a339a0b56e7d4c7e331a90228ea92"
         description: "Treasury token - held in treasury-validator"
 
   - id: governance-mint
@@ -330,7 +365,7 @@ mints:
     policyId: "ba4a7babce6f840e817faf82cb8094aecdca1920909d4b6386832236"
     redeemer:
       tag: "Mint"
-      index: 3
+      index: 4
       format: "constructor 0"
       fields:
         - name: "projectId"
@@ -339,6 +374,10 @@ mints:
           type: "bytes"
         - name: "treasury_token_names"
           type: "list of bytes"
+      example:
+        projectId: "562910c35ecfa2a4abaa529e7289f47904e081bcab68e58b8a03353b"
+        credential_hash: "a1a4a23115ad8cfbbc88917ccaa3f00cb45703efb99834c6838556be"
+        treasury_token_names: ["cc6d5ca3cc1254b04cd3b061be4a339a0b56e7d4c7e331a90228ea92"]
     tokens:
       - quantity: 1
         name: "{projectId}"
@@ -350,35 +389,27 @@ mints:
     policyId: "91ea0e185f399b8bbb2b5d94c397d4122b090d6fdc571d4a054dc8f1"
     redeemer:
       tag: "Mint"
-      index: 4
+      index: 5
       data: "{projectId as bytes}"
+      example: "562910c35ecfa2a4abaa529e7289f47904e081bcab68e58b8a03353b"
     tokens:
       - quantity: 1
         name: "LocalStateToken"
         nameHex: "4c6f63616c5374617465546f6b656e"
         description: "LocalStateToken - shared policy with courses"
 
-  - id: local-state-nft-mint
-    policy: local-state-nft-policy
-    policyId: "{parameterized - projectId}"
-    redeemer:
-      tag: "Mint"
-      index: 5
-      format: "constructor 0"
-      fields: []
-    tokens:
-      - quantity: 1
-        name: "LocalStateNFT"
-        nameHex: "4c6f63616c53746174654e4654"
-        description: "LocalStateNFT - policy ID IS the projectId"
-
 certs:
   - id: stake-registration
     type: StakeRegistration
     credential:
       type: Script
-      hash: "c6bcd51959a6b946d59d68f0c12886e9164b84b86786538730549db7"
+      hash: "{stake_credential_hash}"
+      hashExample: "a1a4a23115ad8cfbbc88917ccaa3f00cb45703efb99834c6838556be"
     deposit: 2000000
+    redeemer:
+      tag: "Cert"
+      index: 0
+      data: "constructor 0, empty fields"
     description: "Registers stake credential for project state - credential hash = project-state token name"
 
 withdraws:
@@ -386,10 +417,12 @@ withdraws:
     validator: project-observer
     stakeAddress: "stake_test17patezangrhy2dnpj2vxzdzpyluka03rh9zrqsgcnxryqfshcn7z2"
     redeemer:
+      tag: "Reward"
+      index: 0
       format: "list"
-      data: "[{tx_output_ref}]"
-      description: "Access token UTxO reference"
-      example: "[f7d56e16391931b31e79abf4b679a70154b0a1759965360430af6cb70990afc0#0]"
+      data: "[{tx_output_ref + 00 suffix}]"
+      description: "Access token UTxO reference (txHash concatenated with index as final byte)"
+      example: "[bf7de2943e1941574b69ad5eb4ee13e981ebe8535d3f2bcced35ee3d7086861f00]"
     amount: 0
     description: "Project creation observer - validates access token ownership"
 
@@ -397,19 +430,23 @@ withdraws:
     validator: project-prereq-observer
     stakeAddress: "stake_test17pxv9jccd0m977k8l2780ja6yqyw3y75jh46ke4hhda73zcm3lw0j"
     redeemer:
+      tag: "Reward"
+      index: 1
       format: "constructor 0"
       fields:
         - name: "output_refs"
           type: "list"
-          description: "Access token UTxO references"
+          description: "Access token UTxO references (txHash + index as last byte)"
         - name: "course_prereqs"
           type: "map"
           description: "Map of course_id -> [required_module_hashes]"
       example:
         constructor: 0
         fields:
-          - ["f7d56e16391931b31e79abf4b679a70154b0a1759965360430af6cb70990afc0#0"]
-          - "7ab75aa33060796d464762a3a81f6332b54592f03ed623d6f2c32841 -> [356be366236f712c2397b3c151ae8ed4656e2574aabfb637ef44ae8345ce9b9a]"
+          - output_refs: ["bf7de2943e1941574b69ad5eb4ee13e981ebe8535d3f2bcced35ee3d7086861f00"]
+          - course_prereqs:
+              "e276a1f2729f06036299998f046765ffdde7ad8fd47f689690fbe2b1":
+                - "10dde6f0936b3dba3339356838e59b1af0f511a777a8701c49d941351b3abcf0"
     amount: 0
     description: "Validates course prerequisite requirements for project contributors"
 
@@ -470,8 +507,8 @@ registry:
       address: "addr_test1xqcucd7rdvhq0d5x6cx87xmehg6l7ul0ld7sru86l8q03g6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lq54qulh"
       note: "NEW - project-specific"
     treasury-validator:
-      address: "addr_test1xrrte4getxntj3k4n450psfgsm53vjuyhpncv5u8xp2fmd6e040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lqeguy9v"
-      note: "NEW - holds project treasury funds"
+      address: "addr_test1xzs6fg33zkkce7au3zghej4r7qxtg4cra7uesdxxswz4d0je040rfxn88d94ckqzkq2h7lcmqzq995dxnqe8kl97w0lque8ppm"
+      note: "Holds project treasury funds - address updated 2026-01-09"
   policies:
     treasury-script-policy:
       policyId: "0d93b85fd1975e409be7c6308060ecc7623498474c4e43da4c83a5ad"
