@@ -16,12 +16,13 @@ Copy this into your `.env` file for the T3 App Template:
 
 ```bash
 # Andamio Database API URL
-NEXT_PUBLIC_ANDAMIO_API_URL="https://andamio-db-api-343753432212.europe-west1.run.app/api/v0"
+NEXT_PUBLIC_ANDAMIO_API_URL="https://andamio-db-api-343753432212.us-central1.run.app/api/v0"
+# NEXT_PUBLIC_ANDAMIO_API_URL="http://localhost:4000/api/v0"
 
 # Andamioscan API URL (on-chain data)
 ANDAMIOSCAN_API_URL="https://preprod.andamioscan.io/api"
 
-# Atlas Transaction API (V2 transaction building)
+# Preprod V2 Tx API URL
 ATLAS_TX_API_URL="https://atlas-api-preprod-507341199760.us-central1.run.app"
 
 # Cardano Network
@@ -33,11 +34,11 @@ NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="4758613867a8a7aa500b5d57a0e877f01a8e63c13654
 
 ## API Documentation
 
-| API | Purpose | Swagger |
-|-----|---------|---------|
-| **Andamioscan** | On-chain data indexing | [Swagger UI](https://preprod.andamioscan.io/api) |
+| API | Purpose | Docs |
+|-----|---------|------|
+| **Andamioscan** | On-chain data indexing | [Andamioscan](https://preprod.andamioscan.io/) |
 | **Atlas TX API** | Transaction building (V2) | [API Docs](https://atlas-api-preprod-507341199760.us-central1.run.app/docs) |
-| **Andamio DB API** | Database operations | [Swagger UI](https://andamio-db-api-343753432212.europe-west1.run.app/swagger/) |
+| **Andamio DB API** | Database operations | [API Docs](https://andamio-db-api-343753432212.us-central1.run.app/docs/index.html) |
 
 These three APIs will become one unified Andamio API when V2 launches on mainnet.
 

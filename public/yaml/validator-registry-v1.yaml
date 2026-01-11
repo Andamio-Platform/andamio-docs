@@ -45,7 +45,7 @@ systems:
     # Global State Tokens
     tokens:
       access-token-user:
-        asset-id: "<access_token_policyid>.222<alias>"
+        asset-id: "<access_token_policyid>.u<alias>"
         minted-in: "general.access-token-mint"
         used-in:
           - "contributor.mint-project-state"
@@ -70,7 +70,7 @@ systems:
         referenced-in:
         burned-in: null
       access-token-global-state:
-        asset-id: "<access_token_policyid>.100<alias>"
+        asset-id: "<access_token_policyid>.g<alias>"
         minted-in: "general.access-token-mint"
         used-in:
           - "contributor.mint-project-state"

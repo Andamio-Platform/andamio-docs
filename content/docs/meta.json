@@ -10,11 +10,10 @@
         "api",
         "transactions",
         "sdk",
+        "repositories",
         "--- External Links ---",
         "[Andamio Reference App](https://app.andamio.io)",
         "[Andamio SDK](https://sdk.andamio.io/)",
-        "[Andamio API 1.0.0](https://andamio-dev.vercel.app/)",
-        "[Swagger Docs](https://indexer-preprod-507341199760.us-central1.run.app/api-docs)",
-        "[GitHub](https://github.com/andamio-platform)"
+        "[GitHub](https://github.com/Andamio-Platform)"
     ]
 }

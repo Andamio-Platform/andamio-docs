@@ -1,0 +1,10 @@
+{
+    "title": "On-Chain Code",
+    "pages": [
+        "plumbline-global-state",
+        "access-token",
+        "ls-course",
+        "ls-project",
+        "ls-instance"
+    ]
+}

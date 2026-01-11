@@ -44,9 +44,9 @@ These represent addresses and policies for dynamically created course and projec
 
 The protocol uses specific numeric suffixes in asset IDs to distinguish token types:
 
-### Suffix Meanings
-- `.222` - Standard access tokens (e.g., `<access_token_policyid>.222<alias>`)
-- `.100` - NFT tokens (e.g., `<course_nft_policyid>.100<course_id>`)
+### Token Name Prefixes
+- `u` - User access tokens (e.g., `<access_token_policyid>.u<alias>`)
+- `g` - Global state tokens (e.g., `<access_token_policyid>.g<alias>`)
 - `.course-state` - Course state tokens
 - `.module-<module_code>` - Module-specific tokens
 - `.treasury` - Treasury tokens
@@ -68,7 +68,7 @@ The backslashes escape the angle brackets, indicating this is a literal pattern 
 2. Dynamic values appear in contexts like:
    ```yaml
    value:
-     - "1 <course_nft_policyid>.100<course_id>"
+     - "1 <course_nft_policyid>.<course_id>"
    datum:
      courseId: "<course_id>"
    ```
@@ -78,7 +78,7 @@ The backslashes escape the angle brackets, indicating this is a literal pattern 
    ```yaml
    tokens:
      access-token-user:
-       asset-id: "<access_token_policyid>.222<alias>"
+       asset-id: "<access_token_policyid>.u<alias>"
    ```
 
 ### In Deployment Params

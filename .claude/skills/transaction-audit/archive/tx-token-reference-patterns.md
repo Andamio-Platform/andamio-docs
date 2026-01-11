@@ -96,7 +96,7 @@ For each file:
 - **UTXO Accuracy**: Proper token flow tracking
 
 ## Implementation Notes
-1. The registry contains actual asset IDs with placeholders (e.g., `<access_token_policyid>.222<alias>`)
+1. The registry contains actual asset IDs with placeholders (e.g., `<access_token_policyid>.u<alias>`)
 2. Transaction files use dot notation for references, policy ID placeholders only in minting
 3. All token/validator references must exist in the registry
 4. The registry serves as the source of truth for all validators and tokens

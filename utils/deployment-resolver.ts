@@ -182,9 +182,9 @@ class DeploymentResolver {
    * Get the token suffix based on token name patterns from registry
    */
   private getTokenSuffix(tokenName: string): string {
-    // Access token patterns
-    if (tokenName === "access-token-user") return "222<alias>";
-    if (tokenName === "access-token-global-state") return "100<alias>";
+    // Access token patterns (u = user token, g = global state token)
+    if (tokenName === "access-token-user") return "u<alias>";
+    if (tokenName === "access-token-global-state") return "g<alias>";
     if (tokenName === "access-token-index") return '" "';
     
     // For other tokens, check if they have specific patterns
