@@ -12,8 +12,20 @@ export const baseOptions: BaseLayoutProps = {
   nav: {
     title: (
       <>
-        <Image src="/andamio.png" width="24" height="24" alt="Andamio Logo" />
-        Andamio
+        <Image
+          src="/logo-with-typography.png"
+          width={128}
+          height={24}
+          alt="Andamio Logo"
+          className="dark:hidden"
+        />
+        <Image
+          src="/logo-with-typography-dark.png"
+          width={128}
+          height={24}
+          alt="Andamio Logo"
+          className="hidden dark:block"
+        />
       </>
     ),
   },
