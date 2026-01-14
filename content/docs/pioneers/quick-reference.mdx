@@ -32,6 +32,10 @@ NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
 ```
 
+<Callout type="warn" title="Port 3000 Required">
+**You must run your local development server on port 3000** (i.e., `http://localhost:3000`). The Andamio APIs are configured to only accept requests from this origin. Using any other port will result in CORS errors or rejected requests.
+</Callout>
+
 ## API Documentation
 
 | API | Purpose | Docs |
