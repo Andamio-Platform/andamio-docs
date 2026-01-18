@@ -20,18 +20,11 @@ This is not yet deployed, or even complete! What's ready is the Course V2 System
 To use the [Andamio T3 App Template](https://github.com/Andamio-Platform/andamio-t3-app-template) locally, you will need to create a `.env` file in the root of the project. You can use the `.env.example` file as a template. Here are the current environment variables:
 
 ```bash
-# Andamio Database API URL
-NEXT_PUBLIC_ANDAMIO_API_URL="https://andamio-db-api-343753432212.us-central1.run.app/api/v0"
-# NEXT_PUBLIC_ANDAMIO_API_URL="http://localhost:4000/api/v0"
+# Andamio API Gateway
+ANDAMIO_API_URL="https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1"
 
-# Andamioscan API URL (on-chain data)
-ANDAMIOSCAN_API_URL="https://preprod.andamioscan.io/api"
-
-# Preprod V2 Tx API URL
-ATLAS_TX_API_URL="https://atlas-api-preprod-507341199760.us-central1.run.app"
-
-# Cardano Network
-NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+# Your Andamio API Key (request one via the API Gateway)
+ANDAMIO_API_KEY="your-api-key-here"
 
 # Andamio Access Token Policy ID
 NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
@@ -41,20 +34,19 @@ NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a9430
 **You must run your local development server on port 3000** (i.e., `http://localhost:3000`). The Andamio APIs are configured to only accept requests from this origin. Using any other port will result in CORS errors or rejected requests.
 </Callout>
 
-## Current API "Subsystems"
+## Andamio API Gateway
 
-### Andamioscan (Indexer) API
+The unified Andamio API Gateway provides access to all Andamio services through a single endpoint:
 
-[https://preprod.andamioscan.io/](https://preprod.andamioscan.io/)
+[https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs](https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html)
 
-### Andamio Transaction API
+### Getting Your API Key
 
-[https://atlas-api-preprod-507341199760.us-central1.run.app/docs](https://atlas-api-preprod-507341199760.us-central1.run.app/docs)
+1. **Register** an account via the API Gateway
+2. **Login** to receive a JWT token
+3. **Request an API Key** using your JWT token
 
-
-### Andamio DB API
-
-[https://andamio-db-api-343753432212.us-central1.run.app/docs/index.html](https://andamio-db-api-343753432212.us-central1.run.app/docs/index.html)
+Full API documentation coming soon.
 
 ## Notes:
 
