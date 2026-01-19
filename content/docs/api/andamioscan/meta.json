@@ -3,7 +3,6 @@
   "pages": [
     "index",
     "api",
-    "health",
-    "v2"
+    "health"
   ]
 }
