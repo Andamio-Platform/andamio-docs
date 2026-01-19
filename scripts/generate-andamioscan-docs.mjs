@@ -42,7 +42,8 @@ const CONFIG = {
   outputDirAbs: path.join(ROOT_DIR, 'content/docs/api/andamioscan'),
 
   // API info
-  baseUrl: 'https://preprod.andamioscan.io/api',
+  // NOTE: baseUrl should NOT include /api since paths already contain /api/v2/...
+  baseUrl: 'https://preprod.andamioscan.io',
   environment: 'preprod',
   version: '1.0',
 };
