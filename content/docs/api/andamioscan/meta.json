@@ -2,6 +2,8 @@
   "title": "Andamioscan",
   "pages": [
     "index",
+    "api",
+    "health",
     "v2"
   ]
 }

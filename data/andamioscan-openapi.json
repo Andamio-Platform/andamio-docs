@@ -1,1347 +1,1370 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "description": "Andamio Protocol indexer API",
-    "title": "Andamioscan API",
     "contact": {},
-    "version": "1.0"
+    "description": "API for observing Andamio events on Cardano.",
+    "title": "Andamioscan API",
+    "version": "0.1.0"
   },
   "paths": {
-    "/v2/courses": {
+    "/api/v2/courses": {
       "get": {
-        "description": "Get all courses or a specific course by course_id",
-        "tags": [
-          "courses"
-        ],
-        "summary": "Get all courses or a specific course",
-        "responses": {
-          "200": {
-            "description": "Single course when course_id provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Course"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/courses/{course_id}": {
-      "get": {
-        "description": "Get all courses or a specific course by course_id",
-        "tags": [
-          "courses"
-        ],
-        "summary": "Get all courses or a specific course",
-        "parameters": [
-          {
-            "description": "Course ID",
-            "name": "course_id",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Single course when course_id provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Course"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/courses/{course_id}/students": {
-      "get": {
-        "description": "Get students by course_id or a specific student by alias",
-        "tags": [
-          "courses"
-        ],
-        "summary": "Get students by course_id or a specific student",
-        "parameters": [
-          {
-            "description": "Course ID",
-            "name": "course_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Single student when alias provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Student"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/courses/{course_id}/students/{alias}": {
-      "get": {
-        "description": "Get students by course_id or a specific student by alias",
-        "tags": [
-          "courses"
-        ],
-        "summary": "Get students by course_id or a specific student",
-        "parameters": [
-          {
-            "description": "Course ID",
-            "name": "course_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "description": "Student alias",
-            "name": "alias",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Single student when alias provided",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Student"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions": {
-      "get": {
-        "description": "Get transactions either by tx hash or by type",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get transactions",
-        "parameters": [
-          {
-            "description": "Transaction type",
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "UserAccessTokenMint",
-                "AdminCourseCreate",
-                "AdminCourseTeachersUpdate",
-                "StudentCourseEnroll",
-                "StudentCourseAssignmentSubmit",
-                "StudentCourseAssignmentUpdate",
-                "StudentCourseCredentialClaim",
-                "TeacherCourseAssignmentsAssess",
-                "TeacherCourseModulesManage"
-              ]
-            }
-          }
-        ],
+        "description": "Returns all courses as JSON",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Transaction"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                    "$ref": "#/components/schemas/AdminCourseCreateResponse"
+                  },
+                  "type": "array"
                 }
               }
             }
           }
-        }
-      }
-    },
-    "/v2/transactions/admincourse/create/{tx_hash}": {
-      "get": {
-        "description": "Get list of admin course create transactions by tx hash",
+        },
+        "summary": "List All Courses",
         "tags": [
-          "transactions"
-        ],
-        "summary": "Get admin course create transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionAdminCourseCreate"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/admincourse/teachers_update/{tx_hash}": {
-      "get": {
-        "description": "Get list of admin course teachers update transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get admin course teachers update transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionAdminCourseTeachersUpdate"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/count": {
-      "get": {
-        "description": "Get total number of all transactions",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get transaction count",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TransactionCountResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/studentcourse/assignment_submit/{tx_hash}": {
-      "get": {
-        "description": "Get list of student course assignment submit transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get student course assignment submit transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionStudentCourseAssignmentSubmit"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/studentcourse/assignment_update/{tx_hash}": {
-      "get": {
-        "description": "Get list of student course assignment update transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get student course assignment update transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionStudentCourseAssignmentUpdate"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/studentcourse/credential_claim/{tx_hash}": {
-      "get": {
-        "description": "Get list of student course credential claim transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get student course credential claim transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionStudentCourseCredentialClaim"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/studentcourse/enroll/{tx_hash}": {
-      "get": {
-        "description": "Get list of student course enroll transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get student course enroll transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionStudentCourseEnroll"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/teachercourse/assignments_assess/{tx_hash}": {
-      "get": {
-        "description": "Get list of teacher course assignments assess transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get teacher course assignments assess transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionTeacherCourseAssignmentsAssess"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/teachercourse/modules_manage/{tx_hash}": {
-      "get": {
-        "description": "Get list of teacher course modules manage transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get teacher course modules manage transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionTeacherCourseModulesManage"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/useraccesstoken/mint/{tx_hash}": {
-      "get": {
-        "description": "Get list of user access token mint transactions by tx hash",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get user access token mint transactions by tx hash ‼️❌🔴🚧🏗️🚧🔴❌‼️",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TransactionUserAccessTokenMint"
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/transactions/{tx_hash}": {
-      "get": {
-        "description": "Get transactions either by tx hash or by type",
-        "tags": [
-          "transactions"
-        ],
-        "summary": "Get transactions",
-        "parameters": [
-          {
-            "description": "Transaction hash",
-            "name": "tx_hash",
-            "in": "path",
-            "schema": {
-              "type": "string"
-            },
-            "required": true
-          },
-          {
-            "description": "Transaction type",
-            "name": "type",
-            "in": "query",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "UserAccessTokenMint",
-                "AdminCourseCreate",
-                "AdminCourseTeachersUpdate",
-                "StudentCourseEnroll",
-                "StudentCourseAssignmentSubmit",
-                "StudentCourseAssignmentUpdate",
-                "StudentCourseCredentialClaim",
-                "TeacherCourseAssignmentsAssess",
-                "TeacherCourseModulesManage"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Transaction"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/user/all": {
-      "get": {
-        "description": "Get all users",
-        "tags": [
-          "user"
-        ],
-        "summary": "Get all users",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/v2/user/global-state/{alias}": {
-      "get": {
-        "description": "Get user global state",
-        "tags": [
-          "user"
-        ],
-        "summary": "Get user global state",
-        "parameters": [
-          {
-            "description": "Alias",
-            "name": "alias",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UserGlobalState"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "ErrorResponse": {
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "string"
-          }
-        }
-      },
-      "TransactionCountResponse": {
-        "type": "object",
-        "properties": {
-          "count": {
-            "$ref": "#/components/schemas/TransactionCounts"
-          }
-        }
-      },
-      "TransactionCounts": {
-        "type": "object",
-        "properties": {
-          "assess_assignment": {
-            "type": "integer"
-          },
-          "claim_credential": {
-            "type": "integer"
-          },
-          "create_course": {
-            "type": "integer"
-          },
-          "enroll_course": {
-            "type": "integer"
-          },
-          "manage_modules": {
-            "type": "integer"
-          },
-          "mint_access_token": {
-            "type": "integer"
-          },
-          "submit_assignment": {
-            "type": "integer"
-          },
-          "total": {
-            "type": "integer"
-          },
-          "unknown": {
-            "type": "integer"
-          },
-          "update_assignment": {
-            "type": "integer"
-          },
-          "update_teachers": {
-            "type": "integer"
-          }
-        }
-      },
-      "UserCourse": {
-        "type": "object",
-        "properties": {
-          "course_id": {
-            "type": "string"
-          },
-          "credential_id": {
-            "type": "string"
-          },
-          "credentials": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "is_enrolled": {
-            "type": "boolean"
-          }
-        }
-      },
-      "UserGlobalState": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "courses": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserCourse"
-            }
-          }
-        }
-      },
-      "Assessment": {
-        "type": "object",
-        "properties": {
-          "assessment": {
-            "$ref": "#/components/schemas/Decision"
-          },
-          "studentAlias": {
-            "type": "string"
-          }
-        }
-      },
-      "Course": {
-        "type": "object",
-        "properties": {
-          "course_address": {
-            "type": "string"
-          },
-          "course_id": {
-            "type": "string"
-          },
-          "course_state_policy_id": {
-            "type": "string"
-          },
-          "modules": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Module"
-            }
-          },
-          "teachers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "Decision": {
-        "type": "string",
-        "enum": [
-          "accept",
-          "refuse"
-        ],
-        "x-enum-varnames": [
-          "Accept",
-          "Refuse"
+          "Courses"
         ]
-      },
-      "Module": {
-        "type": "object",
-        "properties": {
-          "assignment_id": {
-            "type": "string"
-          },
-          "created_by": {
-            "type": "string"
-          },
-          "prerequisites": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "slts": {
-            "type": "array",
-            "items": {
+      }
+    },
+    "/api/v2/courses/{course_id}/details": {
+      "get": {
+        "description": "Returns consolidated details for a course including modules, teachers, and students",
+        "parameters": [
+          {
+            "description": "Course ID",
+            "in": "path",
+            "name": "course_id",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           }
-        }
-      },
-      "ModuleCreate": {
-        "type": "object",
-        "properties": {
-          "prerequisites": {
-            "type": "array",
-            "items": {
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CourseAggregateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Course not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Course Details Aggregate",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/v2/courses/{course_id}/students/{student_alias}/status": {
+      "get": {
+        "description": "Returns a student's progress in a course (Completed vs Current assignments)",
+        "parameters": [
+          {
+            "description": "Course ID",
+            "in": "path",
+            "name": "course_id",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           },
-          "slts": {
-            "type": "array",
-            "items": {
+          {
+            "description": "Student Alias",
+            "in": "path",
+            "name": "student_alias",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           }
-        }
-      },
-      "ModuleUpdate": {
-        "type": "object",
-        "properties": {
-          "prerequisites": {
-            "type": "array",
-            "items": {
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentStatusResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Course or Student not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Student Status",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/v2/courses/teachers/{alias}/assessments/pending": {
+      "get": {
+        "description": "Returns assignments that need assessment for courses where the user is a teacher",
+        "parameters": [
+          {
+            "description": "Teacher Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           }
-        }
-      },
-      "Modules": {
-        "type": "object",
-        "properties": {
-          "create": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ModulesCreated"
-            }
-          },
-          "delete": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ModulesDeleted"
-            }
-          },
-          "update": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ModulesUpdated"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PendingAssessmentResponse"
+                  },
+                  "type": "array"
+                }
+              }
             }
           }
-        }
-      },
-      "ModulesCreated": {
-        "type": "object",
-        "properties": {
-          "assignmentId": {
-            "type": "string"
-          },
-          "createdBy": {
-            "type": "string"
-          },
-          "module": {
-            "$ref": "#/components/schemas/ModuleCreate"
-          }
-        }
-      },
-      "ModulesDeleted": {
-        "type": "object",
-        "properties": {
-          "assignmentId": {
-            "type": "string"
-          }
-        }
-      },
-      "ModulesUpdated": {
-        "type": "object",
-        "properties": {
-          "assignmentId": {
-            "type": "string"
-          },
-          "module": {
-            "$ref": "#/components/schemas/ModuleUpdate"
-          }
-        }
-      },
-      "Student": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "completed": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "course_id": {
-            "type": "string"
-          },
-          "current": {
-            "type": "string"
-          }
-        }
-      },
-      "Transaction": {
-        "type": "object",
-        "properties": {
-          "submitted_at": {
-            "type": "string"
-          },
-          "tx_hash": {
-            "type": "string"
-          },
-          "types": {
-            "type": "array",
-            "items": {
+        },
+        "summary": "Get Pending Assessments",
+        "tags": [
+          "Courses"
+        ]
+      }
+    },
+    "/api/v2/events/access-tokens/mint/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific access token mint",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           }
-        }
-      },
-      "TransactionAdminCourseCreate": {
-        "type": "object",
-        "properties": {
-          "admin": {
-            "type": "string"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAccessTokenMintResponse"
+                }
+              }
+            }
           },
-          "courseAddress": {
-            "type": "string"
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Access Token Mint Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/assessments/assess/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific assessment",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeacherCourseAssignmentsAssessResponse"
+                }
+              }
+            }
           },
-          "courseId": {
-            "type": "string"
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Assessment Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/assignments/submit/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific assignment submission",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentCourseAssignmentSubmitResponse"
+                }
+              }
+            }
           },
-          "courseStatePolicyId": {
-            "type": "string"
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Assignment Submit Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/blacklist/update/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific blacklist update event",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerProjectUpdateBlacklistResponse"
+                }
+              }
+            }
           },
-          "teachers": {
-            "type": "array",
-            "items": {
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Blacklist Update Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/courses/create/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific course",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseCreateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Course Create Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/credential-claims/claim/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific credential claim",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentCourseCredentialClaimResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Credential Claim Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/credential-claims/project/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific project credential claim",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributorProjectCredentialClaimResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Project Credential Claim Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/enrollments/enroll/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific enrollment",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StudentCourseEnrollResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Student Enroll Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/modules/manage/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific module",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeacherCourseModulesManageResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Module Manage Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/projects/create/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific project",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminProjectCreateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Project Create Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/projects/join/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific project join event",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributorProjectJoinResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Project Join Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/tasks/assess/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific task assessment event",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerProjectAssessTaskResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Assess Task Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/tasks/manage/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific tasks manage event",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerProjectTasksManageResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Tasks Manage Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/tasks/submit/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific task submission event",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributorProjectSubmitTaskResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Submit Task Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/teachers/update/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific teachers update event",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminCourseTeachersUpdateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Teachers Update Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/events/treasury/fund/{tx_hash}": {
+      "get": {
+        "description": "Returns details for a specific fund treasury event",
+        "parameters": [
+          {
+            "description": "Transaction Hash",
+            "in": "path",
+            "name": "tx_hash",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ManagerProjectFundTreasuryResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Event not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get Fund Treasury Event",
+        "tags": [
+          "Events"
+        ]
+      }
+    },
+    "/api/v2/projects": {
+      "get": {
+        "description": "Returns all projects as JSON",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminProjectCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List All Projects",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v2/projects/{project_id}/contributors/{contributor_alias}/status": {
+      "get": {
+        "description": "Returns the contributor's progress in a specific project",
+        "parameters": [
+          {
+            "description": "Project ID",
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
               "type": "string"
             }
           },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
-          }
-        }
-      },
-      "TransactionAdminCourseTeachersUpdate": {
-        "type": "object",
-        "properties": {
-          "courseId": {
-            "type": "string"
-          },
-          "teachers": {
-            "description": "Stores add/remove operations as JSON",
-            "type": "string"
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
-          }
-        }
-      },
-      "TransactionStudentCourseAssignmentSubmit": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "assignmentId": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
-          }
-        }
-      },
-      "TransactionStudentCourseAssignmentUpdate": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "assignmentId": {
-            "type": "string"
-          },
-          "content": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
-          }
-        }
-      },
-      "TransactionStudentCourseCredentialClaim": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "credentialId": {
-            "type": "string"
-          },
-          "credentials": {
-            "type": "array",
-            "items": {
+          {
+            "description": "Contributor Alias",
+            "in": "path",
+            "name": "contributor_alias",
+            "required": true,
+            "schema": {
               "type": "string"
             }
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
           }
-        }
-      },
-      "TransactionStudentCourseEnroll": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContributorProjectStatus"
+                }
+              }
+            }
           }
-        }
-      },
-      "TransactionTeacherCourseAssignmentsAssess": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "assessments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Assessment"
+        },
+        "summary": "Get Contributor Status in Project",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v2/projects/{project_id}/details": {
+      "get": {
+        "description": "Returns consolidated details for a project including tasks, contributors, submissions, and assessments",
+        "parameters": [
+          {
+            "description": "Project ID",
+            "in": "path",
+            "name": "project_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectAggregateResponse"
+                }
+              }
             }
           },
-          "assignmentId": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
+          "404": {
+            "description": "Project not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
-        }
-      },
-      "TransactionTeacherCourseModulesManage": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "modules": {
-            "$ref": "#/components/schemas/Modules"
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
+        },
+        "summary": "Get Project Details Aggregate",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v2/projects/managers/{alias}/assessments/pending": {
+      "get": {
+        "description": "Returns tasks pending assessment for projects managed by this user",
+        "parameters": [
+          {
+            "description": "Manager Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
-        }
-      },
-      "TransactionUserAccessTokenMint": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "tx": {
-            "$ref": "#/components/schemas/Transaction"
-          },
-          "txHash": {
-            "type": "string"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/PendingTaskAssessment"
+                  },
+                  "type": "array"
+                }
+              }
+            }
           }
-        }
+        },
+        "summary": "Get Pending Task Assessments for Manager",
+        "tags": [
+          "Projects"
+        ]
+      }
+    },
+    "/api/v2/transactions": {
+      "get": {
+        "description": "Returns a paginated list of all tracked transactions",
+        "parameters": [
+          {
+            "description": "Page number",
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          },
+          {
+            "description": "Items per page",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "type": "integer",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "List Transactions",
+        "tags": [
+          "Transactions"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/courses/completed": {
+      "get": {
+        "description": "Returns courses where the user has claimed a credential",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminCourseCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Completed Courses",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/courses/enrolled": {
+      "get": {
+        "description": "Returns courses where the user is currently enrolled",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminCourseCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Enrolled Courses",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/courses/owned": {
+      "get": {
+        "description": "Returns courses where the user is the admin",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminCourseCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Owned Courses",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/courses/teaching": {
+      "get": {
+        "description": "Returns courses where the user is currently a teacher",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminCourseCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Teaching Courses",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/projects/completed": {
+      "get": {
+        "description": "Returns projects where user has claimed credentials",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminProjectCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Completed Projects",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/projects/contributing": {
+      "get": {
+        "description": "Returns projects the user has joined as a contributor",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminProjectCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Contributing Projects",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/projects/managing": {
+      "get": {
+        "description": "Returns projects where the user is a manager",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminProjectCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Managing Projects",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/projects/owned": {
+      "get": {
+        "description": "Returns projects where the user is the admin",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/AdminProjectCreateResponse"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Owned Projects",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/api/v2/users/{alias}/state": {
+      "get": {
+        "description": "Returns a user's enrolled and completed courses",
+        "parameters": [
+          {
+            "description": "User Alias",
+            "in": "path",
+            "name": "alias",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserGlobalStateResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Get User Global State",
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Returns the health status of the service and its dependencies",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Health Check",
+        "tags": [
+          "System"
+        ]
       }
     }
   },
@@ -1350,5 +1373,1037 @@
       "url": "https://preprod.andamioscan.io/api",
       "description": "Andamioscan API (preprod)"
     }
-  ]
+  ],
+  "components": {
+    "schemas": {
+      "ContributorProjectStatus": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "claimed_credentials": {
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            },
+            "type": "array"
+          },
+          "joined_at": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "tasks_accepted": {
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            },
+            "type": "array"
+          },
+          "tasks_submitted": {
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "HealthResponse": {
+        "properties": {
+          "components": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PendingTaskAssessment": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "submission_tx_hash": {
+            "type": "string"
+          },
+          "submitted_by": {
+            "type": "string"
+          },
+          "task": {
+            "$ref": "#/components/schemas/Task"
+          }
+        },
+        "type": "object"
+      },
+      "DeletedAt": {
+        "properties": {
+          "time": {
+            "type": "string"
+          },
+          "valid": {
+            "description": "Valid is true if Time is not NULL",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "AdminCourseCreateResponse": {
+        "properties": {
+          "course_address": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "student_state_id": {
+            "type": "string"
+          },
+          "teachers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "AdminCourseTeachersUpdateResponse": {
+        "properties": {
+          "add": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "remove": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "AdminProjectCreateResponse": {
+        "properties": {
+          "contributor_state_id": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string"
+          },
+          "managers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "prerequisites": {
+            "items": {
+              "$ref": "#/components/schemas/Prerequisite"
+            },
+            "type": "array"
+          },
+          "project_address": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "treasury_address": {
+            "type": "string"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Assessment": {
+        "properties": {
+          "assessment": {
+            "$ref": "#/components/schemas/AssessmentStatus"
+          },
+          "student_alias": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "AssessmentStatus": {
+        "enum": [
+          "Accept",
+          "Refuse"
+        ],
+        "type": "string",
+        "x-enum-varnames": [
+          "Accept",
+          "Refuse"
+        ]
+      },
+      "Asset": {
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "policy_id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "AssignmentInfo": {
+        "properties": {
+          "assignment_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CompletedCourseInfo": {
+        "properties": {
+          "claimed_credentials": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "course_id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CompletedProjectInfo": {
+        "properties": {
+          "credentials": {
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            },
+            "type": "array"
+          },
+          "project_id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ContributorProjectCredentialClaim": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "credential_id": {
+            "type": "string"
+          },
+          "credentials": {
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            },
+            "type": "array"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DeletedAt"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tx_hash": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ContributorProjectCredentialClaimResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "credential_id": {
+            "type": "string"
+          },
+          "credentials": {
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            },
+            "type": "array"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ContributorProjectJoinResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ContributorProjectSubmitTask": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "content": {
+            "description": "Submission content",
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DeletedAt"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "task": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "tx_hash": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ContributorProjectSubmitTaskResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "task": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CourseAggregateResponse": {
+        "properties": {
+          "course_address": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "modules": {
+            "items": {
+              "$ref": "#/components/schemas/ModulesCreated"
+            },
+            "type": "array"
+          },
+          "past_students": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "student_state_id": {
+            "type": "string"
+          },
+          "students": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "teachers": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "ManagerProjectAssessTask": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/TaskAssessment"
+            },
+            "type": "array"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DeletedAt"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "task": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "tx_hash": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ManagerProjectAssessTaskResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/TaskAssessment"
+            },
+            "type": "array"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "task": {
+            "$ref": "#/components/schemas/Task"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ManagerProjectFundTreasury": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "assets": {
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            },
+            "type": "array"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "deletedAt": {
+            "$ref": "#/components/schemas/DeletedAt"
+          },
+          "id": {
+            "type": "integer"
+          },
+          "lovelace": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tx_hash": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ManagerProjectFundTreasuryResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "assets": {
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            },
+            "type": "array"
+          },
+          "lovelace": {
+            "type": "integer"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ManagerProjectTasksManageResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "removed_tasks": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            },
+            "type": "array"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ManagerProjectUpdateBlacklistResponse": {
+        "properties": {
+          "added": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "address": {
+            "type": "string"
+          },
+          "alias": {
+            "type": "string"
+          },
+          "blacklist": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "removed": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "slot": {
+            "type": "integer"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ModuleCreate": {
+        "properties": {
+          "prerequisites": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "slts": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "Modules": {
+        "properties": {
+          "create": {
+            "items": {
+              "$ref": "#/components/schemas/ModulesCreated"
+            },
+            "type": "array"
+          },
+          "delete": {
+            "items": {
+              "$ref": "#/components/schemas/ModulesDeleted"
+            },
+            "type": "array"
+          },
+          "update": {
+            "items": {
+              "$ref": "#/components/schemas/ModulesUpdated"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "ModulesCreated": {
+        "properties": {
+          "assignment_id": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "module": {
+            "$ref": "#/components/schemas/ModuleCreate"
+          }
+        },
+        "type": "object"
+      },
+      "ModulesDeleted": {
+        "properties": {
+          "assignment_id": {
+            "type": "string"
+          },
+          "deleted_by": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ModulesUpdated": {
+        "type": "object"
+      },
+      "PaginatedResponse": {
+        "properties": {
+          "data": {},
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMeta"
+          }
+        },
+        "type": "object"
+      },
+      "PaginationMeta": {
+        "properties": {
+          "current_page": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "total_count": {
+            "type": "integer"
+          },
+          "total_pages": {
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "PendingAssessmentResponse": {
+        "properties": {
+          "assignment_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "student_alias": {
+            "type": "string"
+          },
+          "submission_slot": {
+            "type": "integer"
+          },
+          "submission_tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Prerequisite": {
+        "properties": {
+          "assignment_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "course_id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PrerequisiteResponse": {
+        "properties": {
+          "assignment_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "contributor_state_id": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ProjectAggregateResponse": {
+        "properties": {
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/ManagerProjectAssessTask"
+            },
+            "type": "array"
+          },
+          "contributors": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "credential_claims": {
+            "items": {
+              "$ref": "#/components/schemas/ContributorProjectCredentialClaim"
+            },
+            "type": "array"
+          },
+          "prerequisites": {
+            "items": {
+              "$ref": "#/components/schemas/PrerequisiteResponse"
+            },
+            "type": "array"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "submissions": {
+            "items": {
+              "$ref": "#/components/schemas/ContributorProjectSubmitTask"
+            },
+            "type": "array"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/Task"
+            },
+            "type": "array"
+          },
+          "treasury_fundings": {
+            "items": {
+              "$ref": "#/components/schemas/ManagerProjectFundTreasury"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "StudentCourseAssignmentSubmitResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "assignment_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "StudentCourseCredentialClaimResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "credential_id": {
+            "type": "string"
+          },
+          "credentials": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "StudentCourseEnrollResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "StudentStatusResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "completed_assignments": {
+            "items": {
+              "$ref": "#/components/schemas/AssignmentInfo"
+            },
+            "type": "array"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "current_assignment": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/AssignmentInfo"
+              }
+            ],
+            "description": "Pointer to allow null"
+          }
+        },
+        "type": "object"
+      },
+      "Task": {
+        "properties": {
+          "assets": {
+            "items": {
+              "$ref": "#/components/schemas/Asset"
+            },
+            "type": "array"
+          },
+          "content": {
+            "type": "string"
+          },
+          "contributor_state_id": {
+            "type": "string"
+          },
+          "created_by": {
+            "type": "string"
+          },
+          "expiration": {
+            "type": "string"
+          },
+          "expiration_posix": {
+            "type": "integer"
+          },
+          "lovelace": {
+            "type": "integer"
+          },
+          "task_id": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TaskAssessment": {
+        "properties": {
+          "contributor_alias": {
+            "type": "string"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/AssessmentStatus"
+          }
+        },
+        "type": "object"
+      },
+      "TeacherCourseAssignmentsAssessResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "assessments": {
+            "items": {
+              "$ref": "#/components/schemas/Assessment"
+            },
+            "type": "array"
+          },
+          "assignment_id": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TeacherCourseModulesManageResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "course_id": {
+            "type": "string"
+          },
+          "modules": {
+            "$ref": "#/components/schemas/Modules"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UserAccessTokenMintResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "tx_hash": {
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UserGlobalStateResponse": {
+        "properties": {
+          "alias": {
+            "type": "string"
+          },
+          "completed_courses": {
+            "items": {
+              "$ref": "#/components/schemas/CompletedCourseInfo"
+            },
+            "type": "array"
+          },
+          "completed_projects": {
+            "items": {
+              "$ref": "#/components/schemas/CompletedProjectInfo"
+            },
+            "type": "array"
+          },
+          "enrolled_courses": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "joined_projects": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      }
+    }
+  }
 }
