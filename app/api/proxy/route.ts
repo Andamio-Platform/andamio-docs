@@ -1,12 +1,16 @@
 import { openapi } from "@/lib/source";
 
+// Environment configuration with fallbacks
+const ANDAMIO_GATEWAY_URL = process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL || "https://dev-api.andamio.io";
+const ANDAMIOSCAN_URL = process.env.NEXT_PUBLIC_ANDAMIOSCAN_URL || "https://preprod.andamioscan.io";
+
 // Create proxy for API documentation
 // Requests are forwarded to the server URLs defined in the OpenAPI schema
 export const { GET, HEAD, PUT, POST, PATCH, DELETE } = openapi.createProxy({
-  // Allow requests to Andamio APIs (preprod)
+  // Allow requests to Andamio APIs
   allowedOrigins: [
-    "https://dev-api.andamio.io",
-    "https://preprod.andamioscan.io",
+    ANDAMIO_GATEWAY_URL,
+    ANDAMIOSCAN_URL,
   ],
 
   // Override request to only forward essential headers

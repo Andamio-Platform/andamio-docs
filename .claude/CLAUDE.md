@@ -31,6 +31,17 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 - `npm run build-all-docs` - **Pull all APIs and regenerate all documentation** (recommended)
 - `npm run docs-coverage` - Check documentation coverage across protocol components
 
+## Environment Variables
+
+Copy `.env.example` to `.env.local` and configure:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_ANDAMIO_GATEWAY_URL` | Andamio API Gateway URL | `https://dev-api.andamio.io` |
+| `NEXT_PUBLIC_ANDAMIOSCAN_URL` | Andamioscan Indexer URL | `https://preprod.andamioscan.io` |
+
+These variables configure the API proxy for interactive documentation testing. The proxy route (`app/api/proxy/route.ts`) uses these to allow cross-origin requests to Andamio APIs.
+
 ## Swagger/OpenAPI Documentation Workflow
 
 ### Andamio API Gateway Schema

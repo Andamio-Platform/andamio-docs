@@ -195,7 +195,7 @@ const context = {
 };
 
 const result = await executeOnSubmit(txDef.onSubmit, context, {
-  apiBaseUrl: process.env.NEXT_PUBLIC_ANDAMIO_API_URL!,
+  apiBaseUrl: process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL!,
   authToken: session.token,
 });
 
