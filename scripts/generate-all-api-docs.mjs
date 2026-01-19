@@ -27,6 +27,9 @@ const API_CONFIGS = [
   // Add more API configs here as needed
 ];
 
+// Source of truth for Andamio API Gateway URL
+const ANDAMIO_API_GATEWAY_URL = 'https://dev-api.andamio.io/api/v1';
+
 async function convertSwaggerToOpenAPI(inputPath) {
   const swaggerContent = await fs.readFile(inputPath, 'utf8');
   const swaggerDoc = JSON.parse(swaggerContent);
@@ -37,16 +40,15 @@ async function convertSwaggerToOpenAPI(inputPath) {
       else {
         const openapi = result.openapi;
 
-        // Always add/override servers field for Andamio API Gateway
-        if (swaggerDoc.host) {
-          openapi.servers = [
-            {
-              url: `https://${swaggerDoc.host}${swaggerDoc.basePath || ''}`,
-              description: 'Andamio API Gateway (Dev)'
-            }
-          ];
-          console.log(`  ✅ Added servers field: ${openapi.servers[0].url}`);
-        }
+        // Always set servers field to the canonical dev-api.andamio.io URL
+        // This ensures the proxy works correctly regardless of what's in the source swagger
+        openapi.servers = [
+          {
+            url: ANDAMIO_API_GATEWAY_URL,
+            description: 'Andamio API Gateway (Dev)'
+          }
+        ];
+        console.log(`  ✅ Set servers field: ${openapi.servers[0].url}`);
 
         resolve(openapi);
       }

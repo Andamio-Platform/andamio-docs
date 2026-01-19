@@ -84,13 +84,22 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
    - Update root `meta.json` with top-level directories
    - Copy OpenAPI schema to `/public/data/` for browser access
 
-4. **Review Output**:
+4. **Hide Internal Directories**:
+   Edit `content/docs/api/meta.json` and remove these from the `pages` array:
+   - `admin` - Admin-only endpoints
+   - `api-key` - Internal API key management
+   - `auth` - Internal auth endpoints
+   - `user` - User account/usage endpoints
+
+   Keep only: `apikey`, `authentication`, `courses-(merged)`, `db-api`, `projects-(merged)`, `tx-api`, `tx-state-machine`
+
+5. **Review Output**:
    - Check organized directory structure in `content/docs/api/`
-   - Top-level directories: `admin`, `api-key`, `authentication`, `node-backend-api`, `platform-api`, `user`
+   - Verify hidden directories removed from `meta.json`
    - Nested directories follow tag hierarchy based on OpenAPI tags
    - Each file references `data/andamio-api-gateway-openapi.json` for live rendering
 
-5. **Commit Changes**:
+6. **Commit Changes**:
    - Commit raw schema, converted OpenAPI 3.0 file, and all generated/organized docs
 
 ### File Locations
@@ -129,6 +138,37 @@ API docs are organized by OpenAPI tags into nested directories:
 - Multiple tags → nested directories (e.g., `atlas-tx-builder-api/atlas-instance-admin/atlas-self-service/`)
 - Tag names converted to kebab-case for directory names
 - Each directory contains `meta.json` with title and `pages: ['...']` for auto-discovery
+
+### Hidden Directories (Post-Generation Cleanup)
+After running the organize scripts, remove the following directories from `content/docs/api/meta.json` to hide them from public navigation:
+
+**Directories to hide:**
+- `admin` - Admin-only endpoints (usage metrics, user role management)
+- `api-key` - Internal API key management (legacy)
+- `auth` - Internal auth endpoints (developer login/register)
+- `user` - User account endpoints with usage metrics
+
+**Why hide:**
+- These endpoints are for internal/admin use only
+- Usage metrics endpoints expose sensitive data
+- Developer auth flows handled separately
+
+**After organize scripts, update `content/docs/api/meta.json`:**
+```json
+{
+  "pages": [
+    "apikey",
+    "authentication",
+    "courses-(merged)",
+    "db-api",
+    "projects-(merged)",
+    "tx-api",
+    "tx-state-machine"
+  ]
+}
+```
+
+Note: The directories and files still exist for reference but won't appear in navigation.
 
 ### Interactive API Testing
 

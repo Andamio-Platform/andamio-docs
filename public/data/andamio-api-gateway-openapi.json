@@ -1043,7 +1043,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.CourseResponse"
                 }
               }
             }
@@ -1148,7 +1148,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseOwnerCourseMintPostRequest"
+                "$ref": "#/components/schemas/andamio_db_client.CourseOwnerCourseMintPostRequest"
               }
             }
           },
@@ -1161,7 +1161,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.CourseResponse"
                 }
               }
             }
@@ -1220,7 +1220,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.CourseResponse"
                 }
               }
             }
@@ -1311,7 +1311,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentCommitmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentCommitmentResponse"
                 }
               }
             }
@@ -1380,7 +1380,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentCommitmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentCommitmentResponse"
                 }
               }
             }
@@ -1439,7 +1439,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentCommitmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentCommitmentResponse"
                 }
               }
             }
@@ -1632,7 +1632,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentCommitmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentCommitmentResponse"
                 }
               }
             }
@@ -1743,7 +1743,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.UserCourseStatusResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.UserCourseStatusResponse"
                 }
               }
             }
@@ -1754,6 +1754,47 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/errors.BadRequestResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "DB API request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.BadGatewayErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/course/student/courses": {
+      "post": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "description": "Returns courses the learner is enrolled in.",
+        "tags": [
+          "DB API",
+          "Course Student"
+        ],
+        "summary": "Get Student's Enrolled Courses",
+        "operationId": "v2-db-student-get-courses",
+        "responses": {
+          "200": {
+            "description": "Enrolled courses",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/andamio_db_client.CourseResponse"
+                  }
                 }
               }
             }
@@ -1831,7 +1872,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ReviewAssignmentCommitmentRequest"
+                "$ref": "#/components/schemas/andamio_db_client.ReviewAssignmentCommitmentRequest"
               }
             }
           },
@@ -1844,7 +1885,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentCommitmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentCommitmentResponse"
                 }
               }
             }
@@ -1955,7 +1996,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentResponse"
                 }
               }
             }
@@ -2057,7 +2098,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentResponse"
                 }
               }
             }
@@ -2116,7 +2157,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentResponse"
                 }
               }
             }
@@ -2175,7 +2216,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseModuleResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.CourseModuleResponse"
                 }
               }
             }
@@ -2277,7 +2318,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseModuleResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.CourseModuleResponse"
                 }
               }
             }
@@ -2336,7 +2377,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseModuleResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.CourseModuleResponse"
                 }
               }
             }
@@ -2397,7 +2438,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseModuleResponse"
+                    "$ref": "#/components/schemas/andamio_db_client.CourseModuleResponse"
                   }
                 }
               }
@@ -2499,7 +2540,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.IntroductionResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.IntroductionResponse"
                 }
               }
             }
@@ -2601,7 +2642,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.IntroductionResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.IntroductionResponse"
                 }
               }
             }
@@ -2660,7 +2701,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.IntroductionResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.IntroductionResponse"
                 }
               }
             }
@@ -2719,7 +2760,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.LessonResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.LessonResponse"
                 }
               }
             }
@@ -2821,7 +2862,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.LessonResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.LessonResponse"
                 }
               }
             }
@@ -2880,7 +2921,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.LessonResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.LessonResponse"
                 }
               }
             }
@@ -2939,7 +2980,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.SLTResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.SLTResponse"
                 }
               }
             }
@@ -3049,7 +3090,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.SLTResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.SLTResponse"
                 }
               }
             }
@@ -3108,7 +3149,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.SLTResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.SLTResponse"
                 }
               }
             }
@@ -3176,7 +3217,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.AssignmentResponse"
                 }
               }
             }
@@ -3237,7 +3278,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseModuleResponse"
+                    "$ref": "#/components/schemas/andamio_db_client.CourseModuleResponse"
                   }
                 }
               }
@@ -3368,65 +3409,6 @@
         }
       }
     },
-    "/api/v2/course/user/course/get/{policy_id}": {
-      "get": {
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "description": "Returns course details by NFT policy ID.",
-        "tags": [
-          "DB API",
-          "Courses"
-        ],
-        "summary": "Get Course by Policy ID",
-        "operationId": "v2-db-get-course",
-        "parameters": [
-          {
-            "description": "Course NFT Policy ID",
-            "name": "policy_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Course details",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Course not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.NotFoundErrorResponse"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "DB API request failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.BadGatewayErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v2/course/user/courses/list": {
       "get": {
         "description": "Returns all published courses with both off-chain (DB) and on-chain (Andamioscan) data",
@@ -3509,7 +3491,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.IntroductionResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.IntroductionResponse"
                 }
               }
             }
@@ -3586,7 +3568,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.LessonResponse"
+                  "$ref": "#/components/schemas/andamio_db_client.LessonResponse"
                 }
               }
             }
@@ -3666,7 +3648,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.LessonResponse"
+                    "$ref": "#/components/schemas/andamio_db_client.LessonResponse"
                   }
                 }
               }
@@ -3727,7 +3709,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.SLTResponse"
+                    "$ref": "#/components/schemas/andamio_db_client.SLTResponse"
                   }
                 }
               }
@@ -4464,6 +4446,79 @@
         }
       }
     },
+    "/api/v2/project/manager/tasks/{project_state_policy_id}": {
+      "get": {
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "description": "Lists all tasks for a project, including DRAFT tasks visible only to managers.",
+        "tags": [
+          "DB API",
+          "Project Manager"
+        ],
+        "summary": "List Manager Tasks",
+        "operationId": "v2-db-manager-list-tasks",
+        "parameters": [
+          {
+            "description": "Project State Policy ID",
+            "name": "project_state_policy_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectManagerTasksListPostRequest"
+              }
+            }
+          },
+          "description": "List tasks request",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "List of tasks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectTask"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.BadRequestResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "DB API request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.BadGatewayErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v2/project/owner/project/create": {
       "post": {
         "security": [
@@ -4693,65 +4748,6 @@
         }
       }
     },
-    "/api/v2/project/user/project/get/{project_id}": {
-      "get": {
-        "security": [
-          {
-            "ApiKeyAuth": []
-          }
-        ],
-        "description": "Returns a project with managers and states.",
-        "tags": [
-          "DB API",
-          "Projects"
-        ],
-        "summary": "Get Project by ID",
-        "operationId": "v2-db-get-project",
-        "parameters": [
-          {
-            "description": "Project ID",
-            "name": "project_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Project details",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectV2Output"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Project not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.NotFoundErrorResponse"
-                }
-              }
-            }
-          },
-          "502": {
-            "description": "DB API request failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errors.BadGatewayErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v2/project/user/project/{project_id}": {
       "get": {
         "description": "Returns detailed project info with both off-chain (DB) and on-chain (Andamioscan) data",
@@ -4938,7 +4934,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ManageTeachersTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.ManageTeachersTxRequest"
               }
             }
           },
@@ -4951,7 +4947,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -4997,7 +4993,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.CommitAssignmentTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.CommitAssignmentTxRequest"
               }
             }
           },
@@ -5010,7 +5006,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5056,7 +5052,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.AssignmentActionTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.AssignmentActionTxRequest"
               }
             }
           },
@@ -5069,7 +5065,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5115,7 +5111,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ClaimCourseCredentialsTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.ClaimCourseCredentialsTxRequest"
               }
             }
           },
@@ -5128,7 +5124,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5174,7 +5170,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.AssessAssignmentsTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.AssessAssignmentsTxRequest"
               }
             }
           },
@@ -5187,7 +5183,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5233,7 +5229,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ManageModulesTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.ManageModulesTxRequest"
               }
             }
           },
@@ -5246,7 +5242,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5292,7 +5288,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.MintAccessTokenTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.MintAccessTokenTxRequest"
               }
             }
           },
@@ -5305,7 +5301,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5351,7 +5347,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.CreateCourseTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.CreateCourseTxRequest"
               }
             }
           },
@@ -5364,7 +5360,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponseInitCourse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponseInitCourse"
                 }
               }
             }
@@ -5410,7 +5406,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.CreateProjectTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.CreateProjectTxRequest"
               }
             }
           },
@@ -5423,7 +5419,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponseInitProject"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponseInitProject"
                 }
               }
             }
@@ -5509,7 +5505,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ClaimProjectCredentialsTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.ClaimProjectCredentialsTxRequest"
               }
             }
           },
@@ -5522,7 +5518,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5568,7 +5564,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.TaskActionTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.TaskActionTxRequest"
               }
             }
           },
@@ -5581,7 +5577,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5627,7 +5623,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.CommitTaskTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.CommitTaskTxRequest"
               }
             }
           },
@@ -5640,7 +5636,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5686,7 +5682,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.TasksAssessV2TxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.TasksAssessV2TxRequest"
               }
             }
           },
@@ -5699,7 +5695,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5745,7 +5741,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ManageTasksTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.ManageTasksTxRequest"
               }
             }
           },
@@ -5758,7 +5754,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5804,7 +5800,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ManageContributorBlacklistTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.ManageContributorBlacklistTxRequest"
               }
             }
           },
@@ -5817,7 +5813,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5863,7 +5859,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ManageManagersTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.ManageManagersTxRequest"
               }
             }
           },
@@ -5876,7 +5872,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -5922,7 +5918,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.AddFundsTxRequest"
+                "$ref": "#/components/schemas/atlas_tx_client.AddFundsTxRequest"
               }
             }
           },
@@ -5935,7 +5931,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse"
+                  "$ref": "#/components/schemas/atlas_tx_client.UnsignedTxResponse"
                 }
               }
             }
@@ -6161,6 +6157,54 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/errors.BadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authorization",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.UnauthorizedErrorResponse"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "DB API request failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errors.BadGatewayErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v2/user/init-roles": {
+      "post": {
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "description": "Creates all 5 roles (Creator, Learner, TreasuryOwner, ContributionManager, Contributor) for the authenticated user. Call this after minting an access token and re-authenticating.",
+        "tags": [
+          "DB API",
+          "User"
+        ],
+        "summary": "Initialize User Roles",
+        "operationId": "v2-db-user-init-roles",
+        "responses": {
+          "200": {
+            "description": "Roles initialized successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.InitRolesResponse"
                 }
               }
             }
@@ -7262,140 +7306,11 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.AssignmentCommitmentResponse": {
-        "type": "object",
-        "properties": {
-          "access_token_alias": {
-            "type": "string"
-          },
-          "assignment_title": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "evidence": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "module_code": {
-            "type": "string"
-          },
-          "pending_tx_hash": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "policy_id": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "tx_hash": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.AssignmentResponse": {
-        "type": "object",
-        "properties": {
-          "assignment_code": {
-            "type": "string"
-          },
-          "content_json": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "description": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "image_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "live": {
-            "type": "boolean"
-          },
-          "module_code": {
-            "type": "string"
-          },
-          "slts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.SLTSummary"
-            }
-          },
-          "title": {
-            "type": "string"
-          },
-          "video_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.CourseModuleResponse": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "module_code": {
-            "type": "string"
-          },
-          "module_hash": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "pending_tx_hash": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "slts": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.SLTSummary"
-            }
-          },
-          "status": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
       "andamio-api_internal_internal_api_andamio_db_client.CourseOwnerCourseDeletePostRequest": {
         "type": "object",
         "properties": {
           "policy_id": {
             "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.CourseOwnerCourseMintPostRequest": {
-        "type": "object",
-        "properties": {
-          "course_nft_policy_id": {
-            "type": "string"
-          },
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.CourseResponse": {
-        "type": "object",
-        "properties": {
-          "course_code": {
-            "type": "string"
-          },
-          "course_nft_policy_id": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "description": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "image_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "title": {
-            "type": "string"
-          },
-          "video_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
           }
         }
       },
@@ -7671,57 +7586,20 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.IntroductionResponse": {
+      "andamio-api_internal_internal_api_andamio_db_client.InitRolesResponse": {
         "type": "object",
         "properties": {
-          "content_json": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "description": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "image_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "live": {
-            "type": "boolean"
-          },
-          "title": {
+          "message": {
             "type": "string"
           },
-          "video_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.LessonResponse": {
-        "type": "object",
-        "properties": {
-          "content_json": {
-            "type": "object",
-            "additionalProperties": true
+          "roles_created": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
-          "description": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "image_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "live": {
+          "success": {
             "type": "boolean"
-          },
-          "module_index": {
-            "type": "integer"
-          },
-          "slt_text": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "title": {
-            "type": "string"
-          },
-          "video_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
           }
         }
       },
@@ -7731,7 +7609,12 @@
           "expires_at": {
             "type": "string"
           },
+          "id": {
+            "description": "Session ID (required for validate endpoint)",
+            "type": "string"
+          },
           "nonce": {
+            "description": "Random nonce to sign with wallet",
             "type": "string"
           }
         }
@@ -7807,26 +7690,7 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.ProjectContributorCommitmentGetPostRequest": {
-        "type": "object",
-        "properties": {
-          "task_hash": {
-            "type": "string"
-          }
-        }
-      },
       "andamio-api_internal_internal_api_andamio_db_client.ProjectManager": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "type": "string"
-          },
-          "tx_hash": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.ProjectManagerOutput": {
         "type": "object",
         "properties": {
           "alias": {
@@ -7872,20 +7736,6 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.ProjectPrerequisiteOutput": {
-        "type": "object",
-        "properties": {
-          "assignment_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "course_id": {
-            "type": "string"
-          }
-        }
-      },
       "andamio-api_internal_internal_api_andamio_db_client.ProjectState": {
         "type": "object",
         "properties": {
@@ -7916,35 +7766,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectTask"
-            }
-          },
-          "title": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.ProjectStateOutput": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "prerequisites": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectPrerequisiteOutput"
-            }
-          },
-          "project_state_policy_id": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "status": {
-            "type": "string"
-          },
-          "tasks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectTaskV2Output"
             }
           },
           "title": {
@@ -8060,115 +7881,6 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.ProjectTaskTokenOutput": {
-        "type": "object",
-        "properties": {
-          "asset_name": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "asset_name_decoded": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "decimals": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableInt32"
-          },
-          "name": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "policy_id": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "quantity": {
-            "type": "string"
-          },
-          "subject": {
-            "type": "string"
-          },
-          "ticker": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.ProjectTaskV2Output": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "content_json": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "created_by": {
-            "type": "string"
-          },
-          "expiration_time": {
-            "type": "string"
-          },
-          "index": {
-            "type": "integer"
-          },
-          "lovelace": {
-            "type": "string"
-          },
-          "status": {
-            "type": "string"
-          },
-          "task_hash": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "title": {
-            "type": "string"
-          },
-          "tokens": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectTaskTokenOutput"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.ProjectV2Output": {
-        "type": "object",
-        "properties": {
-          "admin_alias": {
-            "type": "string"
-          },
-          "description": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "image_url": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "managers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectManagerOutput"
-            }
-          },
-          "project_address": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "project_id": {
-            "type": "string"
-          },
-          "states": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.ProjectStateOutput"
-            }
-          },
-          "status": {
-            "type": "string"
-          },
-          "title": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "treasury_address": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          }
-        }
-      },
       "andamio-api_internal_internal_api_andamio_db_client.RegisterProjectRequest": {
         "type": "object",
         "properties": {
@@ -8182,54 +7894,6 @@
             "type": "string"
           },
           "title": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.ReviewAssignmentCommitmentRequest": {
-        "type": "object",
-        "properties": {
-          "access_token_alias": {
-            "type": "string"
-          },
-          "decision": {
-            "type": "string"
-          },
-          "module_code": {
-            "type": "string"
-          },
-          "pending_tx_hash": {
-            "type": "string"
-          },
-          "policy_id": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.SLTResponse": {
-        "type": "object",
-        "properties": {
-          "module_code": {
-            "type": "string"
-          },
-          "module_index": {
-            "type": "integer"
-          },
-          "policy_id": {
-            "type": "string"
-          },
-          "slt_text": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.SLTSummary": {
-        "type": "object",
-        "properties": {
-          "module_index": {
-            "type": "integer"
-          },
-          "slt_text": {
             "type": "string"
           }
         }
@@ -8421,23 +8085,6 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.User": {
-        "type": "object",
-        "properties": {
-          "access_token_alias": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
-          },
-          "created_at": {
-            "type": "string"
-          },
-          "stake_address": {
-            "type": "string"
-          },
-          "updated_at": {
-            "type": "string"
-          }
-        }
-      },
       "andamio-api_internal_internal_api_andamio_db_client.UserAccessTokenAliasPostRequest": {
         "type": "object",
         "properties": {
@@ -8446,17 +8093,309 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.UserCourseStatusResponse": {
+      "andamio-api_internal_internal_api_andamio_db_client.ValidateSignatureRequest": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "description": "Wallet address (hex or bech32)",
+            "type": "string"
+          },
+          "andamio_access_token_unit": {
+            "description": "Full access token unit (policyId + hex-encoded name)",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+              }
+            ]
+          },
+          "convert_utf8": {
+            "description": "For wallets that hex-encode the nonce as UTF8",
+            "type": "boolean"
+          },
+          "id": {
+            "description": "Session ID from /auth/login/session",
+            "type": "string"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/andamio_db_client.SignatureData"
+          },
+          "wallet_preference": {
+            "description": "Wallet name for debugging",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+              }
+            ]
+          }
+        }
+      },
+      "andamio-api_internal_internal_api_andamio_db_client.ValidateSignatureResponse": {
+        "type": "object",
+        "properties": {
+          "jwt": {
+            "description": "JWT token for authenticated requests",
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/andamio_db_client.UserSummary"
+          }
+        }
+      },
+      "andamio_db_client.AssignmentCommitmentResponse": {
+        "type": "object",
+        "properties": {
+          "access_token_alias": {
+            "type": "string"
+          },
+          "assignment_title": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "evidence": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "module_code": {
+            "type": "string"
+          },
+          "pending_tx_hash": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "tx_hash": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          }
+        }
+      },
+      "andamio_db_client.AssignmentResponse": {
+        "type": "object",
+        "properties": {
+          "assignment_code": {
+            "type": "string"
+          },
+          "content_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "description": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "live": {
+            "type": "boolean"
+          },
+          "module_code": {
+            "type": "string"
+          },
+          "slts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/andamio_db_client.SLTSummary"
+            }
+          },
+          "title": {
+            "type": "string"
+          },
+          "video_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          }
+        }
+      },
+      "andamio_db_client.CourseModuleResponse": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "module_code": {
+            "type": "string"
+          },
+          "module_hash": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "pending_tx_hash": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "slts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/andamio_db_client.SLTSummary"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "andamio_db_client.CourseOwnerCourseMintPostRequest": {
+        "type": "object",
+        "properties": {
+          "course_nft_policy_id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        }
+      },
+      "andamio_db_client.CourseResponse": {
+        "type": "object",
+        "properties": {
+          "course_code": {
+            "type": "string"
+          },
+          "course_nft_policy_id": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "description": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "title": {
+            "type": "string"
+          },
+          "video_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          }
+        }
+      },
+      "andamio_db_client.IntroductionResponse": {
+        "type": "object",
+        "properties": {
+          "content_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "description": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "live": {
+            "type": "boolean"
+          },
+          "title": {
+            "type": "string"
+          },
+          "video_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          }
+        }
+      },
+      "andamio_db_client.LessonResponse": {
+        "type": "object",
+        "properties": {
+          "content_json": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "description": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "image_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "live": {
+            "type": "boolean"
+          },
+          "module_index": {
+            "type": "integer"
+          },
+          "slt_text": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "title": {
+            "type": "string"
+          },
+          "video_url": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          }
+        }
+      },
+      "andamio_db_client.ReviewAssignmentCommitmentRequest": {
+        "type": "object",
+        "properties": {
+          "access_token_alias": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string"
+          },
+          "module_code": {
+            "type": "string"
+          },
+          "pending_tx_hash": {
+            "type": "string"
+          },
+          "policy_id": {
+            "type": "string"
+          }
+        }
+      },
+      "andamio_db_client.SLTResponse": {
+        "type": "object",
+        "properties": {
+          "module_code": {
+            "type": "string"
+          },
+          "module_index": {
+            "type": "integer"
+          },
+          "policy_id": {
+            "type": "string"
+          },
+          "slt_text": {
+            "type": "string"
+          }
+        }
+      },
+      "andamio_db_client.SLTSummary": {
+        "type": "object",
+        "properties": {
+          "module_index": {
+            "type": "integer"
+          },
+          "slt_text": {
+            "type": "string"
+          }
+        }
+      },
+      "andamio_db_client.SignatureData": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "description": "CIP-30 COSE_Key (hex)",
+            "type": "string"
+          },
+          "signature": {
+            "description": "CIP-30 COSE_Sign1 signature (hex)",
+            "type": "string"
+          }
+        }
+      },
+      "andamio_db_client.UserCourseStatusResponse": {
         "type": "object",
         "properties": {
           "commitments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.AssignmentCommitmentResponse"
+              "$ref": "#/components/schemas/andamio_db_client.AssignmentCommitmentResponse"
             }
           },
           "course": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.CourseResponse"
+            "$ref": "#/components/schemas/andamio_db_client.CourseResponse"
           },
           "is_enrolled": {
             "type": "boolean"
@@ -8472,598 +8411,17 @@
           }
         }
       },
-      "andamio-api_internal_internal_api_andamio_db_client.ValidateSignatureRequest": {
+      "andamio_db_client.UserSummary": {
         "type": "object",
         "properties": {
-          "key": {
+          "access_token_alias": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "cardano_bech32_addr": {
+            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.NullableString"
+          },
+          "id": {
             "type": "string"
-          },
-          "nonce": {
-            "type": "string"
-          },
-          "signature": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_andamio_db_client.ValidateSignatureResponse": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string"
-          },
-          "user": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_andamio_db_client.User"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.AddFundsTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "deposit_value": {
-            "description": "List of (asset class, quantity) pairs. This is an asset class, i.e. either \\\"lovelace\\\" or some other token with its minting policy and token name delimited by dot (.).",
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": true
-              }
-            }
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.AssessAssignmentsTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "assignment_decisions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.AssignmentOutcome"
-            }
-          },
-          "course_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.AssignmentActionTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "assignment_info": {
-            "description": "A text string with a maximum length of 140 characters",
-            "type": "string"
-          },
-          "course_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.AssignmentOutcome": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "outcome": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ClaimCourseCredentialsTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "course_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ClaimProjectCredentialsTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "contributor_state_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "fee_tier": {
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.CommitAssignmentTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "assignment_info": {
-            "description": "A text string with a maximum length of 140 characters",
-            "type": "string"
-          },
-          "course_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "slt_hash": {
-            "description": "Hex encoded hash of slts (exactly 64 characters)",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.CommitTaskTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "contributor_state_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "fee_tier": {
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "task_hash": {
-            "description": "Hex encoded hash of slts (exactly 64 characters)",
-            "type": "string"
-          },
-          "task_info": {
-            "description": "A text string with a maximum length of 140 characters",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.CreateCourseTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "teachers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.CreateProjectTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "course_prereqs": {
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": true
-              }
-            }
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "managers": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ManageContributorBlacklistTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "aliases_to_add": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "aliases_to_remove": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ManageManagersTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "managers_to_add": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "managers_to_remove": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ManageModulesTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "course_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "modules_to_add": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.MintModuleV2"
-            }
-          },
-          "modules_to_remove": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "modules_to_update": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.UpdateModuleV2"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ManageTasksTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "contributor_state_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "deposit_value": {
-            "description": "List of (asset class, quantity) pairs. This is an asset class, i.e. either \\\"lovelace\\\" or some other token with its minting policy and token name delimited by dot (.).",
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": true
-              }
-            }
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "tasks_to_add": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.TaskData"
-            }
-          },
-          "tasks_to_remove": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.TaskData"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ManageTeachersTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "course_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "teachers_to_add": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "teachers_to_remove": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.MintAccessTokenTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "description": "An address, serialised as Bech32.",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.MintModuleV2": {
-        "type": "object",
-        "properties": {
-          "allowed_student_state_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "prereq_slt_hashes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "slts": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.ProjectOutcome": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "outcome": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.TaskActionTxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "project_info": {
-            "description": "A text string with a maximum length of 140 characters",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.TaskData": {
-        "type": "object",
-        "properties": {
-          "expiration_posix": {
-            "type": "integer"
-          },
-          "lovelace_amount": {
-            "type": "integer"
-          },
-          "native_assets": {
-            "description": "List of (asset class, quantity) pairs. This is an asset class, i.e. either \\\"lovelace\\\" or some other token with its minting policy and token name delimited by dot (.).",
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": true
-              }
-            }
-          },
-          "project_content": {
-            "description": "A text string with a maximum length of 140 characters",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.TasksAssessV2TxRequest": {
-        "type": "object",
-        "properties": {
-          "alias": {
-            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
-            "type": "string"
-          },
-          "contributor_state_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "initiator_data": {
-            "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.WalletData"
-          },
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "task_decisions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/andamio-api_internal_internal_api_atlas_tx_client.ProjectOutcome"
-            }
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponse": {
-        "type": "object",
-        "properties": {
-          "unsigned_tx": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponseInitCourse": {
-        "type": "object",
-        "properties": {
-          "course_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "unsigned_tx": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.UnsignedTxResponseInitProject": {
-        "type": "object",
-        "properties": {
-          "project_id": {
-            "description": "This is the hash of a minting policy script.",
-            "type": "string"
-          },
-          "unsigned_tx": {
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.UpdateModuleV2": {
-        "type": "object",
-        "properties": {
-          "allowed_student_state_ids": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "prereq_slt_hashes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "slt_hash": {
-            "description": "Hex encoded hash of slts (exactly 64 characters)",
-            "type": "string"
-          }
-        }
-      },
-      "andamio-api_internal_internal_api_atlas_tx_client.WalletData": {
-        "type": "object",
-        "properties": {
-          "change_address": {
-            "description": "An address, serialised as Bech32.",
-            "type": "string"
-          },
-          "used_addresses": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
           }
         }
       },
@@ -9671,6 +9029,576 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/api_usage_viewmodels.UserUsageData"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.AddFundsTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "deposit_value": {
+            "description": "List of (asset class, quantity) pairs. This is an asset class, i.e. either \\\"lovelace\\\" or some other token with its minting policy and token name delimited by dot (.).",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.AssessAssignmentsTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "assignment_decisions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atlas_tx_client.AssignmentOutcome"
+            }
+          },
+          "course_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          }
+        }
+      },
+      "atlas_tx_client.AssignmentActionTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "assignment_info": {
+            "description": "A text string with a maximum length of 140 characters",
+            "type": "string"
+          },
+          "course_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          }
+        }
+      },
+      "atlas_tx_client.AssignmentOutcome": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.ClaimCourseCredentialsTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "course_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          }
+        }
+      },
+      "atlas_tx_client.ClaimProjectCredentialsTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "contributor_state_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "fee_tier": {
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.CommitAssignmentTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "assignment_info": {
+            "description": "A text string with a maximum length of 140 characters",
+            "type": "string"
+          },
+          "course_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "slt_hash": {
+            "description": "Hex encoded hash of slts (exactly 64 characters)",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.CommitTaskTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "contributor_state_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "fee_tier": {
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "task_hash": {
+            "description": "Hex encoded hash of slts (exactly 64 characters)",
+            "type": "string"
+          },
+          "task_info": {
+            "description": "A text string with a maximum length of 140 characters",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.CreateCourseTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "teachers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.CreateProjectTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "course_prereqs": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "managers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.ManageContributorBlacklistTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "aliases_to_add": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aliases_to_remove": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.ManageManagersTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "managers_to_add": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "managers_to_remove": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.ManageModulesTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "course_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "modules_to_add": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atlas_tx_client.MintModuleV2"
+            }
+          },
+          "modules_to_remove": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "modules_to_update": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atlas_tx_client.UpdateModuleV2"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.ManageTasksTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "contributor_state_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "deposit_value": {
+            "description": "List of (asset class, quantity) pairs. This is an asset class, i.e. either \\\"lovelace\\\" or some other token with its minting policy and token name delimited by dot (.).",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "tasks_to_add": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atlas_tx_client.TaskData"
+            }
+          },
+          "tasks_to_remove": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atlas_tx_client.TaskData"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.ManageTeachersTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "course_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "teachers_to_add": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "teachers_to_remove": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.MintAccessTokenTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "description": "An address, serialised as Bech32.",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.MintModuleV2": {
+        "type": "object",
+        "properties": {
+          "allowed_student_state_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "prereq_slt_hashes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "slts": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.ProjectOutcome": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "outcome": {
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.TaskActionTxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "project_info": {
+            "description": "A text string with a maximum length of 140 characters",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.TaskData": {
+        "type": "object",
+        "properties": {
+          "expiration_posix": {
+            "type": "integer"
+          },
+          "lovelace_amount": {
+            "type": "integer"
+          },
+          "native_assets": {
+            "description": "List of (asset class, quantity) pairs. This is an asset class, i.e. either \\\"lovelace\\\" or some other token with its minting policy and token name delimited by dot (.).",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            }
+          },
+          "project_content": {
+            "description": "A text string with a maximum length of 140 characters",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.TasksAssessV2TxRequest": {
+        "type": "object",
+        "properties": {
+          "alias": {
+            "description": "Plain text alias (not hex encoded). Only alphanumeric characters and underscores allowed.",
+            "type": "string"
+          },
+          "contributor_state_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "initiator_data": {
+            "$ref": "#/components/schemas/atlas_tx_client.WalletData"
+          },
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "task_decisions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/atlas_tx_client.ProjectOutcome"
+            }
+          }
+        }
+      },
+      "atlas_tx_client.UnsignedTxResponse": {
+        "type": "object",
+        "properties": {
+          "unsigned_tx": {
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.UnsignedTxResponseInitCourse": {
+        "type": "object",
+        "properties": {
+          "course_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "unsigned_tx": {
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.UnsignedTxResponseInitProject": {
+        "type": "object",
+        "properties": {
+          "project_id": {
+            "description": "This is the hash of a minting policy script.",
+            "type": "string"
+          },
+          "unsigned_tx": {
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.UpdateModuleV2": {
+        "type": "object",
+        "properties": {
+          "allowed_student_state_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "prereq_slt_hashes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "slt_hash": {
+            "description": "Hex encoded hash of slts (exactly 64 characters)",
+            "type": "string"
+          }
+        }
+      },
+      "atlas_tx_client.WalletData": {
+        "type": "object",
+        "properties": {
+          "change_address": {
+            "description": "An address, serialised as Bech32.",
+            "type": "string"
+          },
+          "used_addresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           }
         }
@@ -11237,7 +11165,7 @@
   },
   "servers": [
     {
-      "url": "https://andamio-api-gateway-168705267033.us-central1.run.app/api/v1",
+      "url": "https://dev-api.andamio.io/api/v1",
       "description": "Andamio API Gateway (Dev)"
     }
   ]
