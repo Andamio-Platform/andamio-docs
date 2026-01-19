@@ -39,7 +39,7 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const API_SOURCES = [
   {
     name: 'Andamio API Gateway',
-    swaggerUrl: 'https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json',
+    swaggerUrl: 'https://dev-api.andamio.io/api/v1/docs/doc.json',
     localPath: './data/andamio-api-gateway.json',
     generateScript: 'generate-all-api-docs',
     enabled: true,

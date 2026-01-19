@@ -42,7 +42,7 @@ async function convertSwaggerToOpenAPI(inputPath) {
           openapi.servers = [
             {
               url: `https://${swaggerDoc.host}${swaggerDoc.basePath || ''}`,
-              description: 'Andamio API Gateway (Production)'
+              description: 'Andamio API Gateway (Dev)'
             }
           ];
           console.log(`  ✅ Added servers field: ${openapi.servers[0].url}`);

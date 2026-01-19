@@ -5,7 +5,7 @@ import { openapi } from "@/lib/source";
 export const { GET, HEAD, PUT, POST, PATCH, DELETE } = openapi.createProxy({
   // Allow requests to Andamio APIs (preprod)
   allowedOrigins: [
-    "https://andamio-api-preprod-308006323670.us-central1.run.app",
+    "https://dev-api.andamio.io",
     "https://preprod.andamioscan.io",
   ],
 

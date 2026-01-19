@@ -34,16 +34,16 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 ## Swagger/OpenAPI Documentation Workflow
 
 ### Andamio API Gateway Schema
-- **Live API Docs**: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html
-- **Schema Endpoint**: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json
+- **Live API Docs**: https://dev-api.andamio.io/api/v1/docs/index.html
+- **Schema Endpoint**: https://dev-api.andamio.io/api/v1/docs/doc.json
 - **Local Schema**: `/data/andamio-api-gateway.json`
-- **Environment**: Preprod (as of October 2024)
+- **Environment**: Dev (as of January 2026)
 
 ### Recent Major Changes (October 2024)
 
-**API Restructuring - Migration to Preprod:**
-- **Endpoint Reduction**: 148 → 75 endpoints (~50% reduction)
-- **Host Change**: Migrated from production to preprod environment
+**API Restructuring - Migration to Dev:**
+- **Endpoint Count**: 113 endpoints (as of January 2026)
+- **Host Change**: Migrated to dev-api.andamio.io
 - **Atlas TX Builder API Removed**: All `/atlas-tx-builder/` endpoints have been removed from the API Gateway
   - Previously included: ~77 endpoints across 8 categories (contributor, course-creator, general, instance-admin, project-creator, staking-admin, student, user)
   - Transaction builder functionality moved or consolidated elsewhere
@@ -53,13 +53,13 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 
 **Documentation Impact:**
 - Deleted `content/docs/api/atlas-tx-builder/` and `content/docs/api/atlas-tx-builder-api/` directories
-- Updated all API Gateway URLs to preprod endpoints
-- Reduced generated MDX file count from ~140 to ~75
+- Updated all API Gateway URLs to dev endpoints
+- Generated MDX file count: ~113 files
 
 ### Complete Workflow
 1. **Pull Latest Schema**:
    ```bash
-   curl -s https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json -o data/andamio-api-gateway.json
+   curl -s https://dev-api.andamio.io/api/v1/docs/doc.json -o data/andamio-api-gateway.json
    ```
 
 2. **Generate Documentation**:
@@ -68,8 +68,8 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
    ```
    This will:
    - Convert Swagger 2.0 to OpenAPI 3.0 (saves to `data/andamio-api-gateway-openapi.json`)
-   - **Add `servers` field** to OpenAPI schema pointing to `https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1`
-   - Generate ~75 MDX files (initially flat in `content/docs/api/`)
+   - **Add `servers` field** to OpenAPI schema pointing to API Gateway URL
+   - Generate ~113 MDX files (initially flat in `content/docs/api/`)
 
 3. **Organize Documentation**:
    ```bash
@@ -142,8 +142,8 @@ The API documentation supports interactive testing with the following setup:
 
 **Proxy Configuration:**
 - OpenAPI proxy configured in `lib/source.ts` and `app/api/proxy/route.ts`
-- Allowed origin: `https://andamio-api-preprod-308006323670.us-central1.run.app`
-- **Server URL** (from schema `servers` field): `https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1`
+- Allowed origin: `https://dev-api.andamio.io`
+- **Server URL** (from schema `servers` field): Derived from swagger host field during conversion
 - Proxy endpoint: `/api/proxy` forwards requests to the server URL defined in the schema
 - The `servers` field is automatically added during Swagger → OpenAPI conversion in `scripts/generate-all-api-docs.mjs`
 - **Header forwarding**: Only essential headers are forwarded (authorization, x-api-key, content-type, accept) to avoid 431 errors
@@ -181,7 +181,7 @@ The Andamio platform has multiple API sub-services that will eventually be unifi
 
 | Service | Description | Swagger URL | Local Schema |
 |---------|-------------|-------------|--------------|
-| **Andamio API Gateway** | Auth, user management, platform services | [Swagger UI](https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html) | `data/andamio-api-gateway.json` |
+| **Andamio API Gateway** | Auth, user management, platform services | [Swagger UI](https://dev-api.andamio.io/api/v1/docs/index.html) | `data/andamio-api-gateway.json` |
 | **Andamioscan** | Indexer for on-chain data queries | [Swagger UI](https://preprod.andamioscan.io/api) | `data/andamioscan-swagger.json` |
 | **Atlas TX Builder** | V2 transaction building | [Swagger UI](https://atlas-api-preprod-507341199760.us-central1.run.app/swagger/index.html) | `public/yaml/transactions/v2/atlas-api-swagger.json` |
 
