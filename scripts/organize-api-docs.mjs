@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const API_DIR = './content/docs/api';
+const API_DIR = './content/docs/api/gateway';
 const SCHEMA_PATH = './data/andamio-api-gateway.json';
 
 // Load schema and extract path-to-tags mapping
@@ -111,24 +111,23 @@ for (const [dirPath, info] of Object.entries(directoryStructure)) {
   console.log(`✅ Created ${dirPath}/meta.json`);
 }
 
-// Update root meta.json to include top-level directories
+// Update gateway meta.json to include top-level directories
 const topLevelDirs = [...new Set(
   Object.keys(directoryStructure).map(p => p.split('/')[0])
 )].sort();
 
-const rootMeta = {
-  title: "Andamio API",
-  icon: "Network",
-  pages: topLevelDirs,
+const gatewayMeta = {
+  title: "API Gateway",
+  pages: ["index", ...topLevelDirs],
   defaultOpen: false
 };
 
 await fs.writeFile(
   path.join(API_DIR, 'meta.json'),
-  JSON.stringify(rootMeta, null, 2)
+  JSON.stringify(gatewayMeta, null, 2)
 );
 
-console.log(`\n✅ Updated root meta.json with ${topLevelDirs.length} top-level directories`);
+console.log(`\n✅ Updated gateway meta.json with ${topLevelDirs.length} endpoint directories`);
 
 // Copy schema to public directory for browser access
 console.log(`\n📦 Copying schema to public directory...`);

@@ -10,7 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const API_CONFIGS = [
   {
     input: './data/andamio-api-gateway.json',
-    output: './content/docs/api',
+    output: './content/docs/api/gateway',
     isOpenAPI: false, // Swagger 2.0, needs conversion
   },
   // Legacy schemas - commented out, only using andamio-api-gateway now
@@ -28,7 +28,7 @@ const API_CONFIGS = [
 ];
 
 // Source of truth for Andamio API Gateway URL
-const ANDAMIO_API_GATEWAY_URL = 'https://dev-api.andamio.io/api/v1';
+const ANDAMIO_API_GATEWAY_URL = 'https://dev.api.andamio.io/api/v1';
 
 async function convertSwaggerToOpenAPI(inputPath) {
   const swaggerContent = await fs.readFile(inputPath, 'utf8');

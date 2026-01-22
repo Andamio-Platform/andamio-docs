@@ -1,0 +1,47 @@
+---
+title: Implementation Guides
+description: Learn how to integrate the TX State Machine into your application
+---
+
+# Implementation Guides
+
+These guides show you how to integrate the TX State Machine into your frontend application, with complete code examples and best practices.
+
+## Available Guides
+
+### [React/TypeScript](./react-typescript)
+
+The primary implementation guide covering:
+- Custom hooks for transaction management
+- State handling with loading and error states
+- Polling patterns for transaction status
+- Complete component examples
+
+### [Migration Guide](./migration)
+
+For teams upgrading from v1 patterns:
+- Old vs new transaction flow
+- Deprecated endpoints to remove
+- Step-by-step migration checklist
+
+## Coming Soon
+
+Future guides will cover:
+- Vue.js / Nuxt
+- Svelte / SvelteKit
+- Vanilla JavaScript
+- Server-side integration (Node.js)
+
+## Best Practices
+
+Regardless of framework, follow these principles:
+
+1. **Always register transactions** - Even if you don't poll for status, registering ensures the database gets updated automatically.
+
+2. **Start polling after ~30 seconds** - Cardano block time is typically 20-40 seconds. Polling earlier wastes API calls.
+
+3. **Poll every 10-15 seconds** - This balances responsiveness with API efficiency.
+
+4. **Handle all terminal states** - Always check for `updated`, `failed`, and `expired`.
+
+5. **Don't call legacy confirm endpoints** - The TX State Machine replaces all `/confirm-tx`, `/set-pending-tx`, and `/sync` endpoints.

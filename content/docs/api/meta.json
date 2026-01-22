@@ -2,13 +2,10 @@
   "title": "Andamio API",
   "icon": "Network",
   "pages": [
-    "apikey",
-    "authentication",
-    "courses-(merged)",
-    "db-api",
-    "projects-(merged)",
-    "tx-api",
-    "tx-state-machine"
+    "index",
+    "tx-state-machine",
+    "gateway",
+    "andamioscan"
   ],
   "defaultOpen": false
 }

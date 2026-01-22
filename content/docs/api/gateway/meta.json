@@ -1,0 +1,14 @@
+{
+  "title": "API Gateway",
+  "pages": [
+    "index",
+    "admin",
+    "apikey",
+    "auth",
+    "course",
+    "project",
+    "tx",
+    "user"
+  ],
+  "defaultOpen": false
+}

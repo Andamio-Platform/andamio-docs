@@ -1,7 +1,7 @@
 import { openapi } from "@/lib/source";
 
 // Environment configuration with fallbacks
-const ANDAMIO_GATEWAY_URL = process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL || "https://dev-api.andamio.io";
+const ANDAMIO_GATEWAY_URL = process.env.NEXT_PUBLIC_ANDAMIO_GATEWAY_URL || "https://dev.api.andamio.io";
 const ANDAMIOSCAN_URL = process.env.NEXT_PUBLIC_ANDAMIOSCAN_URL || "https://preprod.andamioscan.io";
 
 // Create proxy for API documentation

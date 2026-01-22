@@ -1,0 +1,141 @@
+---
+title: Core Concepts
+description: Understanding the TX State Machine lifecycle and transaction states
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+# Core Concepts
+
+The TX State Machine replaces the old pattern where frontends had to manually poll the blockchain and call separate confirmation endpoints. Now the Gateway handles all of this automatically.
+
+## What the Gateway Handles
+
+After you register a transaction, the Gateway automatically:
+
+1. **Polls Andamioscan** for transaction confirmation (every ~10 seconds)
+2. **Extracts on-chain data** from the confirmed transaction
+3. **Updates the database** with the new state (enrollment, commitment, assessment, etc.)
+4. **Tracks the final state** for your frontend to query
+
+## Transaction Lifecycle
+
+```
+┌─────────┐     ┌─────────┐     ┌─────────┐     ┌──────────┐     ┌─────────┐
+│  BUILD  │ ──▶ │  SIGN   │ ──▶ │ SUBMIT  │ ──▶ │ REGISTER │ ──▶ │  DONE   │
+└─────────┘     └─────────┘     └─────────┘     └──────────┘     └─────────┘
+   Gateway         Wallet         Network         Gateway         Automatic
+```
+
+### Detailed Flow
+
+```
+┌────────────────────────────────────────────────────────────────────────────┐
+│                         Transaction Lifecycle                               │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  1. BUILD TRANSACTION                                                       │
+│     └─▶ Frontend calls TX build endpoint                                    │
+│     └─▶ Gateway returns unsigned CBOR                                       │
+│                                                                             │
+│  2. SIGN & SUBMIT                                                           │
+│     └─▶ User signs with CIP-30 wallet                                       │
+│     └─▶ Submit to Cardano network, receive tx_hash                          │
+│                                                                             │
+│  3. REGISTER (your last step)                                               │
+│     └─▶ POST /api/v2/tx/register with tx_hash and tx_type                   │
+│     └─▶ Gateway begins tracking                                             │
+│                                                                             │
+│  4. CONFIRM (automatic)                                                     │
+│     └─▶ Gateway polls Andamioscan for confirmation                          │
+│     └─▶ Transaction found in block                                          │
+│                                                                             │
+│  5. UPDATE (automatic)                                                      │
+│     └─▶ Gateway extracts on-chain data                                      │
+│     └─▶ Database updated with final state                                   │
+│                                                                             │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+## Transaction States
+
+Each registered transaction moves through these states:
+
+| State | Meaning | Terminal? |
+|-------|---------|-----------|
+| `pending` | Transaction registered, waiting for on-chain confirmation | No |
+| `confirmed` | Transaction confirmed on-chain by Andamioscan | No |
+| `updated` | Database updated successfully | Yes (success) |
+| `failed` | Error during confirmation or database update | Yes (error) |
+| `expired` | Transaction not confirmed within 2 hours | Yes (error) |
+
+### State Diagram
+
+```
+                    ┌──────────┐
+                    │ pending  │
+                    └────┬─────┘
+                         │
+            ┌────────────┼────────────┐
+            │            │            │
+            ▼            ▼            ▼
+      ┌──────────┐ ┌──────────┐ ┌──────────┐
+      │confirmed │ │  failed  │ │ expired  │
+      └────┬─────┘ └──────────┘ └──────────┘
+           │
+      ┌────┴────┐
+      │         │
+      ▼         ▼
+┌──────────┐ ┌──────────┐
+│ updated  │ │  failed  │
+└──────────┘ └──────────┘
+```
+
+## Status Response
+
+When you query `/api/v2/tx/status/{tx_hash}`, you receive:
+
+```json
+{
+  "tx_hash": "8a3b5c7d9e1f...",
+  "tx_type": "assignment_submit",
+  "state": "updated",
+  "created_at": "2026-01-22T10:00:00Z",
+  "confirmed_at": "2026-01-22T10:01:30Z",
+  "updated_at": "2026-01-22T10:01:35Z"
+}
+```
+
+For failed transactions, the response includes error details:
+
+```json
+{
+  "tx_hash": "8a3b5c7d9e1f...",
+  "tx_type": "assignment_submit",
+  "state": "failed",
+  "last_error": "Database constraint violation: commitment already exists"
+}
+```
+
+## Timing Expectations
+
+| Event | Typical Time |
+|-------|--------------|
+| Transaction in mempool | Immediate |
+| Block confirmation | ~20-40 seconds |
+| Database update | ~5-10 seconds after confirmation |
+| Total end-to-end | ~30-60 seconds |
+
+<Callout type="info">
+**Polling recommendation**: Start checking status ~30 seconds after registration, then poll every 10-15 seconds until you reach a terminal state (`updated`, `failed`, or `expired`).
+</Callout>
+
+## Expiration
+
+Transactions that aren't confirmed within **2 hours** are marked as `expired`. This typically means:
+
+- The transaction was never submitted to the network
+- The transaction was rejected by the network
+- Network congestion prevented inclusion in a block
+
+If a transaction expires, you may need to rebuild and resubmit it.

@@ -1,6 +1,9 @@
 {
   "title": "TX State Machine",
   "pages": [
-    "..."
+    "index",
+    "concepts",
+    "transaction-types",
+    "guides"
   ]
 }

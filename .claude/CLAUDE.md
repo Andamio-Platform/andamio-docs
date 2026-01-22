@@ -37,7 +37,7 @@ Copy `.env.example` to `.env.local` and configure:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `NEXT_PUBLIC_ANDAMIO_GATEWAY_URL` | Andamio API Gateway URL | `https://dev-api.andamio.io` |
+| `NEXT_PUBLIC_ANDAMIO_GATEWAY_URL` | Andamio API Gateway URL | `https://dev.api.andamio.io` |
 | `NEXT_PUBLIC_ANDAMIOSCAN_URL` | Andamioscan Indexer URL | `https://preprod.andamioscan.io` |
 
 These variables configure the API proxy for interactive documentation testing. The proxy route (`app/api/proxy/route.ts`) uses these to allow cross-origin requests to Andamio APIs.
@@ -45,8 +45,8 @@ These variables configure the API proxy for interactive documentation testing. T
 ## Swagger/OpenAPI Documentation Workflow
 
 ### Andamio API Gateway Schema
-- **Live API Docs**: https://dev-api.andamio.io/api/v1/docs/index.html
-- **Schema Endpoint**: https://dev-api.andamio.io/api/v1/docs/doc.json
+- **Live API Docs**: https://dev.api.andamio.io/api/v1/docs/index.html
+- **Schema Endpoint**: https://dev.api.andamio.io/api/v1/docs/doc.json
 - **Local Schema**: `/data/andamio-api-gateway.json`
 - **Environment**: Dev (as of January 2026)
 
@@ -54,7 +54,7 @@ These variables configure the API proxy for interactive documentation testing. T
 
 **API Restructuring - Migration to Dev:**
 - **Endpoint Count**: 113 endpoints (as of January 2026)
-- **Host Change**: Migrated to dev-api.andamio.io
+- **Host Change**: Migrated to dev.api.andamio.io
 - **Atlas TX Builder API Removed**: All `/atlas-tx-builder/` endpoints have been removed from the API Gateway
   - Previously included: ~77 endpoints across 8 categories (contributor, course-creator, general, instance-admin, project-creator, staking-admin, student, user)
   - Transaction builder functionality moved or consolidated elsewhere
@@ -70,7 +70,7 @@ These variables configure the API proxy for interactive documentation testing. T
 ### Complete Workflow
 1. **Pull Latest Schema**:
    ```bash
-   curl -s https://dev-api.andamio.io/api/v1/docs/doc.json -o data/andamio-api-gateway.json
+   curl -s https://dev.api.andamio.io/api/v1/docs/doc.json -o data/andamio-api-gateway.json
    ```
 
 2. **Generate Documentation**:
@@ -193,7 +193,7 @@ The API documentation supports interactive testing with the following setup:
 
 **Proxy Configuration:**
 - OpenAPI proxy configured in `lib/source.ts` and `app/api/proxy/route.ts`
-- Allowed origin: `https://dev-api.andamio.io`
+- Allowed origin: `https://dev.api.andamio.io`
 - **Server URL** (from schema `servers` field): Derived from swagger host field during conversion
 - Proxy endpoint: `/api/proxy` forwards requests to the server URL defined in the schema
 - The `servers` field is automatically added during Swagger → OpenAPI conversion in `scripts/generate-all-api-docs.mjs`
@@ -232,7 +232,7 @@ The Andamio platform has multiple API sub-services that will eventually be unifi
 
 | Service | Description | Swagger URL | Local Schema |
 |---------|-------------|-------------|--------------|
-| **Andamio API Gateway** | Auth, user management, platform services | [Swagger UI](https://dev-api.andamio.io/api/v1/docs/index.html) | `data/andamio-api-gateway.json` |
+| **Andamio API Gateway** | Auth, user management, platform services | [Swagger UI](https://dev.api.andamio.io/api/v1/docs/index.html) | `data/andamio-api-gateway.json` |
 | **Andamioscan** | Indexer for on-chain data queries | [Swagger UI](https://preprod.andamioscan.io/api) | `data/andamioscan-swagger.json` |
 | **Atlas TX Builder** | V2 transaction building | [Swagger UI](https://atlas-api-preprod-507341199760.us-central1.run.app/swagger/index.html) | `public/yaml/transactions/v2/atlas-api-swagger.json` |
 

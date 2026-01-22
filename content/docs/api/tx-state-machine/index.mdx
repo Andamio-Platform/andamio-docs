@@ -1,0 +1,80 @@
+---
+title: TX State Machine
+description: Automatic transaction confirmation and database synchronization for Andamio transactions
+icon: Workflow
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+# TX State Machine
+
+The TX State Machine automatically tracks Cardano transaction confirmations and updates the Andamio database after on-chain settlement. This eliminates the need for frontends to manage complex confirmation logic.
+
+<Callout type="info">
+**Key concept**: After submitting a transaction to the Cardano network, simply register it with the Gateway. The Gateway handles everything else automatically.
+</Callout>
+
+## The New Pattern
+
+```
+BUILD → SIGN → SUBMIT → REGISTER → DONE
+```
+
+| Step | Who | What Happens |
+|------|-----|--------------|
+| **Build** | Frontend → Gateway | Call TX build endpoint, get unsigned CBOR |
+| **Sign** | Frontend → Wallet | User signs with CIP-30 wallet |
+| **Submit** | Frontend → Network | Submit signed TX, receive `tx_hash` |
+| **Register** | Frontend → Gateway | Register `tx_hash` for tracking |
+| **Confirm** | Gateway (automatic) | Polls Andamioscan until confirmed |
+| **Update** | Gateway (automatic) | Updates database with on-chain data |
+
+## Quick Start
+
+```typescript
+// 1. Build the transaction
+const { data } = await fetch('/api/v2/tx/course/student/assignment/commit', {
+  method: 'POST',
+  headers: { 'X-API-Key': API_KEY, 'Authorization': `Bearer ${jwt}` },
+  body: JSON.stringify({
+    alias: walletAddress,
+    course_id: courseId,
+    slt_hash: moduleHash,
+    assignment_info: { evidence_link: 'https://...' }
+  })
+}).then(r => r.json());
+
+// 2. Sign with wallet
+const signedTx = await wallet.signTx(data.cbor, true);
+
+// 3. Submit to network
+const txHash = await wallet.submitTx(signedTx);
+
+// 4. Register with Gateway
+await fetch('/api/v2/tx/register', {
+  method: 'POST',
+  headers: { 'X-API-Key': API_KEY, 'Authorization': `Bearer ${jwt}` },
+  body: JSON.stringify({
+    tx_hash: txHash,
+    tx_type: 'assignment_submit'
+  })
+});
+
+// Done! Gateway handles confirmation and database updates automatically.
+```
+
+## API Endpoints
+
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| `POST` | [`/api/v2/tx/register`](./v2-tx-register) | Register a pending transaction |
+| `GET` | [`/api/v2/tx/status/{tx_hash}`](./v2-tx-status) | Check transaction status |
+| `GET` | [`/api/v2/tx/pending`](./v2-tx-pending) | List user's pending transactions |
+| `GET` | [`/api/v2/tx/types`](./v2-tx-types) | Get valid transaction types |
+
+## Next Steps
+
+- [Core Concepts](./concepts) - Transaction lifecycle and states
+- [Transaction Types](./transaction-types) - Supported transactions and metadata requirements
+- [React/TypeScript Guide](./guides/react-typescript) - Full implementation with hooks
+- [Migration Guide](./guides/migration) - Upgrading from v1 patterns
