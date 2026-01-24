@@ -3,6 +3,7 @@
   "icon": "Network",
   "pages": [
     "index",
+    "type-conventions",
     "tx-state-machine",
     "gateway",
     "andamioscan"

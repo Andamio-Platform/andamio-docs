@@ -1,0 +1,121 @@
+---
+title: API Type Conventions
+description: Patterns and conventions for Andamio API identifiers, field naming, and response structures
+---
+
+# API Type Conventions
+
+This guide explains the patterns and conventions used across Andamio APIs, helping you understand field naming, identifier types, and response structures.
+
+## Identifier Patterns
+
+Andamio API uses two types of identifiers:
+
+| Suffix | Meaning | Example |
+|--------|---------|---------|
+| `_id` | Cardano policy ID (on-chain token) | `course_id`, `project_id` |
+| `_hash` | Content-addressed hash | `task_hash`, `slt_hash` |
+
+### When to use which
+
+- **Policy IDs (`_id`)**: Courses and Projects are Cardano tokens. Use their policy ID.
+- **Content hashes (`_hash`)**: Tasks, SLTs, and evidence are content-addressed. The hash IS the identifier.
+
+### Evidence vs Definition
+
+For submissions, use `*_evidence_hash`:
+
+```json
+{
+  "task_hash": "abc123...",           // The task definition
+  "task_evidence_hash": "def456..."   // The submitted proof
+}
+```
+
+## Response Structure
+
+API responses use a nested content pattern:
+
+```json
+{
+  "task_hash": "abc123...",
+  "project_id": "policy_xyz...",
+  "content": {
+    "title": "Build a feature",
+    "description": "Detailed description..."
+  }
+}
+```
+
+**Why nested?** On-chain identifiers are separate from off-chain customizable content. This allows content schemas to evolve independently while maintaining stable on-chain references.
+
+## Field Naming
+
+All JSON fields use `snake_case`:
+
+```json
+{
+  "task_hash": "...",
+  "task_evidence_hash": "...",
+  "task_commitment_status": "pending",
+  "created_at": "2026-01-24T..."
+}
+```
+
+## Status Fields
+
+Status fields include their resource type for clarity:
+
+| Field | Values |
+|-------|--------|
+| `task_commitment_status` | `pending`, `submitted`, `approved`, `rejected` |
+| `assignment_commitment_status` | `pending`, `submitted`, `approved`, `rejected` |
+
+## Natural Keys
+
+Entities are identified by natural keys, not database IDs:
+
+| Entity | Natural Key |
+|--------|-------------|
+| Task | `task_hash` |
+| TaskCommitment | `task_hash` + `contributor_address` |
+| CourseModule | `slt_hash` + `course_id` |
+
+This means you can reference entities using their protocol-level identifiers without needing to track internal database IDs.
+
+## TypeScript Consumers
+
+If generating TypeScript types from the API:
+
+1. **API returns `snake_case`** - this is correct and intentional
+2. **Transform to `camelCase`** in your data layer if preferred
+3. **Keep `snake_case`** when sending request params back to API
+
+Example transformation pattern:
+
+```typescript
+// API response (snake_case)
+const apiResponse = {
+  task_hash: "abc123",
+  task_commitment_status: "pending",
+  created_at: "2026-01-24T12:00:00Z"
+};
+
+// Transform for internal use (camelCase)
+const task = {
+  taskHash: apiResponse.task_hash,
+  taskCommitmentStatus: apiResponse.task_commitment_status,
+  createdAt: apiResponse.created_at
+};
+
+// When sending back to API, use snake_case
+const updateRequest = {
+  task_hash: task.taskHash,
+  task_commitment_status: "submitted"
+};
+```
+
+## Related Documentation
+
+- [API Gateway Overview](/docs/api) - Authentication and getting started
+- [TX State Machine Guide](/docs/api/tx-state-machine) - Transaction lifecycle management
