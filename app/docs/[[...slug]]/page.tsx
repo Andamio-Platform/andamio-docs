@@ -29,7 +29,6 @@ interface ExtendedPageData {
   validator_id?: string | string[];
   tags?: string[];
   "access-level"?: string;
-  _openapi?: Record<string, unknown>;
   _meta: Record<string, unknown>;
   body: string;
   toc: TOCItemType[];

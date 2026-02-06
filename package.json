@@ -6,12 +6,6 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "generate-api-docs": "node scripts/generate-api-docs.mjs",
-    "convert-swagger": "node scripts/convert-swagger-to-openapi.mjs",
-    "generate-example-docs": "npm run convert-swagger",
-    "generate-all-api-docs": "node scripts/generate-all-api-docs.mjs",
-    "generate-andamioscan-docs": "node scripts/generate-andamioscan-docs.mjs",
-    "build-all-docs": "node scripts/build-all-docs.mjs",
     "docs-coverage": "npx tsx scripts/docs-coverage-check.ts"
   },
   "dependencies": {
@@ -23,7 +17,6 @@
     "@xyflow/react": "^12.7.1",
     "fs": "^0.0.1-security",
     "fumadocs-core": "15.4.1",
-    "fumadocs-openapi": "^9.0.2",
     "fumadocs-ui": "15.4.1",
     "js-yaml": "^4.1.0",
     "lucide-react": "^0.511.0",
@@ -45,7 +38,6 @@
     "eslint": "^8",
     "eslint-config-next": "15.3.2",
     "postcss": "^8.5.3",
-    "swagger2openapi": "^7.0.8",
     "tailwindcss": "^4.1.7",
     "typescript": "^5.8.3"
   }
