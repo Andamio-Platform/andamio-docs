@@ -1,0 +1,235 @@
+{
+  "lastUpdated": "2026-02-08",
+  "summary": {
+    "total": 10,
+    "published": 2,
+    "draft": 0,
+    "notStarted": 8,
+    "blocked": 0,
+    "withFriction": 0,
+    "ready": 2,
+    "notAssessed": 8
+  },
+  "guides": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "role": "general",
+      "guideFile": "content/docs/guides/getting-started.mdx",
+      "description": "Create your on-chain identity and mint an access token",
+      "status": "published",
+      "uxReadiness": {
+        "score": "ready",
+        "lastAssessed": "2026-02-08",
+        "appRoutes": ["/", "/(app)/dashboard"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": "2026-02-08",
+        "reviewDate": "2026-02-08",
+        "publishDate": "2026-02-08"
+      },
+      "scribeUrl": "https://scribehow.com/shared/Create_On-Chain_Identity_and_Mint_Access_Token__vGhN2PU7SmyX-gYGV8HrOQ",
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)"]
+    },
+    {
+      "id": "creating-your-first-course",
+      "title": "Creating Your First Course",
+      "role": "courses",
+      "guideFile": "content/docs/guides/courses/creating-your-first-course.mdx",
+      "description": "Create a course and first module in Andamio Studio",
+      "status": "published",
+      "uxReadiness": {
+        "score": "ready",
+        "lastAssessed": "2026-02-08",
+        "appRoutes": ["/(app)/studio", "/(app)/studio/courses/[courseId]"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": "2026-02-08",
+        "reviewDate": "2026-02-08",
+        "publishDate": "2026-02-08"
+      },
+      "scribeUrl": "https://scribehow.com/shared/Create_a_Course_and_Module_in_Andamio_Studio__5LJvgcnFT_mmT3tww4tknA",
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)"]
+    },
+    {
+      "id": "publishing-and-modules",
+      "title": "Publishing and Modules",
+      "role": "courses",
+      "guideFile": "content/docs/guides/courses/publishing-and-modules.mdx",
+      "description": "Publish a course on-chain and manage its modules",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/studio/courses/[courseId]", "/(app)/studio/courses/[courseId]/modules"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Added to tracker (MDX exists but not in walkthrough-tracker)"]
+    },
+    {
+      "id": "managing-students",
+      "title": "Managing Students and Grading",
+      "role": "courses",
+      "guideFile": "content/docs/guides/courses/managing-students.mdx",
+      "description": "Review student work, assess assignments, and issue credentials",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/studio/courses/[courseId]/students", "/(app)/studio/courses/[courseId]/assignments"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (awaiting-scribe)"]
+    },
+    {
+      "id": "setting-up-prerequisites",
+      "title": "Setting Up Prerequisites",
+      "role": "projects",
+      "guideFile": "content/docs/guides/projects/setting-up-prerequisites.mdx",
+      "description": "Connect courses to projects — shows the Course-Project relationship, branches to course creation if needed, and walks through assigning credentials as project prerequisites",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/studio/projects/[projectId]/prerequisites"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (awaiting-scribe, PRIORITY)"]
+    },
+    {
+      "id": "creating-your-first-project",
+      "title": "Creating Your First Project",
+      "role": "projects",
+      "guideFile": "content/docs/guides/projects/creating-your-first-project.mdx",
+      "description": "Set up a collaborative project with credential requirements",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/studio/projects", "/(app)/studio/projects/[projectId]"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (awaiting-scribe)"]
+    },
+    {
+      "id": "managing-contributors",
+      "title": "Managing Contributors and Tasks",
+      "role": "projects",
+      "guideFile": "content/docs/guides/projects/managing-contributors.mdx",
+      "description": "Manage project tasks, assess contributor work, and distribute rewards",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/studio/projects/[projectId]/contributors", "/(app)/studio/projects/[projectId]/tasks"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (awaiting-scribe)"]
+    },
+    {
+      "id": "earning-credentials",
+      "title": "Earning Credentials",
+      "role": "contributors",
+      "guideFile": "content/docs/guides/contributors/earning-credentials.mdx",
+      "description": "Enroll in courses, complete assignments, and earn verifiable credentials",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/courses", "/(app)/courses/[courseId]", "/(app)/courses/[courseId]/assignments"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (awaiting-scribe)"]
+    },
+    {
+      "id": "completing-prerequisites",
+      "title": "Completing Prerequisites",
+      "role": "contributors",
+      "guideFile": "content/docs/guides/contributors/completing-prerequisites.mdx",
+      "description": "Find a project's required credentials, find the courses that award them, and complete those courses to become eligible",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/projects/[projectId]", "/(app)/courses"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (awaiting-scribe, PRIORITY)"]
+    },
+    {
+      "id": "joining-projects",
+      "title": "Joining Projects",
+      "role": "contributors",
+      "guideFile": "content/docs/guides/contributors/joining-projects.mdx",
+      "description": "Find projects, commit to tasks, and earn rewards as a contributor",
+      "status": "not-started",
+      "uxReadiness": {
+        "score": "not-assessed",
+        "lastAssessed": null,
+        "appRoutes": ["/(app)/projects", "/(app)/projects/[projectId]"],
+        "blockerIssues": [],
+        "frictionIssues": []
+      },
+      "pipeline": {
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
+      },
+      "scribeUrl": null,
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (awaiting-scribe)"]
+    }
+  ]
+}
