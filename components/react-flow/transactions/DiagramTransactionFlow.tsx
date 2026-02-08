@@ -82,7 +82,7 @@ function DiagramTransactionFlow({
       }
 
       try {
-        const response = await fetch("/yaml/validator-registry-v1.yaml");
+        const response = await fetch("/yaml/validator-registry-v2.yaml");
         const yamlText = await response.text();
         const data = yaml.load(yamlText) as Registry;
         setInternalRegistryData(data);

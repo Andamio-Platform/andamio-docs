@@ -17,6 +17,7 @@ Specialized tasks are organized into skills located in `.claude/skills/`. Each s
 | **v2-docs-audit** | Orchestrate V2 MDX documentation coverage and quality | `.claude/skills/v2-docs-audit/` |
 | **v2-docs-review** | Review individual V2 transaction MDX for completeness | `.claude/skills/v2-docs-review/` |
 | **glossary-game** | Collaborative terminology validation and refinement | `.claude/skills/glossary-game/` |
+| **scribe-walkthrough** | Convert Scribe markdown into polished MDX walkthrough pages | `.claude/skills/scribe-walkthrough/` |
 
 When working on tasks that match a skill's domain, read the skill's `SKILL.md` for specific instructions and supporting docs for context.
 

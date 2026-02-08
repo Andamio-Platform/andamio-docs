@@ -1,0 +1,135 @@
+---
+title: "Managers Manage"
+description: "Add or remove managers from a project"
+tx_file: "project/owner/managers/manage.yaml"
+---
+
+# Project Owner Managers Manage
+
+Add or remove managers from a project by updating the governance UTxO.
+
+## API Endpoint
+
+```
+POST /v2/tx/project/owner/managers/manage
+```
+
+## Cost Summary
+
+| Cost Type | Amount | Notes |
+|-----------|--------|-------|
+| Transaction Fee | ~0.30 ADA | Network fee |
+| Protocol Fee | 10 ADA | Fee to instance treasury |
+| MinUTxO Delta | variable | Increases if adding managers |
+| **Total Wallet Delta** | ~10.3 ADA | Adding 1 manager |
+
+## Request Body
+
+```json
+{
+  "alias": "james",
+  "project_id": "1454468edf80c69f84314b689f56e2fc25aca385aecb037a912a5aba",
+  "managers_to_add": ["user1"],
+  "managers_to_remove": []
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | string | Yes | Owner's access token alias |
+| `project_id` | string | Yes | Project NFT policy ID (56 char hex) |
+| `managers_to_add` | string[] | Yes | Aliases to add (empty = none) |
+| `managers_to_remove` | string[] | Yes | Aliases to remove (empty = none) |
+
+## Transaction Pattern
+
+**Spend and Recreate** — No minting. Consumes and recreates UTxOs with updated datum.
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                  MANAGERS MANAGE TRANSACTION                     │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  INPUTS                          OUTPUTS                        │
+│  ──────                          ───────                        │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ LocalStateNFT   │───────────▶│ LocalStateNFT   │            │
+│  │ (project NFT)   │  SPEND     │ (unchanged)     │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Governance       │───────────▶│ Governance      │            │
+│  │ (manager list)  │  SPEND     │ (UPDATED list)  │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  ┌─────────────────┐            ┌─────────────────┐            │
+│  │ Wallet          │───────────▶│ Instance        │  10 ADA    │
+│  │ (u-token + ADA) │            │ Treasury        │            │
+│  └─────────────────┘            └─────────────────┘            │
+│                                                                 │
+│  NO MINTING                      ┌─────────────────┐            │
+│  NO OBSERVERS                    │ User Wallet     │            │
+│                                  │ (u-token +      │            │
+│                                  │  change)        │            │
+│                                  └─────────────────┘            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+## Inputs
+
+| Input | Type | Validator | Description |
+|-------|------|-----------|-------------|
+| LocalStateNFT | Script | local-state-nft-validator | Project NFT (spent with projectId redeemer) |
+| Governance | Script | governance-validator | Governance UTxO (spent to update) |
+| Access Token | Wallet | - | Owner's u-token for authorization |
+| Wallet UTxOs | Wallet | - | ADA for fees |
+
+## Outputs (4)
+
+| Output | Validator | Value | Description |
+|--------|-----------|-------|-------------|
+| LocalStateNFT | local-state-nft-validator | ~1.24 ADA + NFT | Recreated unchanged |
+| Governance | governance-validator | ~1.36 ADA + token | **Updated manager list** |
+| Instance Fee | instance-treasury | 10 ADA | Protocol fee |
+| User Wallet | wallet | u-token + change | Access token returned |
+
+## Datum Changes
+
+The governance datum is updated:
+
+**Before:**
+```
+Constructor 0:
+└── managers: ["james", "nelsonksh"]
+```
+
+**After:**
+```
+Constructor 0:
+└── managers: ["nelsonksh", "user1"]
+```
+
+## Redeemers
+
+Both script inputs use the projectId as the redeemer data:
+
+| Script | Redeemer |
+|--------|----------|
+| local-state-nft-validator | `{ bytes: "<projectId>" }` |
+| governance-validator | `{ bytes: "<projectId>" }` |
+
+## Key Notes
+
+- **Identical pattern to course teachers manage** — same validators, same fee, same structure
+- No observer needed (direct spend validation)
+- The governance validator is **shared** between courses (teachers) and projects (managers)
+- MinUTxO may increase if adding many managers (larger datum)
+- 10 ADA fee per management operation
+- Owner is identified by their access token
+
+## See Also
+
+- [Teachers Manage](/docs/protocol/v2/transactions/course/owner/teachers/manage) — Identical pattern for courses
+- [Contributor Blacklist](/docs/protocol/v2/transactions/project/owner/contributor-blacklist/manage) — Manage project blacklist
+- [Tasks Manage](/docs/protocol/v2/transactions/project/manager/tasks/manage) — Managers create and update tasks

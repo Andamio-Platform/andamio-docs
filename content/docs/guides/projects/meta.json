@@ -1,6 +1,9 @@
 {
   "title": "Project Owner Guide",
   "pages": [
-    "index"
+    "index",
+    "setting-up-prerequisites",
+    "creating-your-first-project",
+    "managing-contributors"
   ]
 }

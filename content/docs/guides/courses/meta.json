@@ -2,6 +2,8 @@
   "title": "Course Owner Guide",
   "pages": [
     "index",
-    "publishing-and-modules"
+    "creating-your-first-course",
+    "publishing-and-modules",
+    "managing-students"
   ]
 }

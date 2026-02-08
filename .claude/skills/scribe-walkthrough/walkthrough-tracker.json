@@ -1,0 +1,121 @@
+{
+  "walkthroughs": [
+    {
+      "id": "getting-started",
+      "title": "Getting Started",
+      "filePath": "content/docs/guides/getting-started.mdx",
+      "role": "general",
+      "description": "Create your on-chain identity and mint an access token",
+      "status": "completed",
+      "lastConverted": "2026-02-08",
+      "scribeUrl": "https://scribehow.com/shared/Create_On-Chain_Identity_and_Mint_Access_Token__vGhN2PU7SmyX-gYGV8HrOQ",
+      "rawStepCount": 18,
+      "sectionCount": 6,
+      "notes": "First walkthrough completed. 6 sections, 14 images."
+    },
+    {
+      "id": "creating-your-first-course",
+      "title": "Creating Your First Course",
+      "filePath": "content/docs/guides/courses/creating-your-first-course.mdx",
+      "role": "courses",
+      "description": "Create a course and first module in Andamio Studio",
+      "status": "completed",
+      "lastConverted": "2026-02-08",
+      "scribeUrl": "https://scribehow.com/shared/Create_a_Course_and_Module_in_Andamio_Studio__5LJvgcnFT_mmT3tww4tknA",
+      "rawStepCount": 32,
+      "sectionCount": 10,
+      "notes": "Full course creation + module + SLTs + assignment. 10 sections, 22 images."
+    },
+    {
+      "id": "managing-students",
+      "title": "Managing Students and Grading",
+      "filePath": "content/docs/guides/courses/managing-students.mdx",
+      "role": "courses",
+      "description": "Review student work, assess assignments, and issue credentials",
+      "status": "awaiting-scribe",
+      "lastConverted": null,
+      "scribeUrl": null,
+      "rawStepCount": null,
+      "sectionCount": null,
+      "notes": "Placeholder ready. Completes the course owner flow."
+    },
+    {
+      "id": "setting-up-prerequisites",
+      "title": "Setting Up Prerequisites",
+      "filePath": "content/docs/guides/projects/setting-up-prerequisites.mdx",
+      "role": "projects",
+      "description": "Connect courses to projects — shows the Course→Project relationship, branches to course creation if needed, and walks through assigning credentials as project prerequisites",
+      "status": "awaiting-scribe",
+      "lastConverted": null,
+      "scribeUrl": null,
+      "rawStepCount": null,
+      "sectionCount": null,
+      "notes": "PRIORITY. Core Andamio concept. Must come before creating-your-first-project. Covers: (a) Course↔Project relationship, (b) branch to course creation if none exists, (c) assigning course credentials as project prereqs."
+    },
+    {
+      "id": "creating-your-first-project",
+      "title": "Creating Your First Project",
+      "filePath": "content/docs/guides/projects/creating-your-first-project.mdx",
+      "role": "projects",
+      "description": "Set up a collaborative project with credential requirements",
+      "status": "awaiting-scribe",
+      "lastConverted": null,
+      "scribeUrl": null,
+      "rawStepCount": null,
+      "sectionCount": null,
+      "notes": "Placeholder ready. Assumes prereqs are already understood via setting-up-prerequisites."
+    },
+    {
+      "id": "managing-contributors",
+      "title": "Managing Contributors and Tasks",
+      "filePath": "content/docs/guides/projects/managing-contributors.mdx",
+      "role": "projects",
+      "description": "Manage project tasks, assess contributor work, and distribute rewards",
+      "status": "awaiting-scribe",
+      "lastConverted": null,
+      "scribeUrl": null,
+      "rawStepCount": null,
+      "sectionCount": null,
+      "notes": "Placeholder ready. Completes the project owner flow."
+    },
+    {
+      "id": "earning-credentials",
+      "title": "Earning Credentials",
+      "filePath": "content/docs/guides/contributors/earning-credentials.mdx",
+      "role": "contributors",
+      "description": "Enroll in courses, complete assignments, and earn verifiable credentials",
+      "status": "awaiting-scribe",
+      "lastConverted": null,
+      "scribeUrl": null,
+      "rawStepCount": null,
+      "sectionCount": null,
+      "notes": "Placeholder ready. Student/learner perspective."
+    },
+    {
+      "id": "completing-prerequisites",
+      "title": "Completing Prerequisites",
+      "filePath": "content/docs/guides/contributors/completing-prerequisites.mdx",
+      "role": "contributors",
+      "description": "Find a project's required credentials, find the courses that award them, and complete those courses to become eligible",
+      "status": "awaiting-scribe",
+      "lastConverted": null,
+      "scribeUrl": null,
+      "rawStepCount": null,
+      "sectionCount": null,
+      "notes": "PRIORITY. Contributor mirror of setting-up-prerequisites. Covers: find project → see prereqs → find matching courses → complete them → become eligible."
+    },
+    {
+      "id": "joining-projects",
+      "title": "Joining Projects",
+      "filePath": "content/docs/guides/contributors/joining-projects.mdx",
+      "role": "contributors",
+      "description": "Find projects, commit to tasks, and earn rewards as a contributor",
+      "status": "awaiting-scribe",
+      "lastConverted": null,
+      "scribeUrl": null,
+      "rawStepCount": null,
+      "sectionCount": null,
+      "notes": "Placeholder ready. Assumes prereqs are complete via completing-prerequisites."
+    }
+  ]
+}

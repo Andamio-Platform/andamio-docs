@@ -2,7 +2,6 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
 import { Mermaid } from "@/components/mdx/mermaid";
 import { Steps, Step } from "fumadocs-ui/components/steps";
-import { ValidatorDiagram } from "@/components/mdx/validator-diagram";
 import { FlywheelDiagram } from "@/components/mdx/flywheel-diagram";
 import { LinearDiagram } from "@/components/mdx/linear-diagram";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
@@ -13,7 +12,6 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ...defaultMdxComponents,
     img: (props) => <ImageZoom {...(props as any)} />,
     Mermaid,
-    ValidatorDiagram,
     FlywheelDiagram,
     LinearDiagram,
     Steps,
