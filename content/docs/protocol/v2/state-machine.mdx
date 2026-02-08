@@ -10,14 +10,7 @@ Every Andamio blockchain transaction follows a consistent 6-step lifecycle, mana
 
 ## Lifecycle
 
-```mermaid
-flowchart LR
-    BUILD["BUILD\n(API builds CBOR)"] --> SIGN["SIGN\n(Wallet signs)"]
-    SIGN --> SUBMIT["SUBMIT\n(Wallet submits)"]
-    SUBMIT --> REGISTER["REGISTER\n(Frontend registers)"]
-    REGISTER --> CONFIRM["CONFIRM\n(Auto: polls chain)"]
-    CONFIRM --> UPDATE["UPDATE\n(Auto: syncs DB)"]
-```
+<Mermaid chart='flowchart LR\n    BUILD["BUILD\n(API builds CBOR)"] --> SIGN["SIGN\n(Wallet signs)"]\n    SIGN --> SUBMIT["SUBMIT\n(Wallet submits)"]\n    SUBMIT --> REGISTER["REGISTER\n(Frontend registers)"]\n    REGISTER --> CONFIRM["CONFIRM\n(Auto: polls chain)"]\n    CONFIRM --> UPDATE["UPDATE\n(Auto: syncs DB)"]' />
 
 | Step | Who | What Happens |
 |------|-----|--------------|
@@ -32,17 +25,7 @@ flowchart LR
 
 Once a transaction is registered, it enters the state machine and transitions automatically:
 
-```mermaid
-stateDiagram-v2
-    [*] --> pending: Transaction registered
-    pending --> confirmed: Found on-chain
-    pending --> expired: Not confirmed in time
-    confirmed --> updated: DB synced successfully
-    confirmed --> failed: DB sync failed after retries
-    updated --> [*]
-    failed --> [*]
-    expired --> [*]
-```
+<Mermaid chart='stateDiagram-v2\n    [*] --> pending: Transaction registered\n    pending --> confirmed: Found on-chain\n    pending --> expired: Not confirmed in time\n    confirmed --> updated: DB synced successfully\n    confirmed --> failed: DB sync failed after retries\n    updated --> [*]\n    failed --> [*]\n    expired --> [*]' />
 
 | State | Meaning |
 |-------|---------|
@@ -140,17 +123,7 @@ Several transaction types involve **commitments** — records that link a partic
 
 ### Two Paths to On-Chain
 
-```mermaid
-flowchart TD
-    A["Option 1: Draft First (recommended)"] --> B["Save draft to DB via API"]
-    B --> C["Build + sign + submit TX"]
-    C --> D["Register with state machine"]
-    D --> E["State machine confirms on-chain\nand updates existing draft → ON_CHAIN"]
-
-    F["Option 2: Direct to Chain"] --> G["Build + sign + submit TX"]
-    G --> H["Register with state machine"]
-    H --> I["State machine confirms on-chain\nand creates DB record automatically"]
-```
+<Mermaid chart='flowchart TD\n    A["Option 1: Draft First (recommended)"] --> B["Save draft to DB via API"]\n    B --> C["Build + sign + submit TX"]\n    C --> D["Register with state machine"]\n    D --> E["State machine confirms on-chain\nand updates existing draft → ON_CHAIN"]\n\n    F["Option 2: Direct to Chain"] --> G["Build + sign + submit TX"]\n    G --> H["Register with state machine"]\n    H --> I["State machine confirms on-chain\nand creates DB record automatically"]' />
 
 **Draft-first** is recommended because it gives users immediate feedback — they can see their pending commitment in the UI before the blockchain transaction confirms. But if a client goes straight to chain (skipping the draft step), the state machine handles it automatically by creating the DB record on confirmation.
 
