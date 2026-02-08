@@ -29,6 +29,19 @@ export const baseOptions: BaseLayoutProps = {
       </>
     ),
   },
-  // see https://fumadocs.dev/docs/ui/navigation/links
-  links: [],
+  links: [
+    {
+      text: "Guides",
+      url: "/docs/guides",
+    },
+    {
+      text: "Protocol",
+      url: "/docs/protocol",
+    },
+    {
+      text: "API Docs",
+      url: "https://api.andamio.io",
+      external: true,
+    },
+  ],
 };

@@ -7,13 +7,21 @@ description: A decentralized protocol for credential-gated collaboration with fu
 
 Andamio is a decentralized protocol for the creation and management of immutable, interoperable credentials. It provides a minimal global standard for placing credentials on the Cardano blockchain, and a flexible toolkit for defining and using new credentials.
 
-This documentation is a work in progress, and we are grateful that you are reading it. We will continue to refine the docs throughout Q3 2025, and we are grateful for your feedback. Please reach out on [our Discord](https://discord.gg/abBbsGZpZ5), on [Twitter @AndamioPlatform](https://twitter.com/AndamioPlatform), or [via GitHub](https://github.com/Andamio-Platform/andamio-docs).
+## Protocol Architecture
 
-## The Andamio Story: From Identity to Contribution
+Andamio's protocol is composed of several interconnected validator systems:
+
+- **[Global State](/docs/protocol/v2/validators/global-state)**: Foundation layer for identity and system-wide configuration
+- **[Course Protocol](/docs/protocol/v2/validators/course)**: Learning and credential issuance
+- **[Project Protocol](/docs/protocol/v2/validators/project)**: Collaborative work and reward distribution
+
+Each system builds on the previous layers, creating a powerful, interoperable system for distributed work and learning.
+
+> **Ready to dive in?** See the full [Protocol V2 Documentation](/docs/protocol/v2) for validators, transactions, and tokens. Or try the [Platform Guides](/docs/guides) for hands-on walkthroughs.
+
+## The Journey: From Identity to Contribution
 
 Andamio's layered architecture creates **open yet gated access** to collaborative work. It is tooling for a digital commons where access is earned through verifiable contributions and reputation emerges as the result of participation and collaboration.
-
-### The Journey
 
 **1. Andamio Access Token and Self-Sovereign On-chain Identity (SSOI)**: Anyone can mint an [access token](/docs/protocol/v2/tokens/global-state/access-token-user) to create a unique identity on Andamio.
 
@@ -51,21 +59,3 @@ This foundation enables diverse applications:
 **2. Interoperable Applications**: Developers can build applications that leverage Andamio's credential verification. Examples include hiring platforms, grant systems, and reputation networks, all using the same underlying trust infrastructure.
 
 **3. Cross-Organizational Ecosystems**: Courses from University X can qualify contributors for projects at Company Y. Credentials from Organization A can be recognized in Organization B's hiring, all verified on-chain without middlemen.
-
-## Protocol Architecture
-
-Andamio's protocol is composed of several interconnected validator systems:
-
-- **[Global State](/docs/protocol/v2/validators/global-state)**: Foundation layer for identity and system-wide configuration
-- **[Course Protocol](/docs/protocol/v2/validators/course)**: Learning and credential issuance
-- **[Project Protocol](/docs/protocol/v2/validators/project)**: Collaborative work and reward distribution
-
-Each system builds on the previous layers, creating a powerful, interoperable system for distributed work and learning.
-
-> [Protocol Documentation](/docs/protocol/v2)
-
-## Goals of this Documentation
-
-1. **End users**: Clear guides for participating in courses and projects on Andamio.
-2. **Developers**: Technical resources to build on and integrate with the Andamio Protocol.
-3. **Decision makers**: Strategic understanding of how Andamio enables credential-gated collaboration.

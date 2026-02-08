@@ -45,21 +45,42 @@ Smart contracts enforcing protocol rules. Includes Global State Validators (prot
 ### Contributors
 Access Token Holders participating in Local States. Called "students" in Courses, "contributors" in Projects. Earn Credentials from Courses (used as prerequisites for Projects). In Projects, commit to tasks defined by Project Owners and earn rewards upon completion.
 
-## Selected Local State Examples
-
-Here are some definitions related to the two initial local states built on Andamio: "Course" and "Project"
-
-### Student
-Contributor participating in a Course Local State. Earns Credentials by completing course requirements, used as prerequisites for Project access. Protocol treats Students and Contributors identically—both are Access Token Holders.
-
-### Project Owner
-Instance-specific role for Access Token Holders in Project Local States. Initial Project Owner is assigned at instance creation and can add additional Project Owners. Manage treasury, approve commitments, and define task requirements within their specific instance. Can also participate as Contributors.
+## Course System
 
 ### Course Owner
 Instance-specific role for Access Token Holders in Course Local States. Initial Course Owner is assigned at instance creation. Manages teacher access, course governance, and course lifecycle within their specific instance.
 
+### Course Teacher
+An Access Token Holder assigned to assess student work within a specific Course Local State instance. Reviews and accepts or denies student assignment submissions.
+
+### Student
+Contributor participating in a Course Local State. Earns Credentials by completing course requirements, used as prerequisites for Project access. Protocol treats Students and Contributors identically—both are Access Token Holders.
+
+### Course Module
+A structured learning unit within a Course containing Student Learning Targets (SLTs), lessons, an assignment, and an introduction. Each module defines a scope of learning with its own content and assessments.
+
+### Student Learning Target (SLT)
+An individual learning objective within a Course Module, formatted as an "I can..." statement. Each SLT is content-addressed by its blake2b-256 hash, making it a unique, verifiable identifier. SLTs define what students should be able to demonstrate upon completion.
+
+### Lesson
+Instructional content tied to a specific Student Learning Target within a Course Module. Lessons deliver the learning material that prepares students to meet the SLT.
+
+### Assignment
+Assessment activity within a Course Module. Students submit evidence of completion; Course Teachers review and accept or refuse submissions.
+
+## Project System
+
 ### Project
 Local State type with multiple on-chain validators (treasury, escrow). Coordinates work, manages funds, and tracks contributions through multi-validator architecture.
+
+### Project Owner
+Instance-specific role for Access Token Holders in Project Local States. Initial Project Owner is assigned at instance creation and can add additional Project Owners or Project Managers. Manage treasury, approve commitments, and define task requirements within their specific instance. Can also participate as Contributors.
+
+### Project Manager
+An Access Token Holder assigned to manage day-to-day operations within a specific Project Local State instance. Reviews contributor task submissions and manages contributor workflow.
+
+### Task
+A discrete unit of work within a Project, content-addressed by its blake2b-256 hash. Contributors commit to tasks, submit evidence of completion, and Project Managers assess the work. Tasks have associated rewards from the Project Treasury.
 
 ### Project Treasury
 On-chain validator holding project funds and tracking approved work. Locks funds into escrow validators when contributors commit to tasks, enabling transparent management and automated disbursements.
@@ -69,6 +90,20 @@ Role-specific requirements contributors must meet to participate in project acti
 
 ### Escrow Validator
 Smart contract locking tasks and rewards from Project Treasury when contributors commit to work. Each prerequisite set has its own escrow validator, ensuring payment upon completion.
+
+## Workflow
+
+### Commitment
+A participant's on-chain pledge to complete work—an Assignment Commitment (student in a Course) or a Task Commitment (contributor in a Project). Commitments track lifecycle from enrollment through submission and assessment.
+
+### Assessment
+Evaluation of submitted work by an authorized reviewer. Course Teachers assess Assignment Commitments; Project Managers assess Task Commitments. Decisions are accept or refuse.
+
+### Evidence
+Proof of work submitted by students (for assignments) or contributors (for tasks). Evidence is hashed on-chain for integrity verification while detailed content is stored off-chain.
+
+### Credential Claim
+Transaction to mint a credential NFT after meeting all requirements in a Course or Project. The credential becomes part of the user's SSOI and is portable across applications.
 
 ## Technical Architecture
 
@@ -87,16 +122,20 @@ Protocol fees charged for certain operations, creating sustainable revenue for A
 ### SDK (Software Development Kit)
 Pre-built libraries (JavaScript, Python, Go, Rust) for simple Andamio integration. Target: days, not months.
 
+### Content Addressing
+Technical pattern using blake2b-256 hashes as unique identifiers for protocol entities (SLT hashes, task hashes, evidence hashes). Ensures content integrity and enables verifiable references between on-chain and off-chain data.
+
 ## Acronyms & Abbreviations
 
 - **API**: Application Programming Interface
-- **SDK**: Software Development Kit
-- **SSOI**: Self-Sovereign On-chain Identity
-- **TVL**: Total Value Locked
-- **RBAC**: Role-Based Access Control
-- **DAO**: Decentralized Autonomous Organization
 - **CIP**: Cardano Improvement Proposal
 - **CF**: Cardano Foundation
+- **DAO**: Decentralized Autonomous Organization
+- **RBAC**: Role-Based Access Control
+- **SDK**: Software Development Kit
+- **SLT**: Student Learning Target
+- **SSOI**: Self-Sovereign On-chain Identity
+- **TVL**: Total Value Locked
 
 ---
 

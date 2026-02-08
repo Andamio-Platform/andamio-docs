@@ -112,21 +112,41 @@ A component of Global State that tracks which Local State instances are authoriz
 ### Validators
 Smart contracts that enforce the rules of the Andamio protocol. Includes both Global State Validators (protocol-wide rules) and Local State Validators (app-specific rules).
 
+### App Roles
+Andamio defines six user roles across two domains. See the [Role Name Conventions](https://github.com/anthropics/andamio-ai-context/blob/main/01-about-andamio/Andamio%20Role%20Name%20Conventions.md) for the full naming standard.
+
+**Course domain:** Course Owner, Course Teacher, Course Student
+**Project domain:** Project Owner, Project Manager, Project Contributor
+
+**Note:** The terms "instructor," "creator" (as a role), and "learner" are retired. Use the role names above.
+
 ### Contributors
-Access Token Holders who participate in Andamio's Local States. The term "Contributor" is used broadly for all participants, though context-specific labels apply: "students" when participating in Course Local States, and "contributors" when participating in Project Local States. Contributors earn Credentials by completing Courses, which serve as on-chain prerequisites for accessing Project participation. In Projects, Contributors commit to specific tasks (code, facilitation, project management, etc.) defined by Project Creators and earn rewards upon completion.
+Access Token Holders who participate in Andamio's Local States. The term "Contributor" is used broadly for all participants, though context-specific labels apply: "students" when participating in Course Local States, and "contributors" when participating in Project Local States. Contributors earn Credentials by completing Courses, which serve as on-chain prerequisites for accessing Project participation. In Projects, Contributors commit to specific tasks (code, facilitation, project management, etc.) defined by Project Owners and earn rewards upon completion.
 
-### Student
-A Contributor participating in a Course Local State. Students earn Credentials by completing course requirements, which then serve as prerequisites for accessing Project Local States. From the protocol perspective, Students and Contributors are identical - both are Access Token Holders with the same underlying capabilities.
+### Course Owner
+An Access Token Holder who creates and manages a Course Local State instance. Controls course structure, modules, and learning targets. Can add Course Teachers to share assessment responsibilities.
 
-### Project Creator
-An instance-specific role assigned to Access Token Holders within individual Project Local States. When a Project Local State instance is created, one Access Token holder is assigned as the initial Project Creator (the "owner"). This Project Creator can then add additional Project Creators to share management responsibilities for that specific project instance.
+### Course Teacher
+An Access Token Holder assigned to assess student work within a specific Course Local State instance. Reviews and accepts or denies student assignment submissions.
+
+### Course Student (Student)
+An Access Token Holder participating in a Course Local State. Students earn Credentials by completing course requirements, which then serve as prerequisites for accessing Project Local States. From the protocol perspective, Students and Contributors are identical - both are Access Token Holders with the same underlying capabilities.
+
+### Project Owner
+An instance-specific role assigned to Access Token Holders within individual Project Local States. When a Project Local State instance is created, one Access Token Holder is assigned as the initial Project Owner. This Project Owner can then add additional Project Owners or Project Managers to share management responsibilities for that specific project instance.
 
 **Key Properties**:
-- **Instance-scoped**: Project Creator privileges only apply within the specific project instance where assigned
-- **Multi-creator support**: Multiple Project Creators can manage a single project instance collaboratively
+- **Instance-scoped**: Project Owner privileges only apply within the specific project instance where assigned
+- **Multi-owner support**: Multiple Project Owners can manage a single project instance collaboratively
 - **On-chain privileges**: Can approve task commitments, manage Project Treasury, define task requirements
-- **Not transferable across projects**: Being a Project Creator in Project A provides no privileges in Project B
-- **Dual participation**: Project Creators can also participate as Contributors in their own or other projects
+- **Not transferable across projects**: Being a Project Owner in Project A provides no privileges in Project B
+- **Dual participation**: Project Owners can also participate as Contributors in their own or other projects
+
+### Project Manager
+An Access Token Holder assigned to manage day-to-day operations within a specific Project Local State instance. Reviews contributor task submissions and manages contributor workflow.
+
+### Project Contributor (Contributor)
+An Access Token Holder who participates in Project Local States. Contributors commit to specific tasks (code, facilitation, project management, etc.) defined by Project Owners and earn rewards upon completion. Contributors earn access to projects by completing Course prerequisites and earning the required Credentials.
 
 ### Project
 A complete Andamio entity consisting of multiple on-chain validators including a treasury validator and escrow validators. Projects coordinate work, manage funds, and track contributions through this multi-validator architecture.
@@ -201,20 +221,17 @@ Football club partnering with Andamio to demonstrate new forms of fan engagement
 
 ## Organizational Structure
 
-### Protocol Circle
-Development team focused on smart contracts and blockchain infrastructure. Led by Adrian and Nelson.
+### Protocol Sub-Circle
+Sub-circle under Development Circle focused on smart contracts and blockchain infrastructure. Led by Adrian and Nelson.
 
-### Platform Circle
-Team building the Andamio API, app, and developer tools. Includes Mix, Cesar, Andrew, and Roberto.
-
-### Development Circle
-Broader development organization including both Protocol and Platform teams plus solution architects.
+### Platform Sub-Circle
+Sub-circle under Development Circle building the Andamio API, app, and developer tools. Includes Mix, Cesar, Andrew, and Roberto.
 
 ### Admin Circle
 Sociocracy 3.0 circle responsible for governance, tokenomics, legal, finance, and operations.
 
 ### Development Circle
-S3 circle overseeing protocol, platform, API, SDK, and technical architecture. Includes both Protocol and Platform sub-circles.
+S3 circle overseeing Andamio's technical development. Includes Protocol sub-circle (smart contracts, blockchain infrastructure) and Platform sub-circle (API, app, developer tools). Responsible for product management, engineering practices, sprint delivery, and solution architecture.
 
 ### Ecosystem Circle
 S3 circle focused on partnerships, marketing, community, adoption, and growth strategies.

@@ -2,13 +2,13 @@
   "lastUpdated": "2026-02-08",
   "summary": {
     "total": 10,
-    "published": 0,
+    "published": 1,
     "draft": 1,
-    "notStarted": 9,
+    "notStarted": 8,
     "blocked": 0,
-    "withFriction": 0,
+    "withFriction": 1,
     "ready": 0,
-    "notAssessed": 10
+    "notAssessed": 9
   },
   "guides": [
     {
@@ -17,7 +17,7 @@
       "role": "general",
       "guideFile": "content/docs/guides/getting-started.mdx",
       "description": "Create your on-chain identity and mint an access token",
-      "status": "review",
+      "status": "published",
       "uxReadiness": {
         "score": "not-assessed",
         "lastAssessed": null,
@@ -28,10 +28,10 @@
       "pipeline": {
         "draftDate": "2026-02-08",
         "reviewDate": "2026-02-08",
-        "publishDate": null
+        "publishDate": "2026-02-08"
       },
       "scribeUrl": "https://scribehow.com/shared/Create_an_On_Chain_Identity_and_Browse_Courses__gOuksygdTYmxLH4FBK3S1g",
-      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)", "2026-02-08: Reset to not-started for full pipeline re-run", "2026-02-08: Updated with fresh Scribe recording, moved to draft", "2026-02-08: Review passed — all checklist items OK, connections map verified", "2026-02-08: Fixed MDX build error (frontmatter encoding), page now renders at /docs/guides/getting-started"]
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)", "2026-02-08: Reset to not-started for full pipeline re-run", "2026-02-08: Updated with fresh Scribe recording, moved to draft", "2026-02-08: Review passed — all checklist items OK, connections map verified", "2026-02-08: Fixed MDX build error (frontmatter encoding), page now renders at /docs/guides/getting-started", "2026-02-08: Published"]
     },
     {
       "id": "creating-your-first-course",
@@ -39,21 +39,25 @@
       "role": "courses",
       "guideFile": "content/docs/guides/courses/creating-your-first-course.mdx",
       "description": "Create a course and first module in Andamio Studio",
-      "status": "not-started",
+      "status": "draft",
       "uxReadiness": {
-        "score": "not-assessed",
-        "lastAssessed": null,
+        "score": "friction",
+        "lastAssessed": "2026-02-08",
         "appRoutes": ["/(app)/studio", "/(app)/studio/courses/[courseId]"],
         "blockerIssues": [],
-        "frictionIssues": []
+        "frictionIssues": [
+          { "number": 226, "title": "Studio: No explanation of Access Token requirement during course creation", "state": "closed" },
+          { "number": 227, "title": "Studio: Module deletion uses unstyled browser confirm() dialog", "state": "open" },
+          { "number": 228, "title": "Studio: Commitment status enums shown as raw values instead of human-readable text", "state": "closed" }
+        ]
       },
       "pipeline": {
-        "draftDate": null,
+        "draftDate": "2026-02-08",
         "reviewDate": null,
         "publishDate": null
       },
       "scribeUrl": "https://scribehow.com/shared/Create_a_Course_and_Module_in_Andamio_Studio__5LJvgcnFT_mmT3tww4tknA",
-      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)", "2026-02-08: Reset to not-started for full pipeline re-run"]
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)", "2026-02-08: Reset to not-started for full pipeline re-run", "2026-02-08: Draft — aligned with template (prereqs link to Getting Started, Next Steps per connections map)", "2026-02-08: Assessed — friction (0 blockers, 3 friction)"]
     },
     {
       "id": "publishing-and-modules",
