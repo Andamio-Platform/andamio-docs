@@ -1,0 +1,155 @@
+---
+title: "Assess Tasks"
+description: "API integration guide for assessing contributor task submissions"
+---
+
+# Assess Tasks
+
+Assessing tasks allows project managers to accept or reject contributor work. Managers review submitted work and issue decisions in batch, updating the on-chain state for each contributor. No new tokens are minted — this transaction uses a spend-and-recreate pattern to update existing UTxOs.
+
+## Summary
+
+| Property | Value |
+|----------|-------|
+| **System** | Project |
+| **Role** | Manager |
+| **Type Key** | `task_assess` |
+| **Build Endpoint** | `POST /api/v2/tx/project/manager/tasks/assess` |
+| **DB Sync** | Yes |
+| **Service Fee** | 0 ADA |
+| **Est. Wallet Cost** | ~0.35 ADA |
+
+The estimated wallet cost covers the transaction fee only. This transaction supports batching multiple accept/reject decisions into a single on-chain transaction.
+
+## Build Transaction
+
+### Endpoint
+
+`POST /api/v2/tx/project/manager/tasks/assess`
+
+### Request Body
+
+```json
+{
+  "alias": "projectmanager",
+  "project_id": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4",
+  "contributor_state_id": "b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5",
+  "task_decisions": [
+    { "alias": "contributor1", "outcome": "accept" },
+    { "alias": "contributor2", "outcome": "reject" }
+  ],
+  "initiator_data": {
+    "usedAddresses": ["addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3n0d3vllmyqwsx5wktcd8cc3sq835lu7drv2xwl2wywfgse35a3x"],
+    "changeAddress": "addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3n0d3vllmyqwsx5wktcd8cc3sq835lu7drv2xwl2wywfgse35a3x"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | `string` (Alias) | Yes | The manager's access token alias. Must be a current manager of the project. |
+| `project_id` | `string` (GYMintingPolicyId) | Yes | 56-character hex policy ID returned from project creation. |
+| `contributor_state_id` | `string` (GYMintingPolicyId) | Yes | The contributor-state policy ID for the project. |
+| `task_decisions` | `TaskDecision[]` | Yes | Array of decisions. Each contains: `alias` (string — the contributor's alias) and `outcome` (`"accept"` or `"reject"`). |
+| `initiator_data` | `WalletData` | No | Object containing `usedAddresses` (string[]) and `changeAddress` (string). If omitted, the Gateway resolves wallet data from the authenticated session. |
+
+### Response
+
+```json
+{
+  "unsigned_tx": "84a800..."
+}
+```
+
+The response contains the unsigned transaction CBOR, ready for the user's wallet to sign.
+
+## Register Transaction
+
+After the user signs and submits the transaction, register it with the state machine:
+
+`POST /api/v2/tx/register`
+
+```json
+{
+  "tx_hash": "64-char hex hash from wallet.submitTx()",
+  "tx_type": "task_assess"
+}
+```
+
+No metadata is required. On confirmation, the state machine updates the assessment status for each contributor in the database.
+
+## Related API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/v2/projects/{project_id}/tasks` | Fetch all tasks including their assessment status per contributor |
+
+## Example: Full Lifecycle
+
+```typescript
+const API_URL = "https://api.andamio.io";
+
+// 1. Build
+const buildRes = await fetch(`${API_URL}/api/v2/tx/project/manager/tasks/assess`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY,
+    "Authorization": `Bearer ${userJwt}`,
+  },
+  body: JSON.stringify({
+    alias: "projectmanager",
+    project_id: projectId,
+    contributor_state_id: contributorStateId,
+    task_decisions: [
+      { alias: "contributor1", outcome: "accept" },
+      { alias: "contributor2", outcome: "reject" },
+    ],
+    initiator_data: {
+      usedAddresses: [walletAddress],
+      changeAddress: walletAddress,
+    },
+  }),
+});
+const { unsigned_tx } = await buildRes.json();
+
+// 2. Sign
+const signedTx = await wallet.signTx(unsigned_tx);
+
+// 3. Submit
+const txHash = await wallet.submitTx(signedTx);
+
+// 4. Register
+await fetch(`${API_URL}/api/v2/tx/register`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY,
+    "Authorization": `Bearer ${userJwt}`,
+  },
+  body: JSON.stringify({
+    tx_hash: txHash,
+    tx_type: "task_assess",
+  }),
+});
+
+// 5. Monitor (SSE)
+const events = new EventSource(
+  `${API_URL}/api/v2/tx/stream/${txHash}`
+);
+events.addEventListener("state_change", (e) => {
+  const data = JSON.parse(e.data);
+  console.log(`State: ${data.old_state} → ${data.new_state}`);
+});
+events.addEventListener("complete", (e) => {
+  const data = JSON.parse(e.data);
+  console.log(`Final: ${data.final_state}`);
+  events.close();
+});
+```
+
+## See Also
+
+- [Transaction State Machine](/docs/protocol/v2/state-machine) -- Lifecycle overview
+- [Manager: Manage Tasks](/docs/protocol/v2/state-machine/project/manager-tasks-manage) -- Create and remove tasks
+- [Contributor: Claim Credential](/docs/protocol/v2/state-machine/project/contributor-credential-claim) -- What contributors do after acceptance

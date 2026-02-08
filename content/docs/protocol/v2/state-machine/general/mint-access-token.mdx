@@ -1,0 +1,132 @@
+---
+title: "Mint Access Token"
+description: "API integration guide for minting an Andamio access token"
+---
+
+# Mint Access Token
+
+Minting an access token is the entry point for all participation in the Andamio protocol. Any user who wants to interact with courses, projects, or any other on-chain feature must first mint an access token tied to a unique alias.
+
+## Summary
+
+| Property | Value |
+|----------|-------|
+| **System** | General |
+| **Role** | User |
+| **Type Key** | `access_token_mint` |
+| **Build Endpoint** | `POST /api/v2/tx/general/mint-access-token` |
+| **DB Sync** | No |
+| **Service Fee** | 5 ADA |
+| **Est. Wallet Cost** | ~7.9 ADA |
+
+## Build Transaction
+
+### Endpoint
+
+`POST /api/v2/tx/general/mint-access-token`
+
+### Request Body
+
+```json
+{
+  "walletData": "addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3n0d3vllmyqwsx5wktcd8cc3sq835lu7drv2xwl2wywfgse35a3x",
+  "alias": "myalias"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `walletData` | `string` (GYAddressBech32) | Yes | Bech32 wallet address. Unlike most endpoints, this takes a simple string rather than the `WalletData` object. |
+| `alias` | `string` (Alias) | Yes | Unique alphanumeric identifier, 1-31 characters. Must be unique across the entire protocol (enforced by the on-chain linked list). |
+
+### Response
+
+```json
+{
+  "unsignedTxCBOR": "84a800..."
+}
+```
+
+The response contains the unsigned transaction CBOR, ready for the user's wallet to sign.
+
+## Register Transaction
+
+After the user signs and submits the transaction, register it with the state machine:
+
+`POST /api/v2/tx/register`
+
+```json
+{
+  "tx_hash": "64-char hex hash from wallet.submitTx()",
+  "tx_type": "access_token_mint"
+}
+```
+
+No metadata is required for access token minting. The registration body only needs `tx_hash` and `tx_type`.
+
+## Related API Endpoints
+
+There are no additional off-chain API endpoints specific to access tokens. The blockchain is the sole source of truth for access token existence and alias ownership. Once minted, the access token lives entirely on-chain.
+
+## Example: Full Lifecycle
+
+```typescript
+const API_URL = "https://api.andamio.io";
+
+// 1. Build
+const buildRes = await fetch(`${API_URL}/api/v2/tx/general/mint-access-token`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY,
+    "Authorization": `Bearer ${userJwt}`,
+  },
+  body: JSON.stringify({
+    walletData: walletAddress,
+    alias: "myalias",
+  }),
+});
+const { unsignedTxCBOR } = await buildRes.json();
+
+// 2. Sign
+const signedTx = await wallet.signTx(unsignedTxCBOR);
+
+// 3. Submit
+const txHash = await wallet.submitTx(signedTx);
+
+// 4. Register
+await fetch(`${API_URL}/api/v2/tx/register`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY,
+    "Authorization": `Bearer ${userJwt}`,
+  },
+  body: JSON.stringify({
+    tx_hash: txHash,
+    tx_type: "access_token_mint",
+  }),
+});
+
+// 5. Monitor (SSE)
+const events = new EventSource(
+  `${API_URL}/api/v2/tx/stream/${txHash}`
+);
+events.addEventListener("state_change", (e) => {
+  const data = JSON.parse(e.data);
+  console.log(`State: ${data.old_state} → ${data.new_state}`);
+});
+events.addEventListener("complete", (e) => {
+  const data = JSON.parse(e.data);
+  console.log(`Final: ${data.final_state}`);
+  events.close();
+});
+```
+
+## See Also
+
+- [Transaction State Machine](/docs/protocol/v2/state-machine) -- Lifecycle overview
+- [Cost Estimation](/docs/protocol/v2/cost-estimation) -- Fee details
+- [On-Chain Structure](/docs/protocol/v2/transactions/global/general/access-token/mint) -- CBOR anatomy
+- [Owner: Create Course](/docs/protocol/v2/state-machine/course/owner-course-create) -- Next step after minting
+- [Owner: Create Project](/docs/protocol/v2/state-machine/project/owner-project-create) -- Next step after minting

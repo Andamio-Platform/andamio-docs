@@ -1,0 +1,169 @@
+---
+title: "Create Project"
+description: "API integration guide for creating an Andamio project instance on-chain"
+---
+
+# Create Project
+
+Creating a project is the first step in setting up a task-based collaboration environment on Andamio. This transaction mints a new project instance on-chain, registering the creator as the owner and first manager, establishing the treasury system, and returning a unique `project_id` (policy ID) used for all subsequent project operations.
+
+## Summary
+
+| Property | Value |
+|----------|-------|
+| **System** | Project |
+| **Role** | Owner |
+| **Type Key** | `project_create` |
+| **Build Endpoint** | `POST /api/v2/tx/instance/owner/project/create` |
+| **DB Sync** | Yes |
+| **Service Fee** | 100 ADA base + 10 ADA per manager |
+| **Est. Wallet Cost** | ~168 ADA for 2 managers |
+
+The service fee scales with the number of managers: 110 ADA for 1 manager, 120 ADA for 2, and so on. The estimated wallet cost of ~168 ADA for two managers breaks down as: transaction fee ~1.30 ADA + service fee 120 ADA + stake registration 2 ADA + UTxO deposits ~45 ADA + deposit_value. This is one of the most complex transactions in the protocol, involving 6 mints and 2 observers.
+
+## Build Transaction
+
+### Endpoint
+
+`POST /api/v2/tx/instance/owner/project/create`
+
+### Request Body
+
+```json
+{
+  "alias": "projectowner",
+  "managers": ["projectowner"],
+  "course_prereqs": [],
+  "deposit_value": [["lovelace", 5000000]],
+  "initiator_data": {
+    "usedAddresses": ["addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3n0d3vllmyqwsx5wktcd8cc3sq835lu7drv2xwl2wywfgse35a3x"],
+    "changeAddress": "addr1qx2fxv2umyhttkxyxp8x0dlpdt3k6cwng5pxj3jhsydzer3n0d3vllmyqwsx5wktcd8cc3sq835lu7drv2xwl2wywfgse35a3x"
+  }
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `alias` | `string` (Alias) | Yes | The owner's access token alias. Must already have a minted access token. |
+| `managers` | `string[]` (Alias[]) | Yes | Manager aliases to include at creation. The Gateway auto-sets this to `[alias]` — the creator is always the first manager. Use Manage Managers to add more afterward. |
+| `course_prereqs` | `array` | Yes | Course prerequisite pairs: `[[course_id, [module_hashes]]]`. Pass an empty array `[]` for no prerequisites. |
+| `deposit_value` | `array` | Yes | Initial treasury deposit as `[[unit, amount]]` pairs. Pass an empty array `[]` for no deposit. |
+| `initiator_data` | `WalletData` | No | Object containing `usedAddresses` (string[]) and `changeAddress` (string). If omitted, the Gateway resolves wallet data from the authenticated session. |
+
+### Response
+
+```json
+{
+  "unsigned_tx": "84a800...",
+  "project_id": "a1b2c3d4e5f6..."
+}
+```
+
+The response includes two fields:
+
+- **`unsigned_tx`** — The unsigned transaction CBOR, ready for the user's wallet to sign. Note: this field is `unsigned_tx`, not `unsignedTxCBOR`.
+- **`project_id`** — The on-chain policy ID for the new project. **Save this value.** It is required as a parameter for every subsequent project operation (managing managers, managing tasks, assessing tasks, treasury operations, etc.).
+
+## Register Transaction
+
+After the user signs and submits the transaction, register it with the state machine:
+
+`POST /api/v2/tx/register`
+
+```json
+{
+  "tx_hash": "64-char hex hash from wallet.submitTx()",
+  "tx_type": "project_create",
+  "instance_id": "a1b2c3d4e5f6..."
+}
+```
+
+The `owner_alias` is auto-captured from the JWT — no manual metadata is needed. You may optionally include metadata fields for the database record:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | `string` | No | Display title for the project |
+| `description` | `string` | No | Project description |
+| `image_url` | `string` | No | URL to a project image or thumbnail |
+
+On confirmation, the state machine registers the project in the database with the owner alias and on-chain `project_id`.
+
+## Related API Endpoints
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/v2/projects/{project_id}` | Fetch project details after creation, including owner, managers, tasks, and treasury balance |
+
+## Example: Full Lifecycle
+
+```typescript
+const API_URL = "https://api.andamio.io";
+
+// 1. Build
+const buildRes = await fetch(`${API_URL}/api/v2/tx/instance/owner/project/create`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY,
+    "Authorization": `Bearer ${userJwt}`,
+  },
+  body: JSON.stringify({
+    alias: "projectowner",
+    managers: ["projectowner"],
+    course_prereqs: [],
+    deposit_value: [["lovelace", 5000000]],
+    initiator_data: {
+      usedAddresses: [walletAddress],
+      changeAddress: walletAddress,
+    },
+  }),
+});
+const { unsigned_tx, project_id } = await buildRes.json();
+// Save project_id — on-chain policy ID for all subsequent project operations
+
+// 2. Sign
+const signedTx = await wallet.signTx(unsigned_tx);
+
+// 3. Submit
+const txHash = await wallet.submitTx(signedTx);
+
+// 4. Register
+await fetch(`${API_URL}/api/v2/tx/register`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY,
+    "Authorization": `Bearer ${userJwt}`,
+  },
+  body: JSON.stringify({
+    tx_hash: txHash,
+    tx_type: "project_create",
+    instance_id: project_id,
+    metadata: {
+      title: "Community Development Initiative",
+      description: "A collaborative project for building open-source tools",
+    },
+  }),
+});
+
+// 5. Monitor (SSE)
+const events = new EventSource(
+  `${API_URL}/api/v2/tx/stream/${txHash}`
+);
+events.addEventListener("state_change", (e) => {
+  const data = JSON.parse(e.data);
+  console.log(`State: ${data.old_state} → ${data.new_state}`);
+});
+events.addEventListener("complete", (e) => {
+  const data = JSON.parse(e.data);
+  console.log(`Final: ${data.final_state}`);
+  events.close();
+});
+```
+
+## See Also
+
+- [Transaction State Machine](/docs/protocol/v2/state-machine) -- Lifecycle overview
+- [Cost Estimation](/docs/protocol/v2/cost-estimation) -- Fee details
+- [On-Chain Structure](/docs/protocol/v2/transactions/instance/owner/project/create) -- CBOR anatomy
+- [Owner: Manage Managers](/docs/protocol/v2/state-machine/project/owner-managers-manage) -- Add or remove managers after creation

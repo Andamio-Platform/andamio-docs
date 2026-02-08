@@ -1,0 +1,14 @@
+{
+  "title": "Project",
+  "pages": [
+    "owner-project-create",
+    "owner-managers-manage",
+    "owner-contributor-blacklist-manage",
+    "manager-tasks-manage",
+    "manager-tasks-assess",
+    "contributor-task-commit",
+    "contributor-task-action",
+    "contributor-credential-claim",
+    "user-treasury-add-funds"
+  ]
+}

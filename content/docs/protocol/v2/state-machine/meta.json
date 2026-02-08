@@ -1,0 +1,10 @@
+{
+  "title": "Transaction State Machine",
+  "pages": [
+    "index",
+    "general",
+    "course",
+    "project"
+  ],
+  "defaultOpen": false
+}
