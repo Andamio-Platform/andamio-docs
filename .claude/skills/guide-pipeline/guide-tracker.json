@@ -2,13 +2,13 @@
   "lastUpdated": "2026-02-08",
   "summary": {
     "total": 10,
-    "published": 2,
-    "draft": 0,
-    "notStarted": 8,
+    "published": 0,
+    "draft": 1,
+    "notStarted": 9,
     "blocked": 0,
     "withFriction": 0,
-    "ready": 2,
-    "notAssessed": 8
+    "ready": 0,
+    "notAssessed": 10
   },
   "guides": [
     {
@@ -17,10 +17,10 @@
       "role": "general",
       "guideFile": "content/docs/guides/getting-started.mdx",
       "description": "Create your on-chain identity and mint an access token",
-      "status": "published",
+      "status": "review",
       "uxReadiness": {
-        "score": "ready",
-        "lastAssessed": "2026-02-08",
+        "score": "not-assessed",
+        "lastAssessed": null,
         "appRoutes": ["/", "/(app)/dashboard"],
         "blockerIssues": [],
         "frictionIssues": []
@@ -28,10 +28,10 @@
       "pipeline": {
         "draftDate": "2026-02-08",
         "reviewDate": "2026-02-08",
-        "publishDate": "2026-02-08"
+        "publishDate": null
       },
-      "scribeUrl": "https://scribehow.com/shared/Create_On-Chain_Identity_and_Mint_Access_Token__vGhN2PU7SmyX-gYGV8HrOQ",
-      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)"]
+      "scribeUrl": "https://scribehow.com/shared/Create_an_On_Chain_Identity_and_Browse_Courses__gOuksygdTYmxLH4FBK3S1g",
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)", "2026-02-08: Reset to not-started for full pipeline re-run", "2026-02-08: Updated with fresh Scribe recording, moved to draft", "2026-02-08: Review passed — all checklist items OK, connections map verified", "2026-02-08: Fixed MDX build error (frontmatter encoding), page now renders at /docs/guides/getting-started"]
     },
     {
       "id": "creating-your-first-course",
@@ -39,21 +39,21 @@
       "role": "courses",
       "guideFile": "content/docs/guides/courses/creating-your-first-course.mdx",
       "description": "Create a course and first module in Andamio Studio",
-      "status": "published",
+      "status": "not-started",
       "uxReadiness": {
-        "score": "ready",
-        "lastAssessed": "2026-02-08",
+        "score": "not-assessed",
+        "lastAssessed": null,
         "appRoutes": ["/(app)/studio", "/(app)/studio/courses/[courseId]"],
         "blockerIssues": [],
         "frictionIssues": []
       },
       "pipeline": {
-        "draftDate": "2026-02-08",
-        "reviewDate": "2026-02-08",
-        "publishDate": "2026-02-08"
+        "draftDate": null,
+        "reviewDate": null,
+        "publishDate": null
       },
       "scribeUrl": "https://scribehow.com/shared/Create_a_Course_and_Module_in_Andamio_Studio__5LJvgcnFT_mmT3tww4tknA",
-      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)"]
+      "history": ["2026-02-08: Seeded from walkthrough-tracker.json (completed)", "2026-02-08: Reset to not-started for full pipeline re-run"]
     },
     {
       "id": "publishing-and-modules",

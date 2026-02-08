@@ -16,16 +16,28 @@ Display the full guide dashboard.
 **Steps:**
 
 1. Read tracker at `.claude/skills/guide-pipeline/guide-tracker.json`
-2. Display dashboard table:
+2. Read connections map at `.claude/skills/guide-pipeline/guide-connections.md`
+3. Display dashboard table:
 
 ```
 | # | Guide | Role | UX Score | Status | Blockers | Friction |
 |---|-------|------|----------|--------|----------|----------|
 ```
 
-3. Show summary counts from `summary` field
-4. Highlight any guides with `blocked` UX score
-5. Note which guides have Scribe recordings available (check `scribeUrl` field)
+4. Show summary counts from `summary` field
+5. Highlight any guides with `blocked` UX score
+6. Note which guides have Scribe recordings available (check `scribeUrl` field)
+7. Display onboarding path view showing guide connections and publish status:
+
+```
+Onboarding Paths:                          (status)
+  Course Owner:  (1) → (2) → (3) → (4)
+  Project Owner: (1) → (6) → (7)
+  Contributor:   (1) → (8) → (9) → (10)
+  Bridge:        (3) + (6) → (5)
+```
+
+Mark each node with its status icon: published, draft, or not-started. Flag any guide whose prereqs are not yet published.
 
 ---
 
@@ -90,14 +102,15 @@ Move a guide to review status after content check.
 1. Read tracker, find guide by `id`
 2. Verify guide is in `draft` status (refuse if `not-started` or `published`)
 3. Read the MDX file at `guideFile`
-4. Run content checklist:
+4. Read connections map at `.claude/skills/guide-pipeline/guide-connections.md`
+5. Run content checklist:
    - [ ] Has frontmatter with `title` and `description`
-   - [ ] Has prerequisites section
+   - [ ] Has prerequisites section linking to prereq guides per connections map
    - [ ] Has at least one walkthrough section with numbered steps
-   - [ ] Has next steps section with internal links
+   - [ ] Has next steps section linking to next-step guides per connections map
    - [ ] Images load (if Scribe-sourced)
    - [ ] No placeholder text remaining (`{GUIDE_TITLE}`, `{STEP_TITLE}`, etc.)
-   - [ ] Links to other guides use correct paths
+   - [ ] Links to other guides use correct paths and match connections map
 5. Report findings — pass or list issues to fix
 6. If passing:
    - Update `status` to `review`
@@ -114,9 +127,11 @@ Mark a guide as published.
 **Steps:**
 
 1. Read tracker, find guide by `id`
-2. Verify guide is in `review` status
-3. Verify the MDX file exists and has content
-4. Check the relevant `meta.json` includes this guide's slug:
+2. Read connections map at `.claude/skills/guide-pipeline/guide-connections.md`
+3. Verify guide is in `review` status
+4. Verify the MDX file exists and has content
+5. Check prereq guides are published — if any prereq is not yet published, WARN before proceeding
+6. Check the relevant `meta.json` includes this guide's slug:
    - Read the `meta.json` in the same directory as the guide file
    - Verify the guide's filename (without `.mdx`) appears in the `pages` array
    - If missing, add it and report the addition
