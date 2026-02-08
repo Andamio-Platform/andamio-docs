@@ -43,7 +43,7 @@ Protocol-level registry and index for all local states. Holds all users' 100 tok
 Smart contracts enforcing protocol rules. Includes Global State Validators (protocol-wide) and Local State Validators (instance-specific).
 
 ### Contributors
-Access Token Holders participating in Local States. Called "students" in Courses, "contributors" in Projects. Earn Credentials from Courses (used as prerequisites for Projects). In Projects, commit to tasks defined by Project Creators and earn rewards upon completion.
+Access Token Holders participating in Local States. Called "students" in Courses, "contributors" in Projects. Earn Credentials from Courses (used as prerequisites for Projects). In Projects, commit to tasks defined by Project Owners and earn rewards upon completion.
 
 ## Selected Local State Examples
 
@@ -52,8 +52,11 @@ Here are some definitions related to the two initial local states built on Andam
 ### Student
 Contributor participating in a Course Local State. Earns Credentials by completing course requirements, used as prerequisites for Project access. Protocol treats Students and Contributors identically—both are Access Token Holders.
 
-### Project Creator
-Instance-specific role for Access Token Holders in Project Local States. Initial Project Creator is assigned at instance creation and can add additional Project Creators. Manage treasury, approve commitments, and define task requirements within their specific instance. Can also participate as Contributors.
+### Project Owner
+Instance-specific role for Access Token Holders in Project Local States. Initial Project Owner is assigned at instance creation and can add additional Project Owners. Manage treasury, approve commitments, and define task requirements within their specific instance. Can also participate as Contributors.
+
+### Course Owner
+Instance-specific role for Access Token Holders in Course Local States. Initial Course Owner is assigned at instance creation. Manages teacher access, course governance, and course lifecycle within their specific instance.
 
 ### Project
 Local State type with multiple on-chain validators (treasury, escrow). Coordinates work, manages funds, and tracks contributions through multi-validator architecture.

@@ -3,35 +3,67 @@ title: Home
 icon: House
 ---
 
-import { House, Code, BookText, Workflow, Coins } from "lucide-react";
+import { House, Code, BookText, Workflow, Coins, BookOpen, Users } from "lucide-react";
 
 Andamio is a set of protocols that support collaboration and allow anyone to create and earn credentials. This ecosystem consists of a foundational layer—the core Andamio Protocol—that provides universal identity through access tokens and tamper-proof state management, plus application protocols that build specific functionality on top of this foundation.
 
 The first application protocols are Course (for learning and credentialing) and Project (for collaborative work). Like the internet's layered architecture, these protocols leverage the foundational layer without needing to solve identity and state management independently.
 
-In this documentation you will learn how these protocols work together and how new protocols can be built within the Andamio ecosystem.
+## Using Andamio
 
-## How It Works
-
-**Foundation Layer**: Universal identity (access tokens) and tamper-proof state management that any protocol can build upon.
-
-**Application Layer**: Specific protocols like Course (learning/credentials) and Project (collaborative work) that leverage the foundation.
-
-**Global/Local Architecture**: Users get unique identities through global state, while each protocol handles its own local interactions—no need to rebuild identity systems.
-
-## What You'll Find
-
-- **Whitepaper**: Why + How of Andamio design
-- **Protocol:** Core architecture and implementation
-- **Tokenomics:** Powering the Andamio ecosystem
-- **APIs:** Developer integration tools at [api.andamio.io](https://api.andamio.io)
-- **Reference Implementation:** About the platform currently hosted at [app.andamio.io](https://app.andamio.io)
-
-## Explore Andamio
+For end users participating in courses and projects on the Andamio platform.
 
 <Cards>
-  <Card title="Whitepaper" href="/docs/whitepaper" icon={<BookText />} />
-  <Card title="Protocol" href="/docs/protocol" icon={<Workflow />} />
-  <Card title="Tokenomics" href="/docs/tokenomics" icon={<Coins />} />
-  <Card title="API Docs" href="https://api.andamio.io" icon={<Code />} />
+  <Card title="Platform Guides" href="/docs/guides" icon={<BookOpen />}>
+    Step-by-step guides for course owners, project owners, teachers, students, and contributors
+  </Card>
+  <Card title="Roles Overview" href="/docs/guides/roles" icon={<Users />}>
+    Understand the 6 canonical roles across courses and projects
+  </Card>
+  <Card title="Glossary" href="/docs/glossary" icon={<BookText />}>
+    Key terms and concepts used throughout Andamio
+  </Card>
 </Cards>
+
+## Building on Andamio
+
+For developers integrating with or building on the Andamio Protocol.
+
+<Cards>
+  <Card title="Protocol" href="/docs/protocol" icon={<Workflow />}>
+    Core architecture, validators, transactions, and tokens
+  </Card>
+  <Card title="SDK" href="/docs/sdk" icon={<Code />}>
+    TypeScript libraries for transaction building and protocol interaction
+  </Card>
+  <Card title="API Docs" href="https://api.andamio.io" icon={<Code />}>
+    REST API reference for the Andamio backend
+  </Card>
+  <Card title="Repositories" href="/docs/repositories" icon={<Code />}>
+    Source code for protocol smart contracts and tools
+  </Card>
+</Cards>
+
+## Understanding Andamio
+
+For decision makers evaluating Andamio for their organization.
+
+<Cards>
+  <Card title="Whitepaper" href="/docs/whitepaper" icon={<BookText />}>
+    Why and how Andamio was designed
+  </Card>
+  <Card title="Tokenomics" href="/docs/tokenomics" icon={<Coins />}>
+    Token model powering the Andamio ecosystem
+  </Card>
+</Cards>
+
+## Roles at a Glance
+
+Andamio uses six canonical roles across two systems:
+
+| System | Roles |
+|--------|-------|
+| **Course** | Owner, Teacher, Student |
+| **Project** | Owner, Manager, Contributor |
+
+See the full [Roles Overview](/docs/guides/roles) for what each role can do.

@@ -1,14 +1,14 @@
 {
     "pages": [
         "index",
-        "glossary",
         "guides",
         "whitepaper",
+        "glossary",
         "protocol",
-        "pioneers",
-        "tokenomics",
         "sdk",
         "repositories",
+        "pioneers",
+        "tokenomics",
         "--- External Links ---",
         "[API Docs](https://api.andamio.io)",
         "[Andamio Reference App](https://app.andamio.io)",

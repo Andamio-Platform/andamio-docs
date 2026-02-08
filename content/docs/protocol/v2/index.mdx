@@ -5,33 +5,30 @@ description: "Andamio Protocol V2 - Enhanced state management, simplified roles,
 
 # Andamio Protocol V2
 
-Protocol V2 introduces architectural improvements that simplify the role structure, enhance state management, and provide a clear migration path from V1.
+Protocol V2 features a streamlined role structure, enhanced state management, and efficient batch operations.
 
 <Callout type="info">
 **New to V2?** Check out [What's New in V2](/docs/protocol/v2/whats-new) for a detailed look at batch module management, SLT hash encoding, and cost savings.
 </Callout>
 
-## Key Changes from V1
-
-| Aspect | V1 | V2 |
-|--------|----|----|
-| **Transaction Types** | 29 across 8 roles | 13 across 5 roles |
-| **Role Structure** | admin, contributor, course-creator, project-creator, student, general | admin, contributor, student, general, user |
-| **State Management** | Separate state validators | Unified Global State V2 with local state registration |
-| **Migration** | N/A | Built-in V1 to V2 migration support |
-
 ## V2 Architecture Overview
 
-### Simplified Role Structure
+### Role Structure
 
-V2 consolidates roles by removing `course-creator` and `project-creator` - these functions are now handled by `admin` transactions. This reduces complexity while maintaining full functionality.
+V2 uses six canonical roles across the Course and Project systems:
 
-**Active Roles in V2:**
-- **Admin** - Instance administrators managing courses and projects
-- **Contributor** - Project participants earning rewards
-- **Student** - Course participants completing assignments
-- **General** - Protocol-wide operations (access tokens, registration)
-- **User** - Migration operations (V1 to V2 transition)
+**Course System:**
+- **Course Owner** - Creates courses, manages teacher access
+- **Course Teacher** - Manages modules, assesses student assignments
+- **Course Student** - Enrolls in courses, completes assignments, claims credentials
+
+**Project System:**
+- **Project Owner** - Creates projects, manages treasury and requirements
+- **Project Manager** - Oversees contributor work and approvals
+- **Project Contributor** - Commits to tasks, earns rewards
+
+**Protocol-Wide:**
+- **General** - Protocol entry point (access tokens, registration)
 
 ### New Systems in V2
 
@@ -62,7 +59,7 @@ V2 transactions organized by system and role:
 | System | Role | Transactions | Key Operations |
 |--------|------|--------------|----------------|
 | [General](/docs/protocol/v2/transactions/general) | Open | 1 | [mint-access-token](/docs/protocol/v2/transactions/general/mint-access-token) (~7.9 ADA) |
-| [Course](/docs/protocol/v2/transactions/course) | Admin | 2 | [create](/docs/protocol/v2/transactions/course/admin/create) (~45 ADA), [teachers-update](/docs/protocol/v2/transactions/course/admin/teachers-update) (~5.3 ADA) |
+| [Course](/docs/protocol/v2/transactions/course) | Owner | 2 | [create](/docs/protocol/v2/transactions/instance/owner/course/create) (~45 ADA), [teachers-manage](/docs/protocol/v2/transactions/course/owner/teachers/manage) (~5.3 ADA) |
 | [Course](/docs/protocol/v2/transactions/course) | Teacher | 2 | [modules-manage](/docs/protocol/v2/transactions/course/teacher/modules-manage), [assignments-assess](/docs/protocol/v2/transactions/course/teacher/assignments-assess) |
 | [Course](/docs/protocol/v2/transactions/course) | Student | 3 | [assignment-commit](/docs/protocol/v2/transactions/course/student/assignment/commit), [assignment-update](/docs/protocol/v2/transactions/course/student/assignment-update), [credential-claim](/docs/protocol/v2/transactions/course/student/credential-claim) |
 

@@ -80,14 +80,9 @@ console.log(txDef.buildTxConfig.estimatedCost);
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-## Protocol Versions
+## Protocol Version
 
-| Version | Status | Transactions | Description |
-|---------|--------|--------------|-------------|
-| **V2**  | Current | 8 | Consolidated role structure, recommended for new implementations |
-| V1      | Legacy  | 8 | Maintained for backward compatibility |
-
-V2 dramatically reduces transaction count compared to V1's original design (29 → 8 transactions) through:
+V2 is the current production protocol with 8 transaction types, featuring:
 - Batch operations (manage multiple modules in one tx)
 - Unified assessment (accept/deny in one tx type)
 - Streamlined enrollment (initial commitment included)
@@ -101,6 +96,6 @@ npm install @andamio/transactions
 ## Next Steps
 
 - [Getting Started](/docs/sdk/transactions/getting-started) - Installation and basic usage
-- [V2 Transactions](/docs/sdk/transactions/v2) - Current production transactions
+- [Transactions](/docs/sdk/transactions/v2) - Production transactions
 - [Utilities](/docs/sdk/transactions/utilities) - Hash functions and helpers
 - [Side Effects](/docs/sdk/transactions/side-effects) - Database update patterns

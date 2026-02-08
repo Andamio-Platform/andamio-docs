@@ -6,15 +6,15 @@ icon: Layers
 
 # V2 Transactions
 
-Protocol V2 is the current production version, recommended for all new implementations. V2 consolidates the role structure and dramatically reduces transaction count compared to V1 (29 → 8 transactions).
+Protocol V2 is the current production version with a consolidated role structure and 8 transaction types.
 
 ## Transaction Overview
 
 | Transaction | Role | Est. Cost | Description |
 |-------------|------|-----------|-------------|
 | `GENERAL_ACCESS_TOKEN_MINT` | General | ~7.9 ADA | Mint access token for protocol participation |
-| `COURSE_ADMIN_CREATE` | Admin | ~45.3 ADA | Create a new course on-chain |
-| `COURSE_ADMIN_TEACHERS_UPDATE` | Admin | ~5.3 ADA | Add/remove teachers from a course |
+| `COURSE_ADMIN_CREATE` | Owner | ~45.3 ADA | Create a new course on-chain |
+| `COURSE_ADMIN_TEACHERS_UPDATE` | Owner | ~5.3 ADA | Add/remove teachers from a course |
 | `COURSE_TEACHER_MODULES_MANAGE` | Teacher | ~1.86 ADA | Batch manage modules (mint/update/burn) |
 | `COURSE_TEACHER_ASSIGNMENTS_ASSESS` | Teacher | ~0.21 ADA | Assess student assignment submissions |
 | `COURSE_STUDENT_ENROLL` | Student | ~2.14 ADA | Enroll in a course with initial commitment |
@@ -28,6 +28,8 @@ V2 transactions follow the pattern: `{SYSTEM}_{ROLE}_{ACTION}`
 - **System**: `GENERAL` or `COURSE` (future: `PROJECT`)
 - **Role**: Who can execute (`ADMIN`, `TEACHER`, `STUDENT`)
 - **Action**: What the transaction does
+
+> **Note:** The SDK uses `ADMIN` in constant names (e.g. `COURSE_ADMIN_CREATE`) which maps to the **Owner** role in user-facing documentation.
 
 ## General System
 
@@ -51,7 +53,7 @@ const inputs = GENERAL_ACCESS_TOKEN_MINT.buildTxConfig.inputSchema.parse({
 
 ---
 
-## Course Admin Transactions
+## Course Owner Transactions
 
 ### COURSE_ADMIN_CREATE
 
@@ -275,4 +277,3 @@ const v2StudentTxs = getTransactionsByVersionAndRole("v2", "student");
 
 - [Utilities](/docs/sdk/transactions/utilities) - Hash functions for modules and assignments
 - [Side Effects](/docs/sdk/transactions/side-effects) - How database updates work
-- [V1 Transactions](/docs/sdk/transactions/v1) - Legacy transaction reference

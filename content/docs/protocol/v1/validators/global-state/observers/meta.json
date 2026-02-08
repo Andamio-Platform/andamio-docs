@@ -1,8 +1,0 @@
-{
-    "title": "Observers",
-    "description": "Observers from the project.plutus blueprint managing contributors, escrow, and treasury operations",
-    "pages": [
-        "init-global-state-observer"
-    ],
-    "defaultOpen": false
-}
