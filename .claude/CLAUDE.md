@@ -309,6 +309,40 @@ Add new session to `content/docs/pioneers/live-coding/archive/sessions/meta.json
 - Questions like "how should AI contributions be tracked?" are feature content, not noise
 - The "source of truth" discussion is protocol design, not just UX
 
+## Notion Integration (Soft Launch)
+
+Claude Code now has access to the Andamio Notion workspace via MCP. This enables:
+- Reading/writing to the Dev Sprint Board and Epics
+- Syncing documentation progress with Product and Ecosystem circles
+- Sharing pipeline status with non-technical team members
+
+**Key Notion locations:**
+- [Dev Sprint Board](https://www.notion.so/andamio/06d10f28dd394f2bbcd5a4a5be19c07d) — task tracking
+- [Projects](https://www.notion.so/andamio/65e009324ad34d13ad345a483d9edcb5) — parent page with Epics, Sprints, OKRs
+
+**To soft-start:**
+1. When a guide moves through the pipeline (draft → review → published), consider noting it in Notion
+2. Link documentation work to the relevant Epic
+3. Share pipeline dashboards with Product/Ecosystem circles as needed
+
+**Coming soon (post-launch):** Automatic sync between guide-tracker.json status and Notion.
+
+## Cross-Repo: Onboarding Guide Pipeline
+
+The `/guide-pipeline` skill in this repo coordinates with the app repo's `/ux-readiness` skill.
+
+**Shared tracker:** `.claude/skills/guide-pipeline/guide-tracker.json` (this repo owns it)
+
+**Pipeline flow:**
+1. App repo: `/ux-readiness assess <guide-id>` evaluates routes, writes UX scores here
+2. This repo: `/guide-pipeline` gates writing on UX scores — blocked guides can't proceed
+3. Guides flow: `not-started` → `draft` → `review` → `published`
+4. Issues in app repo tagged `documentation,ux-readiness` track blockers
+
+**Current status:** 1 published (Getting Started), 1 in draft, 8 not started, 9 not yet assessed.
+
+See [Notion: Onboarding Documentation Pipeline](https://www.notion.so/30244d820e1d81468748ee7e6e0511e1) for team-facing overview.
+
 # Important Reminders
 
 - Do what has been asked; nothing more, nothing less
