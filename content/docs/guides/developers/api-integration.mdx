@@ -7,7 +7,7 @@ description: Complete workflow for building, signing, and tracking Andamio trans
 
 This guide walks through the complete flow for integrating with the Andamio API — from authentication through transaction confirmation.
 
-> **API Reference**: For endpoint schemas, request/response formats, and parameter details, see the [Andamio API Reference](https://api.andamio.io/reference).
+> **API Reference**: For endpoint schemas, request/response formats, and parameter details, see the [Andamio API Reference](https://preprod.api.andamio.io/reference).
 
 ## Authentication
 
@@ -51,7 +51,7 @@ Here's the complete flow with code:
 Request an unsigned transaction from the appropriate build endpoint.
 
 ```typescript
-const API = "https://api.andamio.io/api/v2";
+const API = "https://preprod.api.andamio.io/api/v2";
 
 const headers = {
   "Content-Type": "application/json",
@@ -215,7 +215,7 @@ Here's a full working example combining all steps:
 ```typescript
 import { BrowserWallet } from "@meshsdk/core";
 
-const API = "https://api.andamio.io/api/v2";
+const API = "https://preprod.api.andamio.io/api/v2";
 
 async function submitAssignment(
   wallet: BrowserWallet,
@@ -305,4 +305,4 @@ async function submitAssignment(
 
 - [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed transactions
 - [Transaction State Machine](/docs/protocol/v2/state-machine) — Deep dive into state transitions
-- [API Reference](https://api.andamio.io/reference) — Full endpoint documentation
+- [API Reference](https://preprod.api.andamio.io/reference) — Full endpoint documentation

@@ -21,7 +21,7 @@ Transactions can reach three terminal states:
 
 | Code | Meaning | Resolution |
 |------|---------|------------|
-| `400` | Bad request / validation error | Check request body against [API Reference](https://api.andamio.io/reference) |
+| `400` | Bad request / validation error | Check request body against [API Reference](https://preprod.api.andamio.io/reference) |
 | `401` | Invalid or expired JWT | Re-authenticate user via wallet signature |
 | `403` | Insufficient permissions | User lacks required role (e.g., not a teacher) |
 | `409` | Duplicate registration | Transaction already registered — safe to ignore |
@@ -141,7 +141,7 @@ This means if you're unsure whether an operation completed, it's safe to retry.
 
 ```bash
 curl -H "X-API-Key: $API_KEY" \
-  https://api.andamio.io/api/v2/tx/status/$TX_HASH
+  https://preprod.api.andamio.io/api/v2/tx/status/$TX_HASH
 ```
 
 ### View Pending Transactions
@@ -149,7 +149,7 @@ curl -H "X-API-Key: $API_KEY" \
 ```bash
 curl -H "X-API-Key: $API_KEY" \
      -H "Authorization: Bearer $JWT" \
-  https://api.andamio.io/api/v2/tx/pending
+  https://preprod.api.andamio.io/api/v2/tx/pending
 ```
 
 ### Check On-Chain State
@@ -176,4 +176,4 @@ curl https://andamioscan.io/api/tx/$TX_HASH
 
 - [API Integration](/docs/guides/developers/api-integration) — Complete transaction flow
 - [Transaction State Machine](/docs/protocol/v2/state-machine) — State transition details
-- [API Reference](https://api.andamio.io/reference) — Endpoint documentation
+- [API Reference](https://preprod.api.andamio.io/reference) — Endpoint documentation
