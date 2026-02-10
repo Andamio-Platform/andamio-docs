@@ -80,6 +80,30 @@ Andamio supports 17 transaction types across three categories:
 **"No" DB Sync** means the blockchain is the sole source of truth for that data.
 **"Yes" DB Sync** means the Gateway automatically synchronizes on-chain state to the database after confirmation.
 
+## TX Type Mapping
+
+Some build endpoints share the same state machine type. This is intentional — the on-chain action is identical, so Andamioscan indexes them the same way.
+
+### Course Assignments
+
+| Build Endpoint | TX Type | Notes |
+|----------------|---------|-------|
+| `/tx/course/student/assignment/commit` | `assignment_submit` | First commitment to a module |
+| `/tx/course/student/assignment/update` | `assignment_submit` | Update evidence on existing commitment |
+
+Both use `assignment_submit` because the on-chain action is the same: spending and recreating the enrollment UTxO with updated assignment info. The state machine's upsert behavior handles both cases correctly.
+
+### Project Tasks
+
+| Build Endpoint | TX Type | Notes |
+|----------------|---------|-------|
+| `/tx/project/contributor/task/commit` (first time) | `project_join` | Mints contributor token |
+| `/tx/project/contributor/task/commit` (repeat) | `project_join` | No mint for existing contributors |
+
+The state machine tries the "join" classifier first, then falls back to "task submit" for already-enrolled contributors. From the API consumer's perspective, use `project_join` for all task commits.
+
+> **See also**: [API Integration Guide](/docs/guides/developers/api-integration#tx-type-reference) for the complete endpoint-to-type mapping table.
+
 ## Integration Flow
 
 The full flow for building, signing, and tracking a transaction:

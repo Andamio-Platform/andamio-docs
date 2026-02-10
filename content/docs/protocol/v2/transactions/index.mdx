@@ -13,14 +13,22 @@ Detailed technical reference for each V2 transaction — inputs, outputs, mintin
 
 | System | Description | Transactions |
 |--------|-------------|--------------|
-| [General](./general) | Protocol entry point | 1 |
+| [Global](./global) | Protocol entry point | 1 |
 | [Course](./course) | Course management and credentials | 7 |
+| [Project](./project) | Project management and tasks | 9 |
 
 ## All Transactions
 
+### Global
+
 | Transaction | Role | Wallet Delta |
 |------------|------|--------------|
-| [Mint Access Token](/docs/protocol/v2/transactions/general/mint-access-token) | Open | ~7.9 ADA |
+| [Mint Access Token](/docs/protocol/v2/transactions/global/general/access-token/mint) | Open | ~7.9 ADA |
+
+### Course
+
+| Transaction | Role | Wallet Delta |
+|------------|------|--------------|
 | [Create Course](/docs/protocol/v2/transactions/instance/owner/course/create) | Owner | ~45.3 ADA |
 | [Update Teachers](/docs/protocol/v2/transactions/course/owner/teachers/manage) | Owner | ~5.3 ADA |
 | [Manage Modules](/docs/protocol/v2/transactions/course/teacher/modules/manage) | Teacher | ~1.86 ADA |
@@ -28,6 +36,20 @@ Detailed technical reference for each V2 transaction — inputs, outputs, mintin
 | [Assignment Commit](/docs/protocol/v2/transactions/course/student/assignment/commit) | Student | ~2.14 ADA |
 | [Update Assignment](/docs/protocol/v2/transactions/course/student/assignment/update) | Student | ~0.33 ADA |
 | [Claim Credential](/docs/protocol/v2/transactions/course/student/credential/claim) | Student | **-1.03 ADA** |
+
+### Project
+
+| Transaction | Role | Wallet Delta |
+|------------|------|--------------|
+| [Create Project](/docs/protocol/v2/transactions/instance/owner/project/create) | Owner | ~45 ADA |
+| [Manage Managers](/docs/protocol/v2/transactions/project/owner/managers/manage) | Owner | ~5 ADA |
+| [Manage Blacklist](/docs/protocol/v2/transactions/project/owner/contributor-blacklist/manage) | Owner | ~1 ADA |
+| [Manage Tasks](/docs/protocol/v2/transactions/project/manager/tasks/manage) | Manager | ~2 ADA |
+| [Assess Tasks](/docs/protocol/v2/transactions/project/manager/tasks/assess) | Manager | ~1 ADA |
+| [Commit to Task](/docs/protocol/v2/transactions/project/contributor/task/commit) | Contributor | ~3 ADA |
+| [Claim Credential](/docs/protocol/v2/transactions/project/contributor/credential/claim) | Contributor | ~1 ADA |
+| Add Treasury Funds | User | Variable |
+| Task Action | Contributor | ~1 ADA |
 
 ## Cost Summary
 

@@ -1,0 +1,33 @@
+---
+title: Developer Guides
+description: Build integrations with the Andamio API
+icon: Code
+---
+
+# Developer Guides
+
+Everything you need to build applications that integrate with the Andamio protocol.
+
+## Guides
+
+| Guide | Description |
+|-------|-------------|
+| [API Integration](/docs/guides/developers/api-integration) | Complete workflow for building, signing, and tracking transactions |
+| [Error Handling](/docs/guides/developers/error-handling) | Recovery patterns for failed and expired transactions |
+
+## Quick Links
+
+- **[API Reference](https://api.andamio.io/reference)** — Full endpoint documentation (Scalar)
+- **[Transaction State Machine](/docs/protocol/v2/state-machine)** — How transactions flow from build to database sync
+- **[V2 Transactions](/docs/protocol/v2/transactions)** — Technical specs for each transaction type
+
+## Authentication
+
+All API requests require authentication:
+
+| Header | Purpose |
+|--------|---------|
+| `X-API-Key` | Application-level authentication |
+| `Authorization: Bearer <jwt>` | User-level authentication (wallet signature) |
+
+See [API Integration](/docs/guides/developers/api-integration#authentication) for details on obtaining and using these credentials.

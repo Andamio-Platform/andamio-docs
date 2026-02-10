@@ -1,0 +1,179 @@
+---
+title: Error Handling
+description: Recovery patterns for failed and expired Andamio transactions
+---
+
+# Error Handling
+
+How to handle errors, recover from failed transactions, and build resilient integrations.
+
+## State Machine States
+
+Transactions can reach three terminal states:
+
+| State | Meaning | Recovery |
+|-------|---------|----------|
+| `updated` | Success — DB synced | None needed |
+| `failed` | DB sync failed after retries | Usually auto-heals; see below |
+| `expired` | Not confirmed on-chain in time | Rebuild and resubmit |
+
+## Common API Errors
+
+| Code | Meaning | Resolution |
+|------|---------|------------|
+| `400` | Bad request / validation error | Check request body against [API Reference](https://api.andamio.io/reference) |
+| `401` | Invalid or expired JWT | Re-authenticate user via wallet signature |
+| `403` | Insufficient permissions | User lacks required role (e.g., not a teacher) |
+| `409` | Duplicate registration | Transaction already registered — safe to ignore |
+| `422` | Unprocessable entity | Semantic error (e.g., module doesn't exist) |
+| `500` | Internal server error | Retry with exponential backoff |
+| `502` | Upstream service error | Cardano node issue — retry after delay |
+
+## Recovery Patterns
+
+### Expired Transaction
+
+A transaction expires when it's not confirmed on-chain within the timeout window (typically 2 hours).
+
+**Before rebuilding, check if it actually confirmed:**
+
+```typescript
+async function handleExpired(txHash: string) {
+  // Check Andamioscan to see if TX actually confirmed
+  const scanRes = await fetch(
+    `https://preprod.andamioscan.io/api/tx/${txHash}`
+  );
+
+  if (scanRes.ok) {
+    // TX is on-chain! State machine missed it.
+    // The self-healing reconciler will fix this on next read.
+    console.log("TX confirmed but not detected — will auto-heal");
+    return { action: "wait", reason: "auto-heal" };
+  }
+
+  // TX truly didn't confirm — safe to rebuild
+  return { action: "rebuild", reason: "not-on-chain" };
+}
+```
+
+**Why this matters**: If you rebuild without checking, you might submit a duplicate action (e.g., double-minting a credential).
+
+### Failed DB Sync
+
+A `failed` state means the transaction confirmed on-chain but the database update failed after multiple retries.
+
+**Usually no action needed:**
+
+The Gateway has a self-healing reconciler that detects and repairs inconsistencies when related data is accessed. Your next API call that reads this data will trigger the repair.
+
+**If time-sensitive:**
+
+```typescript
+// Force a read to trigger reconciliation
+await fetch(`${API}/course/${courseId}/commitments`, { headers });
+// The reconciler will notice the on-chain state and sync it
+```
+
+### Network Errors
+
+For transient network issues, implement retry with exponential backoff:
+
+```typescript
+async function fetchWithRetry(
+  url: string,
+  options: RequestInit,
+  maxRetries = 3
+) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const res = await fetch(url, options);
+      if (res.ok || res.status < 500) return res;
+    } catch (e) {
+      if (i === maxRetries - 1) throw e;
+    }
+
+    // Exponential backoff: 1s, 2s, 4s
+    await new Promise(r => setTimeout(r, 1000 * Math.pow(2, i)));
+  }
+}
+```
+
+### Wallet Errors
+
+Common wallet-related issues:
+
+| Error | Cause | Resolution |
+|-------|-------|------------|
+| User rejected | User cancelled signing | Prompt to try again |
+| Insufficient funds | Not enough ADA | Show required amount |
+| TX too large | Too many inputs/outputs | Contact support |
+| Collateral not set | dApp collateral not configured | Prompt user to set collateral in wallet |
+
+```typescript
+try {
+  const signedTx = await wallet.signTx(unsignedTx);
+} catch (e) {
+  if (e.message?.includes("user declined")) {
+    // User cancelled — don't retry automatically
+    return { error: "cancelled", retry: false };
+  }
+  if (e.message?.includes("insufficient")) {
+    const required = parseRequiredAda(e.message);
+    return { error: "insufficient_funds", required };
+  }
+  throw e; // Unknown error
+}
+```
+
+## Idempotency
+
+Andamio's state machine is designed for safe retries:
+
+- **Registration is idempotent**: Registering the same `tx_hash` twice returns `409 Conflict` but doesn't create duplicate records
+- **DB syncs are idempotent**: If a sync is interrupted and retried, it produces the same result
+- **Draft upserts**: Creating a commitment draft that already exists updates it rather than duplicating
+
+This means if you're unsure whether an operation completed, it's safe to retry.
+
+## Debugging
+
+### Check Transaction Status
+
+```bash
+curl -H "X-API-Key: $API_KEY" \
+  https://api.andamio.io/api/v2/tx/status/$TX_HASH
+```
+
+### View Pending Transactions
+
+```bash
+curl -H "X-API-Key: $API_KEY" \
+     -H "Authorization: Bearer $JWT" \
+  https://api.andamio.io/api/v2/tx/pending
+```
+
+### Check On-Chain State
+
+For preprod:
+```bash
+curl https://preprod.andamioscan.io/api/tx/$TX_HASH
+```
+
+For mainnet:
+```bash
+curl https://andamioscan.io/api/tx/$TX_HASH
+```
+
+## Best Practices
+
+1. **Always check before rebuilding expired TXs** — Avoid duplicate on-chain actions
+2. **Implement SSE for real-time updates** — Better UX than polling
+3. **Store `tx_hash` immediately after submit** — Enables recovery if registration fails
+4. **Use draft-first flow** — Provides instant feedback and safer recovery
+5. **Log state transitions** — Helps debug issues in production
+
+## Next Steps
+
+- [API Integration](/docs/guides/developers/api-integration) — Complete transaction flow
+- [Transaction State Machine](/docs/protocol/v2/state-machine) — State transition details
+- [API Reference](https://api.andamio.io/reference) — Endpoint documentation
