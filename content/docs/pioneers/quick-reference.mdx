@@ -15,46 +15,39 @@ Everything you need to get building, in one place.
 Copy this into your `.env` file for the T3 App Template:
 
 ```bash
-# Andamio API Gateway
+# Andamio API Gateway (unified V2 API)
 NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev.api.andamio.io"
 
-# Your Andamio API Key (request one via the API Gateway)
-ANDAMIO_API_KEY="your-api-key-here"
+# Andamio API Key (request via the Gateway)
+ANDAMIO_API_KEY="your-api-key"
 
-# Andamio Access Token Policy ID
-NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
+# Cardano Network
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 ```
-
-<Callout type="warn" title="Port 3000 Required">
-**You must run your local development server on port 3000** (i.e., `http://localhost:3000`). The Andamio APIs are configured to only accept requests from this origin. Using any other port will result in CORS errors or rejected requests.
-</Callout>
 
 ## API Documentation
 
 | API | Purpose | Docs |
 |-----|---------|------|
-| **Andamio API Gateway** | Unified API for all Andamio services | [Swagger UI](https://dev.api.andamio.io/api/v1/docs/index.html) |
-
-Full API documentation coming soon.
+| **Andamio API Gateway** | Unified V2 API (auth, data, transactions) | [API Docs](https://dev.api.andamio.io/api/v1/docs/index.html) |
 
 ## Links
 
 | Resource | Link |
 |----------|------|
 | **Discord** | [Andamio Network](https://discord.gg/abBbsGZpZ5) |
-| **T3 App Template** | [GitHub](https://github.com/Andamio-Platform/andamio-t3-app-template) |
-| **Submit Issues** | [GitHub Issues](https://github.com/Andamio-Platform/andamio-t3-app-template/issues) |
+| **T3 App Template** | [GitHub](https://github.com/Andamio-Platform/andamio-app-v2) |
+| **Submit Issues** | [GitHub Issues](https://github.com/Andamio-Platform/andamio-app-v2/issues) |
 
-## TypeScript Types
-
-Generate TypeScript types from the API Gateway schema:
+## NPM Packages
 
 ```bash
-# Script coming soon
-npm run generate-types
+npm install @andamio/transactions@0.4.1
+npm install @andamio/db-api@0.4.1
 ```
 
-Types are auto-generated from the OpenAPI specification.
+- **@andamio/transactions** - Transaction definitions with params, side effects, and endpoints
+- **@andamio/db-api** - Types for all database API endpoints
 
 ## Live Coding Schedule
 
