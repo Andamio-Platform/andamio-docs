@@ -1,184 +1,88 @@
 ---
 title: Assessment Workflow
-description: Review contributor submissions, read evidence, make accept/refuse/deny decisions, and process the review queue efficiently
+description: Review contributor submissions and make accept, refuse, or deny decisions
 ---
 
-Assessment is the process of reviewing contributor submissions: reading the evidence they submitted, evaluating it against the task requirements, and making an on-chain accept, refuse, or deny decision.
+# Assessment Workflow
 
-Assessment decisions trigger on-chain transactions. **Accept** distributes the reward automatically. **Refuse** allows the contributor to resubmit. **Deny** is permanent. Because these decisions are recorded on-chain and most are irreversible, careful review is essential.
+When contributors submit evidence for a task, you review it and make an on-chain decision: **Accept**, **Refuse**, or **Deny**. Accept distributes the reward automatically. Refuse lets the contributor try again. Deny is permanent. Because these decisions are recorded on-chain and most are irreversible, take your time reading the evidence.
 
-Assessment is the core operational loop during active projects, the most frequent admin action you will perform once contributors start submitting work.
+This is the most frequent admin action during active projects.
 
-### Where to find it
+## Finding Pending Submissions
 
-The assessment workflow lives on the **Commitment Reviews** page, accessible from the **Managers** tab by clicking **Open Full Review Page**. You can also reach it from the **Tasks** tab when a "Review Submissions" button appears (indicating pending items).
+Pending submissions show up in three places:
 
-## Finding Submissions to Review
+- **Managers tab** — shows the pending count and an inline queue
+- **Tasks tab** — a "Review Submissions" button appears when pending count > 0
+- **Dashboard** — pending assessment count per project
 
-The **Managers** tab is your starting point for finding pending submissions. It shows the team overview at the top and the review queue below.
+Start from the **Managers** tab and click **Open Full Review Page** to enter the review interface.
 
 ![The Managers tab showing the Team section with Owner and Managers aliases, the Project Team management area with Add a Manager input, and the "No Pending Reviews" state at the bottom indicating all submissions have been processed.](/guides/projects/assessment-workflow/01-managers-tab-pending.png)
 
-### Three places to find pending submissions
+## The Review Page
 
-| Location | What It Shows | How to Get There |
-|---|---|---|
-| **Managers tab** | Pending review count and inline queue of submissions | Click the Managers tab in Project Studio |
-| **Tasks tab** | "Review Submissions" button appears when pending count > 0 | Click the Tasks tab |
-| **Dashboard** | Pending assessment count per project (summary card) | Main Studio dashboard |
-
-### What the Managers tab shows
-
-The Managers tab is divided into sections:
-
-- **Team**: Owner, Managers, and Contributors count (see [Team & Contributors guide](/docs/guides/projects/team-and-contributors))
-- **Project Team**: Manager management area (owner only)
-- **Pending Reviews**: When submissions are waiting, they appear here with contributor alias and task details. When all reviews are complete, you see "No Pending Reviews. All caught up!"
-
-When pending submissions exist, click **Open Full Review Page** to navigate to the full two-panel review interface.
-
-## The Review Page: Two-Panel Layout
-
-The Commitment Reviews page uses a two-panel layout designed for efficient queue processing.
+The Commitment Reviews page uses a two-panel layout.
 
 ![The full Commitment Reviews page showing the two-panel layout. The left panel contains the project title, a search bar for filtering by contributor or task, and the submission list. The right panel shows instructions to select a submission to begin reviewing.](/guides/projects/assessment-workflow/02-review-page-full.png)
 
-### Left panel: Submission List
-
-The left panel contains:
-
-- **Project title** and pending count in the header
-- **Search bar** to filter by contributor alias or task title/hash
-- **Scrollable list** of all commitments
-- Each entry shows: contributor alias, task title, reward amount, and status badge
-
-Status badge colors:
-
-| Badge | Color | Meaning |
-|-------|-------|---------|
-| **SUBMITTED** | Blue | Awaiting review, needs your attention |
-| **ACCEPTED** | Green | Already approved, reward distributed |
-| **REFUSED** | Red | Sent back for revision |
-| **DENIED** | Red | Permanently rejected |
-
-Click any entry to load its details in the right panel.
-
-### Right panel: Assessment Detail
-
-When a submission is selected, the right panel shows:
-
-- **Contributor alias** and current status badge
-- **Task context:**
-
-| Field | What It Shows |
-|---|---|
-| **Reward** | ADA amount the contributor will receive if accepted |
-| **Expiration** | Task deadline. Deny becomes available after this date |
-| **Submission TX Hash** | On-chain transaction hash of the submission |
-
-## Reading Submitted Evidence
-
-Below the task context in the right panel, the **Submitted Evidence** section displays the contributor's work.
+**Left panel** — a scrollable list of all commitments. Each entry shows the contributor's alias, task title, reward amount, and a status badge: blue (SUBMITTED — needs your review), green (ACCEPTED), or red (REFUSED / DENIED). Use the search bar to filter by contributor alias or task title.
 
 ![The left panel showing the submission list with multiple entries displaying contributor aliases, task titles, and status badges. Use the search bar at the top to filter by contributor or task name.](/guides/projects/assessment-workflow/03-left-panel-list.png)
 
-### Evidence formats
+**Right panel** — when you click a submission, the detail view shows the contributor's alias, the reward amount, expiration date, submission TX hash, and the submitted evidence below.
 
-- **Rich content**: If the contributor submitted through the platform, evidence renders as formatted text (headings, lists, links) using the TipTap content display.
-- **On-chain hash**: If submitted directly on-chain, the evidence shows as a hash identifier.
-- **Evidence hash**: A cryptographic hash of the submitted content for independent verification.
+Evidence is usually rich text (headings, lists, links) submitted through the platform. If submitted directly on-chain, it appears as a hash identifier. An evidence hash is included for independent verification.
 
-### What to look for when reviewing
+## Making a Decision
 
-- Does the submission address the task requirements?
-- Is the content original and substantive?
-- Does the evidence match the task's expected format (as described in the task brief)?
-- Is there sufficient detail to verify the work was completed?
-
-## Making Assessment Decisions
-
-At the bottom of the right panel, three decision buttons allow you to make your assessment.
+At the bottom of the right panel, three buttons let you decide.
 
 ![The right panel showing the evidence display area and the three assessment decision buttons: Accept, Refuse, and Deny.](/guides/projects/assessment-workflow/04-right-panel-evidence.png)
 
-### Decision reference
+| Decision | Effect | Reversible? |
+|----------|--------|-------------|
+| **Accept** | Approves the work. Reward ADA sent to contributor automatically. | No |
+| **Refuse** | Sends back for revision. Contributor can resubmit new evidence. | Contributor gets another chance |
+| **Deny** | Permanently rejects the submission. Contributor's commitment is closed. | No — only available after the task's expiration date |
 
-| Decision | What It Does | Reversible? | When Available |
-|----------|-------------|-------------|----------------|
-| **Accept** | Approves the work. Contributor receives the reward ADA automatically. | No, on-chain and permanent | When status is SUBMITTED |
-| **Refuse** | Sends back for revision. Contributor can resubmit new evidence. | Partially, contributor can try again | When status is SUBMITTED |
-| **Deny** | Permanently rejects the submission. Contributor's commitment is closed. | No, on-chain and permanent | Only after the task's expiration date |
-
-### Decision flow
-
-1. Read the submitted evidence carefully
-2. Click a decision button (**Accept**, **Refuse**, or **Deny**)
-3. A confirmation dialog appears. Review your choice
-4. Click **Confirm** to submit the on-chain transaction
-5. Wait for blockchain confirmation (the TX stream watcher shows progress)
-6. After confirmation, a **"Next pending"** button appears. Click it to auto-navigate to the next unreviewed submission
+When you click a decision button, a confirmation dialog appears. Review your choice, then click **Confirm** to submit the on-chain transaction. After blockchain confirmation, a **"Next pending"** button appears to auto-navigate to the next unreviewed submission.
 
 <Callout type="warn">
-Decisions are recorded on-chain and cannot be undone. A confirmation dialog appears before every decision is submitted. Take care: Accept and Deny cannot be reversed.
+Accept and Deny are irreversible on-chain decisions. The confirmation dialog is your last chance to reconsider.
 </Callout>
 
-### When to use each decision
+### When to use each
 
-- **Accept**: the evidence meets the task requirements. The work is complete and the contributor deserves the reward.
-- **Refuse**: the evidence is insufficient, off-topic, or needs improvement. The contributor should try again. Use this when you want to give them another chance. Communicate feedback through a separate channel (Discord, email) about what to improve.
-- **Deny**: the submission is fundamentally unacceptable (spam, plagiarism, completely off-topic). Only use when a second chance would not help. Only available after the task expiration date to prevent premature permanent rejection.
-
-## Navigating the Queue Efficiently
+- **Accept** when the evidence reasonably meets the task requirements.
+- **Refuse** when the submission needs work. Communicate what to improve through a separate channel (Discord, email) — the platform doesn't have inline feedback on refusals.
+- **Deny** only for clear violations (spam, plagiarism, completely off-topic). It permanently closes the submission and is deliberately gated behind the expiration date to prevent premature permanent rejection.
 
 ![The decision buttons section showing Accept (green), Refuse (yellow), and Deny (red, with note that it becomes available after expiration date). The irreversibility notice appears above the buttons.](/guides/projects/assessment-workflow/05-decision-buttons.png)
 
-### Search and filter
+## Processing the Queue
 
-- **Search bar**: type a contributor alias or task title to filter the submission list in the left panel
-- **Status badges**: visually scan for blue "SUBMITTED" badges to find items needing review
-- **"Next pending" button**: after making a decision and confirming the transaction, this button appears and auto-navigates to the next unreviewed submission
-
-### Efficient review routine
+The efficient routine:
 
 1. Open the Commitment Reviews page from the Managers tab
-2. Start with the first pending submission (blue SUBMITTED badge)
+2. Click the first blue **SUBMITTED** badge in the left panel
 3. Read the evidence in the right panel
 4. Make your decision → confirm → wait for TX confirmation
 5. Click **"Next pending"** to move to the next item
-6. Repeat until the queue shows "All caught up!"
+6. Repeat until the page shows "All caught up!"
 
-### Pending indicators across the platform
+## After a Decision
 
-| Location | What It Shows | How to Get There |
-|---|---|---|
-| Managers tab | Pending count and inline submission list | Click Managers tab |
-| Tasks tab | "Review Submissions" button when pending > 0 | Click Tasks tab |
-| Dashboard | Pending assessment count per project | Main Studio dashboard |
+- **Accept** → reward is distributed automatically. Verify the payout on the [Reports tab](/docs/guides/projects/reports).
+- **Refuse** → the contributor can resubmit. Watch for the resubmission in your pending queue.
+- **Deny** → the commitment is permanently closed. The locked ADA stays in the treasury — reclaim it by removing the task through [Treasury Management](/docs/guides/projects/treasury-management).
 
-## Workflow Quick Reference
+## What's Next
 
-### Daily review routine
-
-1. Check the **Managers** tab for pending review items
-2. Click **Open Full Review Page** to enter the two-panel review interface
-3. Process the queue: read evidence → decide → confirm → next pending
-4. When done, the page shows "All caught up!"
-5. Check the **Tasks** tab for any new submissions that arrived while reviewing
-
-### When to Accept vs. Refuse vs. Deny
-
-- Default to **Accept** when the evidence reasonably meets the task requirements
-- Use **Refuse** when the submission needs revision. Communicate what to improve through a separate channel
-- Reserve **Deny** for clear violations. It permanently closes the submission and is only available after the task's expiration date
-
-### After an assessment
-
-- **Accept** → reward is distributed automatically to the contributor's wallet. The task status changes to Accepted (terminal state). You can verify the payout on the [Reports tab](/docs/guides/projects/reports).
-- **Refuse** → the contributor can resubmit new evidence. The submission returns to their queue. Monitor for the resubmission in the pending review list.
-- **Deny** → the commitment is permanently closed. The locked ADA remains in the treasury and can be reclaimed by removing the task (see [Treasury Management guide](/docs/guides/projects/treasury-management)).
+- [Task Management](/docs/guides/projects/task-management) — create and publish the tasks that generate submissions
+- [Team & Contributors](/docs/guides/projects/team-and-contributors) — manage your team and track contributor activity
 
 ## Related
 
-- [Assess Tasks Transaction](/docs/protocol/v2/transactions/project/manager/tasks/assess): on-chain transaction reference for assessment decisions
-- [Task Management guide](/docs/guides/projects/task-management): creating and publishing tasks
-- [Team & Contributors guide](/docs/guides/projects/team-and-contributors): managing the team and viewing contributor activity
+- [Assess Tasks Transaction](/docs/protocol/v2/transactions/project/manager/tasks/assess) — on-chain reference for assessment decisions

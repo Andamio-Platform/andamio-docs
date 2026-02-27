@@ -1,90 +1,62 @@
 ---
 title: Project Studio Quickstart
-description: Navigate the Project Studio admin workspace, its tabs, components, and where to find every admin action
+description: Navigate the Project Studio admin workspace — tabs, components, and where to find every admin action
 ---
 
-**Project Studio** is the admin workspace for managing an Andamio project. It is the central hub where project owners and managers create tasks, fund the treasury, review contributor submissions, manage team members, and generate reports.
+# Project Studio Quickstart
 
-This quickstart guide orients you to the Studio layout: navigation, tabs, key components, and where to go for each admin action. Every other guide in this series assumes you have read this one first.
+**Project Studio** is the admin workspace for managing an Andamio project. This is where you create tasks, fund the treasury, review contributor submissions, manage your team, and generate reports. Every other guide in this series assumes you've read this one first.
 
 ### Who can access it
 
 Project Studio is visible only to **project owners** and **project managers**. Access is role-gated via your Andamio Access Token:
 
-- **Owner**: the user who created the project. Has full access to all features, including adding and removing managers.
-- **Manager**: a user who has been granted manager access by the owner. Can manage tasks, treasury, assessments, and settings, but cannot add or remove other managers.
+- **Owner** — the user who created the project. Full access to all features, including adding and removing managers.
+- **Manager** — granted access by the owner. Can manage tasks, treasury, assessments, and settings, but cannot modify the team roster.
 
-If you do not see Project Studio in the sidebar, confirm that your wallet is connected with an account that has an owner or manager role for the project.
+If you don't see Project Studio in the sidebar, confirm that your wallet is connected with an account that has an owner or manager role for the project.
 
 ### How to get here
 
-Navigate to Project Studio from the sidebar by clicking **Project Studio** under the Studio section, then selecting your project. You can also navigate directly to `/studio/project/[id]` if you know the project ID.
+Click **Project Studio** in the sidebar under the Studio section, then select your project. You can also navigate directly to `/studio/project/[id]` if you know the project ID.
 
-## Project Dashboard: Overview Tab
+## Overview Tab
 
-The **Overview** tab is the first thing you see when opening a project in Project Studio. It provides a high-level snapshot of your project's current state.
+The Overview tab is the first thing you see when you open a project. It gives you a snapshot of the project's current state.
 
 ![The Overview tab showing the Prerequisites card on the left, the Project Stats card on the right, and the Manage Treasury button below.](/guides/projects/project-studio-quickstart/01-overview-tab-full.png)
 
-### Prerequisites card
+The left side shows **Prerequisites** — the courses contributors must complete before joining. The right side shows four stats: Draft Tasks, Published Tasks, Contributors, and Treasury Balance.
 
-The left side shows the **Prerequisites** section, the courses that contributors must complete before they can join this project. In this example, the project requires the "Intersect Maintainer Onboarding" course, which includes one required module ("101: Maintainer Verification").
-
-Prerequisites are configured during project setup and determine who is eligible to participate.
-
-### Project Stats card
-
-The right side displays four key numbers at a glance:
-
-| Stat | What It Shows | Why It Matters |
-|------|---------------|----------------|
-| **Draft Tasks** | Tasks created but not yet published on-chain | Your pipeline of tasks being prepared |
-| **Published Tasks** | Tasks live on-chain and available to contributors | Active work available to your community |
-| **Contributors** | Number of registered contributors | Participation level |
-| **Treasury Balance** | Current spendable ADA in the project treasury | Budget capacity |
-
-### Manage Treasury button
-
-Below the stats card, the **Manage Treasury** button is the primary call-to-action for funding operations. It links directly to the Treasury Management page where you can deposit ADA, publish draft tasks on-chain, and remove tasks to reclaim funds.
+Below the stats, the **Manage Treasury** button is the main entry point for funding operations — depositing ADA, publishing draft tasks on-chain, and removing tasks to reclaim funds.
 
 ## Tab Tour
 
-The tab bar at the top of Project Studio gives you access to all admin features. Each tab focuses on a different aspect of project management.
+The tab bar gives you access to all admin features.
 
 ![The tab bar showing five tabs: Overview, Tasks, Managers, Reports, and Settings. The project title and status badges appear above.](/guides/projects/project-studio-quickstart/02-tab-bar.png)
 
-| Tab | Purpose | When You'll Use It |
-|-----|---------|-------------------|
-| **Overview** | Project dashboard with stats, prerequisites, treasury link | Daily check-in |
-| **Tasks** | Create, edit, and monitor tasks; view lifecycle states | Setting up work, monitoring progress |
-| **Managers** | Team management, pending review queue, submission history | Reviewing work, managing the team |
-| **Reports** | Treasury reporting, KPI cards, CSV/PDF export | Reporting, audit (see [Reports guide](/docs/guides/projects/reports)) |
-| **Settings** | Edit project metadata, view Project ID | Initial setup, occasional updates |
+| Tab | What you do here |
+|-----|-----------------|
+| **Overview** | Check project stats, prerequisites, and access treasury management |
+| **Tasks** | Create, edit, and monitor tasks across their lifecycle |
+| **Managers** | Review contributor submissions, manage team members |
+| **Reports** | Treasury reporting, KPI cards, CSV/PDF export |
+| **Settings** | Edit project metadata, view the on-chain Project ID |
 
-The project header above the tabs shows the project title, a **Published** status badge, and summary counts (e.g., "5 draft · 7 active"). The **Preview** button on the right opens the public-facing project page as contributors see it.
+The project header above the tabs shows the project title, a **Published** status badge, and summary counts (e.g., "5 draft · 7 active"). The **Preview** button opens the public-facing project page as contributors see it.
 
-## Project Settings
+## Settings Tab
 
-The **Settings** tab lets you edit project metadata and view your project's on-chain identifier.
+The Settings tab lets you edit project metadata and view the on-chain identifier.
 
 ![The Settings tab showing editable fields for Title, Description, Image URL, and Video URL, plus the read-only Project ID at the bottom.](/guides/projects/project-studio-quickstart/03-settings-tab.png)
 
-### Editable fields
+You can change the **Title**, **Description**, **Image URL**, and **Video URL** at any time — click **Save Changes** when done. The page shows "All changes saved" when the current state matches what's stored.
 
-| Field | What It Does |
-|-------|-------------|
-| **Title** | The project display name shown to contributors and in listings |
-| **Description** | A description of the project visible on the public project page |
-| **Image URL** | URL to a hosted image used as the project cover |
-| **Video URL** | URL to an intro video (YouTube or Vimeo embed) |
+The **Project ID** at the bottom is read-only — a long hexadecimal string that identifies this project on the Cardano blockchain. Click the copy icon to grab it for use in external tools, reports, or blockchain explorers.
 
-Changes are saved by clicking the **Save Changes** button. The page detects unsaved changes and shows "All changes saved" when the current state matches what is stored.
-
-### Read-only fields
-
-- **Project ID**: the on-chain identifier for this project. A long hexadecimal string used by the Cardano blockchain to reference this project. Click the copy icon next to it to copy to clipboard. You may need this when referencing the project in external tools, reports, or blockchain explorers.
-
-## Quick Reference: Where Do I Go?
+## Where Do I Go?
 
 | I want to... | Go to... | Guide |
 |---|---|---|
@@ -95,4 +67,4 @@ Changes are saved by clicking the **Save Changes** button. The page detects unsa
 | See contributor activity | Managers tab → **View Contributors** | [Team & Contributors](/docs/guides/projects/team-and-contributors) |
 | Add or remove a team manager | Managers tab (owner only) | [Team & Contributors](/docs/guides/projects/team-and-contributors) |
 | Export a financial report | Reports tab → **Download CSV** or **Download PDF** | [Reports](/docs/guides/projects/reports) |
-| Change project title or description | Settings tab | This guide (see Project Settings above) |
+| Change project title or description | Settings tab | This guide (see Settings above) |

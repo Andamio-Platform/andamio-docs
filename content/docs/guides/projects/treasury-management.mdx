@@ -1,202 +1,90 @@
 ---
 title: Treasury Management
-description: Fund the project treasury, publish tasks on-chain, remove tasks to reclaim ADA, and understand deposit calculations
+description: Fund the project treasury, publish tasks on-chain, and reclaim ADA from expired tasks
 ---
 
-The project treasury is an on-chain smart contract that holds ADA for task rewards. Every published task locks ADA from the treasury as a guaranteed reward. When a contributor's submission is accepted by a manager, the locked ADA is automatically distributed to the contributor's wallet.
+# Treasury Management
 
-This guide walks you through all treasury operations: funding the treasury, publishing tasks on-chain, removing tasks to reclaim funds, and understanding the deposit calculations.
+The project treasury is a smart contract on Cardano that holds ADA for task rewards. When you publish a task, its reward amount gets locked in the treasury. When you accept a contributor's submission, the locked ADA is automatically sent to their wallet. A 1% platform fee is deducted at distribution time.
 
-### How to get here
-
-Navigate to the Treasury Management page from the **Overview** tab by clicking the **Manage Treasury** button. You can also reach it from the **Tasks** tab when draft tasks exist.
-
-### Page layout
-
-The Treasury Management page has two main sections:
-
-- **Top section**: Treasury Balance card and Add Funds component
-- **Bottom section**: Two tabs, **Add to Treasury** (publish tasks) and **Remove from Treasury** (reclaim ADA)
-
-![Full Treasury Management page showing the Treasury Balance display, the treasury address, the Add Funds input field, and the Add to Treasury tab with draft tasks listed below.](/guides/projects/treasury-management/01-treasury-full.png)
+All treasury operations happen on the **Treasury Management** page — accessible from the **Overview** tab by clicking **Manage Treasury**, or from the **Tasks** tab when draft tasks exist.
 
 ## Treasury Balance
 
-At the top of the page, the treasury balance is displayed prominently along with the treasury address.
+At the top of the page, you'll see the current balance and the treasury's on-chain address.
 
 ![Treasury Balance showing the current ADA amount, the treasury address, and the Add Funds section with an ADA amount input field.](/guides/projects/treasury-management/02-balance-card.png)
 
-### Fields displayed
+The number that matters is **Available Funds** — your treasury balance minus the ADA already locked for published tasks. This is what you can spend on new tasks. If you want to publish tasks whose rewards exceed your available funds, you need to deposit more.
 
-| Field | What It Shows | Why It Matters |
-|-------|---------------|----------------|
-| **Treasury Balance** | Current spendable ADA in the treasury (on-chain balance minus min-UTxO reserve) | Your total available budget |
-| **Treasury address** | The on-chain Cardano address of this project's treasury smart contract | For independent verification on a blockchain explorer |
+![Full Treasury Management page showing the Treasury Balance display, the treasury address, the Add Funds input field, and the Add to Treasury tab with draft tasks listed below.](/guides/projects/treasury-management/01-treasury-full.png)
 
-### Available Funds
+## Depositing ADA
 
-The key number to watch is your **Available Funds**:
-
-```
-Available Funds = Treasury Balance - sum of all locked task rewards
-```
-
-Available Funds is what you can use to publish new tasks. If it is less than the total rewards you want to publish, you will need to deposit more ADA from your wallet.
-
-## Adding Funds: Depositing ADA
-
-The **Add Funds** section allows you to deposit ADA from your connected wallet into the project treasury.
+The **Add Funds** section lets you deposit ADA from your connected wallet into the treasury.
 
 ![The Add Funds component showing the Amount (ADA) input field, a helper note explaining that funds will be available for task rewards, and the "Add to Treasury" submit button.](/guides/projects/treasury-management/03-add-funds.png)
 
-### How to deposit
-
-1. Enter the ADA amount you want to deposit in the **Amount (ADA)** field
+1. Enter the ADA amount (minimum 1 ADA)
 2. Click **Add to Treasury**
-3. Approve the transaction in your wallet
-4. Wait for blockchain confirmation. The balance updates automatically
-
-### Key details
-
-- **Minimum deposit:** 1 ADA
-- **Source:** Funds come from the connected wallet. Ensure your wallet has sufficient ADA before depositing.
-- **On-chain transaction:** Deposits require a wallet signature and are recorded on the Cardano blockchain.
+3. Sign the transaction in your wallet
+4. Wait for blockchain confirmation — the balance updates automatically
 
 <Callout type="warn">
-Deposited ADA goes into the project treasury smart contract. It can only be withdrawn by removing published tasks (which returns their locked ADA) or by the project owner.
+Deposited ADA goes into the treasury smart contract. You can only withdraw it by removing published tasks (which returns their locked ADA) or as the project owner.
 </Callout>
-
-### When to deposit
-
-Deposit before publishing tasks whose total rewards exceed your available funds. The Transaction Summary on the Publish tab will tell you exactly how much additional ADA is needed (see below).
 
 ## Publishing Draft Tasks
 
-The **Add to Treasury** tab is where you select draft tasks to publish on-chain. Publishing locks the reward amount for each task and makes them available to contributors.
+The **Add to Treasury** tab is where you select drafts to publish on-chain. Publishing locks the reward amount for each task and makes them available to contributors.
 
 ![The Add to Treasury tab showing five draft tasks with checkboxes, task titles, on-chain hashes, and reward amounts. Three tasks are selected. Below, the Transaction Summary shows the publishing count, total rewards, treasury available, and wallet deposit required.](/guides/projects/treasury-management/04-publish-tab.png)
 
-### Step-by-step flow
+1. Select the drafts you want to publish (or use "Select All")
+2. Review the **Transaction Summary** at the bottom
+3. Click **Publish Tasks** and sign the transaction
+4. Wait for blockchain confirmation
 
-1. **Select tasks to publish**: use the checkboxes next to each draft task. A "Select All" checkbox is available in the header.
-2. **Review the Transaction Summary** (see below)
-3. Click **Publish Tasks** to submit the on-chain transaction
-4. Approve the transaction in your wallet
-5. Wait for blockchain confirmation
-
-### Transaction Summary
-
-The summary card at the bottom updates in real time as you select tasks:
+The Transaction Summary updates in real time as you select tasks:
 
 ![The Transaction Summary card showing Publishing count, Total Rewards, Treasury Available, and Wallet deposit required.](/guides/projects/treasury-management/05-transaction-summary.png)
 
-| Summary Line | What It Shows |
-|---|---|
-| **Publishing** | Number of selected draft tasks |
-| **Total Rewards** | Sum of ADA rewards for all selected tasks |
-| **Treasury Available** | Current available ADA in the treasury |
-| **Wallet deposit required** | Additional ADA needed from your wallet (0 if treasury has enough) |
-
-### Deposit calculation
-
-```
-Wallet Deposit Required = max(0, Total Rewards - Treasury Available)
-```
-
-**Example:** You want to publish 3 tasks worth 300 ADA each (900 ADA total). Your treasury has 0 ADA available. Wallet deposit required = 900 - 0 = 900 ADA from your wallet.
-
-### What happens on-chain
-
-When you submit the publish transaction, several things happen atomically:
-
-1. The required ADA is deposited from your wallet (if any)
-2. The reward amount for each task is locked in the treasury
-3. Each task is registered on the Cardano blockchain
-4. Tasks become **Available**, visible to contributors who can commit to them
+The key line is **Wallet deposit required** — the additional ADA needed from your wallet if the treasury doesn't have enough to cover the selected rewards. The math is straightforward: if you're publishing 900 ADA in rewards and the treasury has 0 available, you need 900 ADA from your wallet.
 
 <Callout type="info">
-On-chain task content is limited to 140 characters. If your task title exceeds this, it will be truncated on-chain (the full content remains in the platform database).
+On-chain task content is limited to 140 characters. Longer titles are truncated on-chain but remain in full on the platform.
 </Callout>
 
-## Removing Tasks from Treasury
+When the transaction confirms, the tasks become **Available** — live on-chain and open for contributors to commit.
 
-The **Remove from Treasury** tab allows you to remove published on-chain tasks and reclaim their locked ADA.
+## Removing Tasks
+
+The **Remove from Treasury** tab lets you pull published tasks off-chain and reclaim their locked ADA.
 
 ![The Remove from Treasury tab showing on-chain tasks with checkboxes, columns for Content (task title), Hash, Reward, and Expires date.](/guides/projects/treasury-management/06-remove-tab.png)
 
-### Table columns
+Select the tasks to remove, submit the transaction, and the locked ADA returns to your treasury balance.
 
-| Column | What It Shows |
-|--------|---------------|
-| **Content** | Task title decoded from on-chain data |
-| **Hash** | On-chain transaction hash (truncated) |
-| **Reward** | Locked ADA amount for this task |
-| **Expires** | Task expiration date |
-
-### How to remove tasks
-
-1. Select tasks to remove using the checkboxes
-2. Review the ADA amount that will be returned
-3. Click the submit button to execute the on-chain transaction
-4. Approve in your wallet and wait for confirmation
-5. Locked ADA returns to your treasury balance
-
-### When to use this
-
-- **Cancelling tasks** that are no longer needed
-- **Reclaiming ADA** from expired tasks with no accepted submissions
-- **Cleaning up** the project by removing stale tasks
+Use this to cancel tasks that are no longer needed, reclaim ADA from expired tasks, or clean up stale work.
 
 <Callout type="warn">
 You cannot remove a task that has an active commitment (In Progress or Pending Review). Only **Available** and **Expired** tasks can be removed.
 </Callout>
 
-## Understanding the Math
+## Treasury Math
 
-All treasury calculations are derived from on-chain data:
+All numbers on this page are computed from on-chain data:
 
-```
-Treasury Balance     = On-chain ADA balance - min-UTxO reserve
-Available Funds      = Treasury Balance - sum(locked task rewards)
-Deposit Required     = max(0, sum(selected task rewards) - Available Funds)
-Budget Utilization   = (Rewards Distributed + Platform Fees) / Total Deposited × 100
-```
+- **Treasury Balance** = on-chain ADA balance minus the min-UTxO reserve (~2–3 ADA required by the Cardano protocol)
+- **Available Funds** = Treasury Balance minus the sum of all locked task rewards
+- **Wallet Deposit Required** = Total Rewards of selected tasks minus Available Funds (or 0 if the treasury has enough)
+- **Budget Utilization** = (Rewards Distributed + Platform Fees) / Total Deposited — visible on the [Reports tab](/docs/guides/projects/reports)
 
-### Key concepts
+## What's Next
 
-- **min-UTxO reserve:** A small amount of ADA (~2–3 ADA) that must remain in the UTxO for Cardano protocol requirements. This is not spendable.
-- **Locked task rewards:** Every published task locks its reward amount. This ADA is committed and cannot be used for other tasks until the task is removed or its submission is accepted.
-- **Platform fee (1%):** An automatic commission on distributed rewards. Deducted at the time of reward distribution, not at publishing time.
-- **Budget utilization:** Visible on the [Reports tab](/docs/guides/projects/reports). Shows what percentage of your total deposits have been spent on rewards and fees.
-
-## Workflow Quick Reference
-
-### How to fund and publish tasks
-
-1. Go to **Overview** → **Manage Treasury**
-2. Check **Treasury Balance** and available funds
-3. If you need more funds, enter an amount in **Add Funds** and click **Add to Treasury**
-4. Switch to the **Add to Treasury** tab
-5. Select the draft tasks to publish
-6. Review the **Transaction Summary** (especially Wallet deposit required)
-7. Click **Publish Tasks** and approve the wallet transaction
-8. Wait for blockchain confirmation. Tasks are now **Available**
-
-### How to check if you have enough funds
-
-1. Note your **Treasury Balance** at the top of the page
-2. Sum the rewards of the tasks you want to publish
-3. If total rewards > available funds, deposit the difference using **Add Funds**
-
-### How to reclaim funds from cancelled or expired tasks
-
-1. Go to **Manage Treasury** → **Remove from Treasury** tab
-2. Select the tasks to remove (only Available and Expired tasks can be removed)
-3. Submit the on-chain transaction
-4. Locked ADA returns to your treasury balance and becomes available for new tasks
+- [Task Management](/docs/guides/projects/task-management) — create draft tasks before publishing
+- [Reports](/docs/guides/projects/reports) — track treasury activity and export financial reports
 
 ## Related
 
-- [Manage Tasks Transaction](/docs/protocol/v2/transactions/project/manager/tasks/manage): on-chain transaction reference for publishing and removing tasks
-- [Task Management guide](/docs/guides/projects/task-management): creating draft tasks before publishing
-- [Reports guide](/docs/guides/projects/reports): treasury reporting and budget utilization
+- [Manage Tasks Transaction](/docs/protocol/v2/transactions/project/manager/tasks/manage) — on-chain reference for publishing and removing tasks
