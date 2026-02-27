@@ -1,0 +1,168 @@
+---
+title: Reports
+description: Track treasury activity, audit contributor payouts, and export financial reports as CSV or PDF
+---
+
+The **Reports** tab is a treasury transparency dashboard inside Project Studio. It gives project owners and managers a real-time view of how project funds are being used: deposits, contributor payouts, budget utilization, and exportable financial reports.
+
+This guide walks you through every component on the Reports tab so you can confidently track your budget, audit contributor payouts, and generate reports for stakeholders.
+
+### Who can access it
+
+The Reports tab is visible only to **project owners** and **project managers**. If you don't see it in the tab bar, confirm that your wallet is connected with an account that has an owner or manager role for the project.
+
+![The tab bar with Reports selected. The Reports tab appears between Managers and Settings.](/guides/projects/reports/06-tab-bar.png)
+
+### Where the data comes from
+
+Every number on this page is computed in real time from **on-chain project data**:
+
+- **Treasury deposits**: ADA added to the project treasury, recorded on-chain with timestamps
+- **Assessment decisions**: Tasks that have been accepted by a manager, which triggers reward distribution
+- **Contributor records**: On-chain contributor registrations for the project
+
+<Callout type="info">
+All data on the Reports tab is independently verifiable against the Cardano blockchain. There is no separate database or manual entry. What you see reflects what the chain shows.
+</Callout>
+
+### Page overview
+
+Here is the full Reports tab for a sample project. The sections that follow explain each area in detail.
+
+![Full view of the Reports tab showing all four sections: KPI cards, Monthly Treasury Activity, Contributor Breakdown, and Export.](/guides/projects/reports/01-reports-tab-full.png)
+
+## KPI Summary Cards
+
+At the top of the Reports tab, six cards display the key financial and operational metrics for your project at a glance.
+
+![The six KPI summary cards arranged in a 3x2 grid.](/guides/projects/reports/02-kpi-cards.png)
+
+### Card-by-card breakdown
+
+| Card | What It Shows | Why It Matters |
+|------|---------------|----------------|
+| **Treasury Balance** | Current spendable funds in ADA. | Tells you instantly whether you can fund more tasks or need to deposit more. |
+| **Total Deposited** | All-time ADA deposited into the project treasury. Shows the budget utilization percentage below. | Tracks total investment into the project since creation. |
+| **Rewards Distributed** | Total ADA paid out for accepted task submissions. | Shows how much has been earned by contributors across all tasks. |
+| **Platform Fee (1%)** | Automatic 1% commission on distributed rewards. | Helps you account for the full cost of running the project on the platform. |
+| **Contributors** | Number of unique contributors registered to the project. | Gauges the participation level and reach of your project. |
+| **Tasks Completed** | Number of tasks with accepted submissions. | Tracks project progress: how much work has been reviewed and approved. |
+
+### Key details to notice
+
+**Budget utilization**: Below the "Total Deposited" card, you will see a percentage. This is the **burn rate**, the fraction of deposited funds that has been distributed as rewards plus platform fees. A high percentage means you are approaching your budget limit and may need to deposit additional funds.
+
+**Pending review count**: The "Tasks Completed" card may show additional text like "1 pending review". This tells you how many submitted tasks are waiting for a manager to accept or refuse. A growing number here means your review queue needs attention.
+
+## Monthly Treasury Activity
+
+This table breaks down treasury activity by calendar month, giving you a time-series view of deposits and payouts.
+
+![Monthly Treasury Activity table showing one month of data.](/guides/projects/reports/03-monthly-activity.png)
+
+### Reading the columns
+
+| Column | Meaning |
+|---|---|
+| **Month** | Calendar month of activity (e.g., "Feb 2026"). |
+| **Deposits** | ADA deposited into the treasury during that month. |
+| **Rewards Paid** | ADA distributed to contributors for accepted tasks during that month. |
+| **Platform Fee** | 1% commission on rewards paid that month (deducted automatically). |
+| **Net Flow** | Deposits minus Rewards minus Fees. A positive number means the treasury grew that month. A negative number means net spend exceeded deposits. |
+
+### How to use this
+
+- **Spot spending trends**: If "Rewards Paid" is increasing month over month, your project is accelerating. Check that deposits are keeping pace.
+- **Plan deposits**: If Net Flow is consistently negative, you may need to add funds soon. Compare with your Treasury Balance to estimate runway.
+- **Audit by period**: Each row corresponds to a calendar month, making it straightforward to match against external accounting periods or milestone reporting windows.
+
+<Callout type="info">
+If the table shows "No treasury activity with timestamps yet", it means the on-chain deposits do not have slot timestamps recorded. This can happen with very early deposits. The table will populate as new activity occurs.
+</Callout>
+
+## Contributor Breakdown
+
+This table shows how rewards are distributed across individual contributors.
+
+![Contributor Breakdown table showing two contributors.](/guides/projects/reports/04-contributor-breakdown.png)
+
+### Reading the columns
+
+| Column | Meaning |
+|---|---|
+| **Contributor** | The contributor's on-chain alias, a short identifier that represents their identity on the platform. |
+| **Tasks Completed** | Number of unique tasks this contributor has had accepted by a manager. |
+| **Total Earned** | Total ADA earned across all accepted tasks. |
+
+### Important notes
+
+- **Only paid contributors appear**: This table shows contributors who have completed and been paid for at least one task. Contributors who have joined the project but have not submitted work (or whose work has not been accepted) will not appear here.
+- **Sorted by earnings**: Contributors are listed from highest to lowest total earned, so the most active contributors appear first.
+- **One row per contributor**: If a contributor completed multiple tasks, their totals are aggregated into a single row.
+
+## Exporting Reports
+
+At the bottom of the Reports tab, two export options let you download the treasury data for external use.
+
+![Export section with Download CSV and Download PDF buttons.](/guides/projects/reports/05-export-section.png)
+
+### Download CSV
+
+Generates a spreadsheet-compatible file containing:
+
+- **Project metadata**: project name, project ID, network (preprod or mainnet), report date
+- **Summary metrics**: all six KPI values (treasury balance, deposits, rewards, fees, contributors, tasks completed)
+- **Monthly breakdown**: same data as the Monthly Treasury Activity table, with values in ADA
+
+<Callout type="info">
+Import the CSV into Excel, Google Sheets, or accounting software for custom analysis, pivot tables, or feeding into your organization's financial reporting tools.
+</Callout>
+
+### Download PDF
+
+Generates a formatted A4 PDF report with:
+
+- **Header**: project name, network, report date, and project ID
+- **Summary table**: all six KPI metrics in a clean two-column layout
+- **Monthly activity table**: deposits, rewards, fees, and net flow by month
+- **Footer**: data source attribution ("Data derived from on-chain activity on Cardano")
+
+Share PDFs with stakeholders, attach to governance reports, or include in milestone submissions as evidence of treasury activity and transparency.
+
+### File naming
+
+Both exports include the project ID (first 8 characters) and the current date in the filename:
+
+- CSV: `treasury-report-84a6f091-2026-02-25.csv`
+- PDF: `treasury-report-84a6f091-2026-02-25.pdf`
+
+## Workflow Quick Reference
+
+### How to check your budget
+
+1. Open the **Reports** tab
+2. Read **Treasury Balance**, this is what you can still spend
+3. Check the **budget utilization** percentage under Total Deposited
+4. Scan the **Monthly Treasury Activity** table. Is spending accelerating or steady?
+5. If utilization is above 80%, consider depositing additional funds via the [Treasury Management](/docs/guides/projects/treasury-management) page
+
+### How to audit a contributor's payouts
+
+1. Scroll to **Contributor Breakdown**
+2. Find the contributor by their alias
+3. Verify their **Tasks Completed** count and **Total Earned** amount
+4. For detailed records, click **Download CSV**. The file includes all data needed for governance or accounting review
+5. Cross-reference with the Managers tab, where you can see the full history of accepted and refused submissions
+
+### How to generate a periodic report
+
+1. Navigate to the **Reports** tab at any time. Data is always current
+2. Click **Download PDF** for a formatted report to share with stakeholders or include in milestone submissions
+3. Click **Download CSV** if you need raw data for accounting tools or custom analysis
+4. Both files include the project name, network, and generation date as metadata
+5. For recurring reporting, download at a consistent cadence (e.g., end of each month) to build a historical record
+
+## Related
+
+- [Treasury Management guide](/docs/guides/projects/treasury-management): funding the treasury and managing task publishing
+- [Task Management guide](/docs/guides/projects/task-management): understanding the task lifecycle that generates report data

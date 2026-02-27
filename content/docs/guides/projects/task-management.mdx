@@ -1,0 +1,198 @@
+---
+title: Task Management
+description: Create, edit, publish, and monitor tasks through their full lifecycle, from draft to completion
+---
+
+Tasks are the fundamental unit of work in Andamio. Each task represents a discrete piece of work with an ADA reward, a deadline, and submission requirements. Contributors commit to tasks, submit evidence of completion, and receive rewards when their work is accepted by a manager.
+
+This guide walks you through the complete task lifecycle, from creating a draft to monitoring live tasks and their status.
+
+### Task lifecycle overview
+
+Every task moves through a defined set of states:
+
+**Draft** → **Available** → **In Progress** → **Pending Review** → **Accepted** / **Refused** / **Denied**
+
+Tasks begin as drafts in the platform, get published on-chain through the Treasury Management page, and then become available for contributors to commit to. The assessment phase (Pending Review and beyond) is covered in the [Assessment Workflow guide](/docs/guides/projects/assessment-workflow).
+
+### Where tasks live
+
+- **Tasks tab** in Project Studio, for creating and monitoring tasks
+- **Treasury Management** page, for publishing draft tasks on-chain (see [Treasury Management guide](/docs/guides/projects/treasury-management))
+
+## Task Overview Dashboard
+
+The **Tasks** tab is the central command for task management. It shows your stats at a glance, plus two tables: Draft Tasks and Live Tasks.
+
+![The Tasks tab showing the Draft Tasks header, stats row with three metric cards, and action buttons for Create Task, Manage Tasks, and Manage Treasury.](/guides/projects/task-management/06-tasks-stats-row.png)
+
+### Stats row
+
+Three cards at the top summarize your task inventory:
+
+| Stat | What It Shows | Source |
+|------|---------------|--------|
+| **Draft Tasks** | Tasks created in the platform, not yet on-chain | Draft status count |
+| **Live Tasks** | Tasks currently active on-chain | Published + available + in-progress tasks |
+| **On-Chain Tasks** | Total tasks ever published | All non-draft tasks |
+
+### Key action buttons
+
+- **Create Task**: opens the task creation form (see below)
+- **Manage Tasks**: navigates to the draft tasks management page
+- **Manage Treasury**: navigates to Treasury Management for publishing and funding
+
+## Creating a Draft Task
+
+Click **Create Task** to open the task creation form. All fields are configured here before saving as a draft.
+
+![The Create Task form showing all fields: Title, Reward Amount, Expiration Date, Pre-assign to, Description, and the Detailed Content rich text editor.](/guides/projects/task-management/02-create-task-form.png)
+
+### Field reference
+
+| Field | Required | Constraints | What It Does |
+|-------|----------|-------------|--------------|
+| **Title** | Yes | Max 100 characters (140 on-chain) | The task name shown to contributors. Keep it descriptive and specific. |
+| **Reward Amount (ADA)** | Yes | Minimum 1 ADA | ADA locked in treasury and paid to the contributor on acceptance. |
+| **Expiration Date** | Yes | Must be a future date | After this date, the task can no longer accept new commitments. Deny becomes available for existing submissions. |
+| **Description** | No | Plain text | Short description visible in task listings. |
+| **Detailed Content** | No | Rich text (TipTap editor) | Full task brief with instructions, requirements, and submission guidelines. Supports formatting, links, and lists. |
+| **Pre-assigned Alias** | No | Must be a valid on-chain alias | Targets the task to a specific contributor. Only that person can commit to it. |
+
+### Key details to notice
+
+- **Reward amount** is entered in ADA but stored internally as lovelace (1 ADA = 1,000,000 lovelace).
+- The **rich content editor** supports headings, bold, italic, lists, and links. Use it to write clear task briefs with structured deliverables and evidence requirements.
+- **Pre-assignment** is optional. Most tasks are open to all eligible contributors. Use pre-assignment only when a task is specifically intended for one person.
+- Click **Save Changes** to save the draft, or **Cancel** to discard.
+
+## Managing Draft Tasks
+
+The draft tasks table shows all tasks that have been created but not yet published on-chain.
+
+![The Tasks management page showing the Draft Tasks table with five draft tasks, each with title, reward amount, DRAFT status badge, and edit/delete action icons. Below it, the Live Tasks table shows seven published tasks with Available status.](/guides/projects/task-management/03-draft-tasks-table.png)
+
+### Table columns
+
+| Column | What It Shows |
+|--------|---------------|
+| **Title** | Task name (sortable) |
+| **Reward** | ADA amount (sortable) |
+| **Status** | Always "DRAFT" for this table, shown as an orange badge |
+| **Actions** | Edit (pencil icon) and Delete (trash icon) buttons |
+
+### Actions
+
+- **Edit** (pencil icon): opens the task form with current values pre-populated. Only tasks in DRAFT status can be edited.
+- **Delete** (trash icon): permanently removes the draft. This action cannot be undone.
+- **Publish Tasks** button: navigates to Treasury Management to select drafts for on-chain publishing.
+
+<Callout type="warn">
+Once a task is published on-chain, it cannot be edited. Draft is the only editable state. Review task content carefully before publishing.
+</Callout>
+
+### Status filter chips
+
+Above the tables, filter chips show counts by category: **Draft**, **Published**, and **Available**. Click a chip to filter the view.
+
+## Publishing Tasks
+
+Publishing moves tasks from draft to on-chain. This requires funding the treasury with enough ADA to cover the task rewards.
+
+The publishing flow happens in **Treasury Management** (see the [Treasury Management guide](/docs/guides/projects/treasury-management) for full details):
+
+1. Navigate to **Manage Treasury** (from the Overview tab or the Tasks tab button)
+2. Switch to the **Add to Treasury** tab
+3. Select draft tasks to publish using the checkboxes
+4. Review the **Transaction Summary**, which shows the total rewards, treasury available, and any wallet deposit required
+5. Click **Publish Tasks** to submit the on-chain transaction
+6. Wait for blockchain confirmation
+
+Once published, tasks become **Available**, visible to contributors who meet the project prerequisites and can commit to them.
+
+## Task Lifecycle
+
+Every task moves through defined states. Understanding these states is essential for monitoring project progress.
+
+![The full review page showing task lifecycle states. The left panel lists submissions with status badges, and the right panel shows a selected task in "Pending Review" state with submitted evidence and assessment decision buttons.](/guides/projects/task-management/05-task-lifecycle-states-pending-review.png)
+
+### State reference
+
+| State | Meaning | What Happens Next |
+|-------|---------|-------------------|
+| **Draft** | Created in the platform, not yet on-chain. Editable. | Publish via Treasury Management → becomes Available. |
+| **Available** | Live on-chain, open for contributors to commit. | Contributor commits → In Progress. |
+| **In Progress** | A contributor has committed and is working. | Contributor submits evidence → Pending Review. |
+| **Pending Review** | Submission received, awaiting manager assessment. | Manager accepts, refuses, or denies. |
+| **Accepted** | Work approved. Reward distributed to contributor automatically. | Terminal state, task complete. |
+| **Refused** | Sent back for revision. Contributor can resubmit. | Contributor resubmits → Pending Review again. |
+| **Denied** | Permanently rejected. Only available after the task's expiration date. | Terminal state, reward returns to treasury. |
+| **Expired** | Past expiration date with no accepted submission. | Can be removed from treasury to reclaim ADA. |
+| **Cancelled** | Removed from treasury by admin. | Terminal state, ADA returned to treasury. |
+
+### Key details
+
+<Callout type="warn">
+**Accept** is irreversible and triggers automatic reward distribution to the contributor's wallet.
+</Callout>
+
+- **Refuse** is recoverable. The contributor can submit new evidence and try again.
+- **Deny** is irreversible and only becomes available after the task's expiration date, to prevent premature permanent rejection.
+- **Expired** tasks still hold locked ADA in the treasury until explicitly removed.
+
+## Live Tasks Table
+
+The bottom section of the Tasks page shows all published on-chain tasks with their current lifecycle status.
+
+![The full Tasks page showing both Draft Tasks and Live Tasks tables. The Live Tasks section displays seven available tasks with columns for Title, Contributor, Reward, and Lifecycle status. Filter chips at the top show "All (7)" and "Available (7)".](/guides/projects/task-management/04-live-tasks-filtered-2.png)
+
+### Filter and sort controls
+
+- **Filter by lifecycle:** All | Available | In Progress | Pending Review | Accepted
+- **Sort by:** Title, Contributor, Reward, or Lifecycle (click column headers)
+- **Columns:** Title, Contributor (alias or "–" if unclaimed), Reward (ADA), Lifecycle (status badge)
+
+### What to look for
+
+- **Pending Review** badges need your attention. Click through to the Assessment page to review submissions.
+- **In Progress** tasks indicate contributors are actively working. No action needed yet.
+- **Available** tasks with no contributor indicate work is open and waiting for someone to commit.
+
+### Other tasks
+
+Expired and cancelled tasks appear in a separate section below the live table. This is a read-only view useful for auditing completed or closed tasks.
+
+## Workflow Quick Reference
+
+### How to create and launch a task (end-to-end)
+
+1. Go to the **Tasks** tab → click **Create Task**
+2. Fill in title, reward amount, expiration date, and task content
+3. Click **Save Changes** to save the draft
+4. Go to **Manage Treasury** (from the Overview tab or Tasks tab button)
+5. Switch to the **Add to Treasury** tab
+6. Select the draft task for publishing
+7. Review the Transaction Summary and click **Publish Tasks**
+8. Wait for blockchain confirmation. The task is now **Available**
+
+### How to check task status
+
+1. Go to the **Tasks** tab
+2. View the stats row for counts (Draft Tasks, Live Tasks, On-Chain Tasks)
+3. Scroll to the **Live Tasks** table
+4. Use the lifecycle filter chips to find tasks in specific states
+5. Look for **Pending Review** badges, which need your attention
+
+### How to handle expired tasks
+
+1. Go to the **Tasks** tab → check the "Other Tasks" section for expired items
+2. Navigate to **Manage Treasury** → **Remove from Treasury** tab
+3. Select expired tasks to remove
+4. Submit the on-chain transaction. Locked ADA returns to your treasury balance
+
+## Related
+
+- [Manage Tasks Transaction](/docs/protocol/v2/transactions/project/manager/tasks/manage): on-chain transaction reference for publishing and removing tasks
+- [Assess Tasks Transaction](/docs/protocol/v2/transactions/project/manager/tasks/assess): how assessment decisions are recorded on-chain
+- [Treasury Management guide](/docs/guides/projects/treasury-management): funding the treasury and publishing tasks
+- [Assessment Workflow guide](/docs/guides/projects/assessment-workflow): reviewing contributor submissions

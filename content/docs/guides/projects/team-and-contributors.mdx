@@ -1,0 +1,161 @@
+---
+title: Team & Contributors
+description: Add and remove project managers, and track contributor activity across your project
+---
+
+Every Andamio project has two types of people: the **team** (owner and managers who administer the project) and **contributors** (community members who commit to tasks and submit evidence of completion).
+
+This guide covers how to manage both from the admin perspective: adding and removing team managers, and tracking contributor activity across the project.
+
+### Owner vs. Manager permissions
+
+Only the **project owner** (the user who created the project) can add or remove managers. Managers have access to most admin features but cannot modify the team roster.
+
+| Action | Owner | Manager |
+|--------|:-----:|:-------:|
+| Create, edit, delete draft tasks | Yes | Yes |
+| Publish/remove tasks (treasury) | Yes | Yes |
+| Review submissions (accept/refuse/deny) | Yes | Yes |
+| View reports and export | Yes | Yes |
+| Add/remove managers | **Yes** | No |
+| Edit project settings | Yes | Yes |
+
+## Team Overview
+
+The **Managers** tab shows the current team composition at the top of the page.
+
+![The Managers tab showing the Team section with Owner and Managers listed with alias badges, Contributors count with a "View Contributors" link, and the Project Team management section with current owner and manager aliases displayed as badges.](/guides/projects/team-and-contributors/01-team-overview.png)
+
+### Components visible
+
+- **Owner**: displayed as an alias badge. The owner is the user who created the project and cannot be changed.
+- **Managers**: list of manager aliases, each representing a user with manager access.
+- **Contributors**: total registered contributor count with a **View Contributors** link that navigates to the full contributor table.
+
+### Project Team section
+
+Below the team summary, the **Project Team** section provides the management interface:
+
+- **Owner**: shown as a badge (read-only)
+- **Managers**: shown as badges. Click x on a badge to mark it for removal (owner only).
+- **Add a Manager**: input field for entering new manager aliases (owner only)
+
+## Adding a Manager
+
+Only the project owner can add managers. The flow validates aliases on-chain before submitting.
+
+### Step 1: Enter the alias
+
+Type the manager's on-chain alias in the **Add a Manager** input field.
+
+![The Managers tab with "Wendy" typed into the Add a Manager input field. The alias is being entered and will be validated against the blockchain.](/guides/projects/team-and-contributors/02-add-manager-2.png)
+
+### Step 2: Review pending changes and cost
+
+After adding the alias, it appears in an **Adding** section below the current managers. A **Pending Changes** summary shows the transaction details, including the cost.
+
+![The Project Team section showing the current owner and manager badges, an "Adding" section with "Wendy" queued for addition, and the Pending Changes summary showing the transaction cost.](/guides/projects/team-and-contributors/02-add-manager-3.png)
+
+Key details:
+
+- Each alias is validated against the blockchain. It must be a registered Andamio alias.
+- The **Pending Changes** section shows all queued additions (and removals, if any).
+
+<Callout type="info">
+Each manager addition costs ADA for the on-chain transaction. You can queue multiple additions before submitting to batch them into a single transaction.
+</Callout>
+
+### Step 3: Submit the transaction
+
+Click **Save Team Changes** to execute the on-chain transaction.
+
+![The confirmation state after the manager addition transaction has been submitted. The new manager now has access to all manager-level features.](/guides/projects/team-and-contributors/02-add-manager-4.png)
+
+After blockchain confirmation, the new manager can connect their wallet and access all manager-level features for this project.
+
+## Removing a Manager
+
+Only the project owner can remove managers. The process is similar to adding: queue the change, review, then submit.
+
+![The Project Team section showing a manager badge with a x button for removal. Click the x to mark a manager for removal, then submit the transaction.](/guides/projects/team-and-contributors/03-remove-manager-2.png)
+
+### Steps
+
+1. Click the **x** button on a manager's alias badge
+2. The alias moves to a "Removing" section in the pending changes
+3. Review the pending changes summary
+4. Click **Save Team Changes** to execute the on-chain transaction
+5. After confirmation, the removed manager loses access to all manager-level features
+
+### Batch changes
+
+You can queue multiple additions and removals in a single transaction. The Pending Changes summary shows all queued changes before you submit, so you can review everything at once.
+
+### Common error: Invalid alias
+
+If you enter an alias that is not registered on-chain, the system will not accept it. The person needs to create an Andamio account and register their on-chain alias before they can be added as a manager.
+
+## Viewing Contributors
+
+The **Contributors** page provides a read-only view of all registered contributors and their activity.
+
+Navigate to it from the Managers tab by clicking the **View Contributors** link next to the contributor count.
+
+![The Contributors page showing a stats row with Total Contributors and Tasks Completed, followed by the Contributors table with columns for rank, Contributor alias, Committed count, Completed count, and Pending count.](/guides/projects/team-and-contributors/05-contributors-table-2.png)
+
+### Stats row
+
+| Stat | What It Shows |
+|------|---------------|
+| **Total Contributors** | Number of unique contributors registered to this project |
+| **Tasks Completed** | Total accepted submissions across all contributors |
+
+### Contributor table
+
+| Column | What It Shows |
+|--------|---------------|
+| **#** | Rank by activity |
+| **Contributor** | On-chain alias |
+| **Committed** | Total task commitments (all states) |
+| **Completed** | Accepted submissions (shown with a green badge) |
+| **Pending** | Submissions awaiting review (shown with a blue badge) |
+
+### What this view tells you
+
+This is a **read-only view** with no actions available. It provides visibility into contributor activity and helps you identify:
+
+- **Most active contributors**: highest completed count
+- **Contributors with pending work**: need review (see [Assessment Workflow guide](/docs/guides/projects/assessment-workflow))
+- **Engagement levels**: compare committed vs. completed to see follow-through rates
+- **New contributors**: recently registered with zero activity
+
+## Workflow Quick Reference
+
+### How to onboard a new team manager
+
+1. Ensure the person has an Andamio account with a registered on-chain alias
+2. Go to the **Managers** tab
+3. Enter their alias in the **Add a Manager** field (owner only)
+4. Review the pending changes and transaction cost
+5. Click **Save Team Changes** to submit the on-chain transaction
+6. After confirmation, they can connect their wallet and access the project
+
+### How to audit a contributor's activity
+
+1. Go to the **Managers** tab → click **View Contributors**
+2. Find the contributor by alias in the table
+3. Check their committed, completed, and pending counts
+4. For financial details, use the **Reports** tab → Contributor Breakdown (see [Reports guide](/docs/guides/projects/reports))
+5. For submission details, use the **Commitment Reviews** page and search by contributor alias (see [Assessment Workflow guide](/docs/guides/projects/assessment-workflow))
+
+### How to check overall project participation
+
+1. **Overview** tab → **Contributors** stat for the headline number
+2. **View Contributors** page for the full breakdown by contributor
+3. **Reports** tab for financial data per contributor (earnings, tasks completed)
+
+## Related
+
+- [Manage Managers Transaction](/docs/protocol/v2/transactions/project/owner/managers/manage): on-chain transaction reference for adding and removing managers
+- [Assessment Workflow guide](/docs/guides/projects/assessment-workflow): reviewing contributor submissions
+- [Reports guide](/docs/guides/projects/reports): financial breakdown per contributor

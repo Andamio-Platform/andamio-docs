@@ -2,8 +2,13 @@
   "title": "Project Owner Guide",
   "pages": [
     "index",
-    "setting-up-prerequisites",
+    "project-studio-quickstart",
     "creating-your-first-project",
-    "managing-contributors"
+    "setting-up-prerequisites",
+    "task-management",
+    "treasury-management",
+    "assessment-workflow",
+    "team-and-contributors",
+    "reports"
   ]
 }
