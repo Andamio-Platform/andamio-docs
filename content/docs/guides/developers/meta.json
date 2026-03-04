@@ -3,6 +3,7 @@
   "pages": [
     "index",
     "api-integration",
+    "authentication",
     "transactions",
     "error-handling"
   ]

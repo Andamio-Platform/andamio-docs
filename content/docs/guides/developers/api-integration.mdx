@@ -1,63 +1,30 @@
 ---
 title: API Integration
-description: Authentication and API setup for Andamio applications
+description: API setup and making requests to the Andamio Gateway
 ---
 
 # API Integration
 
-This guide covers authentication and API setup for integrating with the Andamio Gateway.
+This guide covers API setup and making requests to the Andamio Gateway.
 
 > **API Reference**: For endpoint schemas and parameter details, see the [API Docs](https://api.andamio.io).
 
-## Authentication
+## Authentication Headers
 
 All Andamio API requests require two authentication headers:
 
-| Header | Purpose |
-|--------|---------|
-| `X-API-Key` | Application-level (your app) |
-| `Authorization: Bearer <jwt>` | User-level (wallet signature) |
-
-### API Key (Application)
-
-```
-X-API-Key: <your-api-key>
-```
-
-API keys identify your application. Get one from [app.andamio.io/api-setup](https://app.andamio.io/api-setup). See [Getting Started](/docs/getting-started) for the full setup flow.
-
-### JWT (User)
-
-```
-Authorization: Bearer <jwt>
-```
-
-JWTs authenticate individual users via wallet signature:
+| Header | Purpose | How to get |
+|--------|---------|------------|
+| `X-API-Key` | Application-level (your app) | [Getting Started](/docs/getting-started) |
+| `Authorization: Bearer <jwt>` | User-level (wallet signature) | [Authentication](/docs/guides/developers/authentication) |
 
 ```typescript
-const API = "https://api.andamio.io/api/v2";
-
-// 1. Request a challenge
-const challengeRes = await fetch(`${API}/auth/challenge`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ address: walletAddress }),
-});
-const { challenge } = await challengeRes.json();
-
-// 2. User signs the challenge
-const signature = await wallet.signData(walletAddress, challenge);
-
-// 3. Exchange signature for JWT
-const verifyRes = await fetch(`${API}/auth/verify`, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ address: walletAddress, signature }),
-});
-const { jwt } = await verifyRes.json();
+const headers = {
+  "Content-Type": "application/json",
+  "X-API-Key": APP_API_KEY,
+  "Authorization": `Bearer ${userJwt}`,
+};
 ```
-
-JWTs expire after a configurable period (typically 24 hours).
 
 ## Making Requests
 

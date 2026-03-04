@@ -1,0 +1,291 @@
+---
+title: Authentication
+description: User login, JWT creation, and session management in Andamio applications
+---
+
+# Authentication
+
+Andamio uses wallet-based authentication. Users prove ownership of their Cardano wallet by signing a challenge, and receive a JWT that authorizes API requests.
+
+## How Login Works
+
+```
+CONNECT WALLET → CHECK ACCESS TOKEN → SIGN CHALLENGE → RECEIVE JWT
+```
+
+### 1. User Connects Wallet
+
+The user connects their Cardano wallet (Lace, Eternl, Nami, etc.) using the CIP-30 standard:
+
+```typescript
+import { BrowserWallet } from "@meshsdk/core";
+
+// Get available wallets
+const wallets = BrowserWallet.getInstalledWallets();
+
+// Connect to user's chosen wallet
+const wallet = await BrowserWallet.enable(walletName);
+const address = await wallet.getChangeAddress();
+```
+
+### 2. Verify Access Token
+
+Before authenticating, verify the user has an Andamio Access Token in their wallet. This on-chain token is their identity on the platform.
+
+```typescript
+const ACCESS_TOKEN_POLICY = "29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78";
+
+const utxos = await wallet.getUtxos();
+const hasAccessToken = utxos.some(utxo =>
+  utxo.output.amount.some(asset =>
+    asset.unit.startsWith(ACCESS_TOKEN_POLICY)
+  )
+);
+
+if (!hasAccessToken) {
+  // Redirect to mint access token flow
+}
+```
+
+If the user doesn't have an Access Token, direct them to mint one first. See [Getting Started](/docs/getting-started).
+
+### 3. Request Challenge
+
+Request a cryptographic challenge from the API:
+
+```typescript
+const API = "https://api.andamio.io/api/v2";
+
+const challengeRes = await fetch(`${API}/auth/challenge`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ address }),
+});
+
+const { challenge, expires_at } = await challengeRes.json();
+```
+
+The challenge is a random string that expires in ~5 minutes.
+
+### 4. User Signs Challenge
+
+The user signs the challenge with their wallet, proving they control the address:
+
+```typescript
+// CIP-30 signData
+const signature = await wallet.signData(address, challenge);
+```
+
+This opens the wallet's signing UI. The user sees the challenge text and confirms.
+
+### 5. Exchange for JWT
+
+Submit the signature to receive a JWT:
+
+```typescript
+const verifyRes = await fetch(`${API}/auth/verify`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    address,
+    signature,
+    challenge, // Include original challenge
+  }),
+});
+
+const { jwt, expires_at, user } = await verifyRes.json();
+```
+
+The response includes:
+- `jwt` — The authentication token
+- `expires_at` — When the JWT expires (typically 24 hours)
+- `user` — User profile (alias, roles, etc.)
+
+## What the JWT Enables
+
+The JWT authorizes the user to perform actions on the platform. Different actions require different roles.
+
+### Actions by Role
+
+| Action | Required Role | Endpoint Pattern |
+|--------|---------------|------------------|
+| View public courses/projects | None | `GET /course/public/*` |
+| List own courses | Course Owner | `GET /course/owner/*` |
+| Create course | Course Owner | `POST /tx/instance/owner/course/create` |
+| Manage teachers | Course Owner | `POST /tx/course/owner/teachers/manage` |
+| Manage modules | Teacher | `POST /tx/course/teacher/modules/*` |
+| Assess assignments | Teacher | `POST /tx/course/teacher/assignments/assess` |
+| Submit assignment | Student | `POST /tx/course/student/assignment/*` |
+| Claim credential | Student | `POST /tx/course/student/credential/claim` |
+| Create project | Project Owner | `POST /tx/instance/owner/project/create` |
+| Manage tasks | Manager | `POST /tx/project/manager/tasks/*` |
+| Commit to task | Contributor | `POST /tx/project/contributor/task/commit` |
+
+### JWT Claims
+
+The JWT contains claims that identify the user:
+
+```json
+{
+  "sub": "addr1q9...",           // Wallet address
+  "alias": "alice",              // Access token alias
+  "access_token": "abc123...",   // Access token asset ID
+  "iat": 1709568000,             // Issued at
+  "exp": 1709654400,             // Expires at
+  "iss": "andamio.io"            // Issuer
+}
+```
+
+### Authorization Flow
+
+When you make an API request:
+
+1. Gateway validates the JWT signature
+2. Gateway checks the JWT hasn't expired
+3. Gateway extracts the user's alias/address
+4. Endpoint checks if user has required role for that course/project
+5. Request proceeds or returns `403 Forbidden`
+
+## Session Management
+
+### Storing the JWT
+
+Store the JWT securely. Common patterns:
+
+```typescript
+// Option 1: Memory only (most secure, lost on refresh)
+let jwt = null;
+
+// Option 2: Session storage (cleared when tab closes)
+sessionStorage.setItem("andamio_jwt", jwt);
+
+// Option 3: HTTP-only cookie (set by backend)
+// Most secure for server-rendered apps
+```
+
+Never store JWTs in localStorage for production apps — they persist indefinitely and are vulnerable to XSS.
+
+### Checking Expiration
+
+Check if the JWT is expired before making requests:
+
+```typescript
+function isJwtExpired(jwt: string): boolean {
+  try {
+    const payload = JSON.parse(atob(jwt.split('.')[1]));
+    return Date.now() >= payload.exp * 1000;
+  } catch {
+    return true;
+  }
+}
+
+// Before API calls
+if (isJwtExpired(jwt)) {
+  // Re-authenticate
+  await login();
+}
+```
+
+### Refresh Strategy
+
+Andamio JWTs don't support refresh tokens. When a JWT expires, the user must sign a new challenge. Design your UX to:
+
+1. Check expiration before sensitive actions
+2. Prompt re-authentication gracefully
+3. Consider shorter sessions for high-security apps
+
+### Logout
+
+To log out, simply discard the JWT:
+
+```typescript
+function logout() {
+  jwt = null;
+  sessionStorage.removeItem("andamio_jwt");
+  // Redirect to home or login page
+}
+```
+
+No server-side logout endpoint is needed — JWTs are stateless.
+
+## Complete Login Example
+
+```typescript
+import { BrowserWallet } from "@meshsdk/core";
+
+const API = "https://api.andamio.io/api/v2";
+const ACCESS_TOKEN_POLICY = "29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78";
+
+interface AuthResult {
+  jwt: string;
+  user: { alias: string; address: string };
+  expiresAt: Date;
+}
+
+async function login(walletName: string): Promise<AuthResult> {
+  // 1. Connect wallet
+  const wallet = await BrowserWallet.enable(walletName);
+  const address = await wallet.getChangeAddress();
+
+  // 2. Verify access token exists
+  const utxos = await wallet.getUtxos();
+  const accessToken = utxos
+    .flatMap(u => u.output.amount)
+    .find(a => a.unit.startsWith(ACCESS_TOKEN_POLICY));
+
+  if (!accessToken) {
+    throw new Error("NO_ACCESS_TOKEN");
+  }
+
+  // 3. Request challenge
+  const challengeRes = await fetch(`${API}/auth/challenge`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ address }),
+  });
+
+  if (!challengeRes.ok) {
+    throw new Error("CHALLENGE_FAILED");
+  }
+
+  const { challenge } = await challengeRes.json();
+
+  // 4. Sign challenge
+  const signature = await wallet.signData(address, challenge);
+
+  // 5. Exchange for JWT
+  const verifyRes = await fetch(`${API}/auth/verify`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ address, signature, challenge }),
+  });
+
+  if (!verifyRes.ok) {
+    throw new Error("VERIFY_FAILED");
+  }
+
+  const { jwt, expires_at, user } = await verifyRes.json();
+
+  return {
+    jwt,
+    user,
+    expiresAt: new Date(expires_at),
+  };
+}
+```
+
+## Error Handling
+
+| Error | Cause | Resolution |
+|-------|-------|------------|
+| `NO_ACCESS_TOKEN` | User hasn't minted an access token | Redirect to mint flow |
+| `CHALLENGE_EXPIRED` | Challenge timed out before signing | Request new challenge |
+| `INVALID_SIGNATURE` | Signature doesn't match challenge | Retry sign flow |
+| `JWT_EXPIRED` | Token expired | Re-authenticate |
+| `FORBIDDEN` | User lacks role for action | Check user's roles |
+
+## Next Steps
+
+- [API Integration](/docs/guides/developers/api-integration) — Making authenticated requests
+- [Transaction Handling](/docs/guides/developers/transactions) — Build and submit transactions
+- [Getting Started](/docs/getting-started) — Mint an access token
