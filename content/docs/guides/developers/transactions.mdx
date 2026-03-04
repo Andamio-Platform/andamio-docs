@@ -1,0 +1,277 @@
+---
+title: Transaction Handling
+description: Build, sign, submit, and track Andamio transactions
+---
+
+# Transaction Handling
+
+Every Andamio transaction follows a 6-step lifecycle:
+
+```
+BUILD → SIGN → SUBMIT → REGISTER → CONFIRM → UPDATE
+```
+
+## The Transaction Lifecycle
+
+### 1. Build the Transaction
+
+Request an unsigned transaction from the appropriate build endpoint.
+
+```typescript
+const API = "https://api.andamio.io/api/v2";
+
+const headers = {
+  "Content-Type": "application/json",
+  "X-API-Key": APP_API_KEY,
+  "Authorization": `Bearer ${userJwt}`,
+};
+
+// Example: Student committing to an assignment
+const buildRes = await fetch(`${API}/tx/course/student/assignment/commit`, {
+  method: "POST",
+  headers,
+  body: JSON.stringify({
+    alias: "student1",
+    course_id: "abc123...",
+    slt_hash: "deadbeef...",
+    assignment_info: "sha256:...",
+    initiator_data: {
+      usedAddresses: [...],
+      changeAddress: "addr1...",
+    },
+  }),
+});
+
+const { unsigned_tx } = await buildRes.json();
+```
+
+### 2. Sign with Wallet
+
+Use the browser wallet API to sign the transaction.
+
+```typescript
+// CIP-30 wallet API
+const signedTx = await wallet.signTx(unsigned_tx);
+```
+
+### 3. Submit to Cardano
+
+Submit the signed transaction to the network.
+
+```typescript
+const txHash = await wallet.submitTx(signedTx);
+```
+
+### 4. Register with State Machine
+
+Tell Andamio to track this transaction.
+
+```typescript
+await fetch(`${API}/tx/register`, {
+  method: "POST",
+  headers,
+  body: JSON.stringify({
+    tx_hash: txHash,
+    tx_type: "assignment_submit",
+  }),
+});
+```
+
+### 5. Monitor Status
+
+Track the transaction until it reaches a terminal state.
+
+**Option A: Server-Sent Events (recommended)**
+
+```typescript
+const events = new EventSource(`${API}/tx/stream/${txHash}`);
+
+events.addEventListener("state_change", (e) => {
+  const { old_state, new_state } = JSON.parse(e.data);
+  console.log(`${old_state} → ${new_state}`);
+});
+
+events.addEventListener("complete", (e) => {
+  const { final_state } = JSON.parse(e.data);
+  console.log(`Transaction complete: ${final_state}`);
+  events.close();
+});
+```
+
+**Option B: Polling**
+
+```typescript
+const checkStatus = async () => {
+  const res = await fetch(`${API}/tx/status/${txHash}`, { headers });
+  const { state } = await res.json();
+
+  if (["updated", "failed", "expired"].includes(state)) {
+    return state; // Terminal
+  }
+
+  await new Promise(r => setTimeout(r, 5000));
+  return checkStatus(); // Keep polling
+};
+```
+
+### 6. Database Sync
+
+On confirmation, the state machine syncs the on-chain state to the database. Your UI can then query the latest data.
+
+## Draft-First vs Direct-to-Chain
+
+For transactions involving commitments (assignments, tasks), you have two integration paths:
+
+### Draft-First (Recommended)
+
+Create a database record before the blockchain transaction. Users see immediate feedback.
+
+```typescript
+// 1. Create draft (instant UI feedback)
+await fetch(`${API}/course/student/commitment/create`, {
+  method: "POST",
+  headers,
+  body: JSON.stringify({
+    course_id: "abc123...",
+    course_module_code: "MODULE_01",
+    evidence: { submission_url: "https://..." },
+  }),
+});
+
+// 2. Build, sign, submit TX (as above)
+// 3. Register with state machine
+// 4. On confirmation, draft status updates to ON_CHAIN
+```
+
+### Direct-to-Chain
+
+Skip the draft step. The state machine creates the database record automatically on confirmation.
+
+```typescript
+// 1. Build, sign, submit TX directly
+// 2. Register with state machine
+// 3. On confirmation, state machine creates DB record
+```
+
+Both paths result in the same final state. Draft-first provides better UX for multi-step submissions.
+
+## TX Type Reference
+
+When registering a transaction, use the correct `tx_type`:
+
+| Build Endpoint | TX Type | Notes |
+|----------------|---------|-------|
+| `/tx/global/general/access-token/mint` | `access_token_mint` | — |
+| `/tx/instance/owner/course/create` | `course_create` | — |
+| `/tx/course/owner/teachers/manage` | `teachers_update` | — |
+| `/tx/course/teacher/modules/manage` | `modules_manage` | — |
+| `/tx/course/teacher/assignments/assess` | `assessment_assess` | — |
+| `/tx/course/student/assignment/commit` | `assignment_submit` | First or update |
+| `/tx/course/student/assignment/update` | `assignment_submit` | Same as commit |
+| `/tx/course/student/credential/claim` | `credential_claim` | — |
+| `/tx/instance/owner/project/create` | `project_create` | — |
+| `/tx/project/owner/managers/manage` | `managers_manage` | — |
+| `/tx/project/owner/contributor-blacklist/manage` | `blacklist_update` | — |
+| `/tx/project/manager/tasks/manage` | `tasks_manage` | — |
+| `/tx/project/manager/tasks/assess` | `task_assess` | — |
+| `/tx/project/contributor/task/commit` | `project_join` | Join + commit |
+| `/tx/project/contributor/credential/claim` | `project_credential_claim` | Requires `task_hash` metadata |
+
+## Complete Example
+
+Here's a full working example combining all steps:
+
+```typescript
+import { BrowserWallet } from "@meshsdk/core";
+
+const API = "https://api.andamio.io/api/v2";
+
+async function submitAssignment(
+  wallet: BrowserWallet,
+  apiKey: string,
+  jwt: string,
+  courseId: string,
+  moduleCode: string,
+  evidenceUrl: string
+) {
+  const headers = {
+    "Content-Type": "application/json",
+    "X-API-Key": apiKey,
+    "Authorization": `Bearer ${jwt}`,
+  };
+
+  // 1. Create draft for immediate feedback
+  await fetch(`${API}/course/student/commitment/create`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      course_id: courseId,
+      course_module_code: moduleCode,
+      evidence: { submission_url: evidenceUrl },
+    }),
+  });
+
+  // 2. Get wallet info
+  const usedAddresses = await wallet.getUsedAddresses();
+  const changeAddress = await wallet.getChangeAddress();
+  const alias = await getAliasFromAccessToken(wallet); // Your helper
+
+  // 3. Build unsigned TX
+  const buildRes = await fetch(`${API}/tx/course/student/assignment/commit`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      alias,
+      course_id: courseId,
+      slt_hash: await getSltHash(courseId, alias), // Your helper
+      assignment_info: hashEvidence(evidenceUrl),  // SHA256
+      initiator_data: { usedAddresses, changeAddress },
+    }),
+  });
+  const { unsigned_tx } = await buildRes.json();
+
+  // 4. Sign
+  const signedTx = await wallet.signTx(unsigned_tx);
+
+  // 5. Submit
+  const txHash = await wallet.submitTx(signedTx);
+
+  // 6. Register
+  await fetch(`${API}/tx/register`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      tx_hash: txHash,
+      tx_type: "assignment_submit",
+    }),
+  });
+
+  // 7. Wait for confirmation
+  return new Promise((resolve, reject) => {
+    const events = new EventSource(`${API}/tx/stream/${txHash}`);
+
+    events.addEventListener("complete", (e) => {
+      const { final_state } = JSON.parse(e.data);
+      events.close();
+
+      if (final_state === "updated") {
+        resolve({ success: true, txHash });
+      } else {
+        reject(new Error(`Transaction ${final_state}`));
+      }
+    });
+
+    // Timeout after 10 minutes
+    setTimeout(() => {
+      events.close();
+      reject(new Error("Timeout waiting for confirmation"));
+    }, 600000);
+  });
+}
+```
+
+## Next Steps
+
+- [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed transactions
+- [Transaction State Machine](/docs/protocol/v2/state-machine) — Deep dive into state transitions
+- [API Docs](https://api.andamio.io) — Full endpoint documentation
