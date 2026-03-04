@@ -1,12 +1,13 @@
 {
-  "title": "Platform Guides",
+  "title": "Guides",
   "pages": [
     "index",
+    "developers",
+    "---",
     "getting-started",
     "roles",
     "courses",
     "projects",
-    "contributors",
-    "developers"
+    "contributors"
   ]
 }

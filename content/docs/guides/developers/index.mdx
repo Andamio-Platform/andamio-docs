@@ -1,33 +1,37 @@
 ---
-title: Developer Guides
-description: Build integrations with the Andamio API
+title: Build with Andamio
+description: Everything you need to build applications on the Andamio protocol
 icon: Code
 ---
 
-# Developer Guides
+# Build with Andamio
 
-Everything you need to build applications that integrate with the Andamio protocol.
+## Start Here
+
+**[Getting Started](/docs/guides/developers/getting-started)** — Get your API key and run the app template locally (~15 min)
 
 ## Guides
 
 | Guide | Description |
 |-------|-------------|
-| [API Integration](/docs/guides/developers/api-integration) | Complete workflow for building, signing, and tracking transactions |
-| [Error Handling](/docs/guides/developers/error-handling) | Recovery patterns for failed and expired transactions |
+| [Getting Started](/docs/guides/developers/getting-started) | API key setup and app template quickstart |
+| [API Integration](/docs/guides/developers/api-integration) | Build, sign, and submit transactions |
+| [Error Handling](/docs/guides/developers/error-handling) | Recovery patterns for failed transactions |
 
-## Quick Links
+## Reference
 
-- **[API Reference](https://preprod.api.andamio.io/reference)** — Full endpoint documentation (Scalar)
-- **[Transaction State Machine](/docs/protocol/v2/state-machine)** — How transactions flow from build to database sync
-- **[V2 Transactions](/docs/protocol/v2/transactions)** — Technical specs for each transaction type
+- **[API Docs](https://dev-api.andamio.io/api/v1/docs/index.html)** — Full endpoint documentation
+- **[Protocol](/docs/protocol)** — On-chain architecture and state machines
+- **[SDK](/docs/sdk)** — NPM packages for Andamio development
+- **[App Template](https://github.com/Andamio-Platform/andamio-app-template)** — Fork and build
 
 ## Authentication
 
-All API requests require authentication:
+All API requests require two headers:
 
 | Header | Purpose |
 |--------|---------|
-| `X-API-Key` | Application-level authentication |
-| `Authorization: Bearer <jwt>` | User-level authentication (wallet signature) |
+| `X-API-Key` | Application-level (your app) |
+| `Authorization: Bearer <jwt>` | User-level (wallet signature) |
 
-See [API Integration](/docs/guides/developers/api-integration#authentication) for details on obtaining and using these credentials.
+See [API Integration](/docs/guides/developers/api-integration#authentication) for the full auth flow.

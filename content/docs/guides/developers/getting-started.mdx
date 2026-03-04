@@ -1,0 +1,159 @@
+---
+title: Getting Started
+description: Get your API key and run the Andamio app template locally on Cardano preprod
+---
+
+# Developer Getting Started
+
+This guide walks you through getting an Andamio API key and running the app template locally on Cardano preprod (Andamio staging environment).
+
+**Time to complete**: ~15 minutes
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- **Node.js 20+** — Check with `node --version`
+- **npm 10+** — Check with `npm --version`
+- **A Cardano wallet** — Browser extension wallet like [Lace](https://www.lace.io/), [Eternl](https://eternl.io/), or [Nami](https://namiwallet.io/)
+- **Test ADA on preprod** — Get free tADA from the [Cardano Faucet](https://docs.cardano.org/cardano-testnets/tools/faucet/)
+
+## Step 1: Mint Your Access Token
+
+Before you can get an API key, you need an Andamio Access Token. This is your on-chain identity.
+
+1. Go to [preprod.app.andamio.io](https://preprod.app.andamio.io)
+2. Click **Enter**, then **Connect Wallet**
+3. Choose your wallet and connect on **preprod** network
+4. Enter an alias (this is permanent — choose carefully)
+5. Click **Mint Access Token** and sign the transaction
+6. Wait for confirmation (~20 seconds)
+
+Once confirmed, you have an on-chain identity and can authenticate with Andamio APIs.
+
+## Step 2: Get Your API Key
+
+API keys authenticate your application with the Andamio Gateway.
+
+1. Go to [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup)
+2. Connect your wallet (the one holding your Access Token)
+3. Sign in to the Gateway
+4. Click **Generate API Key**
+5. Enter a name for your key (e.g., "local-dev")
+6. Copy the API key — you won't see it again
+
+> **Keep your API key secret.** Never commit it to version control or expose it in client-side code.
+
+## Step 3: Clone the App Template
+
+Fork and clone the Andamio app template:
+
+```bash
+# Fork first on GitHub, then:
+git clone https://github.com/YOUR-USERNAME/andamio-app-template.git
+cd andamio-app-template
+npm install
+```
+
+Or clone directly to get started quickly:
+
+```bash
+git clone https://github.com/Andamio-Platform/andamio-app-template.git
+cd andamio-app-template
+npm install
+```
+
+## Step 4: Configure Environment
+
+Create your environment file:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` with your API key:
+
+```bash
+# Andamio Gateway (preprod/staging)
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev-api.andamio.io"
+
+# Your API key from Step 2
+ANDAMIO_API_KEY="your-api-key-here"
+
+# Cardano network
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+
+# Access Token policy ID (preprod/dev)
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
+```
+
+## Step 5: Start the Dev Server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Step 6: Verify Everything Works
+
+1. Click **Enter** on the landing page
+2. Connect your wallet (the one with your Access Token)
+3. You should see your dashboard with your alias displayed
+
+If you see your dashboard, congratulations — you're set up and ready to build.
+
+## Troubleshooting
+
+### "Access Token not found"
+
+Your wallet may be connected to the wrong network. Ensure your wallet is set to **preprod**.
+
+### "Invalid API key"
+
+Double-check your `.env` file:
+- No quotes around the API key value (or use double quotes, not single)
+- No trailing whitespace
+- The key matches what you generated in Step 2
+
+### "Failed to fetch" errors
+
+Verify the gateway URL is correct and reachable:
+```bash
+curl https://dev-api.andamio.io/health
+```
+
+### Build or type errors
+
+Regenerate API types from the gateway spec:
+```bash
+npm run generate:types
+```
+
+## Environment Reference
+
+| Environment | Gateway URL | Access Token Policy | App URL |
+|-------------|-------------|---------------------|---------|
+| Dev/Preprod | `dev-api.andamio.io` | `29aa6a65...` | `dev.app.andamio.io` |
+| Staging | `dev-api.andamio.io` | `aa1cbea2...` | `preprod.app.andamio.io` |
+| Production | `api.andamio.io` | (mainnet) | `app.andamio.io` |
+
+For local development on preprod, use the **Dev/Preprod** configuration shown in Step 4.
+
+## Next Steps
+
+Now that you're running locally:
+
+- **[API Integration](/docs/guides/developers/api-integration)** — Learn the transaction build/sign/submit flow
+- **[Error Handling](/docs/guides/developers/error-handling)** — Handle failed and expired transactions
+- **[API Reference](https://dev-api.andamio.io/api/v1/docs/index.html)** — Explore all available endpoints
+
+## Scripts Reference
+
+| Script | What it does |
+|--------|-------------|
+| `npm run dev` | Start dev server with hot reload |
+| `npm run build` | Production build |
+| `npm run check` | Run linting and type checking |
+| `npm run generate:types` | Regenerate API types from gateway spec |
+| `npm run preview` | Build and serve locally |

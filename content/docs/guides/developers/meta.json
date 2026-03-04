@@ -1,7 +1,8 @@
 {
-  "title": "Developers",
+  "title": "Build with Andamio",
   "pages": [
     "index",
+    "getting-started",
     "api-integration",
     "error-handling"
   ]

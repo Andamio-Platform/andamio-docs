@@ -1,10 +1,12 @@
 {
     "pages": [
         "index",
-        "guides",
-        "--- For Developers ---",
+        "--- Build with Andamio ---",
+        "guides/developers",
         "protocol",
         "sdk",
+        "--- Platform Guides ---",
+        "guides",
         "--- Reference ---",
         "whitepaper",
         "glossary",
