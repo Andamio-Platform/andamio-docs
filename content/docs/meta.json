@@ -1,6 +1,7 @@
 {
     "pages": [
         "index",
+        "getting-started",
         "--- Build with Andamio ---",
         "guides/developers",
         "protocol",

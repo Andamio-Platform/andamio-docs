@@ -22,9 +22,9 @@ Before you begin, make sure you have:
 
 Before you can get an API key, you need an Andamio Access Token. This is your on-chain identity.
 
-1. Go to [preprod.app.andamio.io](https://preprod.app.andamio.io)
+1. Go to [app.andamio.io](https://app.andamio.io)
 2. Click **Enter**, then **Connect Wallet**
-3. Choose your wallet and connect on **preprod** network
+3. Choose your wallet and connect on **preprod** network (for development) or **mainnet** (for production)
 4. Enter an alias (this is permanent — choose carefully)
 5. Click **Mint Access Token** and sign the transaction
 6. Wait for confirmation (~20 seconds)
@@ -33,14 +33,15 @@ Once confirmed, you have an on-chain identity and can authenticate with Andamio 
 
 ## Step 2: Get Your API Key
 
-API keys authenticate your application with the Andamio Gateway.
+API keys authenticate your application with the Andamio Gateway. You can generate keys for either preprod or mainnet from the same place.
 
-1. Go to [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup)
+1. Go to [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
 2. Connect your wallet (the one holding your Access Token)
 3. Sign in to the Gateway
-4. Click **Generate API Key**
-5. Enter a name for your key (e.g., "local-dev")
-6. Copy the API key — you won't see it again
+4. Select your target network (preprod for development, mainnet for production)
+5. Click **Generate API Key**
+6. Enter a name for your key (e.g., "local-dev")
+7. Copy the API key — you won't see it again
 
 > **Keep your API key secret.** Never commit it to version control or expose it in client-side code.
 
