@@ -18,7 +18,7 @@ BUILD → SIGN → SUBMIT → REGISTER → CONFIRM → UPDATE
 Request an unsigned transaction from the appropriate build endpoint.
 
 ```typescript
-const API = "https://api.andamio.io/api/v2";
+const API = "https://dev-api.andamio.io/api/v2";
 
 const headers = {
   "Content-Type": "application/json",
@@ -184,7 +184,7 @@ Here's a full working example combining all steps:
 ```typescript
 import { BrowserWallet } from "@meshsdk/core";
 
-const API = "https://api.andamio.io/api/v2";
+const API = "https://dev-api.andamio.io/api/v2";
 
 async function submitAssignment(
   wallet: BrowserWallet,
@@ -274,4 +274,4 @@ async function submitAssignment(
 
 - [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed transactions
 - [Transaction State Machine](/docs/protocol/v2/state-machine) — Deep dive into state transitions
-- [API Docs](https://api.andamio.io) — Full endpoint documentation
+- [API Docs](https://dev-api.andamio.io) — Full endpoint documentation (preprod)

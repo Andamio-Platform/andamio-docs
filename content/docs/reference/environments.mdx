@@ -5,15 +5,14 @@ description: Gateway URLs, policy IDs, and app URLs for each Andamio environment
 
 # Environment Reference
 
-Andamio runs on three environments. Use **Dev/Preprod** for local development.
+Start on **preprod** for development. Move to **production** when your app is tested and ready.
 
-## Environment Configuration
+## Quick Reference
 
-| Environment | Gateway URL | App URL | Network |
-|-------------|-------------|---------|---------|
-| Dev/Preprod | `https://dev-api.andamio.io` | [dev.app.andamio.io](https://dev.app.andamio.io) | Cardano Preprod |
-| Staging | `https://dev-api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | Cardano Preprod |
-| Production | `https://api.andamio.io` | [app.andamio.io](https://app.andamio.io) | Cardano Mainnet |
+| Environment | Gateway URL | App URL | Generate API Key |
+|-------------|-------------|---------|------------------|
+| **Preprod** (start here) | `dev-api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup) |
+| Production | `api.andamio.io` | [app.andamio.io](https://app.andamio.io) | [app.andamio.io/api-setup](https://app.andamio.io/api-setup) |
 
 ## Access Token Policy IDs
 
@@ -21,38 +20,37 @@ Each environment has a unique Access Token policy ID:
 
 | Environment | Policy ID |
 |-------------|-----------|
-| Dev/Preprod | `29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78` |
-| Staging | `aa1cbea2a81608f4c310990c1f1a73b69fee9177ce0434c99e1cd789` |
+| Preprod | `29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78` |
 | Production | Contact team for mainnet policy ID |
 
 ## Environment Variables
 
-### Dev/Preprod (Recommended for Development)
+### Preprod (Development)
 
 ```bash
 NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev-api.andamio.io"
-ANDAMIO_API_KEY="your-api-key"
+ANDAMIO_API_KEY="your-preprod-api-key"
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
 ```
 
-### Staging
-
-```bash
-NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev-api.andamio.io"
-ANDAMIO_API_KEY="your-api-key"
-NEXT_PUBLIC_CARDANO_NETWORK="preprod"
-NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="aa1cbea2a81608f4c310990c1f1a73b69fee9177ce0434c99e1cd789"
-```
-
-### Production
+### Production (Mainnet)
 
 ```bash
 NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://api.andamio.io"
-ANDAMIO_API_KEY="your-api-key"
+ANDAMIO_API_KEY="your-mainnet-api-key"
 NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
-NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="<mainnet-policy-id>"
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="<contact-team-for-mainnet-policy-id>"
 ```
+
+## Moving to Production
+
+When your app is tested and ready:
+
+1. **Generate a mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
+2. **Mint a mainnet Access Token** at [app.andamio.io](https://app.andamio.io) (requires real ADA)
+3. **Update environment variables** with production values above
+4. **Contact the Andamio team** for the mainnet Access Token policy ID
 
 ## App Template Scripts
 
@@ -69,7 +67,7 @@ NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="<mainnet-policy-id>"
 Verify gateway connectivity:
 
 ```bash
-# Dev/Preprod & Staging
+# Preprod
 curl https://dev-api.andamio.io/health
 
 # Production

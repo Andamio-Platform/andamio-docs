@@ -54,7 +54,7 @@ If the user doesn't have an Access Token, direct them to mint one first. See [Ge
 Request a cryptographic challenge from the API:
 
 ```typescript
-const API = "https://api.andamio.io/api/v2";
+const API = "https://dev-api.andamio.io/api/v2";
 
 const challengeRes = await fetch(`${API}/auth/challenge`, {
   method: "POST",
@@ -213,7 +213,7 @@ No server-side logout endpoint is needed — JWTs are stateless.
 ```typescript
 import { BrowserWallet } from "@meshsdk/core";
 
-const API = "https://api.andamio.io/api/v2";
+const API = "https://dev-api.andamio.io/api/v2";
 const ACCESS_TOKEN_POLICY = "29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78";
 
 interface AuthResult {

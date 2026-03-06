@@ -6,36 +6,29 @@ icon: Code
 
 # Build with Andamio
 
-## Start Here
+All guides use **preprod** (Cardano testnet) by default. See [API Integration](/docs/guides/developers/api-integration#ready-for-mainnet) when you're ready for production.
 
-**[Getting Started](/docs/getting-started)** — Get your API key and run the app template locally (~15 min)
+## Choose Your Path
+
+| Path | Time | What You Get |
+|------|------|--------------|
+| **[Getting Started](/docs/getting-started)** | ~15 min | Full local dev environment with app template |
+| **[API Quickstart](/docs/guides/developers/api-quickstart)** | ~5 min | First API call with curl (no app template) |
+
+After setup, continue with **[Your First Andamio App](/docs/guides/developers/first-app)** to build something real.
 
 ## Guides
 
 | Guide | Description |
 |-------|-------------|
-| [Getting Started](/docs/getting-started) | API key setup and app template quickstart |
-| [Your First Andamio App](/docs/guides/developers/first-app) | Learn by building — create a course, enroll a student |
-| [API Quickstart](/docs/guides/developers/api-quickstart) | Make your first API call in 5 minutes (curl only) |
-| [API Integration](/docs/guides/developers/api-integration) | API setup and making requests |
-| [Authentication](/docs/guides/developers/authentication) | User login, JWT creation, and sessions |
-| [Transaction Handling](/docs/guides/developers/transactions) | Build, sign, submit, and track transactions |
+| [API Integration](/docs/guides/developers/api-integration) | Environment URLs, auth headers, making requests |
+| [Authentication](/docs/guides/developers/authentication) | Wallet-based login, JWT flow, session management |
+| [Transaction Handling](/docs/guides/developers/transactions) | Build → sign → submit lifecycle |
 | [Error Handling](/docs/guides/developers/error-handling) | Recovery patterns for failed transactions |
 
 ## Reference
 
-- **[API Docs](https://dev-api.andamio.io/api/v1/docs/index.html)** — Full endpoint documentation
+- **[Preprod API Docs](https://preprod.api.andamio.io)** — Full endpoint documentation
 - **[Protocol](/docs/protocol)** — On-chain architecture and state machines
 - **[SDK](/docs/sdk)** — NPM packages for Andamio development
 - **[App Template](https://github.com/Andamio-Platform/andamio-app-template)** — Fork and build
-
-## Authentication
-
-All API requests require two headers:
-
-| Header | Purpose |
-|--------|---------|
-| `X-API-Key` | Application-level (your app) |
-| `Authorization: Bearer <jwt>` | User-level (wallet signature) |
-
-See [API Integration](/docs/guides/developers/api-integration#authentication) for the full auth flow.

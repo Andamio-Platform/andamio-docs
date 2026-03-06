@@ -7,7 +7,7 @@ description: API setup and making requests to the Andamio Gateway
 
 This guide covers API setup and making requests to the Andamio Gateway.
 
-> **API Reference**: For endpoint schemas and parameter details, see the [API Docs](https://api.andamio.io).
+> **API Reference**: For endpoint schemas and parameter details, see the [Preprod API Docs](https://preprod.api.andamio.io). When ready for production, use `api.andamio.io`.
 
 ## Authentication Headers
 
@@ -61,10 +61,28 @@ For transaction building and submission, see [Transaction Handling](/docs/guides
 
 ## Environment URLs
 
-| Environment | Gateway URL | Use Case |
-|-------------|-------------|----------|
-| Production | `api.andamio.io` | Live applications |
-| Development | `dev-api.andamio.io` | Local development on preprod |
+Start development on **preprod** — it uses test ADA and is safe to experiment with.
+
+| Environment | Gateway URL | App URL | Network |
+|-------------|-------------|---------|---------|
+| **Preprod** (start here) | `dev-api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | Cardano Preprod |
+| Production | `api.andamio.io` | [app.andamio.io](https://app.andamio.io) | Cardano Mainnet |
+
+All code examples in these docs use preprod URLs.
+
+## Ready for Mainnet?
+
+When your app is tested and ready for production:
+
+1. Generate a **mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
+2. Update your environment variables:
+   ```bash
+   NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://api.andamio.io"
+   NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
+   ```
+3. Update the Access Token policy ID (contact team for mainnet ID)
+
+See [Environment Reference](/docs/reference/environments) for full configuration details.
 
 ## Error Responses
 
@@ -93,4 +111,4 @@ See [Error Handling](/docs/guides/developers/error-handling) for recovery patter
 
 - [Transaction Handling](/docs/guides/developers/transactions) — Build, sign, and submit transactions
 - [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed requests
-- [API Docs](https://api.andamio.io) — Full endpoint reference
+- [Preprod API Docs](https://preprod.api.andamio.io) — Full endpoint reference

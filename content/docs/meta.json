@@ -15,8 +15,8 @@
         "repositories",
         "pioneers",
         "--- External ---",
-        "[API Docs](https://api.andamio.io)",
-        "[Andamio Reference App](https://app.andamio.io)",
+        "[API Docs (Preprod)](https://preprod.api.andamio.io)",
+        "[Andamio App (Preprod)](https://preprod.app.andamio.io)",
         "[Andamio SDK](https://sdk.andamio.io/)",
         "[GitHub](https://github.com/Andamio-Platform)"
     ]
