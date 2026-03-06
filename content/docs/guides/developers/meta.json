@@ -3,6 +3,7 @@
   "pages": [
     "index",
     "first-app",
+    "api-quickstart",
     "---",
     "api-integration",
     "authentication",
