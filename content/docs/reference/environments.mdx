@@ -1,0 +1,77 @@
+---
+title: Environments
+description: Gateway URLs, policy IDs, and app URLs for each Andamio environment
+---
+
+# Environment Reference
+
+Andamio runs on three environments. Use **Dev/Preprod** for local development.
+
+## Environment Configuration
+
+| Environment | Gateway URL | App URL | Network |
+|-------------|-------------|---------|---------|
+| Dev/Preprod | `https://dev-api.andamio.io` | [dev.app.andamio.io](https://dev.app.andamio.io) | Cardano Preprod |
+| Staging | `https://dev-api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | Cardano Preprod |
+| Production | `https://api.andamio.io` | [app.andamio.io](https://app.andamio.io) | Cardano Mainnet |
+
+## Access Token Policy IDs
+
+Each environment has a unique Access Token policy ID:
+
+| Environment | Policy ID |
+|-------------|-----------|
+| Dev/Preprod | `29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78` |
+| Staging | `aa1cbea2a81608f4c310990c1f1a73b69fee9177ce0434c99e1cd789` |
+| Production | Contact team for mainnet policy ID |
+
+## Environment Variables
+
+### Dev/Preprod (Recommended for Development)
+
+```bash
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev-api.andamio.io"
+ANDAMIO_API_KEY="your-api-key"
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
+```
+
+### Staging
+
+```bash
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev-api.andamio.io"
+ANDAMIO_API_KEY="your-api-key"
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="aa1cbea2a81608f4c310990c1f1a73b69fee9177ce0434c99e1cd789"
+```
+
+### Production
+
+```bash
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://api.andamio.io"
+ANDAMIO_API_KEY="your-api-key"
+NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="<mainnet-policy-id>"
+```
+
+## App Template Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start dev server with hot reload |
+| `npm run build` | Production build |
+| `npm run check` | Run linting and type checking |
+| `npm run generate:types` | Regenerate API types from gateway spec |
+| `npm run preview` | Build and serve locally |
+
+## API Health Checks
+
+Verify gateway connectivity:
+
+```bash
+# Dev/Preprod & Staging
+curl https://dev-api.andamio.io/health
+
+# Production
+curl https://api.andamio.io/health
+```

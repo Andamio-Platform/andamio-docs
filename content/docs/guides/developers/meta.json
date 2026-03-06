@@ -2,6 +2,8 @@
   "title": "Build with Andamio",
   "pages": [
     "index",
+    "first-app",
+    "---",
     "api-integration",
     "authentication",
     "transactions",
