@@ -2,22 +2,20 @@
     "pages": [
         "index",
         "getting-started",
-        "--- Build with Andamio ---",
+        "--- Guides ---",
         "guides/developers",
+        "guides",
+        "--- Protocol & SDK ---",
         "protocol",
         "sdk",
-        "--- Platform Guides ---",
-        "guides",
         "--- Reference ---",
         "reference",
         "whitepaper",
         "glossary",
         "repositories",
         "pioneers",
-        "--- External ---",
-        "[API Docs (Preprod)](https://preprod.api.andamio.io)",
-        "[Andamio App (Preprod)](https://preprod.app.andamio.io)",
-        "[Andamio SDK](https://sdk.andamio.io/)",
-        "[GitHub](https://github.com/Andamio-Platform)"
+        "--- API ---",
+        "[Mainnet API](https://api.andamio.io)",
+        "[Preprod API](https://preprod.api.andamio.io)"
     ]
 }

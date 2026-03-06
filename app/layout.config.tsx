@@ -29,16 +29,5 @@ export const baseOptions: BaseLayoutProps = {
       </>
     ),
   },
-  links: [
-    {
-      text: "Mainnet API",
-      url: "https://mainnet.api.andamio.io",
-      external: true,
-    },
-    {
-      text: "Preprod API",
-      url: "https://preprod.api.andamio.io",
-      external: true,
-    },
-  ],
+  links: [],
 };
