@@ -31,16 +31,13 @@ export const baseOptions: BaseLayoutProps = {
   },
   links: [
     {
-      text: "Guides",
-      url: "/docs/guides",
+      text: "Mainnet API",
+      url: "https://mainnet.api.andamio.io",
+      external: true,
     },
     {
-      text: "Protocol",
-      url: "/docs/protocol",
-    },
-    {
-      text: "API Docs",
-      url: "https://api.andamio.io",
+      text: "Preprod API",
+      url: "https://preprod.api.andamio.io",
       external: true,
     },
   ],
