@@ -32,7 +32,7 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 ## External API Documentation
 
 Developer-facing API documentation is hosted externally:
-- **Production**: https://api.andamio.io
+- **Production**: https://mainnet.api.andamio.io
 - **Preprod**: https://preprod.api.andamio.io
 
 This documentation site focuses on high-level protocol descriptions. When developers are ready to build, they are directed to the live API docs.

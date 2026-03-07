@@ -11,8 +11,8 @@ Start on **preprod** for development. Move to **production** when your app is te
 
 | Environment | Gateway URL | App URL | Generate API Key |
 |-------------|-------------|---------|------------------|
-| **Preprod** (start here) | `dev-api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup) |
-| Production | `api.andamio.io` | [app.andamio.io](https://app.andamio.io) | [app.andamio.io/api-setup](https://app.andamio.io/api-setup) |
+| **Preprod** (start here) | `preprod.api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup) |
+| Production | `mainnet.api.andamio.io` | [app.andamio.io](https://app.andamio.io) | [app.andamio.io/api-setup](https://app.andamio.io/api-setup) |
 
 ## Access Token Policy IDs
 
@@ -28,7 +28,7 @@ Each environment has a unique Access Token policy ID:
 ### Preprod (Development)
 
 ```bash
-NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev-api.andamio.io"
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://preprod.api.andamio.io"
 ANDAMIO_API_KEY="your-preprod-api-key"
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
@@ -37,7 +37,7 @@ NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a9430
 ### Production (Mainnet)
 
 ```bash
-NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://api.andamio.io"
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://mainnet.api.andamio.io"
 ANDAMIO_API_KEY="your-mainnet-api-key"
 NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
 NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="<contact-team-for-mainnet-policy-id>"
@@ -68,8 +68,8 @@ Verify gateway connectivity:
 
 ```bash
 # Preprod
-curl https://dev-api.andamio.io/health
+curl https://preprod.api.andamio.io/health
 
 # Production
-curl https://api.andamio.io/health
+curl https://mainnet.api.andamio.io/health
 ```

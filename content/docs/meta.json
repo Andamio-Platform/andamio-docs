@@ -15,7 +15,7 @@
         "repositories",
         "pioneers",
         "--- API ---",
-        "[Mainnet API](https://api.andamio.io)",
+        "[Mainnet API](https://mainnet.api.andamio.io)",
         "[Preprod API](https://preprod.api.andamio.io)"
     ]
 }

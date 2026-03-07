@@ -18,7 +18,7 @@ Get from zero to a successful API call in 5 minutes. No app template, no fronten
 ## 2. Test the Connection
 
 ```bash
-curl -X GET "https://dev-api.andamio.io/health"
+curl -X GET "https://preprod.api.andamio.io/health"
 ```
 
 You should see:
@@ -32,7 +32,7 @@ You should see:
 List all courses on the instance:
 
 ```bash
-curl -X GET "https://dev-api.andamio.io/api/v2/instance/courses" \
+curl -X GET "https://preprod.api.andamio.io/api/v2/instance/courses" \
   -H "X-API-Key: YOUR_API_KEY"
 ```
 
@@ -56,7 +56,7 @@ Response:
 Get modules for a specific course:
 
 ```bash
-curl -X GET "https://dev-api.andamio.io/api/v2/course/dbd4f125.../modules" \
+curl -X GET "https://preprod.api.andamio.io/api/v2/course/dbd4f125.../modules" \
   -H "X-API-Key: YOUR_API_KEY"
 ```
 
@@ -84,7 +84,7 @@ Response:
 Get tasks (practicums) for a project:
 
 ```bash
-curl -X GET "https://dev-api.andamio.io/api/v2/project/PROJECT_ID/tasks" \
+curl -X GET "https://preprod.api.andamio.io/api/v2/project/PROJECT_ID/tasks" \
   -H "X-API-Key: YOUR_API_KEY"
 ```
 
@@ -116,4 +116,4 @@ See [Authentication](/docs/guides/developers/authentication) for the full JWT fl
 
 - **[Authentication](/docs/guides/developers/authentication)** — User login with wallet signatures
 - **[Transaction Handling](/docs/guides/developers/transactions)** — Build, sign, and submit transactions
-- **[API Reference](https://dev-api.andamio.io/api/v1/docs/index.html)** — Full endpoint documentation
+- **[API Reference](https://preprod.api.andamio.io/api/v1/docs/index.html)** — Full endpoint documentation

@@ -52,7 +52,7 @@ cp .env.example .env
 Edit `.env`:
 
 ```bash
-NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://dev-api.andamio.io"
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://preprod.api.andamio.io"
 ANDAMIO_API_KEY="your-api-key-here"
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
@@ -91,7 +91,7 @@ These docs use **preprod** (Cardano testnet) for safe development. When your app
 
 **"Invalid API key"** — Verify `.env` has no trailing whitespace and uses double quotes.
 
-**"Failed to fetch"** — Test the gateway: `curl https://dev-api.andamio.io/health`
+**"Failed to fetch"** — Test the gateway: `curl https://preprod.api.andamio.io/health`
 
 **Build errors** — Regenerate types: `npm run generate:types`
 
@@ -109,7 +109,7 @@ These docs use **preprod** (Cardano testnet) for safe development. When your app
   <Card title="Environment Reference" href="/docs/reference/environments">
     All environment configurations for dev, staging, and production
   </Card>
-  <Card title="API Reference" href="https://dev-api.andamio.io/api/v1/docs/index.html">
+  <Card title="API Reference" href="https://preprod.api.andamio.io/api/v1/docs/index.html">
     Full endpoint documentation
   </Card>
 </Cards>
