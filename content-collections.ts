@@ -1,16 +1,16 @@
 import { defineCollection, defineConfig } from "@content-collections/core";
 import {
-  createMetaSchema,
-  createDocSchema,
+  frontmatterSchema,
+  metaSchema,
   transformMDX,
 } from "@fumadocs/content-collections/configuration";
+import { z } from "zod";
 
 const docs = defineCollection({
   name: "docs",
   directory: "content/docs",
   include: "**/*.mdx",
-  schema: (z) => ({
-    ...createDocSchema(z),
+  schema: frontmatterSchema.extend({
     tx_file: z.string().optional(),
     validator_system: z.string().optional(),
     validator_id: z.union([z.string(), z.array(z.string())]).optional(),
@@ -24,7 +24,7 @@ const metas = defineCollection({
   directory: "content/docs",
   include: "**/meta.json",
   parser: "json",
-  schema: createMetaSchema,
+  schema: metaSchema,
 });
 
 export default defineConfig({
