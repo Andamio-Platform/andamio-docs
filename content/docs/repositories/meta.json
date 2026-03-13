@@ -1,10 +1,12 @@
 {
     "title": "Repositories",
+    "icon": "Github",
     "pages": [
         "index",
         "on-chain",
         "apis",
         "templates",
         "docs"
-    ]
+    ],
+    "defaultOpen": false
 }

@@ -1,5 +1,6 @@
 {
   "title": "Developer Guides",
+  "icon": "Code",
   "pages": [
     "index",
     "first-app",
@@ -9,5 +10,6 @@
     "authentication",
     "transactions",
     "error-handling"
-  ]
+  ],
+  "defaultOpen": false
 }

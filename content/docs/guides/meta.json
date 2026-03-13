@@ -1,5 +1,6 @@
 {
   "title": "Platform Guides",
+  "icon": "Users",
   "pages": [
     "index",
     "preprod-wallet-setup",
@@ -8,5 +9,6 @@
     "courses",
     "projects",
     "contributors"
-  ]
+  ],
+  "defaultOpen": false
 }
