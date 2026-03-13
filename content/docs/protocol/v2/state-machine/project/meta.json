@@ -3,7 +3,6 @@
   "pages": [
     "owner-project-create",
     "owner-managers-manage",
-    "owner-contributor-blacklist-manage",
     "manager-tasks-manage",
     "manager-tasks-assess",
     "contributor-task-commit",
