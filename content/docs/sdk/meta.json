@@ -3,5 +3,6 @@
   "icon": "Package",
   "pages": [
     "npm-packages/andamio-transactions"
-  ]
+  ],
+  "defaultOpen": false
 }

@@ -2,20 +2,19 @@
     "pages": [
         "index",
         "getting-started",
-        "--- Guides ---",
+        "--- Build with the API ---",
         "guides/developers",
-        "guides",
-        "--- Protocol & SDK ---",
-        "protocol",
         "sdk",
-        "--- Reference ---",
-        "reference",
-        "whitepaper",
-        "glossary",
-        "repositories",
-        "pioneers",
-        "--- API ---",
         "[Mainnet API](https://mainnet.api.andamio.io)",
-        "[Preprod API](https://preprod.api.andamio.io)"
+        "[Preprod API](https://preprod.api.andamio.io)",
+        "--- Get to Know Andamio ---",
+        "guides",
+        "--- Understand the Protocol ---",
+        "protocol",
+        "whitepaper",
+        "--- Reference ---",
+        "glossary",
+        "reference",
+        "repositories"
     ]
 }

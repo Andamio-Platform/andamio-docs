@@ -270,8 +270,40 @@ async function submitAssignment(
 }
 ```
 
+## Common Pitfalls
+
+### Don't Refetch on `confirmed`
+
+The most common mistake is treating `confirmed` as the terminal state:
+
+```typescript
+// ❌ WRONG — data will be stale
+if (status.state === "confirmed") {
+  refetchData(); // DB hasn't synced yet!
+}
+
+// ✅ CORRECT — wait for DB sync
+if (status.state === "updated") {
+  refetchData(); // Now it's safe
+}
+```
+
+`confirmed` means "found on-chain" but the gateway is still syncing to the database. Wait for `updated` (~30s after on-chain confirmation) before refetching.
+
+## Using the App Template Hooks
+
+The [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template) provides production-ready React hooks that handle the entire transaction lifecycle:
+
+| Hook | Purpose |
+|------|---------|
+| [`useTransaction`](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-transaction.ts) | Build, sign, submit, register — full lifecycle |
+| [`useTxStream`](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-tx-stream.ts) | SSE stream for real-time state updates |
+
+These hooks abstract the manual fetch/sign/submit code shown above. See the [How Transactions Work](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work) README section for usage examples.
+
 ## Next Steps
 
 - [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed transactions
 - [Transaction State Machine](/docs/protocol/v2/state-machine) — Deep dive into state transitions
 - [API Docs](https://preprod.api.andamio.io) — Full endpoint documentation (preprod)
+- [App Template](https://github.com/Andamio-Platform/andamio-app-template) — Production-ready starter with hooks
