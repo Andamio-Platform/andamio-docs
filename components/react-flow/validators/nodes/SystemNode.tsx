@@ -14,7 +14,7 @@ const SystemNode = ({ data }: { data: SystemNodeData }) => {
     <div className="px-4 py-3 shadow-md rounded-md bg-gray-100 border-2 border-purple-700 text-gray-700">
       <div className="flex items-center justify-center">
         <Link 
-          href={`/docs/protocol/v1/validators/${data.system}`}
+          href={`/docs/protocol/v2/validators/${data.system}`}
           className="font-bold text-lg text-purple-700 hover:text-purple-900 hover:underline transition-colors"
         >
           {data.name}

@@ -39,7 +39,7 @@ const RedeemerNode = ({ data }: { data: RedeemerNodeData }) => {
     // Handle dot notation format: "role.transaction-name"
     if (transaction.includes(".")) {
       const [role, txName] = transaction.split(".");
-      return `/docs/protocol/v1/transactions/${role}/${txName}`;
+      return `/docs/protocol/v2/transactions/${role}/${txName}`;
     }
 
     // Fallback: Check if transaction starts with any of the roles (legacy format)
@@ -47,12 +47,12 @@ const RedeemerNode = ({ data }: { data: RedeemerNodeData }) => {
       if (transaction.startsWith(`${role}-`)) {
         // Extract the transaction part after the role prefix
         const txPart = transaction.substring(role.length + 1); // +1 for the hyphen
-        return `/docs/protocol/v1/transactions/${role}/${txPart}`;
+        return `/docs/protocol/v2/transactions/${role}/${txPart}`;
       }
     }
 
     // Default case: assume it's a general transaction
-    return `/docs/protocol/v1/transactions/general/${transaction}`;
+    return `/docs/protocol/v2/transactions/general/${transaction}`;
   };
 
   return (

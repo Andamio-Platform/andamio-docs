@@ -85,9 +85,9 @@ resources:
 
 The project contains comprehensive documentation for the Andamio protocol:
 
-- **Transaction specifications**: Found in `public/yaml/transactions/` organized by role (admin, contributor, course-creator, project-creator, student, general)
-- **Validator registry**: Central source of truth at `public/yaml/validator-registry-v1.yaml`
-- **Protocol documentation**: Generated MDX files in `content/docs/protocol/v1/`
+- **Transaction specifications**: Found in `public/yaml/transactions/v2/` organized by system and role
+- **Registry files**: `address-registry.json`, `cost-registry.json`, `endpoint-registry.json` in `public/yaml/transactions/v2/`
+- **Protocol documentation**: MDX files in `content/docs/protocol/v2/`
 - **Working glossary**: Located at `docs/reference/GLOSSARY.md`
 
 For details on the documentation system architecture, see `CLAUDE.md`.

@@ -3,6 +3,8 @@
 **Date:** 2025-12-09
 **Status:** Audit Complete, Action Plan Defined
 
+> **Note (2026-03):** V1 content has been fully removed from the codebase. The `content/docs/protocol/v1/` directory and `public/yaml/transactions/v1/` no longer exist. All protocol documentation is now V2-only. The historical V1 references below are preserved for context.
+
 ## Executive Summary
 
 The V1 documentation system is well-architected and functional. The V2 YAML files we've been creating have a **different schema** optimized for CBOR analysis rather than diagram rendering. We need to either:
