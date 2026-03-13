@@ -2,6 +2,7 @@
 
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { useEffect, useState } from "react";
 
 interface ThemedImageProps {
@@ -44,13 +45,15 @@ export function ThemedImage({
   const src = inverted ? (isDark ? lightSrc : darkSrc) : isDark ? darkSrc : lightSrc;
 
   return (
-    <Image
-      src={src}
-      alt={alt}
-      width={width}
-      height={height}
-      className={`rounded-lg ${className}`}
-      priority
-    />
+    <ImageZoom>
+      <Image
+        src={src}
+        alt={alt}
+        width={width}
+        height={height}
+        className={`rounded-lg ${className}`}
+        priority
+      />
+    </ImageZoom>
   );
 }
