@@ -10,9 +10,29 @@ How Andamio tracks every transaction from build to database synchronization — 
 
 > **Looking for individual transaction specs?** The [V2 Transactions](/docs/protocol/v2/transactions) section has detailed technical reference for each transaction type — inputs, outputs, costs, and datums.
 
-Every Andamio blockchain transaction follows a consistent 6-step lifecycle, managed automatically by the API Gateway.
+## The Happy Path
 
-## Lifecycle
+You build the UX, Andamio handles credentials. Here's what happens for every transaction:
+
+<ThemedImage
+  lightSrc="/diagrams/txsm-sequence-light.png"
+  darkSrc="/diagrams/txsm-sequence-dark.png"
+  alt="Transaction flow: Developer builds UI, user signs, Andamio handles the rest"
+  inverted
+/>
+
+1. **User clicks action** — your app handles the UI
+2. **Request transaction** — POST to the appropriate build endpoint
+3. **Return unsigned CBOR** — the API builds the transaction
+4. **Prompt wallet signature** — show the wallet popup
+5. **User approves & signs** — CIP-30 wallet API
+6. **Submit signed tx** — wallet submits to Cardano
+7. **Register for confirmation** — tell Andamio to track it
+8. **Block confirmation** — Cardano confirms (~20-30s)
+9. **Sync DB + push event** — gateway syncs, you get notified
+10. **Display success** — update your UI
+
+## Lifecycle Diagram
 
 <Mermaid chart='flowchart LR\n    BUILD["BUILD\n(API builds CBOR)"] --> SIGN["SIGN\n(Wallet signs)"]\n    SIGN --> SUBMIT["SUBMIT\n(Wallet submits)"]\n    SUBMIT --> REGISTER["REGISTER\n(Frontend registers)"]\n    REGISTER --> CONFIRM["CONFIRM\n(Auto: polls chain)"]\n    CONFIRM --> UPDATE["UPDATE\n(Auto: syncs DB)"]' />
 

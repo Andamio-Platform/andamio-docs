@@ -5,29 +5,31 @@ description: Build, sign, submit, and track Andamio transactions
 
 # Transaction Handling
 
-Every Andamio transaction follows a 6-step lifecycle:
+You build the UX, Andamio handles credentials. Every transaction follows a consistent lifecycle across all transaction types.
 
-```
-BUILD → SIGN → SUBMIT → REGISTER → CONFIRM → UPDATE
-```
+<ThemedImage
+  lightSrc="/diagrams/txsm-sequence-light.png"
+  darkSrc="/diagrams/txsm-sequence-dark.png"
+  alt="Transaction flow: Developer builds UI, user signs, Andamio handles the rest"
+  inverted
+/>
 
-## The Transaction Lifecycle
+The flow: your app requests a transaction → user signs → Andamio submits, confirms, and syncs to the database. Your app gets notified when it's done.
 
-### 1. Build the Transaction
+> **Deep dive**: For state transitions, error handling patterns, and architecture details, see [Transaction State Machine](/docs/protocol/v2/state-machine).
 
-Request an unsigned transaction from the appropriate build endpoint.
+## The Steps
 
 ```typescript
 const API = "https://preprod.api.andamio.io/api/v2";
-
 const headers = {
   "Content-Type": "application/json",
   "X-API-Key": APP_API_KEY,
   "Authorization": `Bearer ${userJwt}`,
 };
 
-// Example: Student committing to an assignment
-const buildRes = await fetch(`${API}/tx/course/student/assignment/commit`, {
+// 1. Build — request unsigned CBOR from the API
+const { unsigned_tx } = await fetch(`${API}/tx/course/student/assignment/commit`, {
   method: "POST",
   headers,
   body: JSON.stringify({
@@ -35,125 +37,39 @@ const buildRes = await fetch(`${API}/tx/course/student/assignment/commit`, {
     course_id: "abc123...",
     slt_hash: "deadbeef...",
     assignment_info: "sha256:...",
-    initiator_data: {
-      usedAddresses: [...],
-      changeAddress: "addr1...",
-    },
+    initiator_data: { usedAddresses: [...], changeAddress: "addr1..." },
   }),
-});
+}).then(r => r.json());
 
-const { unsigned_tx } = await buildRes.json();
-```
-
-### 2. Sign with Wallet
-
-Use the browser wallet API to sign the transaction.
-
-```typescript
-// CIP-30 wallet API
+// 2. Sign — user approves in their wallet
 const signedTx = await wallet.signTx(unsigned_tx);
-```
 
-### 3. Submit to Cardano
-
-Submit the signed transaction to the network.
-
-```typescript
+// 3. Submit — send to Cardano
 const txHash = await wallet.submitTx(signedTx);
-```
 
-### 4. Register with State Machine
-
-Tell Andamio to track this transaction.
-
-```typescript
+// 4. Register — tell Andamio to track it
 await fetch(`${API}/tx/register`, {
   method: "POST",
   headers,
-  body: JSON.stringify({
-    tx_hash: txHash,
-    tx_type: "assignment_submit",
-  }),
+  body: JSON.stringify({ tx_hash: txHash, tx_type: "assignment_submit" }),
 });
-```
 
-### 5. Monitor Status
-
-Track the transaction until it reaches a terminal state.
-
-**Option A: Server-Sent Events (recommended)**
-
-```typescript
+// 5. Monitor — wait for DB sync via SSE
 const events = new EventSource(`${API}/tx/stream/${txHash}`);
-
-events.addEventListener("state_change", (e) => {
-  const { old_state, new_state } = JSON.parse(e.data);
-  console.log(`${old_state} → ${new_state}`);
-});
-
 events.addEventListener("complete", (e) => {
   const { final_state } = JSON.parse(e.data);
-  console.log(`Transaction complete: ${final_state}`);
   events.close();
-});
-```
-
-**Option B: Polling**
-
-```typescript
-const checkStatus = async () => {
-  const res = await fetch(`${API}/tx/status/${txHash}`, { headers });
-  const { state } = await res.json();
-
-  if (["updated", "failed", "expired"].includes(state)) {
-    return state; // Terminal
+  if (final_state === "updated") {
+    // Success — safe to refetch data
   }
-
-  await new Promise(r => setTimeout(r, 5000));
-  return checkStatus(); // Keep polling
-};
-```
-
-### 6. Database Sync
-
-On confirmation, the state machine syncs the on-chain state to the database. Your UI can then query the latest data.
-
-## Draft-First vs Direct-to-Chain
-
-For transactions involving commitments (assignments, tasks), you have two integration paths:
-
-### Draft-First (Recommended)
-
-Create a database record before the blockchain transaction. Users see immediate feedback.
-
-```typescript
-// 1. Create draft (instant UI feedback)
-await fetch(`${API}/course/student/commitment/create`, {
-  method: "POST",
-  headers,
-  body: JSON.stringify({
-    course_id: "abc123...",
-    course_module_code: "MODULE_01",
-    evidence: { submission_url: "https://..." },
-  }),
 });
-
-// 2. Build, sign, submit TX (as above)
-// 3. Register with state machine
-// 4. On confirmation, draft status updates to ON_CHAIN
 ```
 
-### Direct-to-Chain
+<Callout type="warn">
+**Wait for `updated`, not `confirmed`**
 
-Skip the draft step. The state machine creates the database record automatically on confirmation.
-
-```typescript
-// 1. Build, sign, submit TX directly
-// 2. Register with state machine
-// 3. On confirmation, state machine creates DB record
-```
-
-Both paths result in the same final state. Draft-first provides better UX for multi-step submissions.
+`confirmed` means found on-chain, but the database hasn't synced yet. Wait for `updated` before refetching data.
+</Callout>
 
 ## TX Type Reference
 
@@ -177,120 +93,7 @@ When registering a transaction, use the correct `tx_type`:
 | `/tx/project/contributor/task/commit` | `project_join` | Join + commit |
 | `/tx/project/contributor/credential/claim` | `project_credential_claim` | Requires `task_hash` metadata |
 
-## Complete Example
-
-Here's a full working example combining all steps:
-
-```typescript
-import { BrowserWallet } from "@meshsdk/core";
-
-const API = "https://preprod.api.andamio.io/api/v2";
-
-async function submitAssignment(
-  wallet: BrowserWallet,
-  apiKey: string,
-  jwt: string,
-  courseId: string,
-  moduleCode: string,
-  evidenceUrl: string
-) {
-  const headers = {
-    "Content-Type": "application/json",
-    "X-API-Key": apiKey,
-    "Authorization": `Bearer ${jwt}`,
-  };
-
-  // 1. Create draft for immediate feedback
-  await fetch(`${API}/course/student/commitment/create`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      course_id: courseId,
-      course_module_code: moduleCode,
-      evidence: { submission_url: evidenceUrl },
-    }),
-  });
-
-  // 2. Get wallet info
-  const usedAddresses = await wallet.getUsedAddresses();
-  const changeAddress = await wallet.getChangeAddress();
-  const alias = await getAliasFromAccessToken(wallet); // Your helper
-
-  // 3. Build unsigned TX
-  const buildRes = await fetch(`${API}/tx/course/student/assignment/commit`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      alias,
-      course_id: courseId,
-      slt_hash: await getSltHash(courseId, alias), // Your helper
-      assignment_info: hashEvidence(evidenceUrl),  // SHA256
-      initiator_data: { usedAddresses, changeAddress },
-    }),
-  });
-  const { unsigned_tx } = await buildRes.json();
-
-  // 4. Sign
-  const signedTx = await wallet.signTx(unsigned_tx);
-
-  // 5. Submit
-  const txHash = await wallet.submitTx(signedTx);
-
-  // 6. Register
-  await fetch(`${API}/tx/register`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      tx_hash: txHash,
-      tx_type: "assignment_submit",
-    }),
-  });
-
-  // 7. Wait for confirmation
-  return new Promise((resolve, reject) => {
-    const events = new EventSource(`${API}/tx/stream/${txHash}`);
-
-    events.addEventListener("complete", (e) => {
-      const { final_state } = JSON.parse(e.data);
-      events.close();
-
-      if (final_state === "updated") {
-        resolve({ success: true, txHash });
-      } else {
-        reject(new Error(`Transaction ${final_state}`));
-      }
-    });
-
-    // Timeout after 10 minutes
-    setTimeout(() => {
-      events.close();
-      reject(new Error("Timeout waiting for confirmation"));
-    }, 600000);
-  });
-}
-```
-
-## Common Pitfalls
-
-### Don't Refetch on `confirmed`
-
-The most common mistake is treating `confirmed` as the terminal state:
-
-```typescript
-// ❌ WRONG — data will be stale
-if (status.state === "confirmed") {
-  refetchData(); // DB hasn't synced yet!
-}
-
-// ✅ CORRECT — wait for DB sync
-if (status.state === "updated") {
-  refetchData(); // Now it's safe
-}
-```
-
-`confirmed` means "found on-chain" but the gateway is still syncing to the database. Wait for `updated` (~30s after on-chain confirmation) before refetching.
-
-## Using the App Template Hooks
+## App Template Hooks
 
 The [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template) provides production-ready React hooks that handle the entire transaction lifecycle:
 

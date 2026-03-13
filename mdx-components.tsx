@@ -5,6 +5,7 @@ import { Steps, Step } from "fumadocs-ui/components/steps";
 import { FlywheelDiagram } from "@/components/mdx/flywheel-diagram";
 import { LinearDiagram } from "@/components/mdx/linear-diagram";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
+import { ThemedImage } from "@/components/mdx/themed-image";
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
@@ -14,6 +15,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Mermaid,
     FlywheelDiagram,
     LinearDiagram,
+    ThemedImage,
     Steps,
     Step,
     ...components,
