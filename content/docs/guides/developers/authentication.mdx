@@ -5,13 +5,25 @@ description: User login, JWT creation, and session management in Andamio applica
 
 # Authentication
 
-Andamio uses wallet-based authentication. Users prove ownership of their Cardano wallet by signing a challenge, and receive a JWT that authorizes API requests.
+Andamio uses wallet-based authentication. Users prove ownership of their Cardano wallet by signing a cryptographic challenge, and receive a JWT that authorizes API requests.
 
 ## How Login Works
 
-```
-CONNECT WALLET → CHECK ACCESS TOKEN → SIGN CHALLENGE → RECEIVE JWT
-```
+<ThemedImage
+  lightSrc="/diagrams/auth-sequence-light.png"
+  darkSrc="/diagrams/auth-sequence-dark.png"
+  alt="Authentication flow: User connects wallet, signs challenge, receives JWT"
+  inverted
+/>
+
+The authentication sequence:
+
+1. **User connects wallet** — CIP-30 browser wallet
+2. **Request challenge** — POST to `/auth/challenge` with address
+3. **API returns nonce** — random string that expires in ~5 minutes
+4. **User signs challenge** — wallet prompts for signature
+5. **Verify signature** — POST to `/auth/verify` with signature
+6. **Receive JWT** — token authorizes subsequent API calls
 
 ### 1. User Connects Wallet
 
