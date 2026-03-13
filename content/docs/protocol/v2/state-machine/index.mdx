@@ -56,6 +56,22 @@ Once a transaction is registered, it enters the state machine and transitions au
 
 All database updates are **idempotent** — if a sync is interrupted and retried, it produces the same result.
 
+<Callout type="warn">
+**Common Pitfall: `confirmed` is NOT terminal**
+
+Don't refetch data when the state reaches `confirmed` — the database hasn't synced yet. Wait for `updated`:
+
+```typescript
+// ❌ WRONG — data will be stale
+if (status.state === "confirmed") refetchData();
+
+// ✅ CORRECT — wait for DB sync (~30s after on-chain)
+if (status.state === "updated") refetchData();
+```
+
+The `confirmed` state means "found on-chain" but the gateway is still syncing to the database. Only `updated` guarantees fresh data.
+</Callout>
+
 ## Architecture Pattern: Check-Effect-Interact (CEI)
 
 Andamio transactions follow a layered CEI pattern across client and gateway:
@@ -304,3 +320,25 @@ This transaction has `DB Sync: No` because the credential NFT in the wallet is t
 - **Single teacher/manager at creation**: Courses start with one teacher and projects start with one manager (the creator). Use the manage endpoints to add more after creation.
 - **Not yet implemented**: Task Leave and Task Update sub-actions have build endpoints but are not yet tracked by the state machine. The on-chain effects still work.
 </Callout>
+
+## Implementation Reference
+
+For working code examples, see the [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template):
+
+| Resource | Description |
+|----------|-------------|
+| [How Transactions Work](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work) | README section with diagrams, code examples, and the 7-step flow |
+| [useTransaction hook](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-transaction.ts) | Full implementation with PHASE 0-6 inline comments |
+| [useTxStream hook](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-tx-stream.ts) | SSE stream handling for real-time state updates |
+
+The `useTransaction` hook follows explicit phases that map to the lifecycle above:
+
+| Phase | Purpose |
+|-------|---------|
+| PHASE 0 | Check wallet connection |
+| PHASE 1 | Validate params (Zod schema) |
+| PHASE 2 | Build (POST to gateway → unsigned CBOR) |
+| PHASE 3 | Sign (user approves in wallet) |
+| PHASE 4 | Submit (to Cardano blockchain) |
+| PHASE 5 | Register (with gateway + global store) |
+| PHASE 6 | Success (update state, fire callbacks) |

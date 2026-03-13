@@ -16,6 +16,10 @@ In this tutorial, you'll learn how Andamio works by building something real: a s
 
 **Prerequisites**: Complete [Getting Started](/docs/getting-started) first.
 
+<Callout type="info">
+**Start from the template**: Clone the [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template) to follow along. It includes production-ready hooks for transaction handling — see the [How Transactions Work](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work) section for details.
+</Callout>
+
 ---
 
 ## What We're Building
@@ -50,7 +54,7 @@ Let's see this in action.
 
 ## Step 2: Create a Course
 
-Open your app template at `localhost:3000` and navigate to the course creation page.
+Open your [app template](https://github.com/Andamio-Platform/andamio-app-template) at `localhost:3000` and navigate to the course creation page.
 
 <Callout type="info">
 If you don't see course creation options, your Access Token may not have course creator permissions. On preprod, you can grant yourself permissions — see [Course Creator Setup](#course-creator-setup) below.
@@ -120,9 +124,10 @@ Every interaction follows the same build → sign → submit pattern. The Gatewa
 
 Now that you understand the basics:
 
-- **[API Integration](/docs/guides/developers/api-integration)** — Deep dive into the Gateway API
 - **[Transaction Handling](/docs/guides/developers/transactions)** — Error handling, retries, and confirmation tracking
+- **[API Integration](/docs/guides/developers/api-integration)** — Deep dive into the Gateway API
 - **[Protocol Overview](/docs/protocol)** — Understand the on-chain architecture
+- **[App Template Source](https://github.com/Andamio-Platform/andamio-app-template)** — Explore the hooks and patterns used in this tutorial
 
 ---
 
