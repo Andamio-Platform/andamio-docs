@@ -25,6 +25,21 @@ Every Andamio blockchain transaction follows a consistent 6-step lifecycle, mana
 | **CONFIRM** | Gateway (automatic) | Polls the blockchain until the transaction appears on-chain |
 | **UPDATE** | Gateway (automatic) | Syncs the confirmed on-chain data to the Andamio database |
 
+### Client Transaction States
+
+The frontend tracks its own state machine during the build-sign-submit flow:
+
+<Mermaid chart='stateDiagram-v2\n    [*] --> idle\n    idle --> fetching: execute()\n    fetching --> signing: CBOR received\n    fetching --> error: API error\n    signing --> submitting: User signed\n    signing --> error: User declined\n    submitting --> success: txHash received\n    submitting --> error: Submit failed\n    success --> [*]\n    error --> idle: reset()' />
+
+| State | Meaning |
+|-------|---------|
+| `idle` | Ready to start a new transaction |
+| `fetching` | Building unsigned CBOR via API |
+| `signing` | Waiting for user to approve in wallet |
+| `submitting` | Submitting signed transaction to Cardano |
+| `success` | Transaction submitted, hash received |
+| `error` | Something failed — can reset to idle |
+
 ## State Transitions
 
 Once a transaction is registered, it enters the state machine and transitions automatically:
@@ -40,6 +55,39 @@ Once a transaction is registered, it enters the state machine and transitions au
 | `expired` | Not confirmed on-chain within the timeout window — terminal |
 
 All database updates are **idempotent** — if a sync is interrupted and retried, it produces the same result.
+
+## Architecture Pattern: Check-Effect-Interact (CEI)
+
+Andamio transactions follow a layered CEI pattern across client and gateway:
+
+| Phase | Client | Gateway |
+|-------|--------|---------|
+| **Check** | Validate params (Zod schemas) | Validate eligibility, balances, permissions |
+| **Effect** | Sign transaction in wallet | Confirm transaction on-chain |
+| **Interact** | Submit to blockchain | Sync state to database |
+
+The client never writes to the database directly — the gateway handles all database synchronization after on-chain confirmation. This ensures the blockchain remains the source of truth.
+
+## Data Model: Hash On-Chain, Data Off-Chain
+
+Andamio stores hashes on the blockchain, not raw data:
+
+```
+On-chain:  assignment_info: "sha256:abc123def456..."
+Off-chain: evidence: { url: "https://...", text: "My submission notes" }
+```
+
+| Aspect | On-Chain | Off-Chain |
+|--------|----------|-----------|
+| **Stored** | Commitment hash (32 bytes) | Full evidence payload |
+| **Cost** | Minimal (~0.02 ADA) | Database storage |
+| **Privacy** | Public but opaque | Access-controlled |
+| **Verifiability** | Anyone can verify | Hash proves integrity |
+
+**Why this pattern?**
+- **Blockchain space is expensive** — hashes are small and fixed-size
+- **Privacy** — raw evidence (URLs, text, files) never touches the chain
+- **Verifiability** — anyone can prove off-chain data matches the on-chain hash
 
 ## Transaction Types
 
@@ -201,6 +249,53 @@ Managers can also create tasks as drafts in the database before publishing them 
 ## Self-Healing
 
 If a transaction is confirmed on-chain but the database update was missed (for example, due to a service restart), the Gateway automatically detects and repairs the inconsistency when related data is next accessed. This is transparent to API consumers — no manual intervention is needed.
+
+## Example Flow: Claiming a Course Credential
+
+A complete walkthrough of one transaction from click to completion.
+
+### Prerequisites
+
+| Requirement | Description |
+|-------------|-------------|
+| Enrolled | Student holds an enrollment token for the course |
+| Assignments complete | All required modules assessed as `ACCEPTED` |
+| Wallet connected | Browser wallet with ~1.5 ADA for fees |
+
+### The Flow
+
+| Step | Layer | What Happens |
+|------|-------|--------------|
+| 1. Click "Claim Credential" | UI | `useTransaction().execute({ txType: "credential_claim", ... })` |
+| 2. Build | Client → Gateway | `POST /api/v2/tx/course/student/credential/claim` → unsigned CBOR |
+| 3. Sign | Client → Wallet | `wallet.signTx(cbor)` — user approves in wallet popup |
+| 4. Submit | Client → Blockchain | `wallet.submitTx(signed)` → txHash |
+| 5. Register | Client → Gateway | `POST /api/v2/tx/register` with `{ tx_hash, tx_type: "credential_claim" }` |
+| 6. Monitor | Client ← Gateway | SSE stream at `/api/v2/tx/stream/{txHash}` |
+| 7. Confirm | Gateway | ~30s later: `pending` → `confirmed` → `updated` |
+| 8. Complete | UI | Toast: "Credential claimed!" — credential NFT now in wallet |
+
+### What the User Sees
+
+```
+[Click]       → Button shows spinner: "Building..."
+[~2 seconds]  → Wallet popup appears
+[Sign]        → Button: "Submitting..."
+[~1 second]   → Toast: "Credential claim submitted"
+[~30 seconds] → Toast updates: "✓ Credential claimed!"
+```
+
+### CEI Pattern Applied
+
+| Phase | Where | What |
+|-------|-------|------|
+| **Check** | Gateway (build) | Validates enrollment, all assignments accepted, sufficient ADA |
+| **Effect** | Blockchain | Burns enrollment token, mints credential NFT |
+| **Interact** | Gateway (sync) | No DB update needed — `credential_claim` is on-chain only |
+
+This transaction has `DB Sync: No` because the credential NFT in the wallet is the sole proof of completion — the blockchain is the source of truth.
+
+> **See also**: [Claim Course Credential API Reference](/docs/protocol/v2/state-machine/course/student-credential-claim) for full request/response details.
 
 <Callout type="info">
 **Important Notes**
