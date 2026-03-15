@@ -28,6 +28,20 @@ export const baseOptions: BaseLayoutProps = {
         />
       </>
     ),
+    url: "https://andamio.io",
   },
-  links: [],
+  links: [
+    {
+      text: "Guides",
+      url: "/docs/guides",
+    },
+    {
+      text: "Protocol",
+      url: "/docs/protocol",
+    },
+    {
+      text: "API Reference",
+      url: "https://mainnet.api.andamio.io/reference",
+    },
+  ],
 };

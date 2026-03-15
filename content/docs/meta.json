@@ -15,6 +15,13 @@
         "--- Reference ---",
         "glossary",
         "reference",
-        "repositories"
+        "repositories",
+        "pioneers",
+        "--- External ---",
+        "[andamio.io](https://andamio.io)",
+        "[API Reference](https://mainnet.api.andamio.io/reference)",
+        "[Andamio App](https://mainnet.app.andamio.io)",
+        "[Andamio SDK](https://sdk.andamio.io/)",
+        "[GitHub](https://github.com/Andamio-Platform)"
     ]
 }
