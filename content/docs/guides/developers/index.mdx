@@ -1,33 +1,34 @@
 ---
-title: Developer Guides
-description: Build integrations with the Andamio API
+title: Overview
+description: Everything you need to build applications on the Andamio protocol
 icon: Code
 ---
 
-# Developer Guides
+# Build with Andamio
 
-Everything you need to build applications that integrate with the Andamio protocol.
+All guides use **preprod** (Cardano testnet) by default. See [API Integration](/docs/guides/developers/api-integration#ready-for-mainnet) when you're ready for production.
+
+## Choose Your Path
+
+| Path | Time | What You Get |
+|------|------|--------------|
+| **[Getting Started](/docs/getting-started)** | ~15 min | Full local dev environment with app template |
+| **[API Quickstart](/docs/guides/developers/api-quickstart)** | ~5 min | First API call with curl (no app template) |
+
+After setup, continue with **[Your First Andamio App](/docs/guides/developers/first-app)** to build something real.
 
 ## Guides
 
 | Guide | Description |
 |-------|-------------|
-| [API Integration](/docs/guides/developers/api-integration) | Complete workflow for building, signing, and tracking transactions |
-| [Error Handling](/docs/guides/developers/error-handling) | Recovery patterns for failed and expired transactions |
+| [API Integration](/docs/guides/developers/api-integration) | Environment URLs, auth headers, making requests |
+| [Authentication](/docs/guides/developers/authentication) | Wallet-based login, JWT flow, session management |
+| [Transaction Handling](/docs/guides/developers/transactions) | Build → sign → submit lifecycle |
+| [Error Handling](/docs/guides/developers/error-handling) | Recovery patterns for failed transactions |
 
-## Quick Links
+## Reference
 
-- **[API Reference](https://preprod.api.andamio.io/reference)** — Full endpoint documentation (Scalar)
-- **[Transaction State Machine](/docs/protocol/v2/state-machine)** — How transactions flow from build to database sync
-- **[V2 Transactions](/docs/protocol/v2/transactions)** — Technical specs for each transaction type
-
-## Authentication
-
-All API requests require authentication:
-
-| Header | Purpose |
-|--------|---------|
-| `X-API-Key` | Application-level authentication |
-| `Authorization: Bearer <jwt>` | User-level authentication (wallet signature) |
-
-See [API Integration](/docs/guides/developers/api-integration#authentication) for details on obtaining and using these credentials.
+- **[Preprod API Docs](https://preprod.api.andamio.io)** — Full endpoint documentation
+- **[Protocol](/docs/protocol)** — On-chain architecture and state machines
+- **[SDK](/docs/sdk)** — NPM packages for Andamio development
+- **[App Template](https://github.com/Andamio-Platform/andamio-app-template)** — Fork and build

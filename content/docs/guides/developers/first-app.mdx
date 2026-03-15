@@ -1,0 +1,143 @@
+---
+title: Your First Andamio App
+description: Learn Andamio by building — create a course and enroll your first student
+---
+
+# Your First Andamio App
+
+In this tutorial, you'll learn how Andamio works by building something real: a simple course with one module, then enrolling yourself as a student.
+
+**What you'll learn**:
+- How Andamio transactions work (build → sign → submit)
+- The relationship between Access Tokens, courses, and enrollments
+- How on-chain state changes as you interact with the protocol
+
+**Time**: ~30 minutes
+
+**Prerequisites**: Complete [Getting Started](/docs/getting-started) first.
+
+<Callout type="info">
+**Start from the template**: Clone the [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template) to follow along. It includes production-ready hooks for transaction handling — see the [How Transactions Work](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work) section for details.
+</Callout>
+
+---
+
+## What We're Building
+
+By the end of this tutorial, you'll have:
+
+1. Created a course on preprod
+2. Added a module with a simple assignment
+3. Enrolled yourself as a student
+4. Submitted an assignment
+
+This mirrors the real workflow of Andamio — you'll understand the protocol by using it.
+
+---
+
+## Step 1: Understand the Transaction Flow
+
+Every action in Andamio follows the same pattern:
+
+```
+Your App → Gateway (build) → Wallet (sign) → Gateway (submit) → Cardano
+```
+
+1. **Build**: Your app requests a transaction from the Gateway
+2. **Sign**: The user signs with their wallet
+3. **Submit**: The signed transaction goes back to the Gateway
+4. **Confirm**: The Gateway submits to Cardano and tracks confirmation
+
+Let's see this in action.
+
+---
+
+## Step 2: Create a Course
+
+Open your [app template](https://github.com/Andamio-Platform/andamio-app-template) at `localhost:3000` and navigate to the course creation page.
+
+<Callout type="info">
+If you don't see course creation options, your Access Token may not have course creator permissions. On preprod, you can grant yourself permissions — see [Course Creator Setup](#course-creator-setup) below.
+</Callout>
+
+### What happens on-chain
+
+When you create a course, Andamio:
+- Mints a **Course Token** representing your course
+- Creates a **Course State UTxO** holding course metadata
+- Links your Access Token as the course creator
+
+This is your first real transaction. Watch the confirmation — it takes about 20 seconds on preprod.
+
+---
+
+## Step 3: Add a Module
+
+Courses contain modules. Each module can have:
+- Learning content (off-chain, referenced by hash)
+- Assignments (on-chain commitments)
+
+Add a simple module to your course. The module metadata lives off-chain, but the module's existence is recorded on-chain.
+
+---
+
+## Step 4: Enroll as a Student
+
+Now switch perspectives. Using a different wallet (or the same one on a test course), enroll as a student.
+
+### What happens on-chain
+
+Enrollment creates:
+- A **Student Token** linking you to the course
+- An **Enrollment UTxO** tracking your progress
+
+You now have an on-chain relationship with the course.
+
+---
+
+## Step 5: Submit an Assignment
+
+Complete the loop by submitting an assignment. This demonstrates the full Andamio workflow:
+
+1. Student submits work (reference to off-chain content)
+2. Transaction records submission on-chain
+3. Course creator can now review and accept/reject
+
+---
+
+## What You've Learned
+
+You've now experienced the core Andamio flow:
+
+| Action | On-chain Result |
+|--------|-----------------|
+| Create course | Course Token + Course State UTxO |
+| Add module | Module reference in course state |
+| Enroll student | Student Token + Enrollment UTxO |
+| Submit assignment | Assignment UTxO with submission reference |
+
+Every interaction follows the same build → sign → submit pattern. The Gateway handles the complexity; your app just needs to request the right endpoints and handle wallet signing.
+
+---
+
+## Next Steps
+
+Now that you understand the basics:
+
+- **[Transaction Handling](/docs/guides/developers/transactions)** — Error handling, retries, and confirmation tracking
+- **[API Integration](/docs/guides/developers/api-integration)** — Deep dive into the Gateway API
+- **[Protocol Overview](/docs/protocol)** — Understand the on-chain architecture
+- **[App Template Source](https://github.com/Andamio-Platform/andamio-app-template)** — Explore the hooks and patterns used in this tutorial
+
+---
+
+## Appendix: Course Creator Setup
+
+On preprod, you can grant course creator permissions to your Access Token:
+
+1. Go to [preprod.andamio.io](https://preprod.andamio.io)
+2. Connect your wallet
+3. Navigate to Admin → Permissions
+4. Add your Access Token as a course creator
+
+This is a preprod convenience — on mainnet, permissions are managed by instance administrators.

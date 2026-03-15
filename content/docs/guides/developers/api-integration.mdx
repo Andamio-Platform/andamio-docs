@@ -1,308 +1,114 @@
 ---
 title: API Integration
-description: Complete workflow for building, signing, and tracking Andamio transactions
+description: API setup and making requests to the Andamio Gateway
 ---
 
-# API Integration Guide
+# API Integration
 
-This guide walks through the complete flow for integrating with the Andamio API — from authentication through transaction confirmation.
+This guide covers API setup and making requests to the Andamio Gateway.
 
-> **API Reference**: For endpoint schemas, request/response formats, and parameter details, see the [Andamio API Reference](https://preprod.api.andamio.io/reference).
+> **API Reference**: For endpoint schemas and parameter details, see the [Preprod API Docs](https://preprod.api.andamio.io). When ready for production, use `mainnet.api.andamio.io`.
 
-## Authentication
+## Authentication Headers
 
 All Andamio API requests require two authentication headers:
 
-### API Key (Application)
-
-```
-X-API-Key: <your-api-key>
-```
-
-API keys identify your application. Contact the Andamio team to obtain one for your project.
-
-### JWT (User)
-
-```
-Authorization: Bearer <jwt>
-```
-
-JWTs authenticate individual users via wallet signature. The flow:
-
-1. User connects their wallet
-2. Your app requests a challenge from `/api/v2/auth/challenge`
-3. User signs the challenge with their wallet
-4. Your app exchanges the signature for a JWT via `/api/v2/auth/verify`
-
-JWTs expire after a configurable period (typically 24 hours).
-
-## Transaction Flow
-
-Every Andamio transaction follows a 6-step lifecycle:
-
-```
-BUILD → SIGN → SUBMIT → REGISTER → CONFIRM → UPDATE
-```
-
-Here's the complete flow with code:
-
-### 1. Build the Transaction
-
-Request an unsigned transaction from the appropriate build endpoint.
+| Header | Purpose | How to get |
+|--------|---------|------------|
+| `X-API-Key` | Application-level (your app) | [Getting Started](/docs/getting-started) |
+| `Authorization: Bearer <jwt>` | User-level (wallet signature) | [Authentication](/docs/guides/developers/authentication) |
 
 ```typescript
-const API = "https://preprod.api.andamio.io/api/v2";
+const headers = {
+  "Content-Type": "application/json",
+  "X-API-Key": APP_API_KEY,
+  "Authorization": `Bearer ${userJwt}`,
+};
+```
 
+## Making Requests
+
+Once authenticated, include both headers in all requests:
+
+```typescript
 const headers = {
   "Content-Type": "application/json",
   "X-API-Key": APP_API_KEY,
   "Authorization": `Bearer ${userJwt}`,
 };
 
-// Example: Student committing to an assignment
-const buildRes = await fetch(`${API}/tx/course/student/assignment/commit`, {
-  method: "POST",
+// Example: List user's courses
+const res = await fetch(`${API}/course/owner/courses/list`, {
+  method: "GET",
   headers,
-  body: JSON.stringify({
-    alias: "student1",
-    course_id: "abc123...",
-    slt_hash: "deadbeef...",
-    assignment_info: "sha256:...",
-    initiator_data: {
-      usedAddresses: [...],
-      changeAddress: "addr1...",
-    },
-  }),
 });
-
-const { unsigned_tx } = await buildRes.json();
+const courses = await res.json();
 ```
 
-### 2. Sign with Wallet
+## API Endpoints
 
-Use the browser wallet API to sign the transaction.
+The Andamio Gateway provides endpoints for:
 
-```typescript
-// CIP-30 wallet API
-const signedTx = await wallet.signTx(unsigned_tx);
-```
+| Category | Base Path | Description |
+|----------|-----------|-------------|
+| Auth | `/api/v2/auth/*` | Challenge/verify, JWT management |
+| Courses | `/api/v2/course/*` | Course CRUD, modules, enrollments |
+| Projects | `/api/v2/project/*` | Project CRUD, tasks, contributors |
+| Transactions | `/api/v2/tx/*` | Build and register on-chain transactions |
+| Global | `/api/v2/global/*` | Access tokens, platform config |
 
-### 3. Submit to Cardano
+For transaction building and submission, see [Transaction Handling](/docs/guides/developers/transactions).
 
-Submit the signed transaction to the network.
+## Environment URLs
 
-```typescript
-const txHash = await wallet.submitTx(signedTx);
-```
+Start development on **preprod** — it uses test ADA and is safe to experiment with.
 
-### 4. Register with State Machine
+| Environment | Gateway URL | App URL | Network |
+|-------------|-------------|---------|---------|
+| **Preprod** (start here) | `preprod.api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | Cardano Preprod |
+| Production | `mainnet.api.andamio.io` | [app.andamio.io](https://app.andamio.io) | Cardano Mainnet |
 
-Tell Andamio to track this transaction.
+All code examples in these docs use preprod URLs.
 
-```typescript
-await fetch(`${API}/tx/register`, {
-  method: "POST",
-  headers,
-  body: JSON.stringify({
-    tx_hash: txHash,
-    tx_type: "assignment_submit",
-  }),
-});
-```
+## Ready for Mainnet?
 
-### 5. Monitor Status
+When your app is tested and ready for production:
 
-Track the transaction until it reaches a terminal state.
+1. Generate a **mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
+2. Update your environment variables:
+   ```bash
+   NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://mainnet.api.andamio.io"
+   NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
+   ```
+3. Update the Access Token policy ID (contact team for mainnet ID)
 
-**Option A: Server-Sent Events (recommended)**
+See [Environment Reference](/docs/reference/environments) for full configuration details.
 
-```typescript
-const events = new EventSource(`${API}/tx/stream/${txHash}`);
+## Error Responses
 
-events.addEventListener("state_change", (e) => {
-  const { old_state, new_state } = JSON.parse(e.data);
-  console.log(`${old_state} → ${new_state}`);
-});
+API errors return JSON with `error` and `message` fields:
 
-events.addEventListener("complete", (e) => {
-  const { final_state } = JSON.parse(e.data);
-  console.log(`Transaction complete: ${final_state}`);
-  events.close();
-});
-```
-
-**Option B: Polling**
-
-```typescript
-const checkStatus = async () => {
-  const res = await fetch(`${API}/tx/status/${txHash}`, { headers });
-  const { state } = await res.json();
-
-  if (["updated", "failed", "expired"].includes(state)) {
-    return state; // Terminal
-  }
-
-  await new Promise(r => setTimeout(r, 5000));
-  return checkStatus(); // Keep polling
-};
-```
-
-## Draft-First vs Direct-to-Chain
-
-For transactions involving commitments (assignments, tasks), you have two integration paths:
-
-### Draft-First (Recommended)
-
-Create a database record before the blockchain transaction. Users see immediate feedback.
-
-```typescript
-// 1. Create draft (instant UI feedback)
-await fetch(`${API}/course/student/commitment/create`, {
-  method: "POST",
-  headers,
-  body: JSON.stringify({
-    course_id: "abc123...",
-    course_module_code: "MODULE_01",
-    evidence: { submission_url: "https://..." },
-  }),
-});
-
-// 2. Build, sign, submit TX (as above)
-// 3. Register with state machine
-// 4. On confirmation, draft status updates to ON_CHAIN
-```
-
-### Direct-to-Chain
-
-Skip the draft step. The state machine creates the database record automatically on confirmation.
-
-```typescript
-// 1. Build, sign, submit TX directly
-// 2. Register with state machine
-// 3. On confirmation, state machine creates DB record
-```
-
-Both paths result in the same final state. Draft-first provides better UX for multi-step submissions.
-
-## TX Type Reference
-
-When registering a transaction, use the correct `tx_type`:
-
-| Build Endpoint | TX Type | Notes |
-|----------------|---------|-------|
-| `/tx/global/general/access-token/mint` | `access_token_mint` | — |
-| `/tx/instance/owner/course/create` | `course_create` | — |
-| `/tx/course/owner/teachers/manage` | `teachers_update` | — |
-| `/tx/course/teacher/modules/manage` | `modules_manage` | — |
-| `/tx/course/teacher/assignments/assess` | `assessment_assess` | — |
-| `/tx/course/student/assignment/commit` | `assignment_submit` | First or update |
-| `/tx/course/student/assignment/update` | `assignment_submit` | Same as commit |
-| `/tx/course/student/credential/claim` | `credential_claim` | — |
-| `/tx/instance/owner/project/create` | `project_create` | — |
-| `/tx/project/owner/managers/manage` | `managers_manage` | — |
-| `/tx/project/owner/contributor-blacklist/manage` | `blacklist_update` | — |
-| `/tx/project/manager/tasks/manage` | `tasks_manage` | — |
-| `/tx/project/manager/tasks/assess` | `task_assess` | — |
-| `/tx/project/contributor/task/commit` | `project_join` | Join + commit |
-| `/tx/project/contributor/credential/claim` | `project_credential_claim` | Requires `task_hash` metadata |
-
-**Note**: Some endpoints share the same TX type. See [TX Type Mapping](/docs/protocol/v2/state-machine#tx-type-mapping) for details.
-
-## Complete Example: Assignment Submission
-
-Here's a full working example combining all steps:
-
-```typescript
-import { BrowserWallet } from "@meshsdk/core";
-
-const API = "https://preprod.api.andamio.io/api/v2";
-
-async function submitAssignment(
-  wallet: BrowserWallet,
-  apiKey: string,
-  jwt: string,
-  courseId: string,
-  moduleCode: string,
-  evidenceUrl: string
-) {
-  const headers = {
-    "Content-Type": "application/json",
-    "X-API-Key": apiKey,
-    "Authorization": `Bearer ${jwt}`,
-  };
-
-  // 1. Create draft for immediate feedback
-  await fetch(`${API}/course/student/commitment/create`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      course_id: courseId,
-      course_module_code: moduleCode,
-      evidence: { submission_url: evidenceUrl },
-    }),
-  });
-
-  // 2. Get wallet info
-  const usedAddresses = await wallet.getUsedAddresses();
-  const changeAddress = await wallet.getChangeAddress();
-  const alias = await getAliasFromAccessToken(wallet); // Your helper
-
-  // 3. Build unsigned TX
-  const buildRes = await fetch(`${API}/tx/course/student/assignment/commit`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      alias,
-      course_id: courseId,
-      slt_hash: await getSltHash(courseId, alias), // Your helper
-      assignment_info: hashEvidence(evidenceUrl),  // SHA256
-      initiator_data: { usedAddresses, changeAddress },
-    }),
-  });
-  const { unsigned_tx } = await buildRes.json();
-
-  // 4. Sign
-  const signedTx = await wallet.signTx(unsigned_tx);
-
-  // 5. Submit
-  const txHash = await wallet.submitTx(signedTx);
-
-  // 6. Register
-  await fetch(`${API}/tx/register`, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      tx_hash: txHash,
-      tx_type: "assignment_submit",
-    }),
-  });
-
-  // 7. Wait for confirmation
-  return new Promise((resolve, reject) => {
-    const events = new EventSource(`${API}/tx/stream/${txHash}`);
-
-    events.addEventListener("complete", (e) => {
-      const { final_state } = JSON.parse(e.data);
-      events.close();
-
-      if (final_state === "updated") {
-        resolve({ success: true, txHash });
-      } else {
-        reject(new Error(`Transaction ${final_state}`));
-      }
-    });
-
-    // Timeout after 10 minutes
-    setTimeout(() => {
-      events.close();
-      reject(new Error("Timeout waiting for confirmation"));
-    }, 600000);
-  });
+```json
+{
+  "error": "UNAUTHORIZED",
+  "message": "Invalid or expired JWT"
 }
 ```
 
+Common error codes:
+
+| Code | Meaning |
+|------|---------|
+| `UNAUTHORIZED` | Missing or invalid auth headers |
+| `FORBIDDEN` | User lacks permission for this action |
+| `NOT_FOUND` | Resource doesn't exist |
+| `VALIDATION_ERROR` | Invalid request body |
+| `TX_BUILD_FAILED` | Transaction building failed |
+
+See [Error Handling](/docs/guides/developers/error-handling) for recovery patterns.
+
 ## Next Steps
 
-- [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed transactions
-- [Transaction State Machine](/docs/protocol/v2/state-machine) — Deep dive into state transitions
-- [API Reference](https://preprod.api.andamio.io/reference) — Full endpoint documentation
+- [Transaction Handling](/docs/guides/developers/transactions) — Build, sign, and submit transactions
+- [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed requests
+- [Preprod API Docs](https://preprod.api.andamio.io) — Full endpoint reference

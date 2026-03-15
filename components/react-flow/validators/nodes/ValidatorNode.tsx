@@ -20,10 +20,10 @@ const ValidatorNode = ({ data }: { data: ValidatorNodeData }) => {
     const isObserver = validatorId.includes('obs') || validatorId.includes('observer');
     
     if (isObserver) {
-      return `/docs/protocol/v1/validators/${system}/observers/${validatorId}`;
+      return `/docs/protocol/v2/validators/${system}/observers/${validatorId}`;
     }
     
-    return `/docs/protocol/v1/validators/${system}/${validatorId}`;
+    return `/docs/protocol/v2/validators/${system}/${validatorId}`;
   };
 
   const validatorLink = getValidatorLink(data.system, data.id);
@@ -51,7 +51,7 @@ const ValidatorNode = ({ data }: { data: ValidatorNodeData }) => {
           <div className="flex items-center">
             <span className="font-semibold mr-1">System:</span> 
             <Link 
-              href={`/docs/protocol/v1/validators/${data.system}`}
+              href={`/docs/protocol/v2/validators/${data.system}`}
               className="text-blue-700 hover:text-blue-900 hover:underline transition-colors"
             >
               {data.system}

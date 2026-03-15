@@ -41,7 +41,7 @@ export const baseOptions: BaseLayoutProps = {
     },
     {
       text: "API Reference",
-      url: "https://dev.api.andamio.io/reference",
+      url: "https://mainnet.api.andamio.io/reference",
     },
   ],
 };

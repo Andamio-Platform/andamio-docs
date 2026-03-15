@@ -1,0 +1,75 @@
+---
+title: Environments
+description: Gateway URLs, policy IDs, and app URLs for each Andamio environment
+---
+
+# Environment Reference
+
+Start on **preprod** for development. Move to **production** when your app is tested and ready.
+
+## Quick Reference
+
+| Environment | Gateway URL | App URL | Generate API Key |
+|-------------|-------------|---------|------------------|
+| **Preprod** (start here) | `preprod.api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup) |
+| Production | `mainnet.api.andamio.io` | [app.andamio.io](https://app.andamio.io) | [app.andamio.io/api-setup](https://app.andamio.io/api-setup) |
+
+## Access Token Policy IDs
+
+Each environment has a unique Access Token policy ID:
+
+| Environment | Policy ID |
+|-------------|-----------|
+| Preprod | `29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78` |
+| Production | Contact team for mainnet policy ID |
+
+## Environment Variables
+
+### Preprod (Development)
+
+```bash
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://preprod.api.andamio.io"
+ANDAMIO_API_KEY="your-preprod-api-key"
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
+```
+
+### Production (Mainnet)
+
+```bash
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://mainnet.api.andamio.io"
+ANDAMIO_API_KEY="your-mainnet-api-key"
+NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="<contact-team-for-mainnet-policy-id>"
+```
+
+## Moving to Production
+
+When your app is tested and ready:
+
+1. **Generate a mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
+2. **Mint a mainnet Access Token** at [app.andamio.io](https://app.andamio.io) (requires real ADA)
+3. **Update environment variables** with production values above
+4. **Contact the Andamio team** for the mainnet Access Token policy ID
+
+## App Template Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start dev server with hot reload |
+| `npm run build` | Production build |
+| `npm run check` | Run linting and type checking |
+| `npm run generate:types` | Regenerate API types from gateway spec |
+| `npm run preview` | Build and serve locally |
+
+## API Health Checks
+
+Verify gateway connectivity:
+
+```bash
+# Preprod
+curl https://preprod.api.andamio.io/health
+
+# Production
+curl https://mainnet.api.andamio.io/health
+```

@@ -10,9 +10,29 @@ How Andamio tracks every transaction from build to database synchronization — 
 
 > **Looking for individual transaction specs?** The [V2 Transactions](/docs/protocol/v2/transactions) section has detailed technical reference for each transaction type — inputs, outputs, costs, and datums.
 
-Every Andamio blockchain transaction follows a consistent 6-step lifecycle, managed automatically by the API Gateway.
+## The Happy Path
 
-## Lifecycle
+You build the UX, Andamio handles credentials. Here's what happens for every transaction:
+
+<ThemedImage
+  lightSrc="/diagrams/txsm-sequence-light.png"
+  darkSrc="/diagrams/txsm-sequence-dark.png"
+  alt="Transaction flow: Developer builds UI, user signs, Andamio handles the rest"
+  inverted
+/>
+
+1. **User clicks action** — your app handles the UI
+2. **Request transaction** — POST to the appropriate build endpoint
+3. **Return unsigned CBOR** — the API builds the transaction
+4. **Prompt wallet signature** — show the wallet popup
+5. **User approves & signs** — CIP-30 wallet API
+6. **Submit signed tx** — wallet submits to Cardano
+7. **Register for confirmation** — tell Andamio to track it
+8. **Block confirmation** — Cardano confirms (~20-30s)
+9. **Sync DB + push event** — gateway syncs, you get notified
+10. **Display success** — update your UI
+
+## Lifecycle Diagram
 
 <Mermaid chart='flowchart LR\n    BUILD["BUILD\n(API builds CBOR)"] --> SIGN["SIGN\n(Wallet signs)"]\n    SIGN --> SUBMIT["SUBMIT\n(Wallet submits)"]\n    SUBMIT --> REGISTER["REGISTER\n(Frontend registers)"]\n    REGISTER --> CONFIRM["CONFIRM\n(Auto: polls chain)"]\n    CONFIRM --> UPDATE["UPDATE\n(Auto: syncs DB)"]' />
 
@@ -24,6 +44,21 @@ Every Andamio blockchain transaction follows a consistent 6-step lifecycle, mana
 | **REGISTER** | Frontend | Calls the registration endpoint with the transaction hash and type |
 | **CONFIRM** | Gateway (automatic) | Polls the blockchain until the transaction appears on-chain |
 | **UPDATE** | Gateway (automatic) | Syncs the confirmed on-chain data to the Andamio database |
+
+### Client Transaction States
+
+The frontend tracks its own state machine during the build-sign-submit flow:
+
+<Mermaid chart='stateDiagram-v2\n    [*] --> idle\n    idle --> fetching: execute()\n    fetching --> signing: CBOR received\n    fetching --> error: API error\n    signing --> submitting: User signed\n    signing --> error: User declined\n    submitting --> success: txHash received\n    submitting --> error: Submit failed\n    success --> [*]\n    error --> idle: reset()' />
+
+| State | Meaning |
+|-------|---------|
+| `idle` | Ready to start a new transaction |
+| `fetching` | Building unsigned CBOR via API |
+| `signing` | Waiting for user to approve in wallet |
+| `submitting` | Submitting signed transaction to Cardano |
+| `success` | Transaction submitted, hash received |
+| `error` | Something failed — can reset to idle |
 
 ## State Transitions
 
@@ -40,6 +75,55 @@ Once a transaction is registered, it enters the state machine and transitions au
 | `expired` | Not confirmed on-chain within the timeout window — terminal |
 
 All database updates are **idempotent** — if a sync is interrupted and retried, it produces the same result.
+
+<Callout type="warn">
+**Common Pitfall: `confirmed` is NOT terminal**
+
+Don't refetch data when the state reaches `confirmed` — the database hasn't synced yet. Wait for `updated`:
+
+```typescript
+// ❌ WRONG — data will be stale
+if (status.state === "confirmed") refetchData();
+
+// ✅ CORRECT — wait for DB sync (~30s after on-chain)
+if (status.state === "updated") refetchData();
+```
+
+The `confirmed` state means "found on-chain" but the gateway is still syncing to the database. Only `updated` guarantees fresh data.
+</Callout>
+
+## Architecture Pattern: Check-Effect-Interact (CEI)
+
+Andamio transactions follow a layered CEI pattern across client and gateway:
+
+| Phase | Client | Gateway |
+|-------|--------|---------|
+| **Check** | Validate params (Zod schemas) | Validate eligibility, balances, permissions |
+| **Effect** | Sign transaction in wallet | Confirm transaction on-chain |
+| **Interact** | Submit to blockchain | Sync state to database |
+
+The client never writes to the database directly — the gateway handles all database synchronization after on-chain confirmation. This ensures the blockchain remains the source of truth.
+
+## Data Model: Hash On-Chain, Data Off-Chain
+
+Andamio stores hashes on the blockchain, not raw data:
+
+```
+On-chain:  assignment_info: "sha256:abc123def456..."
+Off-chain: evidence: { url: "https://...", text: "My submission notes" }
+```
+
+| Aspect | On-Chain | Off-Chain |
+|--------|----------|-----------|
+| **Stored** | Commitment hash (32 bytes) | Full evidence payload |
+| **Cost** | Minimal (~0.02 ADA) | Database storage |
+| **Privacy** | Public but opaque | Access-controlled |
+| **Verifiability** | Anyone can verify | Hash proves integrity |
+
+**Why this pattern?**
+- **Blockchain space is expensive** — hashes are small and fixed-size
+- **Privacy** — raw evidence (URLs, text, files) never touches the chain
+- **Verifiability** — anyone can prove off-chain data matches the on-chain hash
 
 ## Transaction Types
 
@@ -69,7 +153,6 @@ Andamio supports 17 transaction types across three categories:
 |-------------|----------|------|---------|
 | Create Project | `project_create` | Owner | Yes |
 | Manage Managers | `managers_manage` | Owner | Yes |
-| Manage Blacklist | `blacklist_update` | Owner | No |
 | Manage Tasks | `tasks_manage` | Manager | Yes |
 | Commit to Task | `project_join` | Contributor | Yes |
 | Submit Task Work | `task_submit` | Contributor | Yes |
@@ -202,6 +285,53 @@ Managers can also create tasks as drafts in the database before publishing them 
 
 If a transaction is confirmed on-chain but the database update was missed (for example, due to a service restart), the Gateway automatically detects and repairs the inconsistency when related data is next accessed. This is transparent to API consumers — no manual intervention is needed.
 
+## Example Flow: Claiming a Course Credential
+
+A complete walkthrough of one transaction from click to completion.
+
+### Prerequisites
+
+| Requirement | Description |
+|-------------|-------------|
+| Enrolled | Student holds an enrollment token for the course |
+| Assignments complete | All required modules assessed as `ACCEPTED` |
+| Wallet connected | Browser wallet with ~1.5 ADA for fees |
+
+### The Flow
+
+| Step | Layer | What Happens |
+|------|-------|--------------|
+| 1. Click "Claim Credential" | UI | `useTransaction().execute({ txType: "credential_claim", ... })` |
+| 2. Build | Client → Gateway | `POST /api/v2/tx/course/student/credential/claim` → unsigned CBOR |
+| 3. Sign | Client → Wallet | `wallet.signTx(cbor)` — user approves in wallet popup |
+| 4. Submit | Client → Blockchain | `wallet.submitTx(signed)` → txHash |
+| 5. Register | Client → Gateway | `POST /api/v2/tx/register` with `{ tx_hash, tx_type: "credential_claim" }` |
+| 6. Monitor | Client ← Gateway | SSE stream at `/api/v2/tx/stream/{txHash}` |
+| 7. Confirm | Gateway | ~30s later: `pending` → `confirmed` → `updated` |
+| 8. Complete | UI | Toast: "Credential claimed!" — credential NFT now in wallet |
+
+### What the User Sees
+
+```
+[Click]       → Button shows spinner: "Building..."
+[~2 seconds]  → Wallet popup appears
+[Sign]        → Button: "Submitting..."
+[~1 second]   → Toast: "Credential claim submitted"
+[~30 seconds] → Toast updates: "✓ Credential claimed!"
+```
+
+### CEI Pattern Applied
+
+| Phase | Where | What |
+|-------|-------|------|
+| **Check** | Gateway (build) | Validates enrollment, all assignments accepted, sufficient ADA |
+| **Effect** | Blockchain | Burns enrollment token, mints credential NFT |
+| **Interact** | Gateway (sync) | No DB update needed — `credential_claim` is on-chain only |
+
+This transaction has `DB Sync: No` because the credential NFT in the wallet is the sole proof of completion — the blockchain is the source of truth.
+
+> **See also**: [Claim Course Credential API Reference](/docs/protocol/v2/state-machine/course/student-credential-claim) for full request/response details.
+
 <Callout type="info">
 **Important Notes**
 
@@ -209,3 +339,25 @@ If a transaction is confirmed on-chain but the database update was missed (for e
 - **Single teacher/manager at creation**: Courses start with one teacher and projects start with one manager (the creator). Use the manage endpoints to add more after creation.
 - **Not yet implemented**: Task Leave and Task Update sub-actions have build endpoints but are not yet tracked by the state machine. The on-chain effects still work.
 </Callout>
+
+## Implementation Reference
+
+For working code examples, see the [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template):
+
+| Resource | Description |
+|----------|-------------|
+| [How Transactions Work](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work) | README section with diagrams, code examples, and the 7-step flow |
+| [useTransaction hook](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-transaction.ts) | Full implementation with PHASE 0-6 inline comments |
+| [useTxStream hook](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-tx-stream.ts) | SSE stream handling for real-time state updates |
+
+The `useTransaction` hook follows explicit phases that map to the lifecycle above:
+
+| Phase | Purpose |
+|-------|---------|
+| PHASE 0 | Check wallet connection |
+| PHASE 1 | Validate params (Zod schema) |
+| PHASE 2 | Build (POST to gateway → unsigned CBOR) |
+| PHASE 3 | Sign (user approves in wallet) |
+| PHASE 4 | Submit (to Cardano blockchain) |
+| PHASE 5 | Register (with gateway + global store) |
+| PHASE 6 | Success (update state, fire callbacks) |

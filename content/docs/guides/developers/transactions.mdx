@@ -1,0 +1,111 @@
+---
+title: Transaction Handling
+description: Build, sign, submit, and track Andamio transactions
+---
+
+# Transaction Handling
+
+You build the UX, Andamio handles credentials. Every transaction follows a consistent lifecycle across all transaction types.
+
+<ThemedImage
+  lightSrc="/diagrams/txsm-sequence-light.png"
+  darkSrc="/diagrams/txsm-sequence-dark.png"
+  alt="Transaction flow: Developer builds UI, user signs, Andamio handles the rest"
+  inverted
+/>
+
+The flow: your app requests a transaction → user signs → Andamio submits, confirms, and syncs to the database. Your app gets notified when it's done.
+
+> **Deep dive**: For state transitions, error handling patterns, and architecture details, see [Transaction State Machine](/docs/protocol/v2/state-machine).
+
+## The Steps
+
+```typescript
+const API = "https://preprod.api.andamio.io/api/v2";
+const headers = {
+  "Content-Type": "application/json",
+  "X-API-Key": APP_API_KEY,
+  "Authorization": `Bearer ${userJwt}`,
+};
+
+// 1. Build — request unsigned CBOR from the API
+const { unsigned_tx } = await fetch(`${API}/tx/course/student/assignment/commit`, {
+  method: "POST",
+  headers,
+  body: JSON.stringify({
+    alias: "student1",
+    course_id: "abc123...",
+    slt_hash: "deadbeef...",
+    assignment_info: "sha256:...",
+    initiator_data: { usedAddresses: [...], changeAddress: "addr1..." },
+  }),
+}).then(r => r.json());
+
+// 2. Sign — user approves in their wallet
+const signedTx = await wallet.signTx(unsigned_tx);
+
+// 3. Submit — send to Cardano
+const txHash = await wallet.submitTx(signedTx);
+
+// 4. Register — tell Andamio to track it
+await fetch(`${API}/tx/register`, {
+  method: "POST",
+  headers,
+  body: JSON.stringify({ tx_hash: txHash, tx_type: "assignment_submit" }),
+});
+
+// 5. Monitor — wait for DB sync via SSE
+const events = new EventSource(`${API}/tx/stream/${txHash}`);
+events.addEventListener("complete", (e) => {
+  const { final_state } = JSON.parse(e.data);
+  events.close();
+  if (final_state === "updated") {
+    // Success — safe to refetch data
+  }
+});
+```
+
+<Callout type="warn">
+**Wait for `updated`, not `confirmed`**
+
+`confirmed` means found on-chain, but the database hasn't synced yet. Wait for `updated` before refetching data.
+</Callout>
+
+## TX Type Reference
+
+When registering a transaction, use the correct `tx_type`:
+
+| Build Endpoint | TX Type | Notes |
+|----------------|---------|-------|
+| `/tx/global/general/access-token/mint` | `access_token_mint` | — |
+| `/tx/instance/owner/course/create` | `course_create` | — |
+| `/tx/course/owner/teachers/manage` | `teachers_update` | — |
+| `/tx/course/teacher/modules/manage` | `modules_manage` | — |
+| `/tx/course/teacher/assignments/assess` | `assessment_assess` | — |
+| `/tx/course/student/assignment/commit` | `assignment_submit` | First or update |
+| `/tx/course/student/assignment/update` | `assignment_submit` | Same as commit |
+| `/tx/course/student/credential/claim` | `credential_claim` | — |
+| `/tx/instance/owner/project/create` | `project_create` | — |
+| `/tx/project/owner/managers/manage` | `managers_manage` | — |
+| `/tx/project/manager/tasks/manage` | `tasks_manage` | — |
+| `/tx/project/manager/tasks/assess` | `task_assess` | — |
+| `/tx/project/contributor/task/commit` | `project_join` | Join + commit |
+| `/tx/project/contributor/credential/claim` | `project_credential_claim` | Requires `task_hash` metadata |
+
+## App Template Hooks
+
+The [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template) provides production-ready React hooks that handle the entire transaction lifecycle:
+
+| Hook | Purpose |
+|------|---------|
+| [`useTransaction`](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-transaction.ts) | Build, sign, submit, register — full lifecycle |
+| [`useTxStream`](https://github.com/Andamio-Platform/andamio-app-template/blob/main/src/hooks/tx/use-tx-stream.ts) | SSE stream for real-time state updates |
+
+These hooks abstract the manual fetch/sign/submit code shown above. See the [How Transactions Work](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work) README section for usage examples.
+
+## Next Steps
+
+- [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed transactions
+- [Transaction State Machine](/docs/protocol/v2/state-machine) — Deep dive into state transitions
+- [API Docs](https://preprod.api.andamio.io) — Full endpoint documentation (preprod)
+- [App Template](https://github.com/Andamio-Platform/andamio-app-template) — Production-ready starter with hooks

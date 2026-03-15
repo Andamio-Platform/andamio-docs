@@ -32,7 +32,7 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 ## External API Documentation
 
 Developer-facing API documentation is hosted externally:
-- **Production**: https://api.andamio.io
+- **Production**: https://mainnet.api.andamio.io
 - **Preprod**: https://preprod.api.andamio.io
 
 This documentation site focuses on high-level protocol descriptions. When developers are ready to build, they are directed to the live API docs.
@@ -58,9 +58,9 @@ This is a Next.js documentation site built with Fumadocs, using content collecti
 
 ### Content Organization
 - Protocol documentation in `content/docs/protocol/`
-- Transaction documentation in `content/docs/protocol/v1/transactions/`
-- Validator documentation in `content/docs/protocol/v1/validators/`
-- Token documentation in `content/docs/protocol/v1/tokens/`
+- Transaction documentation in `content/docs/protocol/v2/transactions/`
+- Validator documentation in `content/docs/protocol/v2/validators/`
+- Token documentation in `content/docs/protocol/v2/tokens/`
 - Whitepaper content in `content/docs/whitepaper/`
 
 ### Special Features
@@ -99,92 +99,25 @@ MDX files support custom frontmatter fields defined in `content-collections.ts`:
 - **Path aliases**: Use `@/*` to import from project root (e.g., `import { Component } from "@/components/..."`)
 - **Content collections**: Auto-generated types available at `content-collections` import path
 
-## Validator Documentation System
-
-The `diagrams/graphviz/generate/` directory contains a comprehensive validator and transaction documentation system:
-
-### Registry System
-- **`yaml/validator-registry-v1.yaml`**: Central source of truth for all validators and redeemers
-  - Maps validators to their script purposes (spend/mint/withdraw/cert/reward)
-  - Defines redeemer types and their associated actions
-  - Links transactions to specific validator actions
-
-### Validator Documentation
-- **`yaml/validators/`**: Individual YAML files for each validator (24 total)
-  - Each file includes: validator name, blueprint source, script purpose, and redeemers
-  - Script purposes are sourced from blueprint analysis of `../andamio-atlas-api/blueprints/`
-  - Validator names follow `underscore_case` convention
-
-### Transaction Documentation  
-- **`yaml/transactions/`**: Individual YAML files for each transaction type (28 total)
-  - UTxOs with redeemers are mapped to their corresponding validators
-  - Address field format: `address: "<validator-name>"` (not "string")
-  - Redeemer titles follow registry format: `ValidatorAction.SpecificAction`
-
-### Key Validator Mappings
-- **Assignment operations** → `Assignment_Validator` (AssignmentDecisionAction: Accept/Reject/Update)
-- **Treasury operations** → `treasury_scripts` (TreasuryAction: AddFunds/CommitProject/GetRewards/ManageTreasury)
-- **Global state operations** → `global_state` (GlobalStateAction: AddTokenInformation/UpdateTokenInformation/AddAllowedCsTn/UpdateGlobalInfo/ChangeIndexData)
-- **Course state operations** → `course_state_scripts`
-- **Observer operations** → corresponding `*_cbor_obs` validators
-
-### Blueprint Integration
-Script purposes are derived from blueprint files in `../andamio-atlas-api/blueprints/`:
-- `course.plutus`, `global.plutus`, `index.plutus`, `instance.plutus`, `project.plutus`
-- Blueprint analysis shows parameter purposes that determine validator functionality
-- All redeemer purposes are "spend" but parameter purposes vary (spend/mint/withdraw)
-
-### Maintenance Notes
-- When updating validators, always sync validator-registry-v1.yaml first as source of truth
-- Transaction files should reference validators by exact name from registry
-- Blueprint changes in andamio-atlas-api should trigger purpose updates here
-- Validator documentation system enables automated diagram generation
-
-## Diagram Asset Management
-
-All diagram images in `public/diagrams/` have corresponding MDX documentation files. Image references follow this pattern:
-- Transaction diagrams: `/diagrams/transactions/{transaction-name}.png`
-- Validator diagrams: `/diagrams/validators/{validator-name}.png`
-
-**IMPORTANT**: When checking diagram references, verify exact filename matches between `public/diagrams/` and MDX files. Common errors include:
-- Using dots instead of dashes in filenames (e.g., `course-creator-accept.assignment.png` should be `course-creator-accept-assignment.png`)
-- Mismatched transaction/validator names between YAML sources and generated images
-
-## V1 Transaction Documentation
-
-V1 transaction YAML files use a dot notation system to reference tokens and validators. For detailed patterns and audit workflows, see the **transaction-audit** skill in `.claude/skills/transaction-audit/`.
-
-Key files:
-- `public/yaml/validator-registry-v1.yaml` - Central source of truth for validators and tokens
-- `public/yaml/transactions/` - Transaction YAML files organized by role
-
 ## Documentation Linking System
 
 Documentation follows standardized URL patterns for predictable linking:
 
 ### URL Patterns
-- **Transactions**: `/docs/protocol/v1/transactions/<role>/<transaction-name>`
-- **Tokens**: `/docs/protocol/v1/tokens/<system>/<token-name>`
-- **Validators**: `/docs/protocol/v1/validators/<system>/<validator-name>`
+- **Transactions**: `/docs/protocol/v2/transactions/<scope>/<role>/<transaction-name>`
+- **Tokens**: `/docs/protocol/v2/tokens/<system>/<token-name>`
+- **Validators**: `/docs/protocol/v2/validators/<system>/<validator-name>`
 
 ### File Organization
 
 ```
-content/docs/protocol/v1/
-├── transactions/          # Organized by role (admin/, contributor/, student/, etc.)
-├── tokens/                # Organized by system (global-state/, course/, project/, etc.)
+content/docs/protocol/v2/
+├── transactions/          # Organized by scope/role
+├── tokens/                # Organized by system
 └── validators/            # Organized by system with observers/ subdirectories
 
-public/yaml/transactions/  # V1 YAML files organized by role
+public/yaml/transactions/v2/  # V2 YAML files
 ```
-
-### Registry-Based Links
-
-The validator registry (`public/yaml/validator-registry-v1.yaml`) contains:
-- `doc` fields mapping validators to documentation paths
-- Token usage tracking (`minted-in`, `used-in`, `referenced-in`, `burned-in`)
-
-For detailed token reference patterns and registry management, see the **transaction-audit** skill.
 
 ## Glossary and Terminology
 

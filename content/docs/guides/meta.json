@@ -1,12 +1,14 @@
 {
   "title": "Platform Guides",
+  "icon": "Users",
   "pages": [
     "index",
+    "preprod-wallet-setup",
     "getting-started",
     "roles",
     "courses",
     "projects",
-    "contributors",
-    "developers"
-  ]
+    "contributors"
+  ],
+  "defaultOpen": false
 }

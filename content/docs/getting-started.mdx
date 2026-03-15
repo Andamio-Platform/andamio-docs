@@ -1,0 +1,115 @@
+---
+title: Getting Started
+description: Set up local Andamio development in 15 minutes
+---
+
+# Getting Started
+
+Set up your local development environment and run the Andamio app template.
+
+**Time**: ~15 minutes
+
+## Prerequisites
+
+- **Node.js 20+** and **npm 10+**
+- **Cardano wallet on preprod with test ADA** — [Setup guide](/docs/guides/preprod-wallet-setup)
+
+## 1. Mint Your Access Token
+
+Your Access Token is your on-chain identity for Andamio.
+
+1. Go to [preprod.app.andamio.io](https://preprod.app.andamio.io)
+2. Click **Enter** → **Connect Wallet**
+3. Connect your wallet (preprod network)
+4. Enter an alias (permanent)
+5. Click **Mint Access Token** and sign
+6. Wait ~20 seconds for confirmation
+
+## 2. Generate an API Key
+
+1. Go to [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup)
+2. Connect your wallet
+3. Sign in to the Gateway
+4. Select **preprod**
+5. Click **Generate API Key**
+6. Name it (e.g., "local-dev")
+7. Copy the key immediately — it won't be shown again
+
+## 3. Clone and Install
+
+```bash
+git clone https://github.com/Andamio-Platform/andamio-app-template.git
+cd andamio-app-template
+npm install
+```
+
+## 4. Configure Environment
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env`:
+
+```bash
+NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://preprod.api.andamio.io"
+ANDAMIO_API_KEY="your-api-key-here"
+NEXT_PUBLIC_CARDANO_NETWORK="preprod"
+NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
+```
+
+## 5. Start Development Server
+
+```bash
+npm run dev
+```
+
+Open [localhost:3000](http://localhost:3000).
+
+## 6. Verify Setup
+
+1. Click **Enter**
+2. Connect your wallet
+3. You should see your dashboard with your alias
+
+Setup complete.
+
+---
+
+## Ready for Mainnet?
+
+These docs use **preprod** (Cardano testnet) for safe development. When your app is ready for production:
+
+1. Generate a mainnet API key at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
+2. Update `.env` with mainnet settings — see [Environment Reference](/docs/reference/environments)
+
+---
+
+## Troubleshooting
+
+**"Access Token not found"** — Check your wallet is set to preprod network.
+
+**"Invalid API key"** — Verify `.env` has no trailing whitespace and uses double quotes.
+
+**"Failed to fetch"** — Test the gateway: `curl https://preprod.api.andamio.io/health`
+
+**Build errors** — Regenerate types: `npm run generate:types`
+
+---
+
+## Next Steps
+
+<Cards>
+  <Card title="Your First Transaction" href="/docs/guides/developers/first-app">
+    Build something real — create a course and enroll a student
+  </Card>
+  <Card title="API Integration" href="/docs/guides/developers/api-integration">
+    Understand the build → sign → submit flow
+  </Card>
+  <Card title="Environment Reference" href="/docs/reference/environments">
+    All environment configurations for dev, staging, and production
+  </Card>
+  <Card title="API Reference" href="https://preprod.api.andamio.io/api/v1/docs/index.html">
+    Full endpoint documentation
+  </Card>
+</Cards>
