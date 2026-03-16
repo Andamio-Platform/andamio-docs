@@ -9,7 +9,9 @@
     "api-integration",
     "authentication",
     "transactions",
-    "error-handling"
+    "error-handling",
+    "--- Tools ---",
+    "cli"
   ],
   "defaultOpen": false
 }

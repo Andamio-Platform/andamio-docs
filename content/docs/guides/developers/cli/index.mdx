@@ -1,0 +1,52 @@
+---
+title: Overview
+description: Manage Andamio courses, modules, and content from the command line
+icon: Terminal
+---
+
+# Andamio CLI
+
+The Andamio CLI is a command-line tool for managing course content. Export modules for local editing, import updated content, query course data, and manage authentication — all without leaving your terminal.
+
+## What You Can Do
+
+| Task | Command |
+|------|---------|
+| List your courses | `andamio course list` |
+| Export a module for editing | `andamio course export <course-id> <module-code>` |
+| Import updated content | `andamio course import ./compiled/101 --course-id <id>` |
+| Check auth status | `andamio user status` |
+| Browse API endpoints | `andamio spec paths` |
+
+## Quick Start
+
+```bash
+# Install
+go install github.com/Andamio-Platform/andamio-cli/cmd/andamio@latest
+
+# Configure
+andamio auth login --api-key YOUR_KEY
+andamio user login
+
+# List courses
+andamio course list
+
+# Export a module, edit locally, re-import
+andamio course export <course-id> 101
+vim compiled/my-course/101/lesson-1.md
+andamio course import compiled/my-course/101 --course-id <course-id>
+```
+
+## Guides
+
+| Guide | Description |
+|-------|-------------|
+| [Installation](/docs/guides/developers/cli/installation) | Install the CLI and verify setup |
+| [Authentication](/docs/guides/developers/cli/authentication) | API keys, wallet login, JWT management |
+| [Managing Courses](/docs/guides/developers/cli/managing-courses) | Query courses, modules, SLTs, and lessons |
+| [Import & Export](/docs/guides/developers/cli/import-export) | Round-trip editing workflow |
+| [Import Format](/docs/guides/developers/cli/import-format) | File format reference for `outline.md`, `lesson-N.md`, etc. |
+
+## Source
+
+The CLI is open source: [github.com/Andamio-Platform/andamio-cli](https://github.com/Andamio-Platform/andamio-cli)

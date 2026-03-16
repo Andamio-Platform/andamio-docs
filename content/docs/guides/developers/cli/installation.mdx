@@ -1,0 +1,79 @@
+---
+title: Installation
+description: Install the Andamio CLI
+---
+
+# Installation
+
+## Requirements
+
+- [Go](https://go.dev/dl/) 1.21 or later
+
+## Install
+
+```bash
+go install github.com/Andamio-Platform/andamio-cli/cmd/andamio@latest
+```
+
+Verify the installation:
+
+```bash
+andamio --version
+```
+
+You should see output like:
+
+```
+andamio 0.2.0 (commit: abc1234, built: 2026-03-16T18:21:02Z)
+```
+
+## Configuration
+
+The CLI stores configuration at `~/.andamio/config.json`. This file is created automatically when you first authenticate.
+
+### Set Environment
+
+The CLI defaults to **preprod**. To switch environments:
+
+```bash
+# Preprod (default)
+andamio config set-url https://preprod.api.andamio.io
+
+# Mainnet
+andamio config set-url https://mainnet.api.andamio.io
+```
+
+View current configuration:
+
+```bash
+andamio config show
+```
+
+## Update
+
+To update to the latest version:
+
+```bash
+go install github.com/Andamio-Platform/andamio-cli/cmd/andamio@latest
+```
+
+## All Commands
+
+```bash
+andamio --help
+```
+
+```
+Available Commands:
+  apikey      API key management
+  auth        Authenticate with the Andamio API
+  config      Manage CLI configuration
+  course      Manage courses
+  project     Manage projects
+  spec        Manage OpenAPI spec
+  teacher     Teacher operations
+  tx          Transaction operations
+  user        User authentication and info
+```
+
+Every command supports `-o json` for machine-readable output.

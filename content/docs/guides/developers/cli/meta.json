@@ -1,0 +1,13 @@
+{
+  "title": "Andamio CLI",
+  "icon": "Terminal",
+  "pages": [
+    "index",
+    "installation",
+    "authentication",
+    "managing-courses",
+    "import-export",
+    "import-format"
+  ],
+  "defaultOpen": false
+}

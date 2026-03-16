@@ -1,0 +1,93 @@
+---
+title: Managing Courses
+description: Query courses, modules, SLTs, and lesson content
+---
+
+# Managing Courses
+
+## List Courses
+
+```bash
+andamio course list
+```
+
+To see only courses where you're a teacher:
+
+```bash
+andamio teacher courses
+```
+
+## Course Details
+
+```bash
+andamio course get <course-id>
+```
+
+## List Modules
+
+```bash
+andamio course modules <course-id>
+```
+
+## View SLTs
+
+```bash
+andamio course slts <course-id> <module-code>
+```
+
+This returns the Student Learning Targets for a specific module. The module must be on-chain (APPROVED or ON_CHAIN status) for this public endpoint to work.
+
+## View Lesson Content
+
+Get a single lesson by SLT index:
+
+```bash
+andamio course lesson <course-id> <module-code> <slt-index>
+```
+
+Get the module introduction:
+
+```bash
+andamio course intro <course-id> <module-code>
+```
+
+Get the module assignment:
+
+```bash
+andamio course assignment <course-id> <module-code>
+```
+
+## JSON Output
+
+All commands support `-o json` for structured output:
+
+```bash
+andamio course modules <course-id> -o json | jq '.data[].content.course_module_code'
+```
+
+## Other Resources
+
+### Projects
+
+```bash
+andamio project list
+andamio project get <project-id>
+```
+
+### Transactions
+
+```bash
+andamio tx pending
+andamio tx status <tx-hash>
+andamio tx types
+```
+
+### API Exploration
+
+Fetch the OpenAPI spec and browse available endpoints:
+
+```bash
+andamio spec fetch
+andamio spec paths
+andamio spec paths --filter course-module
+```

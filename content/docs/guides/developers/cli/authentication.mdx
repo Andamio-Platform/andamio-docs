@@ -1,0 +1,70 @@
+---
+title: Authentication
+description: API keys and wallet-based authentication for the Andamio CLI
+---
+
+# Authentication
+
+The CLI supports two authentication methods. Most operations require both.
+
+| Method | Access Level | Used For |
+|--------|-------------|----------|
+| API Key | Read-only | Querying courses, modules, SLTs |
+| User Login (JWT) | Read + Write | Importing content, uploading images |
+
+## API Key Authentication
+
+Get an API key from [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup), then store it:
+
+```bash
+andamio auth login --api-key YOUR_API_KEY
+```
+
+Check status:
+
+```bash
+andamio auth status
+```
+
+## User Authentication (Wallet Login)
+
+Write operations (import, export) require wallet-based authentication. This proves you own an Access Token and have teacher permissions on the course.
+
+```bash
+andamio user login
+```
+
+This opens your browser to sign a message with your Cardano wallet. After signing, a JWT is stored locally and included in subsequent requests.
+
+Check your session:
+
+```bash
+andamio user status
+```
+
+```
+Authentication Status
+---------------------
+API Key: ****... (configured)
+Base URL: https://preprod.api.andamio.io
+
+User: your-alias
+Session: active (expires in 23h 45m)
+```
+
+## Session Management
+
+JWTs expire after 24 hours. When your session expires:
+
+```bash
+andamio user logout
+andamio user login
+```
+
+## Troubleshooting
+
+**`unauthorized` errors** — Run `andamio user status` to check if your JWT has expired. If so, log out and log back in.
+
+**`forbidden` errors** — You may not be a teacher on the course you're trying to modify. Check with `andamio teacher courses` to see which courses you have write access to.
+
+**Browser doesn't open** — The CLI starts a local server and opens your default browser. If it doesn't open automatically, copy the URL from the terminal output.

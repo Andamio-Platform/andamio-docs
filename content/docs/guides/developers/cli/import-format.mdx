@@ -1,0 +1,168 @@
+---
+title: Import Format
+description: Reference for markdown file formats used in module imports
+---
+
+# Import Format
+
+Reference for the markdown file formats used by `andamio course import` and `andamio course export`.
+
+## Directory Structure
+
+```
+module-folder/
+├── outline.md          # Required — module metadata and SLTs
+├── introduction.md     # Optional — shown before lessons
+├── lesson-1.md         # Optional — content for SLT 1
+├── lesson-2.md         # Optional — content for SLT 2
+├── lesson-N.md         # Optional — content for SLT N
+├── assignment.md       # Optional — module assignment
+└── assets/             # Optional — images
+    ├── screenshot.png
+    └── .image-manifest.json
+```
+
+## outline.md (Required)
+
+Defines the module metadata and Student Learning Targets. Each SLT becomes a lesson slot.
+
+```markdown
+---
+title: Introduction to Cardano
+code: intro-cardano
+---
+
+## SLTs
+
+1. Understand blockchain fundamentals
+2. Set up a Cardano wallet
+3. Execute your first transaction
+```
+
+**Rules:**
+- YAML frontmatter must include `title` and `code`
+- The `code` field is the unique module identifier — can be numeric (`101`) or a slug (`intro-cardano`)
+- No `# H1` heading in this file — the title comes from YAML frontmatter
+- SLT heading must be exactly `## SLTs` or `## SLT` (case-insensitive)
+- Each numbered or bulleted item becomes one SLT
+- SLT text is used exactly as written — preserve any "I can" prefix
+- If `code` matches an existing module, content will be updated (upsert)
+
+## lesson-N.md (Optional)
+
+Content for each lesson, where N corresponds to the SLT index (1-indexed). File `lesson-1.md` maps to the first SLT, `lesson-2.md` to the second, etc.
+
+```markdown
+# Understanding Blockchain
+
+A blockchain is a distributed ledger...
+
+## Key Concepts
+
+- Decentralization
+- Immutability
+- Consensus mechanisms
+```
+
+**Rules:**
+- The `# H1` heading becomes the **lesson title** in the app
+- Everything after the H1 becomes the lesson content
+- If no H1 is present, the lesson imports with a blank title
+- Supports standard markdown: headings, lists, code blocks, blockquotes, emphasis, links, images
+
+## introduction.md (Optional)
+
+Module introduction shown before lessons. Great for context, prerequisites, or learning objectives.
+
+```markdown
+# Welcome to Cardano Development
+
+This module covers the fundamentals
+of building on the Cardano blockchain.
+
+## Prerequisites
+
+- Basic programming knowledge
+- Curiosity about Web3
+```
+
+**Rules:**
+- `# H1` heading becomes the introduction title
+- Rest of content becomes the introduction body
+
+## assignment.md (Optional)
+
+Module assignment content. This is the task students complete to demonstrate mastery.
+
+```markdown
+# Module Assignment
+
+## Task
+
+Create a simple Cardano wallet and
+document the process.
+
+## Deliverables
+
+1. Screenshot of wallet setup
+2. Your wallet address
+3. Brief reflection (200 words)
+```
+
+**Rules:**
+- `# H1` heading becomes the assignment title
+- Use `## Task` and `## Deliverables` sections for consistent structure
+- Additional sections like `## Notes` are allowed
+
+## Images
+
+Place images in an `assets/` subdirectory and reference them with relative paths.
+
+### Referencing Images
+
+```markdown
+![Wallet Setup](assets/screenshot-wallet.png)
+
+![Diagram](./assets/diagram-1.png)
+```
+
+Both `assets/image.png` and `./assets/image.png` work.
+
+### Supported Formats
+
+`.png`, `.jpg`, `.jpeg`, `.gif`, `.webp`, `.svg` (max 5MB per image)
+
+### What Happens on Import
+
+1. New images are uploaded to the CDN
+2. Local paths are replaced with hosted URLs
+3. An `.image-manifest.json` file is written mapping filenames to CDN URLs
+
+### Image Manifest
+
+The `.image-manifest.json` file preserves CDN URLs across import/export cycles:
+
+```json
+{
+  "screenshot-wallet.png": "https://storage.googleapis.com/andamio-storage/abc123.png",
+  "diagram-1.png": "https://storage.googleapis.com/andamio-storage/def456.png"
+}
+```
+
+On subsequent imports, images in the manifest are not re-uploaded. On export, images are downloaded from their CDN URLs and the manifest is recreated.
+
+### Best Practices
+
+- Use lowercase filenames without spaces: `wallet-setup.png` not `Wallet Setup.png`
+- Name screenshots to match lesson flow: `1.1-connect-wallet-01.png`, `1.1-connect-wallet-02.png`
+- Remove unused images and their manifest entries before importing
+
+## Common Mistakes
+
+| Mistake | What Happens | Fix |
+|---------|-------------|-----|
+| Adding `# H1` to outline.md | Ignored, but adds confusion | Remove it — title comes from YAML `title:` field |
+| Missing `# H1` in lesson files | Lesson imports with blank title | Add a descriptive H1 heading |
+| Using `# Student Learning Targets` | Parser ignores SLTs entirely | Use `## SLTs` exactly |
+| Placeholder lesson files (< 50 bytes) | Skipped by importer, remaining lessons re-indexed to wrong SLTs | Write real content or remove the file |
+| Image filenames with spaces | May cause upload issues | Use lowercase with hyphens |
