@@ -1,39 +1,56 @@
 ---
 title: Installation
-description: Install the Andamio CLI
+description: Install and configure the Andamio CLI
 ---
 
 # Installation
 
-## Requirements
+## Download a Release
 
-- [Go](https://go.dev/dl/) 1.21 or later
+Prebuilt binaries for macOS, Linux, and Windows are available on the [Releases page](https://github.com/Andamio-Platform/andamio-cli/releases/latest).
 
-## Install
+```bash
+# Example: macOS Apple Silicon — replace VERSION with the latest release
+VERSION=0.1.0
+curl -sLO "https://github.com/Andamio-Platform/andamio-cli/releases/download/v${VERSION}/andamio_${VERSION}_darwin_arm64.tar.gz"
+curl -sLO "https://github.com/Andamio-Platform/andamio-cli/releases/download/v${VERSION}/checksums.txt"
+shasum -a 256 --check --ignore-missing checksums.txt
+tar xzf "andamio_${VERSION}_darwin_arm64.tar.gz"
+sudo mv andamio /usr/local/bin/
+```
+
+Available platforms: `darwin_arm64`, `darwin_amd64`, `linux_amd64`, `linux_arm64`, `windows_amd64`, `windows_arm64`.
+
+## Build from Source
+
+Requires [Go](https://go.dev/dl/) 1.21 or later.
 
 ```bash
 go install github.com/Andamio-Platform/andamio-cli/cmd/andamio@latest
 ```
 
-Verify the installation:
+## Verify
 
 ```bash
 andamio --version
-```
-
-You should see output like:
-
-```
-andamio 0.2.0 (commit: abc1234, built: 2026-03-16T18:21:02Z)
 ```
 
 ## Configuration
 
 The CLI stores configuration at `~/.andamio/config.json`. This file is created automatically when you first authenticate.
 
-### Set Environment
+## Networks
 
-The CLI defaults to **preprod**. To switch environments:
+The CLI works with two Cardano networks. **Start on preprod for development.**
+
+| | Preprod (default) | Mainnet |
+|---|---|---|
+| API | `preprod.api.andamio.io` | `mainnet.api.andamio.io` |
+| App | [preprod.app.andamio.io](https://preprod.app.andamio.io) | [app.andamio.io](https://app.andamio.io) |
+| Get API key | [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup) | [app.andamio.io/api-setup](https://app.andamio.io/api-setup) |
+| Access Token | Free (test ADA) | Requires real ADA |
+
+Switch networks:
 
 ```bash
 # Preprod (default)
@@ -43,6 +60,16 @@ andamio config set-url https://preprod.api.andamio.io
 andamio config set-url https://mainnet.api.andamio.io
 ```
 
+When switching networks, you need to re-authenticate — API keys and Access Tokens are network-specific:
+
+```bash
+andamio config set-url https://mainnet.api.andamio.io
+andamio auth login --api-key <your-mainnet-api-key>
+andamio user login  # re-authenticate wallet on mainnet
+```
+
+See [Environments](/docs/reference/environments) for policy IDs and environment variables.
+
 View current configuration:
 
 ```bash
@@ -51,7 +78,7 @@ andamio config show
 
 ## Update
 
-To update to the latest version:
+Download the latest release from the [Releases page](https://github.com/Andamio-Platform/andamio-cli/releases/latest), or if installed from source:
 
 ```bash
 go install github.com/Andamio-Platform/andamio-cli/cmd/andamio@latest
