@@ -8,7 +8,8 @@
         "state-machine",
         "validators",
         "transactions",
-        "tokens"
+        "tokens",
+        "security-audit"
     ],
     "defaultOpen": false
 }

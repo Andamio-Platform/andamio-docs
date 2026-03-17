@@ -1,0 +1,44 @@
+---
+title: Security Audit
+description: Independent smart contract security audit of Andamio Protocol V2, conducted by TxPipe.
+---
+
+# Security Audit
+
+The Andamio Protocol V2 smart contracts have been independently audited by [TxPipe](https://txpipe.io/), a Cardano ecosystem infrastructure and development firm. The audit was completed on December 31, 2025.
+
+## Audit Report
+
+The full audit report is available for download:
+
+<a href="/documents/andamio-v2-audit.pdf" target="_blank" rel="noopener noreferrer">
+  **Download Audit Report (PDF)**
+</a>
+
+## Scope
+
+The audit covered two sets of validators that comprise the V2 protocol:
+
+- **Access Token validators** (Plinth) — decentralized minting of access tokens with unique token names, enforced through IndexUTxOs that store valid token name ranges
+- **Plumbline validators** (Aiken) — global state tracking, local state enrollment, and local state registration
+
+The audit examined potential security threats including index token theft, protocol halting, datum malformation, double satisfaction, and minting policy vulnerabilities.
+
+## Findings
+
+The audit identified 6 findings across severity levels:
+
+| ID | Finding | Severity |
+|---|---|---|
+| AND-001 | IndexToken tokens can be stolen | Critical |
+| AND-101 | Publish purpose in IndexScript is too lax | Major |
+| AND-201 | Adding PubKeyCredential to initGSObsShList forces IndexData UTxO to be unspendable | Moderate |
+| AND-202 | Missing checks in IndexData fields related to treasury fees output | Moderate |
+| AND-301 | Use builtin constant mkNil instead of mkNilData | Minor |
+| AND-302 | Incorrect CIP-68 implementation | Minor |
+
+All findings were communicated to the Andamio team and addressed in an efficient and timely manner.
+
+## Why This Matters
+
+External partners and organizations evaluating Andamio for treasury management and institutional use require independent verification of smart contract security. This audit provides that assurance, covering the full V2 validator and minting policy surface area.
