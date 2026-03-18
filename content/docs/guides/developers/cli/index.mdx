@@ -18,6 +18,7 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | List project tasks | `andamio project task list <project-id>` |
 | Create a task linked to a GitHub issue | `andamio project task create <project-id> --title "..." --github-issue org/repo#42 --lovelace 5000000 --expiration 2026-06-01` |
 | Export tasks to Markdown | `andamio project task export <project-id>` |
+| Sign and submit a transaction | `andamio tx build /v2/tx/... --body '...' --output json` |
 | Check auth status | `andamio user status` |
 | Browse API endpoints | `andamio spec paths` |
 
@@ -51,6 +52,7 @@ andamio course import compiled/my-course/101 --course-id <course-id>
 | [Import Format](/docs/guides/developers/cli/import-format) | File format reference for `outline.md`, `lesson-N.md`, etc. |
 | [Managing Tasks](/docs/guides/developers/cli/managing-tasks) | Create and manage on-chain task bounties, link to GitHub issues |
 | [Task Import & Export](/docs/guides/developers/cli/task-import-export) | Edit tasks as Markdown files and sync changes |
+| [Transaction Signing](/docs/guides/developers/cli/transaction-signing) | Sign and submit Cardano transactions with a local `.skey` file |
 
 ## Source
 

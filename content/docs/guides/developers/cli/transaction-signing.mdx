@@ -1,0 +1,208 @@
+---
+title: Transaction Signing
+description: Sign and submit Cardano transactions from the command line
+---
+
+# Transaction Signing
+
+The CLI can sign Cardano transactions locally using a `.skey` file and submit them directly to the network. The API builds the transaction, you sign it with your key, and submit it — no browser wallet required.
+
+The workflow uses four composable commands:
+
+```
+tx build → tx sign → tx submit → tx register
+```
+
+Each command supports `--output json` and can be piped together for scripting.
+
+## Prerequisites
+
+- [User authentication](/docs/guides/developers/cli/authentication) (wallet login) for `tx build` and `tx register`
+- A Cardano `.skey` file (payment signing key from `cardano-cli`)
+- A Cardano submit API URL (Blockfrost, Maestro, or self-hosted)
+
+## Setup
+
+Configure your submit API URL once:
+
+```bash
+andamio config set-submit-url https://cardano-mainnet.blockfrost.io/api/tx/submit
+```
+
+This is stored in `~/.andamio/config.json`. You can also pass `--submit-url` per command or set the `ANDAMIO_SUBMIT_URL` environment variable.
+
+## The Four Steps
+
+### 1. Build an Unsigned Transaction
+
+Request an unsigned transaction from the Andamio API:
+
+```bash
+andamio tx build /v2/tx/global/user/access-token/mint \
+  --body '{"alias":"dev1","initiator_data":"addr_test1..."}' \
+  --output json
+```
+
+The API builds the transaction (handles UTxO selection, fee calculation, script logic) and returns the unsigned CBOR:
+
+```json
+{ "unsigned_tx": "84a400..." }
+```
+
+Some endpoints return additional fields like `course_id` or `project_id` — these are passed through in the response.
+
+Use `--body-file` for complex request bodies:
+
+```bash
+andamio tx build /v2/tx/instance/owner/course/create \
+  --body-file create-course.json \
+  --output json
+```
+
+To see all available transaction endpoints:
+
+```bash
+andamio tx types
+```
+
+### 2. Sign Locally
+
+Sign the unsigned transaction with your `.skey` file:
+
+```bash
+andamio tx sign --tx 84a400... --skey ./payment.skey --output json
+```
+
+Returns the signed transaction and its hash:
+
+```json
+{ "signed_tx": "84a400...", "tx_hash": "abc123..." }
+```
+
+This is a purely local operation — no network calls. Your private key never leaves your machine.
+
+For large transactions, use a file:
+
+```bash
+andamio tx sign --tx-file unsigned.cbor --skey ./payment.skey --output json
+```
+
+### 3. Submit to the Network
+
+Submit the signed transaction to the Cardano network:
+
+```bash
+andamio tx submit --tx 84a400... --output json
+```
+
+If you configured a submit URL (step 0), it uses that. Otherwise pass it explicitly:
+
+```bash
+andamio tx submit --tx 84a400... \
+  --submit-url https://cardano-mainnet.blockfrost.io/api/tx/submit \
+  --submit-header "project_id: your-blockfrost-project-id" \
+  --output json
+```
+
+`--submit-header` is repeatable for providers that require authentication headers.
+
+### 4. Register for Tracking
+
+Register the transaction hash with Andamio so the platform can track its confirmation:
+
+```bash
+andamio tx register --tx-hash abc123... --tx-type access_token_mint
+```
+
+For transaction types that create new resources, pass the ID returned by `tx build`:
+
+```bash
+andamio tx register --tx-hash abc123... --tx-type course_create --instance-id <course-id>
+```
+
+Check confirmation status:
+
+```bash
+andamio tx status abc123...
+```
+
+## Scripting the Full Pipeline
+
+Chain all four steps together with `jq`:
+
+```bash
+# 1. Build
+RESULT=$(andamio tx build /v2/tx/global/user/access-token/mint \
+  --body '{"alias":"dev1","initiator_data":"addr_test1..."}' \
+  --output json)
+UNSIGNED_TX=$(echo "$RESULT" | jq -r '.unsigned_tx')
+
+# 2. Sign
+SIGNED=$(andamio tx sign --tx "$UNSIGNED_TX" --skey ./payment.skey --output json)
+TX_HASH=$(echo "$SIGNED" | jq -r '.tx_hash')
+SIGNED_TX=$(echo "$SIGNED" | jq -r '.signed_tx')
+
+# 3. Submit
+andamio tx submit --tx "$SIGNED_TX" --output json
+
+# 4. Register
+andamio tx register --tx-hash "$TX_HASH" --tx-type access_token_mint
+
+# 5. Check status
+andamio tx status "$TX_HASH"
+```
+
+A convenience script is included in the CLI repository at `scripts/tx-flow.sh`:
+
+```bash
+./scripts/tx-flow.sh \
+  /v2/tx/global/user/access-token/mint \
+  '{"alias":"dev1","initiator_data":"addr_test1..."}' \
+  ./payment.skey \
+  access_token_mint
+```
+
+## Transaction Endpoints
+
+The API provides 17 transaction-building endpoints organized by role:
+
+| Role | Endpoint | Description |
+|------|----------|-------------|
+| **User** | `/v2/tx/global/user/access-token/mint` | Mint access token |
+| **Instance Owner** | `/v2/tx/instance/owner/course/create` | Create course |
+| | `/v2/tx/instance/owner/project/create` | Create project |
+| **Course Owner** | `/v2/tx/course/owner/teachers/manage` | Manage teachers |
+| **Course Teacher** | `/v2/tx/course/teacher/modules/manage` | Manage modules |
+| | `/v2/tx/course/teacher/assignments/assess` | Assess assignments |
+| **Course Student** | `/v2/tx/course/student/assignment/commit` | Commit to assignment |
+| | `/v2/tx/course/student/assignment/update` | Update assignment |
+| | `/v2/tx/course/student/credential/claim` | Claim credential |
+| **Project Owner** | `/v2/tx/project/owner/managers/manage` | Manage managers |
+| **Project Manager** | `/v2/tx/project/manager/tasks/manage` | Manage tasks |
+| | `/v2/tx/project/manager/tasks/assess` | Assess tasks |
+| **Project Contributor** | `/v2/tx/project/contributor/task/commit` | Commit to task |
+| | `/v2/tx/project/contributor/task/action` | Task action |
+| | `/v2/tx/project/contributor/credential/claim` | Claim credential |
+| **Project User** | `/v2/tx/project/user/treasury/add-funds` | Add funds to treasury |
+
+## Monitoring Transactions
+
+```bash
+# Check a specific transaction
+andamio tx status <tx-hash>
+
+# List your pending transactions
+andamio tx pending
+
+# List valid transaction types
+andamio tx types
+```
+
+Transaction states: `pending` → `confirmed` → `updated` (or `failed` / `expired`).
+
+## Security Notes
+
+- Your `.skey` private key never leaves your machine — signing is purely local
+- The CLI warns if your `.skey` file has overly permissive permissions (should be `0600`)
+- Submit URLs must use HTTPS (except localhost for development)
+- The CLI checks `required_signers` in the transaction and warns if your key doesn't match
