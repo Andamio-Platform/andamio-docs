@@ -6,7 +6,7 @@ icon: Terminal
 
 # Andamio CLI
 
-The Andamio CLI is a command-line tool for managing course content. Export modules for local editing, import updated content, query course data, and manage authentication — all without leaving your terminal.
+The Andamio CLI is a command-line tool for managing course content and project tasks. Export modules for local editing, create on-chain task bounties linked to GitHub issues, import changes, and manage authentication — all without leaving your terminal.
 
 ## What You Can Do
 
@@ -15,6 +15,9 @@ The Andamio CLI is a command-line tool for managing course content. Export modul
 | List your courses | `andamio course list` |
 | Export a module for editing | `andamio course export <course-id> <module-code>` |
 | Import updated content | `andamio course import ./compiled/101 --course-id <id>` |
+| List project tasks | `andamio project task list <project-id>` |
+| Create a task linked to a GitHub issue | `andamio project task create <project-id> --title "..." --github-issue org/repo#42 --lovelace 5000000 --expiration 2026-06-01` |
+| Export tasks to Markdown | `andamio project task export <project-id>` |
 | Check auth status | `andamio user status` |
 | Browse API endpoints | `andamio spec paths` |
 
@@ -44,8 +47,10 @@ andamio course import compiled/my-course/101 --course-id <course-id>
 | [Installation](/docs/guides/developers/cli/installation) | Install the CLI and verify setup |
 | [Authentication](/docs/guides/developers/cli/authentication) | API keys, wallet login, JWT management |
 | [Managing Courses](/docs/guides/developers/cli/managing-courses) | Query courses, modules, SLTs, and lessons |
-| [Import & Export](/docs/guides/developers/cli/import-export) | Round-trip editing workflow |
+| [Import & Export](/docs/guides/developers/cli/import-export) | Round-trip course editing workflow |
 | [Import Format](/docs/guides/developers/cli/import-format) | File format reference for `outline.md`, `lesson-N.md`, etc. |
+| [Managing Tasks](/docs/guides/developers/cli/managing-tasks) | Create and manage on-chain task bounties, link to GitHub issues |
+| [Task Import & Export](/docs/guides/developers/cli/task-import-export) | Edit tasks as Markdown files and sync changes |
 
 ## Source
 
