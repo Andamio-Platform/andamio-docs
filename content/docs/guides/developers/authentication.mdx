@@ -5,7 +5,7 @@ description: User login, JWT creation, and session management in Andamio applica
 
 # Authentication
 
-Andamio uses wallet-based authentication. Users prove ownership of their Cardano wallet by signing a cryptographic challenge, and receive a JWT that authorizes API requests.
+Users sign a cryptographic challenge with their Cardano wallet and receive a JWT that authorizes API requests.
 
 ## How Login Works
 
@@ -27,7 +27,7 @@ The authentication sequence:
 
 ### 1. User Connects Wallet
 
-The user connects their Cardano wallet (Lace, Eternl, Nami, etc.) using the CIP-30 standard:
+Connect a CIP-30 wallet (Lace, Eternl, Nami, etc.):
 
 ```typescript
 import { BrowserWallet } from "@meshsdk/core";
@@ -42,7 +42,7 @@ const address = await wallet.getChangeAddress();
 
 ### 2. Verify Access Token
 
-Before authenticating, verify the user has an Andamio Access Token in their wallet. This on-chain token is their identity on the platform.
+Verify the user has an Andamio Access Token in their wallet:
 
 ```typescript
 const ACCESS_TOKEN_POLICY = "29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78";
@@ -59,11 +59,9 @@ if (!hasAccessToken) {
 }
 ```
 
-If the user doesn't have an Access Token, direct them to mint one first. See [Getting Started](/docs/getting-started).
+If no Access Token, redirect to [Getting Started](/docs/getting-started) to mint one.
 
 ### 3. Request Challenge
-
-Request a cryptographic challenge from the API:
 
 ```typescript
 const API = "https://preprod.api.andamio.io/api/v2";
@@ -77,22 +75,16 @@ const challengeRes = await fetch(`${API}/auth/challenge`, {
 const { challenge, expires_at } = await challengeRes.json();
 ```
 
-The challenge is a random string that expires in ~5 minutes.
-
 ### 4. User Signs Challenge
 
-The user signs the challenge with their wallet, proving they control the address:
+Sign the challenge to prove wallet ownership:
 
 ```typescript
 // CIP-30 signData
 const signature = await wallet.signData(address, challenge);
 ```
 
-This opens the wallet's signing UI. The user sees the challenge text and confirms.
-
 ### 5. Exchange for JWT
-
-Submit the signature to receive a JWT:
 
 ```typescript
 const verifyRes = await fetch(`${API}/auth/verify`, {
@@ -115,7 +107,7 @@ The response includes:
 
 ## What the JWT Enables
 
-The JWT authorizes the user to perform actions on the platform. Different actions require different roles.
+Different actions require different roles:
 
 ### Actions by Role
 
@@ -135,8 +127,6 @@ The JWT authorizes the user to perform actions on the platform. Different action
 
 ### JWT Claims
 
-The JWT contains claims that identify the user:
-
 ```json
 {
   "sub": "addr1q9...",           // Wallet address
@@ -148,21 +138,9 @@ The JWT contains claims that identify the user:
 }
 ```
 
-### Authorization Flow
-
-When you make an API request:
-
-1. Gateway validates the JWT signature
-2. Gateway checks the JWT hasn't expired
-3. Gateway extracts the user's alias/address
-4. Endpoint checks if user has required role for that course/project
-5. Request proceeds or returns `403 Forbidden`
-
 ## Session Management
 
 ### Storing the JWT
-
-Store the JWT securely. Common patterns:
 
 ```typescript
 // Option 1: Memory only (most secure, lost on refresh)
@@ -200,15 +178,11 @@ if (isJwtExpired(jwt)) {
 
 ### Refresh Strategy
 
-Andamio JWTs don't support refresh tokens. When a JWT expires, the user must sign a new challenge. Design your UX to:
-
-1. Check expiration before sensitive actions
-2. Prompt re-authentication gracefully
-3. Consider shorter sessions for high-security apps
+No refresh tokens. When a JWT expires, the user signs a new challenge. Check expiration before sensitive actions and prompt re-authentication gracefully.
 
 ### Logout
 
-To log out, simply discard the JWT:
+Discard the JWT:
 
 ```typescript
 function logout() {

@@ -5,7 +5,7 @@ description: Build, sign, submit, and track Andamio transactions
 
 # Transaction Handling
 
-You build the UX, Andamio handles credentials. Every transaction follows a consistent lifecycle across all transaction types.
+Every transaction follows the same lifecycle: build → sign → submit → register → monitor.
 
 <ThemedImage
   lightSrc="/diagrams/txsm-sequence-light.png"
@@ -14,7 +14,7 @@ You build the UX, Andamio handles credentials. Every transaction follows a consi
   inverted
 />
 
-The flow: your app requests a transaction → user signs → Andamio submits, confirms, and syncs to the database. Your app gets notified when it's done.
+Your app requests a transaction, the user signs, Andamio submits and confirms on-chain, then syncs to the database.
 
 > **Deep dive**: For state transitions, error handling patterns, and architecture details, see [Transaction State Machine](/docs/protocol/v2/state-machine).
 

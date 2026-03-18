@@ -9,7 +9,8 @@
     "import-export",
     "import-format",
     "managing-tasks",
-    "task-import-export"
+    "task-import-export",
+    "transaction-signing"
   ],
   "defaultOpen": false
 }

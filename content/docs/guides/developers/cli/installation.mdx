@@ -96,11 +96,36 @@ Available Commands:
   auth        Authenticate with the Andamio API
   config      Manage CLI configuration
   course      Manage courses
+  manager     Project manager operations (requires user login)
   project     Manage projects
   spec        Manage OpenAPI spec
-  teacher     Teacher operations
+  teacher     Teacher operations (requires user login)
   tx          Transaction operations
   user        User authentication and info
 ```
 
-Every command supports `-o json` for machine-readable output.
+Every command supports four output formats via the `-o` flag:
+
+| Format | Flag | Use case |
+|--------|------|----------|
+| Text (default) | `-o text` | Human-readable tables in the terminal |
+| JSON | `-o json` | Scripting and piping to `jq` |
+| CSV | `-o csv` | Spreadsheets and data analysis |
+| Markdown | `-o markdown` | Documentation and reports |
+
+JSON goes to stdout with no stderr noise, so all commands are safe to pipe.
+
+## Shell Completion
+
+Generate autocompletion for your shell:
+
+```bash
+# Zsh (add to ~/.zshrc)
+source <(andamio completion zsh)
+
+# Bash (add to ~/.bashrc)
+source <(andamio completion bash)
+
+# Fish
+andamio completion fish | source
+```

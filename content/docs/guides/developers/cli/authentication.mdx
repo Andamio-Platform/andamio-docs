@@ -61,10 +61,35 @@ andamio user logout
 andamio user login
 ```
 
+## Check If a User Exists
+
+Look up any user by alias:
+
+```bash
+andamio user exists <alias>
+```
+
+Returns `{ "alias": "...", "exists": true }` — useful for scripting and verifying aliases before creating tasks or courses.
+
+## Check Your Roles
+
+After logging in, verify what you have access to:
+
+```bash
+# Full dashboard — courses, projects, credentials
+andamio user me
+
+# Courses where you're a teacher (can import/export content)
+andamio teacher courses
+
+# Projects where you're a manager (can create/manage tasks)
+andamio manager projects
+```
+
 ## Troubleshooting
 
 **`unauthorized` errors** — Run `andamio user status` to check if your JWT has expired. If so, log out and log back in.
 
-**`forbidden` errors** — You may not be a teacher on the course you're trying to modify. Check with `andamio teacher courses` to see which courses you have write access to.
+**`forbidden` errors** — You may not be a teacher on the course you're trying to modify. Check with `andamio teacher courses` to see which courses you have write access to. For task operations, check `andamio manager projects`.
 
 **Browser doesn't open** — The CLI starts a local server and opens your default browser. If it doesn't open automatically, copy the URL from the terminal output.

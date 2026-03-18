@@ -104,13 +104,37 @@ Module content follows these rules depending on status:
 
 Once a module is approved or registered on-chain, its SLTs cannot be changed through the CLI. You can still update lesson content and assignments.
 
-## Import Multiple Modules
+## Import All Modules
 
-To import all modules in a course:
+Import every module in a course directory at once:
 
 ```bash
-COURSE_ID="your-course-id"
+andamio course import-all ./compiled/my-course --course-id <course-id>
+```
 
+This scans for subdirectories containing `outline.md` and imports each one.
+
+### Options
+
+```bash
+# Dry run — preview what would be imported
+andamio course import-all ./compiled/my-course --course-id <id> --dry-run
+
+# Create modules that don't exist yet on the course
+andamio course import-all ./compiled/my-course --course-id <id> --create
+
+# Continue past failures instead of stopping on first error
+andamio course import-all ./compiled/my-course --course-id <id> --continue-on-error
+
+# Set starting sort order for new modules (with --create)
+andamio course import-all ./compiled/my-course --course-id <id> --create --sort-order-start 100
+```
+
+### Manual alternative
+
+If you need more control per module, loop manually:
+
+```bash
 for module_dir in ./compiled/my-course/*/; do
   echo "=== Importing $(basename $module_dir) ==="
   andamio course import "$module_dir" --course-id "$COURSE_ID"

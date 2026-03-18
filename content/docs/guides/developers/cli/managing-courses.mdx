@@ -65,6 +65,42 @@ All commands support `-o json` for structured output:
 andamio course modules <course-id> -o json | jq '.data[].content.course_module_code'
 ```
 
+## Create a Module
+
+Create a new module on an existing course, either from a compiled directory or explicit flags:
+
+```bash
+# From a compiled directory (reads title and code from outline.md)
+andamio course create-module ./compiled/my-course/101 --course-id <id>
+
+# From explicit flags
+andamio course create-module --course-id <id> --code 101 --title "My Module"
+```
+
+Requires [user authentication](/docs/guides/developers/cli/authentication) (wallet login) and teacher access on the course.
+
+## Your Dashboard
+
+See a summary of everything you're enrolled in, teaching, and managing:
+
+```bash
+andamio user me
+```
+
+## Role-Specific Views
+
+List courses where you're a teacher:
+
+```bash
+andamio teacher courses
+```
+
+List projects where you're a manager:
+
+```bash
+andamio manager projects
+```
+
 ## Other Resources
 
 ### Projects
@@ -76,11 +112,16 @@ andamio project get <project-id>
 
 ### Transactions
 
+Build, sign, and submit transactions:
+
 ```bash
-andamio tx pending
+andamio tx build /v2/tx/global/user/access-token/mint --body '{"alias":"dev1",...}'
+andamio tx sign --tx <unsigned-cbor> --skey ./payment.skey
+andamio tx submit --tx <signed-cbor>
 andamio tx status <tx-hash>
-andamio tx types
 ```
+
+See [Transaction Signing](/docs/guides/developers/cli/transaction-signing) for the full workflow.
 
 ### API Exploration
 

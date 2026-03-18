@@ -12,9 +12,15 @@ The Andamio CLI is a command-line tool for managing course content and project t
 
 | Task | Command |
 |------|---------|
+| See your dashboard | `andamio user me` |
 | List your courses | `andamio course list` |
+| List courses you teach | `andamio teacher courses` |
+| List projects you manage | `andamio manager projects` |
 | Export a module for editing | `andamio course export <course-id> <module-code>` |
 | Import updated content | `andamio course import ./compiled/101 --course-id <id>` |
+| Import all modules at once | `andamio course import-all ./compiled/my-course --course-id <id>` |
+| Create a new module | `andamio course create-module --course-id <id> --code 101 --title "My Module"` |
+| Check if a user exists | `andamio user exists <alias>` |
 | List project tasks | `andamio project task list <project-id>` |
 | Create a task linked to a GitHub issue | `andamio project task create <project-id> --title "..." --github-issue org/repo#42 --lovelace 5000000 --expiration 2026-06-01` |
 | Export tasks to Markdown | `andamio project task export <project-id>` |

@@ -2,6 +2,7 @@
   "title": "SDK",
   "icon": "Package",
   "pages": [
+    "index",
     "npm-packages/andamio-transactions"
   ],
   "defaultOpen": false
