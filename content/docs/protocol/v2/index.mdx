@@ -46,7 +46,7 @@ V2 validators organized by system:
 | System | Validators | Purpose |
 |--------|------------|---------|
 | [Global State](/docs/protocol/v2/validators/global-state) | 2 | Core protocol state (V1 compat + V2 enhanced) |
-| [Global](/docs/protocol/v2/validators/global) | 1 | Local state registration |
+| [Global](/docs/protocol/v2/validators/global/local-state-registration) | 1 | Local state registration |
 | [Index Validators](/docs/protocol/v2/validators/index-validators) | 3 | Access token minting and index references |
 | [Instance](/docs/protocol/v2/validators/instance) | 3 | Instance-level management |
 | [Course](/docs/protocol/v2/validators/course) | 4 + 3 observers | Course and assignment management |
@@ -58,10 +58,10 @@ V2 transactions organized by system and role:
 
 | System | Role | Transactions | Key Operations |
 |--------|------|--------------|----------------|
-| [General](/docs/protocol/v2/transactions/general) | Open | 1 | [mint-access-token](/docs/protocol/v2/transactions/general/mint-access-token) (~7.9 ADA) |
+| [General](/docs/protocol/v2/transactions/global/general/access-token/mint) | Open | 1 | [mint-access-token](/docs/protocol/v2/transactions/global/general/access-token/mint) (~7.9 ADA) |
 | [Course](/docs/protocol/v2/transactions/course) | Owner | 2 | [create](/docs/protocol/v2/transactions/instance/owner/course/create) (~45 ADA), [teachers-manage](/docs/protocol/v2/transactions/course/owner/teachers/manage) (~5.3 ADA) |
-| [Course](/docs/protocol/v2/transactions/course) | Teacher | 2 | [modules-manage](/docs/protocol/v2/transactions/course/teacher/modules-manage), [assignments-assess](/docs/protocol/v2/transactions/course/teacher/assignments-assess) |
-| [Course](/docs/protocol/v2/transactions/course) | Student | 3 | [assignment-commit](/docs/protocol/v2/transactions/course/student/assignment/commit), [assignment-update](/docs/protocol/v2/transactions/course/student/assignment-update), [credential-claim](/docs/protocol/v2/transactions/course/student/credential-claim) |
+| [Course](/docs/protocol/v2/transactions/course) | Teacher | 2 | [modules-manage](/docs/protocol/v2/transactions/course/teacher/modules/manage), [assignments-assess](/docs/protocol/v2/transactions/course/teacher/assignments/assess) |
+| [Course](/docs/protocol/v2/transactions/course) | Student | 3 | [assignment-commit](/docs/protocol/v2/transactions/course/student/assignment/commit), [assignment-update](/docs/protocol/v2/transactions/course/student/assignment/update), [credential-claim](/docs/protocol/v2/transactions/course/student/credential/claim) |
 
 **Single Credential Loop Cost:** Student ~1.11 ADA + Teacher ~0.21 ADA = **~1.32 ADA total**
 
@@ -72,15 +72,15 @@ V2 tokens organized by system:
 | System | Key Tokens |
 |--------|------------|
 | [Global State](/docs/protocol/v2/tokens/global-state) | access-token-user, access-token-global-state, access-token-index |
-| [Global](/docs/protocol/v2/tokens/global) | local-state-registration |
-| [Local State](/docs/protocol/v2/tokens/local-state) | local-state-nft |
-| [Instance](/docs/protocol/v2/tokens/instance) | instance-admin-token, course-nft, project-nft |
-| [Course](/docs/protocol/v2/tokens/course) | course-state-v2-token, module-token |
-| [Project](/docs/protocol/v2/tokens/project) | contributor-state-v2-token, treasury-token |
+| [Global](/docs/protocol/v2/tokens/global/local-state-registration) | local-state-registration |
+| [Local State](/docs/protocol/v2/tokens/local-state/local-state-nft) | local-state-nft |
+| [Instance](/docs/protocol/v2/tokens/instance/instance-admin-token) | instance-admin-token, course-nft, project-nft |
+| [Course](/docs/protocol/v2/tokens/course/course-state-v2-token) | course-state-v2-token, module-token |
+| [Project](/docs/protocol/v2/tokens/project/contributor-state-v2-token) | contributor-state-v2-token, treasury-token |
 
 ## Migration from V1
 
-Users with V1 global state can migrate to V2 using the [move-global-state-v1-to-v2](/docs/protocol/v2/transactions/user/move-global-state-v1-to-v2) transaction. This preserves existing access tokens while enabling V2 features.
+Users with V1 global state can migrate to V2 using the move-global-state-v1-to-v2 transaction. This preserves existing access tokens while enabling V2 features.
 
 ## Source of Truth
 
