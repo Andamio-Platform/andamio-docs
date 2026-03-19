@@ -5,13 +5,19 @@ description: Install and configure the Andamio CLI
 
 # Installation
 
+## Homebrew (macOS)
+
+```bash
+brew install Andamio-Platform/tap/andamio-cli
+```
+
 ## Download a Release
 
 Prebuilt binaries for macOS, Linux, and Windows are available on the [Releases page](https://github.com/Andamio-Platform/andamio-cli/releases/latest).
 
 ```bash
 # Example: macOS Apple Silicon — replace VERSION with the latest release
-VERSION=0.1.0
+VERSION=0.3.0
 curl -sLO "https://github.com/Andamio-Platform/andamio-cli/releases/download/v${VERSION}/andamio_${VERSION}_darwin_arm64.tar.gz"
 curl -sLO "https://github.com/Andamio-Platform/andamio-cli/releases/download/v${VERSION}/checksums.txt"
 shasum -a 256 --check --ignore-missing checksums.txt
@@ -78,11 +84,15 @@ andamio config show
 
 ## Update
 
-Download the latest release from the [Releases page](https://github.com/Andamio-Platform/andamio-cli/releases/latest), or if installed from source:
-
 ```bash
+# Homebrew
+brew upgrade andamio-cli
+
+# From source
 go install github.com/Andamio-Platform/andamio-cli/cmd/andamio@latest
 ```
+
+Or download the latest binary from the [Releases page](https://github.com/Andamio-Platform/andamio-cli/releases/latest).
 
 ## All Commands
 
