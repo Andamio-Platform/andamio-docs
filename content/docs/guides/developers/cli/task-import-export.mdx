@@ -31,6 +31,10 @@ Each file has YAML frontmatter and a Markdown body:
 title: "Implement wallet connect"
 lovelace: "5000000"
 expiration_time: "2026-06-01T00:00:00Z"
+tokens:
+  - policy_id: "722c475bebb10..."
+    asset_name: "XP"
+    quantity: "50"
 index: 1
 status: DRAFT
 project_id: "abc123..."
@@ -172,5 +176,6 @@ andamio project task get 1 --project-id "$PROJECT_ID" --output json | jq '.conte
 | `expiration_time` | yes | Deadline — ISO 8601 datetime |
 | `project_id` | yes | Project identifier |
 | `project_state_policy_id` | yes | Policy ID for the project state |
+| `tokens` | no | Native asset rewards — array of `{policy_id, asset_name, quantity}` |
 | `index` | for updates | Task index — omit to create a new task |
 | `status` | informational | Set by the platform; not used during import |

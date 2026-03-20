@@ -56,6 +56,40 @@ andamio project task create <project-id> \
 
 All three flags are required. Expiration accepts both date-only (`2026-06-01`) and datetime (`2026-06-01T00:00:00Z`) formats.
 
+### Assign Native Asset Tokens
+
+Use `--token` to attach Cardano native assets (e.g. XP tokens) as rewards:
+
+```bash
+andamio project task create "$PROJECT_ID" \
+  --title "Build a dApp" \
+  --lovelace 5000000 \
+  --expiration 2026-06-01 \
+  --token "722c475bebb106799b109fc95301c9b796e1a37b6afc601359d54a04,XP,50"
+```
+
+**Format:** `--token "policy_id,asset_name,quantity"` — repeatable for multiple tokens:
+
+```bash
+andamio project task create "$PROJECT_ID" \
+  --title "Complete milestone" \
+  --lovelace 5000000 \
+  --expiration 2026-06-01 \
+  --token "abc123...,XP,50" \
+  --token "def456...,RewardToken,100"
+```
+
+Policy IDs must be exactly 56 hex characters. Empty asset names are allowed for policy-only tokens (`"policyid,,quantity"`).
+
+Tokens can also be added to existing tasks via update:
+
+```bash
+andamio project task update 3 --project-id "$PROJECT_ID" \
+  --token "abc123...,XP,50"
+```
+
+Omitting `--token` on update leaves existing tokens unchanged.
+
 ### Link a GitHub Issue
 
 Use `--github-issue` to prefix the title with the issue reference:

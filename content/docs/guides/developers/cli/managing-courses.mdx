@@ -29,10 +29,24 @@ andamio course get <course-id>
 andamio course modules <course-id>
 ```
 
+Or use `--course` to specify by name instead of ID:
+
+```bash
+andamio course modules --course "Intro to Cardano"
+```
+
+The `--course` flag matches by substring. If multiple courses match, all candidates are listed with their IDs.
+
 ## View SLTs
 
 ```bash
 andamio course slts <course-id> <module-code>
+```
+
+With `--course`:
+
+```bash
+andamio course slts <module-code> --course "Intro to Cardano"
 ```
 
 This returns the Student Learning Targets for a specific module. The module must be on-chain (APPROVED or ON_CHAIN status) for this public endpoint to work.

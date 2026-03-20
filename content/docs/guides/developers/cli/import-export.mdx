@@ -13,6 +13,12 @@ The CLI supports a round-trip editing workflow: export a module to local markdow
 andamio course export <course-id> <module-code>
 ```
 
+Or use `--course` to specify by name instead of opaque ID:
+
+```bash
+andamio course export <module-code> --course "Intro to Cardano"
+```
+
 This creates a local directory with the module's content:
 
 ```
@@ -53,6 +59,12 @@ Common edits:
 
 ```bash
 andamio course import ./compiled/my-course/101 --course-id <course-id>
+```
+
+Or use `--course` for name-based resolution:
+
+```bash
+andamio course import ./compiled/my-course/101 --course "Intro to Cardano"
 ```
 
 **Requires** [user authentication](/docs/guides/developers/cli/authentication) (wallet login).
@@ -110,6 +122,12 @@ Import every module in a course directory at once:
 
 ```bash
 andamio course import-all ./compiled/my-course --course-id <course-id>
+```
+
+Or with `--course`:
+
+```bash
+andamio course import-all ./compiled/my-course --course "Intro to Cardano"
 ```
 
 This scans for subdirectories containing `outline.md` and imports each one.
