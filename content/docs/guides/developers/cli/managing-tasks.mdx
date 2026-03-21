@@ -5,6 +5,43 @@ description: Create, query, and manage project tasks from the command line
 
 # Managing Tasks
 
+## Project Owner Commands
+
+If you own projects (created via on-chain transaction), manage them with the `project owner` subgroup. All require [user authentication](/docs/guides/developers/cli/authentication).
+
+### List Your Projects
+
+```bash
+andamio project owner list
+```
+
+### Create a Project
+
+```bash
+andamio project owner create --title "Community Dev" --description "Build things" --public
+```
+
+Optional flags: `--description`, `--image-url`, `--video-url`, `--category`, `--public`.
+
+### Update Project Metadata
+
+Only specified flags are updated — omitted fields remain unchanged:
+
+```bash
+andamio project owner update --project-id <id> --title "New Title"
+andamio project owner update --project-id <id> --description "Updated" --public=false
+```
+
+### Register an On-Chain Project
+
+After creating a project on-chain with `tx run`, register it with off-chain metadata. The on-chain transaction creates the project in the smart contract; registration links it to the API's metadata store.
+
+```bash
+andamio project owner register --project-id <id> --title "Community Dev"
+```
+
+## Task Management
+
 Project tasks represent on-chain bounties tied to work items. Managers create tasks in DRAFT state, set a lovelace reward and expiration, and optionally link them to a GitHub issue. Learners complete the work and claim the reward on-chain.
 
 All task commands require [user authentication](/docs/guides/developers/cli/authentication) (wallet login) and manager access on the project.

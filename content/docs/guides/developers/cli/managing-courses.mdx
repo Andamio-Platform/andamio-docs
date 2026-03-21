@@ -122,7 +122,7 @@ andamio course owner update --course-id <id> --description "Updated" --public=fa
 
 ### Register an On-Chain Course
 
-After creating a course on-chain with `tx run`, register it with off-chain metadata:
+After creating a course on-chain with `tx run`, register it with off-chain metadata. The on-chain transaction creates the course in the smart contract; registration links it to the API's metadata store.
 
 ```bash
 andamio course owner register --course-id <id> --title "My Course"
@@ -134,24 +134,6 @@ Set the teacher list for a course (repeatable `--teacher` flag):
 
 ```bash
 andamio course owner teachers --course-id <id> --teacher addr1... --teacher addr2...
-```
-
-## Project Owner Commands
-
-Manage projects you own. All require [user authentication](/docs/guides/developers/cli/authentication).
-
-```bash
-# List your projects
-andamio project owner list
-
-# Create a project
-andamio project owner create --title "Community Dev" --description "Build things" --public
-
-# Update project metadata (only changed flags sent)
-andamio project owner update --project-id <id> --title "New Title"
-
-# Register on-chain project with off-chain metadata
-andamio project owner register --project-id <id>
 ```
 
 ## Your Dashboard
