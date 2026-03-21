@@ -68,7 +68,9 @@ andamio project task create "$PROJECT_ID" \
   --token "722c475bebb106799b109fc95301c9b796e1a37b6afc601359d54a04,XP,50"
 ```
 
-**Format:** `--token "policy_id,asset_name,quantity"` — repeatable for multiple tokens:
+**Format:** `--token "policy_id,asset_name,quantity"` — repeatable for multiple tokens.
+
+The CLI **auto-hex-encodes** `asset_name` if it's human-readable text. Cardano stores asset names as hex on-chain, so `XP` is sent as `5850`. Already-hex values pass through unchanged. When exporting tasks, hex names are decoded back to human-readable text for editing.
 
 ```bash
 andamio project task create "$PROJECT_ID" \

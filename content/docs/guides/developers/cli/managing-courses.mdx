@@ -93,6 +93,67 @@ andamio course create-module --course-id <id> --code 101 --title "My Module"
 
 Requires [user authentication](/docs/guides/developers/cli/authentication) (wallet login) and teacher access on the course.
 
+## Course Owner Commands
+
+If you own courses (created via on-chain transaction), manage them with the `course owner` subgroup. All require [user authentication](/docs/guides/developers/cli/authentication).
+
+### List Your Courses
+
+```bash
+andamio course owner list
+```
+
+### Create a Course
+
+```bash
+andamio course owner create --title "My Course" --description "Learn things" --public
+```
+
+Optional flags: `--description`, `--image-url`, `--video-url`, `--category`, `--public`.
+
+### Update Course Metadata
+
+Only specified flags are updated — omitted fields remain unchanged:
+
+```bash
+andamio course owner update --course-id <id> --title "New Title"
+andamio course owner update --course-id <id> --description "Updated" --public=false
+```
+
+### Register an On-Chain Course
+
+After creating a course on-chain with `tx run`, register it with off-chain metadata:
+
+```bash
+andamio course owner register --course-id <id> --title "My Course"
+```
+
+### Manage Teachers
+
+Set the teacher list for a course (repeatable `--teacher` flag):
+
+```bash
+andamio course owner teachers --course-id <id> --teacher addr1... --teacher addr2...
+```
+
+## Project Owner Commands
+
+Manage projects you own. All require [user authentication](/docs/guides/developers/cli/authentication).
+
+```bash
+# List your projects
+andamio project owner list
+
+# Create a project
+andamio project owner create --title "Community Dev" --description "Build things" --public
+
+# Update project metadata (only changed flags sent)
+andamio project owner update --project-id <id> --title "New Title"
+
+# Register on-chain project with off-chain metadata
+andamio project owner register --project-id <id>
+```
+
 ## Your Dashboard
 
 See a summary of everything you're enrolled in, teaching, and managing:

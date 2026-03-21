@@ -126,6 +126,40 @@ Check confirmation status:
 andamio tx status abc123...
 ```
 
+## One-Command Pipeline: `tx run`
+
+For the common case of build → sign → submit → register → poll, use `tx run` to execute the full lifecycle in one command:
+
+```bash
+andamio tx run /v2/tx/global/user/access-token/mint \
+  --body '{"alias":"dev1","initiator_data":"addr_test1..."}' \
+  --skey ./payment.skey \
+  --tx-type access_token_mint
+```
+
+This:
+1. Builds the unsigned transaction via the API
+2. Signs it locally with your `.skey`
+3. Submits to the Cardano network
+4. Registers the tx hash for tracking
+5. Polls for confirmation (unless `--no-wait`)
+
+Optional flags:
+- `--body-file` for complex request bodies
+- `--no-wait` to skip polling after submission
+- `--timeout` to set polling timeout (default: 5 minutes)
+- `--metadata` for additional registration metadata
+- `--instance-id` for resource creation transactions (course_create, project_create)
+
+```bash
+# Create a course on-chain
+andamio tx run /v2/tx/instance/owner/course/create \
+  --body-file create-course.json \
+  --skey ./payment.skey \
+  --tx-type course_create \
+  --instance-id <course-id>
+```
+
 ## Scripting the Full Pipeline
 
 Chain all four steps together with `jq`:

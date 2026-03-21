@@ -52,6 +52,45 @@ User: your-alias
 Session: active (expires in 23h 45m)
 ```
 
+## Headless Login (CI/CD & Scripting)
+
+For automated workflows — CI/CD pipelines, agents, multi-wallet testing — authenticate with a `.skey` file instead of a browser:
+
+```bash
+andamio user login --skey ./payment.skey --alias myalias
+```
+
+This signs a nonce with your Cardano signing key using CIP-8 message signing. No browser, no TTY required.
+
+The flow:
+1. CLI requests a nonce from the API
+2. Signs the nonce locally with your `.skey` (private key never leaves your machine)
+3. API verifies the signature and returns a JWT
+4. JWT is stored in config for subsequent commands
+
+### CI/CD Example
+
+```bash
+# Authenticate and capture the result
+andamio user login --skey ./payment.skey --alias dev1 --output json
+
+# Or capture just the expiry for logging
+RESULT=$(andamio user login --skey ./payment.skey --alias dev1 -o json)
+echo "Session expires: $(echo $RESULT | jq -r '.expires_at')"
+
+# Now use authenticated commands
+andamio project owner list
+andamio course owner list
+```
+
+Unlike browser login, `--skey` always re-authenticates (no "already logged in" check), making it safe for scheduled scripts.
+
+### Requirements
+
+- An API key must be configured first (`andamio auth login --api-key`)
+- A Cardano `.skey` file (payment signing key from `cardano-cli`)
+- The `--alias` flag is required — this is your Andamio username
+
 ## Session Management
 
 JWTs expire after 24 hours. When your session expires:
