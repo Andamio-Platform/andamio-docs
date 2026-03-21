@@ -9,8 +9,8 @@ The CLI supports two authentication methods. Most operations require both.
 
 | Method | Access Level | Used For |
 |--------|-------------|----------|
-| API Key | Read-only | Querying courses, modules, SLTs |
-| User Login (JWT) | Read + Write | Importing content, uploading images |
+| API Key | Read-only | Querying courses, modules, SLTs, public task listings |
+| User Login (JWT) | Read + Write | Import/export, student enrollment, teacher reviews, contributor actions, owner operations |
 
 ## API Key Authentication
 
@@ -118,17 +118,29 @@ After logging in, verify what you have access to:
 # Full dashboard — courses, projects, credentials
 andamio user me
 
-# Courses where you're a teacher (can import/export content)
+# Courses where you're a teacher (can import/export content, review submissions)
 andamio teacher courses
 
-# Projects where you're a manager (can create/manage tasks)
+# Projects where you're a manager (can create/manage tasks, review commitments)
 andamio manager projects
+
+# Courses you own
+andamio course owner list
+
+# Courses you're enrolled in as a student
+andamio course student courses
+
+# Projects you own
+andamio project owner list
+
+# Projects you contribute to
+andamio project contributor list
 ```
 
 ## Troubleshooting
 
 **`unauthorized` errors** — Run `andamio user status` to check if your JWT has expired. If so, log out and log back in.
 
-**`forbidden` errors** — You may not be a teacher on the course you're trying to modify. Check with `andamio teacher courses` to see which courses you have write access to. For task operations, check `andamio manager projects`.
+**`forbidden` errors** — You may not have the required role. Check with `andamio teacher courses` for teacher access, `andamio manager projects` for manager access, `andamio course student courses` for student enrollment, or `andamio project contributor list` for contributor access.
 
 **Browser doesn't open** — The CLI starts a local server and opens your default browser. If it doesn't open automatically, copy the URL from the terminal output.

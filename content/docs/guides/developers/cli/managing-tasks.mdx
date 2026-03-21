@@ -1,6 +1,6 @@
 ---
 title: Managing Tasks
-description: Create, query, and manage project tasks from the command line
+description: Create and manage project tasks, contribute to bounties, and review commitments
 ---
 
 # Managing Tasks
@@ -222,6 +222,96 @@ andamio project task create "$PROJECT_ID" \
 ```bash
 andamio project task list "$PROJECT_ID" --output json | \
   jq -r '.data[].status' | sort | uniq -c | sort -rn
+```
+
+## Public Task Listing
+
+Anyone with an API key can view tasks on a project without manager access:
+
+```bash
+andamio project tasks <project-id>
+andamio project tasks <project-id> --output json
+```
+
+This uses the public user endpoint, unlike `project task list` which requires manager role.
+
+## Project Manager: Review Commitments
+
+Managers review contributor commitments on their projects. Requires [user authentication](/docs/guides/developers/cli/authentication) and manager access.
+
+```bash
+andamio project manager commitments --project-id <id>
+```
+
+JSON output for scripting:
+
+```bash
+andamio project manager commitments --project-id "$PROJECT_ID" --output json | \
+  jq '.data[] | {commitment_id, title: .content.title}'
+```
+
+## Project Contributor Commands
+
+Contributors commit to tasks, submit evidence, and track their work. All `project contributor` commands require [user authentication](/docs/guides/developers/cli/authentication).
+
+### List Your Projects and Commitments
+
+```bash
+# Projects you contribute to
+andamio project contributor list
+
+# All your task commitments
+andamio project contributor commitments
+```
+
+### Get a Specific Commitment
+
+```bash
+andamio project contributor commitment --project-id <id> --task-index 3
+```
+
+### Commit to a Task
+
+```bash
+andamio project contributor commit --project-id <id> --task-index 3
+```
+
+### Update Evidence
+
+```bash
+andamio project contributor update --project-id <id> --task-index 3 --evidence "https://github.com/my/pr"
+```
+
+### Delete a Commitment
+
+Withdraw your commitment from a task:
+
+```bash
+andamio project contributor delete --project-id <id> --task-index 3
+```
+
+### Contributor Workflow Example
+
+The full contributor workflow from discovering tasks to submitting evidence:
+
+```bash
+PROJECT_ID="your-project-id"
+
+# 1. Browse available tasks (public — no manager role needed)
+andamio project tasks "$PROJECT_ID"
+
+# 2. Commit to a task
+andamio project contributor commit --project-id "$PROJECT_ID" --task-index 3
+
+# 3. Submit evidence
+andamio project contributor update --project-id "$PROJECT_ID" --task-index 3 \
+  --evidence "https://github.com/myrepo/pull/5"
+
+# 4. Check your commitment status
+andamio project contributor commitment --project-id "$PROJECT_ID" --task-index 3 -o json
+
+# 5. List all your active commitments
+andamio project contributor commitments
 ```
 
 ## Task States
