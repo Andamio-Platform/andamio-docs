@@ -141,6 +141,10 @@ andamio project contributor list
 
 **`unauthorized` errors** — Run `andamio user status` to check if your JWT has expired. If so, log out and log back in.
 
-**`forbidden` errors** — You may not have the required role. Check with `andamio teacher courses` for teacher access, `andamio manager projects` for manager access, `andamio course student courses` for student enrollment, or `andamio project contributor list` for contributor access.
+**`forbidden` errors** — You may not have the required role. Check which roles you have:
+- `andamio teacher courses` — teacher access
+- `andamio manager projects` — manager access
+- `andamio course student courses` — student enrollment
+- `andamio project contributor list` — contributor access
 
 **Browser doesn't open** — The CLI starts a local server and opens your default browser. If it doesn't open automatically, copy the URL from the terminal output.

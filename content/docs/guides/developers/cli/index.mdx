@@ -35,8 +35,10 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | List courses you own | `andamio course owner list` |
 | Create a course | `andamio course owner create --title "My Course"` |
 | List courses you teach | `andamio teacher courses` |
-| Export a module for editing | `andamio course export <course-id> <module-code>` |
-| Import updated content | `andamio course import ./compiled/101 --course-id <id>` |
+| Export a module for editing | `andamio course export <course-id> <module-code>` or `--course "Name"` |
+| Import updated content | `andamio course import ./compiled/101 --course-id <id>` or `--course "Name"` |
+| Import all modules at once | `andamio course import-all ./compiled/my-course --course-id <id>` |
+| Create a new module | `andamio course create-module --course-id <id> --code 101 --title "My Module"` |
 | Register a module from chain | `andamio course teacher register-module --course-id <id> --module-code 101` |
 | Publish a module | `andamio course teacher publish-module --course-id <id> --module-code 101` |
 | Review a student submission | `andamio course teacher review --course-id <id> --commitment-id <cid> --decision approve` |
@@ -59,7 +61,8 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | List projects you own | `andamio project owner list` |
 | Create a project | `andamio project owner create --title "My Project"` |
 | List tasks (manager) | `andamio project task list <project-id>` |
-| Create a task with token rewards | `andamio project task create <project-id> --title "..." --lovelace 5000000 --expiration 2026-06-01` |
+| Create a task with token rewards | `andamio project task create <project-id> --title "..." --lovelace 5000000 --expiration 2026-06-01 --token "policyid,XP,50"` |
+| Link a task to a GitHub issue | `andamio project task create <project-id> --title "..." --github-issue org/repo#42 --lovelace 5000000 --expiration 2026-06-01` |
 | Export tasks to Markdown | `andamio project task export <project-id>` |
 | List pending assessments | `andamio project manager commitments --project-id <id>` |
 
@@ -77,7 +80,7 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | Task | Command |
 |------|---------|
 | Full transaction lifecycle | `andamio tx run /v2/tx/... --body '...' --skey ./key.skey --tx-type ...` |
-| Sign and submit (step by step) | `andamio tx build` then `tx sign` then `tx submit` then `tx register` |
+| Sign and submit (step by step) | `andamio tx build` → `tx sign` → `tx submit` → `tx register` |
 
 ## Quick Start
 

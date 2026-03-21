@@ -179,10 +179,22 @@ The `--decision` flag accepts `approve` or `reject`. The `--feedback` flag is op
 
 ### Scripting Example
 
-Review all pending commitments in a pipeline:
+List pending commitments and review each individually:
 
 ```bash
 COURSE_ID="your-course-id"
+
+# List all pending commitment IDs
+andamio course teacher commitments --course-id "$COURSE_ID" -o json | \
+  jq -r '.data[].commitment_id'
+
+# Review a specific commitment
+andamio course teacher review --course-id "$COURSE_ID" --commitment-id <cid> --decision approve
+```
+
+To batch-approve (use with caution — review each submission first in production):
+
+```bash
 andamio course teacher commitments --course-id "$COURSE_ID" -o json | \
   jq -r '.data[].commitment_id' | \
   while read CID; do
