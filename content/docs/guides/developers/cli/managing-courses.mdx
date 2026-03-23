@@ -237,6 +237,9 @@ andamio course student create --course-id <id> --module-code 101
 # Submit evidence for the first time
 andamio course student submit --course-id <id> --module-code 101 --evidence "https://github.com/my/pr"
 
+# For chain-only modules (no module code), use --slt-hash instead
+andamio course student submit --course-id <id> --slt-hash 77547a... --evidence "https://github.com/my/pr"
+
 # Update evidence after feedback
 andamio course student update --course-id <id> --module-code 101 --evidence "https://github.com/my/pr/v2"
 ```
@@ -258,11 +261,17 @@ andamio course student commit-tx \
   --course-id <id> --module-code 101 \
   --evidence-file ./my-evidence.md \
   --skey ./payment.skey
+
+# For chain-only modules, use --slt-hash instead of --module-code
+andamio course student commit-tx \
+  --course-id <id> --slt-hash 77547a... \
+  --evidence-file ./my-evidence.md \
+  --skey ./payment.skey
 ```
 
 The CLI converts your markdown evidence to Tiptap JSON, computes its Blake2b-256 hash, builds the on-chain transaction, signs it locally, submits to the network, and stores the evidence off-chain — all in one step.
 
-Evidence is optional — omit `--evidence`/`--evidence-file` to commit on-chain without evidence.
+Evidence is optional — omit `--evidence`/`--evidence-file` to commit on-chain without evidence. Use `--slt-hash` instead of `--module-code` for chain-only modules that don't have a module code.
 
 See [Transaction Signing](/docs/guides/developers/cli/transaction-signing#domain-specific-transaction-commands) for more details.
 

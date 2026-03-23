@@ -243,6 +243,15 @@ This single command:
 
 Evidence is optional — omit `--evidence`/`--evidence-file` for a commit-only transaction (enroll on-chain without evidence).
 
+For chain-only modules (no module code), use `--slt-hash` instead of `--module-code`:
+
+```bash
+andamio course student commit-tx \
+  --course-id <id> --slt-hash 77547ab0... \
+  --evidence-file ./my-evidence.md \
+  --skey ./payment.skey
+```
+
 ### Task Commitment (Project Contributor)
 
 Commit to a project task on-chain, optionally including evidence:
