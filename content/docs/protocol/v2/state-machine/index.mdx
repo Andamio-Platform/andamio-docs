@@ -256,7 +256,9 @@ When a contributor commits to a task (`project_join`):
 2. **Required**: Build and submit the on-chain transaction, then register with `task_hash` in metadata
 3. **Automatic**: On confirmation, the state machine confirms the commitment and links the contributor to the task
 
-Status progression: `DRAFT` → `COMMITTED` → `SUBMITTED` → `ACCEPTED` or `REFUSED` → `REWARDED`
+Status progression: `DRAFT` → `SUBMITTED` → `ACCEPTED` or `REFUSED` → `REWARDED`
+
+> **Note**: The API previously returned a `COMMITTED` status between `DRAFT` and `SUBMITTED`. As of v2.1.1-rc12, the API normalizes `COMMITTED` to `SUBMITTED` at read time — commit and submit are the same action on-chain.
 
 > **Note**: A contributor's first commit to a project also "joins" the project by minting a contributor token. Subsequent commits by the same contributor do not mint again. The state machine handles both cases transparently.
 
