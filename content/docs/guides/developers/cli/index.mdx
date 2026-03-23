@@ -51,6 +51,7 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | List enrolled courses | `andamio course student courses` |
 | Enroll in a module | `andamio course student create --course-id <id> --module-code 101` |
 | Submit assignment evidence | `andamio course student submit --course-id <id> --module-code 101 --evidence "https://..."` |
+| On-chain commitment with evidence | `andamio course student commit-tx --course-id <id> --module-code 101 --evidence-file ./evidence.md --skey ./key.skey` |
 | List your credentials | `andamio course student credentials` |
 | Claim a credential | `andamio course student claim --course-id <id> --module-code 101` |
 
@@ -73,6 +74,7 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | List projects you contribute to | `andamio project contributor list` |
 | Commit to a task | `andamio project contributor commit --project-id <id> --task-index 3` |
 | Submit evidence | `andamio project contributor update --project-id <id> --task-index 3 --evidence "https://..."` |
+| On-chain commitment with evidence | `andamio project contributor commit-tx --project-id <id> --task-index 0 --evidence-file ./evidence.md --skey ./key.skey` |
 | List your commitments | `andamio project contributor commitments` |
 
 ### Transactions
