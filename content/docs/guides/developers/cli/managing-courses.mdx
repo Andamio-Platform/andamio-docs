@@ -252,28 +252,9 @@ After your submission is approved:
 andamio course student claim --course-id <id> --module-code 101
 ```
 
-### On-Chain Commitment with Evidence
+### On-Chain Transactions
 
-For the full on-chain flow (build, sign, submit, register), use `commit-tx`. This combines evidence preparation with the Cardano transaction lifecycle in a single command:
-
-```bash
-andamio course student commit-tx \
-  --course-id <id> --module-code 101 \
-  --evidence-file ./my-evidence.md \
-  --skey ./payment.skey
-
-# For chain-only modules, use --slt-hash instead of --module-code
-andamio course student commit-tx \
-  --course-id <id> --slt-hash 77547a... \
-  --evidence-file ./my-evidence.md \
-  --skey ./payment.skey
-```
-
-The CLI converts your markdown evidence to Tiptap JSON, computes its Blake2b-256 hash, builds the on-chain transaction, signs it locally, submits to the network, and stores the evidence off-chain — all in one step.
-
-Evidence is optional — omit `--evidence`/`--evidence-file` to commit on-chain without evidence. Use `--slt-hash` instead of `--module-code` for chain-only modules that don't have a module code.
-
-See [Transaction Signing](/docs/guides/developers/cli/transaction-signing#domain-specific-transaction-commands) for more details.
+For on-chain operations (assignment commitment, evidence update, credential claim), use `tx run` with the appropriate transaction endpoint. See [Transaction Signing](/docs/guides/developers/cli/transaction-signing) for the full workflow.
 
 ### Leave a Commitment
 

@@ -282,22 +282,15 @@ andamio project contributor commit --project-id <id> --task-index 3
 andamio project contributor update --project-id <id> --task-index 3 --evidence "https://github.com/my/pr"
 ```
 
-### On-Chain Commitment with Evidence
-
-For the full on-chain flow (build, sign, submit, register), use `commit-tx`. This combines evidence preparation with the Cardano transaction lifecycle in a single command:
+For chain-only tasks (no task index), use `--task-hash` instead of `--task-index`:
 
 ```bash
-andamio project contributor commit-tx \
-  --project-id <id> --task-index 0 \
-  --evidence-file ./my-evidence.md \
-  --skey ./payment.skey
+andamio project contributor update --project-id <id> --task-hash 9672454f... --evidence "https://github.com/my/pr"
 ```
 
-The CLI converts your markdown evidence to Tiptap JSON, computes its Blake2b-256 hash, builds the on-chain transaction, signs it locally, submits to the network, and stores the evidence off-chain — all in one step.
+### On-Chain Transactions
 
-Evidence is optional — omit `--evidence`/`--evidence-file` to commit on-chain without evidence.
-
-See [Transaction Signing](/docs/guides/developers/cli/transaction-signing#domain-specific-transaction-commands) for more details.
+For on-chain operations (task commitment, credential claim), use `tx run` with the appropriate transaction endpoint. See [Transaction Signing](/docs/guides/developers/cli/transaction-signing) for the full workflow.
 
 ### Delete a Commitment
 

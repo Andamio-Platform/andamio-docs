@@ -88,38 +88,27 @@ Unlike browser login, `--skey` always re-authenticates (no "already logged in" c
 - A Cardano `.skey` file (payment signing key from `cardano-cli`)
 - The `--alias` flag is required — this is the Andamio username you registered with `andamio user login`
 
-## End-to-End Example: Headless Login + On-Chain Commitment
+## End-to-End Example: Headless Login + Transaction
 
-Combine headless login with `commit-tx` for fully automated on-chain operations:
+Combine headless login with `tx run` for fully automated on-chain operations:
 
 ```bash
 # 1. Authenticate with signing key (address is derived automatically)
 andamio user login --skey ./payment.skey --alias badger
 
-# 2. Commit to an assignment with evidence — single command
-andamio course student commit-tx \
-  --course-id 76bab0... --module-code 101 \
-  --evidence-file ./my-evidence.md \
-  --skey ./payment.skey
+# 2. Run a transaction using tx run (follows the tx state machine)
+andamio tx run /v2/tx/course/student/assignment/commit \
+  --body '{"alias":"badger","course_id":"76bab0...","slt_hash":"77547a...","assignment_info":"...","initiator_data":{"change_address":"addr_test1...","used_addresses":["addr_test1..."]}}' \
+  --skey ./payment.skey \
+  --tx-type assignment_submit \
+  --instance-id 76bab0...
+
+# 3. Submit evidence off-chain (separate step)
+andamio course student submit --course-id 76bab0... --module-code 101 \
+  --evidence-file ./my-evidence.md
 ```
 
-The CLI handles everything: evidence conversion (markdown to Tiptap JSON), Blake2b-256 hashing, slt_hash resolution, transaction building, signing, submission, registration, and off-chain evidence storage.
-
-Output:
-```
-  Preparing evidence...
-  ✓ Evidence hashed (blake2b-256: a1b2c3d4e5f6a7b8...)
-  ✓ Resolved slt_hash for module 101
-  Building transaction: POST /v2/tx/course/student/assignment/commit
-  ✓ Built unsigned TX
-  ✓ Signed with ./payment.skey (tx: 897883db...)
-  ✓ Submitted to network
-  ✓ Registered as assignment_submit
-  ✓ Evidence submitted to API
-  ⏳ Waiting for confirmation...
-  ✓ Confirmed on-chain
-  ✓ DB updated — complete!
-```
+All transactions follow the same pattern: build → sign → submit → register → gateway confirms. `tx run` composes these steps. Off-chain operations (evidence submission) are separate commands.
 
 No browser, no wallet extension, no interactive prompts. This flow works in CI/CD pipelines, cron jobs, and agent harnesses.
 

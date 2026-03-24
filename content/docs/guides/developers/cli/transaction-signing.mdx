@@ -219,53 +219,18 @@ The API provides 17 transaction-building endpoints organized by role:
 | | `/v2/tx/project/contributor/credential/claim` | Claim credential |
 | **Project User** | `/v2/tx/project/user/treasury/add-funds` | Add funds to treasury |
 
-## Domain-Specific Transaction Commands
+## Diagnostic Tools
 
-For common on-chain operations, the CLI provides high-level commands that handle evidence preparation, hash resolution, and the full transaction lifecycle automatically.
+### Verify Task Hashes
 
-### Assignment Commitment (Course Student)
-
-Commit to a course assignment on-chain, optionally including evidence:
+Compute task hashes locally and compare against API-returned hashes. Useful for diagnosing hash mismatches with on-chain tasks:
 
 ```bash
-andamio course student commit-tx \
-  --course-id <id> --module-code 101 \
-  --evidence-file ./my-evidence.md \
-  --skey ./payment.skey
+andamio project task verify-hash <project-id>
+andamio project task verify-hash <project-id> --output json
 ```
 
-This single command:
-1. Converts markdown evidence to Tiptap JSON and computes its Blake2b-256 hash
-2. Resolves the `slt_hash` from the module code
-3. Builds the on-chain transaction with the evidence hash as `assignment_info`
-4. Signs, submits, registers, and polls for confirmation
-5. Submits the evidence to the off-chain API with the `pending_tx_hash`
-
-Evidence is optional — omit `--evidence`/`--evidence-file` for a commit-only transaction (enroll on-chain without evidence).
-
-For chain-only modules (no module code), use `--slt-hash` instead of `--module-code`:
-
-```bash
-andamio course student commit-tx \
-  --course-id <id> --slt-hash 77547ab0... \
-  --evidence-file ./my-evidence.md \
-  --skey ./payment.skey
-```
-
-### Task Commitment (Project Contributor)
-
-Commit to a project task on-chain, optionally including evidence:
-
-```bash
-andamio project contributor commit-tx \
-  --project-id <id> --task-index 0 \
-  --evidence-file ./my-evidence.md \
-  --skey ./payment.skey
-```
-
-Same lifecycle as the course command, but resolves `task_hash` and `contributor_state_id` automatically.
-
-Both commands support `--no-wait`, `--timeout`, `--submit-url`, `--submit-header`, and `--output json` with a structured `CommitTxResult` response.
+This fetches all tasks, computes the Blake2b-256 hash from the Plutus Data CBOR encoding (content, expiration, lovelace, native assets), and reports any mismatches between the API hash and the locally computed hash.
 
 ## Monitoring Transactions
 
