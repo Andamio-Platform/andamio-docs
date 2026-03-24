@@ -73,7 +73,7 @@ The flow:
 ```bash
 # Authenticate and capture the result
 andamio user login --skey ./payment.skey --alias dev1 --output json
-# Returns: {"alias":"dev1","user_id":"...","address":"addr_test1...","key_hash":"..."}
+# Returns: {"alias":"dev1","user_id":"...","key_hash":"..."}
 
 # Now use authenticated commands
 andamio project owner list
@@ -93,7 +93,7 @@ Unlike browser login, `--skey` always re-authenticates (no "already logged in" c
 Combine headless login with `tx run` for fully automated on-chain operations:
 
 ```bash
-# 1. Authenticate with signing key (address is derived automatically)
+# 1. Authenticate with signing key
 andamio user login --skey ./payment.skey --alias badger
 
 # 2. Run a transaction using tx run (follows the tx state machine)
