@@ -33,13 +33,13 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | Task | Command |
 |------|---------|
 | List courses you own | `andamio course owner list` |
-| Create a course | `andamio course owner create --title "My Course"` |
+| Create a course | `andamio course owner create --course-id <id> --pending-tx-hash <hash>` |
 | List courses you teach | `andamio teacher courses` |
 | Export a module for editing | `andamio course export <course-id> <module-code>` or `--course "Name"` |
 | Import updated content | `andamio course import ./compiled/101 --course-id <id>` or `--course "Name"` |
 | Import all modules at once | `andamio course import-all ./compiled/my-course --course-id <id>` |
 | Create a new module | `andamio course create-module --course-id <id> --code 101 --title "My Module"` |
-| Register a module from chain | `andamio course teacher register-module --course-id <id> --module-code 101` |
+| Register a module from chain | `andamio course teacher register-module --course-id <id> --module-code 101 --slt-hash <hash>` |
 | Publish a module | `andamio course teacher publish-module --course-id <id> --module-code 101` |
 | Review a student submission | `andamio course teacher review --course-id <id> --commitment-id <cid> --decision approve` |
 | List pending reviews | `andamio course teacher commitments --course-id <id>` |
@@ -52,14 +52,14 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | Enroll in a module | `andamio course student create --course-id <id> --module-code 101` |
 | Submit assignment evidence | `andamio course student submit --course-id <id> --module-code 101 --evidence "https://..."` |
 | List your credentials | `andamio course student credentials` |
-| Claim a credential | `andamio course student claim --course-id <id> --module-code 101` |
+| Claim a credential | `andamio course student claim --course-id <id> --module-code 101 --pending-tx-hash <hash>` |
 
 ### Project Owner and Manager
 
 | Task | Command |
 |------|---------|
 | List projects you own | `andamio project owner list` |
-| Create a project | `andamio project owner create --title "My Project"` |
+| Create a project | `andamio project owner create --project-id <id> --pending-tx-hash <hash>` |
 | List tasks (manager) | `andamio project task list <project-id>` |
 | Create a task with token rewards | `andamio project task create <project-id> --title "..." --lovelace 5000000 --expiration 2026-06-01 --token "policyid,XP,50"` |
 | Link a task to a GitHub issue | `andamio project task create <project-id> --title "..." --github-issue org/repo#42 --lovelace 5000000 --expiration 2026-06-01` |

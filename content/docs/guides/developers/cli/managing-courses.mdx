@@ -106,10 +106,11 @@ andamio course owner list
 ### Create a Course
 
 ```bash
-andamio course owner create --title "My Course" --description "Learn things" --public
+andamio course owner create --course-id <id> --pending-tx-hash <hash> --title "My Course" --description "Learn things" --public
 ```
 
-Optional flags: `--description`, `--image-url`, `--video-url`, `--category`, `--public`.
+Required flags: `--course-id` (derived from on-chain NFT policy), `--pending-tx-hash` (hash of the pending creation transaction).
+Optional flags: `--title`, `--description`, `--image-url`, `--video-url`, `--category`, `--public`.
 
 ### Update Course Metadata
 
@@ -130,11 +131,20 @@ andamio course owner register --course-id <id> --title "My Course"
 
 ### Manage Teachers
 
-Set the teacher list for a course (repeatable `--teacher` flag):
+Add or remove teachers from a course using `--add` and `--remove` flags:
 
 ```bash
-andamio course owner teachers --course-id <id> --teacher addr1... --teacher addr2...
+# Add teachers
+andamio course owner teachers --course-id <id> --add alice --add bob
+
+# Remove a teacher
+andamio course owner teachers --course-id <id> --remove charlie
+
+# Add and remove in one call
+andamio course owner teachers --course-id <id> --add alice --remove charlie
 ```
+
+At least one of `--add` or `--remove` must be provided.
 
 ## Course Teacher Commands
 
@@ -145,8 +155,8 @@ Teachers manage module lifecycle and review student submissions. All `course tea
 Register, publish, delete, and update the status of course modules:
 
 ```bash
-# Register a module from on-chain data
-andamio course teacher register-module --course-id <id> --module-code 101
+# Register a module from on-chain data (requires --slt-hash)
+andamio course teacher register-module --course-id <id> --module-code 101 --slt-hash <hash>
 
 # Publish a module
 andamio course teacher publish-module --course-id <id> --module-code 101
@@ -158,7 +168,7 @@ andamio course teacher delete-module --course-id <id> --module-code 101
 andamio course teacher update-module-status --course-id <id> --module-code 101 --status DRAFT
 ```
 
-All four commands require `--course-id` and `--module-code`. The `update-module-status` command also requires `--status`.
+All four commands require `--course-id` and `--module-code`. The `register-module` command also requires `--slt-hash` (the on-chain module identifier). The `update-module-status` command also requires `--status` (`APPROVED` or `DRAFT`).
 
 ### Review Student Submissions
 
@@ -222,8 +232,13 @@ andamio course student commitments
 ### Get a Specific Commitment
 
 ```bash
-andamio course student commitment --course-id <id> --module-code 101
+andamio course student commitment --course-id <id> --slt-hash <hash>
+
+# Optionally include module code for enriched DB data
+andamio course student commitment --course-id <id> --slt-hash <hash> --module-code 101
 ```
+
+The `--slt-hash` flag is required (on-chain module identifier). The `--module-code` flag is optional.
 
 ### Enroll in a Module
 
@@ -249,8 +264,10 @@ andamio course student update --course-id <id> --module-code 101 --evidence "htt
 After your submission is approved:
 
 ```bash
-andamio course student claim --course-id <id> --module-code 101
+andamio course student claim --course-id <id> --module-code 101 --pending-tx-hash <hash>
 ```
+
+The `--pending-tx-hash` is required — provide the hash of the on-chain claim transaction.
 
 ### On-Chain Transactions
 
@@ -261,8 +278,10 @@ For on-chain operations (assignment commitment, evidence update, credential clai
 Withdraw from a module before completion:
 
 ```bash
-andamio course student leave --course-id <id> --module-code 101
+andamio course student leave --course-id <id> --module-code 101 --pending-tx-hash <hash>
 ```
+
+The `--pending-tx-hash` is required — provide the hash of the on-chain leave transaction.
 
 ### Student Workflow Example
 
@@ -279,11 +298,11 @@ andamio course student create --course-id "$COURSE_ID" --module-code "$MODULE"
 andamio course student submit --course-id "$COURSE_ID" --module-code "$MODULE" \
   --evidence "https://github.com/myrepo/pull/1"
 
-# 3. Check status
-andamio course student commitment --course-id "$COURSE_ID" --module-code "$MODULE" -o json
+# 3. Check status (requires slt-hash from on-chain data)
+andamio course student commitment --course-id "$COURSE_ID" --slt-hash "$SLT_HASH" -o json
 
-# 4. After approval, claim credential
-andamio course student claim --course-id "$COURSE_ID" --module-code "$MODULE"
+# 4. After approval, claim credential (requires pending-tx-hash from on-chain claim tx)
+andamio course student claim --course-id "$COURSE_ID" --module-code "$MODULE" --pending-tx-hash "$TX_HASH"
 
 # 5. Verify
 andamio course student credentials

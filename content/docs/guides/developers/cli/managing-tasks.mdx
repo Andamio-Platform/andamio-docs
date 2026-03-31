@@ -18,10 +18,11 @@ andamio project owner list
 ### Create a Project
 
 ```bash
-andamio project owner create --title "Community Dev" --description "Build things" --public
+andamio project owner create --project-id <id> --pending-tx-hash <hash> --title "Community Dev" --description "Build things" --public
 ```
 
-Optional flags: `--description`, `--image-url`, `--video-url`, `--category`, `--public`.
+Required flags: `--project-id` (derived from on-chain NFT policy), `--pending-tx-hash` (hash of the pending creation transaction).
+Optional flags: `--title`, `--description`, `--image-url`, `--video-url`, `--category`, `--public`.
 
 ### Update Project Metadata
 
