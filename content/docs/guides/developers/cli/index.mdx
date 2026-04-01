@@ -41,7 +41,7 @@ The Andamio CLI is a command-line tool for managing course content and project t
 | Create a new module | `andamio course create-module --course-id <id> --code 101 --title "My Module"` |
 | Register a module from chain | `andamio course teacher register-module --course-id <id> --module-code 101 --slt-hash <hash>` |
 | Publish a module | `andamio course teacher publish-module --course-id <id> --module-code 101` |
-| Review a student submission | `andamio course teacher review --course-id <id> --commitment-id <cid> --decision approve` |
+| Review a student submission | `andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision accept` |
 | List pending reviews | `andamio course teacher commitments --course-id <id>` |
 
 ### Course Student

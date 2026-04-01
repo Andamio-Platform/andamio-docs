@@ -172,20 +172,20 @@ All four commands require `--course-id` and `--module-code`. The `register-modul
 
 ### Review Student Submissions
 
-List pending reviews, then approve or reject with optional feedback:
+List pending reviews, then accept or refuse:
 
 ```bash
 # List commitments awaiting review
 andamio course teacher commitments --course-id <id>
 
-# Approve a submission
-andamio course teacher review --course-id <id> --commitment-id <cid> --decision approve
+# Accept a submission
+andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision accept
 
-# Reject with feedback
-andamio course teacher review --course-id <id> --commitment-id <cid> --decision reject --feedback "Needs more detail"
+# Refuse a submission
+andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision refuse
 ```
 
-The `--decision` flag accepts `approve` or `reject`. The `--feedback` flag is optional.
+The `--decision` flag accepts `accept` or `refuse`. Required flags: `--course-id`, `--module-code`, `--participant-alias`, `--decision`.
 
 ### Scripting Example
 
@@ -194,21 +194,21 @@ List pending commitments and review each individually:
 ```bash
 COURSE_ID="your-course-id"
 
-# List all pending commitment IDs
+# List pending commitments with module code and participant
 andamio course teacher commitments --course-id "$COURSE_ID" -o json | \
-  jq -r '.data[].commitment_id'
+  jq -r '.data[] | "\(.content.course_module_code) \(.content.participant_alias)"'
 
 # Review a specific commitment
-andamio course teacher review --course-id "$COURSE_ID" --commitment-id <cid> --decision approve
+andamio course teacher review --course-id "$COURSE_ID" --module-code 101 --participant-alias student1 --decision accept
 ```
 
-To batch-approve (use with caution — review each submission first in production):
+To batch-accept (use with caution — review each submission first in production):
 
 ```bash
 andamio course teacher commitments --course-id "$COURSE_ID" -o json | \
-  jq -r '.data[].commitment_id' | \
-  while read CID; do
-    andamio course teacher review --course-id "$COURSE_ID" --commitment-id "$CID" --decision approve
+  jq -r '.data[] | "\(.content.course_module_code) \(.content.participant_alias)"' | \
+  while read MODULE ALIAS; do
+    andamio course teacher review --course-id "$COURSE_ID" --module-code "$MODULE" --participant-alias "$ALIAS" --decision accept
   done
 ```
 
