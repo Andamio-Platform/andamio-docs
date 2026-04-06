@@ -1,0 +1,119 @@
+---
+title: Developer Accounts
+description: Register a developer account, verify your email, and manage credentials for API access
+---
+
+# Developer Accounts
+
+Andamio uses three types of credentials. Understanding which you need is the first step to building on the platform.
+
+## Three Credential Types
+
+| Credential | What It Is | How to Get It | When to Use It |
+|------------|-----------|---------------|----------------|
+| **API Key** | Application identity — "who's asking" | Register a developer account, then request a key | Every API request (`X-API-Key` header) |
+| **User JWT** | Action authority — "who's acting" | User signs a wallet challenge ([Authentication](/docs/guides/developers/authentication)) | Requests that act on behalf of a user (`Authorization: Bearer` header) |
+| **Attestation JWT** | Offline proof — "prove it to a third party" | Returned by the access token verification flow | Verify Andamio identity without API access |
+
+API Key is always required. User JWT is required for write operations. Attestation JWT is for third-party integrations that need to verify identity offline.
+
+## Developer Registration
+
+Register a developer account with email and password:
+
+```bash
+curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/account/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "dev@example.com", "password": "your-password"}'
+```
+
+This creates your developer account and sends a verification email.
+
+## Email Verification
+
+A magic link is sent to your email. Click it to verify, or call the endpoint directly:
+
+```bash
+curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/verify-email \
+  -H "Content-Type: application/json" \
+  -d '{"token": "magic-link-token"}'
+```
+
+Email verification is required before you can create or rotate API keys.
+
+Rate limits apply: 5 verification emails per 24 hours, with a 5-minute cooldown between resend requests.
+
+To resend the verification email (requires Developer JWT):
+
+```bash
+curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/resend-verification \
+  -H "X-API-Key: $API_KEY" \
+  -H "Authorization: Bearer $DEV_JWT"
+```
+
+## Developer Login
+
+Log in to receive a Developer JWT:
+
+```bash
+curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/account/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "dev@example.com", "password": "your-password"}'
+```
+
+The Developer JWT is used for account management operations (key creation, rotation, profile access). It is **not** the same as a User JWT from wallet authentication.
+
+### Developer JWT Claims
+
+```json
+{
+  "iss": "andamio-api",
+  "aud": "paid-api",
+  "user_id": "uuid",
+  "email": "dev@example.com",
+  "iat": 1709568000,
+  "exp": 1709654400
+}
+```
+
+The gateway validates issuer (`andamio-api`) and audience (`paid-api`) on every request that requires a Developer JWT.
+
+## Wallet Registration
+
+After creating a developer account, link your Cardano wallet for on-chain operations:
+
+```bash
+# Step 1: Start registration session (requires User JWT from wallet login)
+curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/register/session \
+  -H "Authorization: Bearer $USER_JWT"
+
+# Step 2: Complete with wallet signature
+curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/register/complete \
+  -H "Authorization: Bearer $USER_JWT" \
+  -H "Content-Type: application/json" \
+  -d '{"signature": "...", "key": "..."}'
+```
+
+## Attestation JWT
+
+The Attestation JWT is a short-lived (approximately 10 minutes) RS256-signed token that proves a user owns an Andamio Access Token. It can be verified offline without calling the API — useful for third-party integrations that need to confirm Andamio identity.
+
+Attestation JWTs are returned by the [Access Token Verification](/docs/guides/developers/access-token-verification) flow.
+
+## Developer Auth Endpoints
+
+| Method | Endpoint | Auth Required | Description |
+|--------|----------|--------------|-------------|
+| `POST` | `/v2/auth/developer/account/register` | None | Register developer account |
+| `POST` | `/v2/auth/developer/account/login` | None | Developer login |
+| `POST` | `/v2/auth/developer/verify-email` | None | Verify email with magic link |
+| `POST` | `/v2/auth/developer/resend-verification` | API Key + Developer JWT | Resend verification email |
+| `GET` | `/v2/auth/developer/email-status` | API Key + Developer JWT | Check verification status |
+| `POST` | `/v2/auth/developer/register/session` | User JWT | Start wallet registration |
+| `POST` | `/v2/auth/developer/register/complete` | User JWT | Complete wallet registration |
+
+## Next Steps
+
+- [API Keys](/docs/guides/developers/api-keys) — Request, rotate, and manage API keys
+- [Authentication](/docs/guides/developers/authentication) — Wallet-based user login for end users
+- [Access Token Verification](/docs/guides/developers/access-token-verification) — Verify identity for third parties

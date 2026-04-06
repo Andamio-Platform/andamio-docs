@@ -232,19 +232,56 @@ andamio project task verify-hash <project-id> --output json
 
 This fetches all tasks, computes the Blake2b-256 hash from the Plutus Data CBOR encoding (content, expiration, lovelace, native assets), and reports any mismatches between the API hash and the locally computed hash.
 
-## Monitoring Transactions
+## Inspection Commands
+
+### Transaction Status
 
 ```bash
-# Check a specific transaction
 andamio tx status <tx-hash>
 ```
 
-Transaction states: `pending` → `confirmed` → `updated` (or `failed` / `expired`).
+States: `pending` → `confirmed` → `updated` (or `failed` / `expired`). See [Error Handling](/docs/guides/developers/error-handling) for recovery actions per state.
 
-Browse available transaction endpoints:
+### Pending Transactions
+
+List your in-flight transactions:
+
+```bash
+andamio tx pending
+andamio tx pending --output json
+```
+
+### Transaction Types
+
+List all valid `tx_type` values accepted by `tx register` and `tx run`:
+
+```bash
+andamio tx types
+```
+
+### Browse Endpoints
 
 ```bash
 andamio spec paths --filter tx
+andamio spec fetch  # Download full OpenAPI spec to openapi.json
+```
+
+## Exit Codes
+
+All CLI commands use consistent exit codes for scripting:
+
+| Code | Meaning | Example |
+|------|---------|---------|
+| `0` | Success | Command completed normally |
+| `1` | Generic error | Invalid flags, network error, server 500 |
+| `2` | Not found | Resource doesn't exist (404) |
+| `3` | Auth required | Missing API key or JWT, or 401/403 |
+
+```bash
+andamio tx status abc123...
+if [ $? -eq 2 ]; then
+  echo "Transaction not found"
+fi
 ```
 
 ## Security Notes

@@ -29,6 +29,46 @@ Transactions can reach three terminal states:
 | `500` | Internal server error | Retry with exponential backoff |
 | `502` | Upstream service error | Cardano node issue — retry after delay |
 
+## Five Failure Modes
+
+Every transaction failure falls into one of five categories, each with a distinct recovery action:
+
+| # | Failure | How to Detect | Recovery |
+|---|---------|---------------|----------|
+| 1 | **Build error** | HTTP 4xx from `tx build` | Fix request body, retry build |
+| 2 | **Sign error** | Local error from `tx sign` | Fix key path or permissions, retry sign |
+| 3 | **Submit rejection** | Cardano rejects the transaction | Fix the condition that caused rejection, rebuild fresh |
+| 4 | **Chain expiry** | State = `expired`, `confirmed_at` is null | Check Andamioscan first, then rebuild if truly not on-chain |
+| 5 | **Off-chain sync failure** | State = `failed`, `confirmed_at` is set | **Do NOT retry.** The chain TX succeeded. Off-chain sync will auto-retry. |
+
+<Callout type="warn">
+**Never rebuild a transaction in `failed` state.** If `confirmed_at` has a value, the transaction is on-chain. Rebuilding would create a duplicate action. The gateway's self-healing reconciler retries the off-chain sync automatically.
+</Callout>
+
+### Build and Sign Errors (1-2)
+
+These are pre-submission errors — no on-chain state was created. Fix the input and retry safely.
+
+### Submit Rejection (3)
+
+Cardano rejected the transaction (e.g., insufficient funds, invalid inputs, script failure). The old unsigned TX is now stale — you must rebuild from scratch because UTxO inputs may have changed.
+
+## Commitment State Expiry
+
+When a transaction expires, most commitment states revert to their previous value:
+
+| State Before TX | Reverts To | Notes |
+|----------------|------------|-------|
+| `SUBMIT` | Pre-submission state | Safe revert |
+| `ASSESS` | `SUBMITTED` | Safe revert |
+| `CLAIM` | `ACCEPTED` | Safe revert |
+| **`PENDING_TX_COMMIT`** | **No revert** | No earlier state exists — this was the first enrollment |
+| **`PENDING_TX_LEAVE`** | **No revert** | Reverting would undo an intentional user action |
+
+The two non-reverting states require special handling:
+- **PENDING_TX_COMMIT**: The commitment record stays in pending state. Your app must let the user retry the transaction or delete the commitment.
+- **PENDING_TX_LEAVE**: The commitment record stays in pending state. The user intended to leave — don't automatically re-enroll them.
+
 ## Recovery Patterns
 
 ### Expired Transaction
@@ -174,6 +214,7 @@ curl https://andamioscan.io/api/tx/$TX_HASH
 
 ## Next Steps
 
+- [API Concepts](/docs/guides/developers/api-concepts) — Safe refetch timing and the source field
 - [API Integration](/docs/guides/developers/api-integration) — Complete transaction flow
 - [Transaction State Machine](/docs/protocol/v2/state-machine) — State transition details
 - [API Reference](https://preprod.api.andamio.io/reference) — Endpoint documentation

@@ -5,6 +5,16 @@ description: User login, JWT creation, and session management in Andamio applica
 
 # Authentication
 
+Andamio uses three credential types. This page covers **User JWT** (wallet-based authentication for end users). For the other two, see the links below.
+
+| Credential | Purpose | Guide |
+|-----------|---------|-------|
+| **API Key** | Application identity — required on every request | [API Keys](/docs/guides/developers/api-keys) |
+| **User JWT** | User identity — wallet-signed, authorizes actions | This page |
+| **Developer JWT** | Account management — email/password login | [Developer Accounts](/docs/guides/developers/developer-accounts) |
+
+## Wallet Login
+
 Users sign a cryptographic challenge with their Cardano wallet and receive a JWT that authorizes API requests.
 
 ## How Login Works
@@ -272,6 +282,7 @@ async function login(walletName: string): Promise<AuthResult> {
 
 ## Next Steps
 
+- [Developer Accounts](/docs/guides/developers/developer-accounts) — Developer registration, email verification, Attestation JWT
+- [API Keys](/docs/guides/developers/api-keys) — Request, rotate, and manage API keys
 - [API Integration](/docs/guides/developers/api-integration) — Making authenticated requests
 - [Transaction Handling](/docs/guides/developers/transactions) — Build and submit transactions
-- [Getting Started](/docs/getting-started) — Mint an access token

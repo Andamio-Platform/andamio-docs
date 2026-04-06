@@ -45,15 +45,24 @@ const courses = await res.json();
 
 ## API Endpoints
 
-The Andamio Gateway provides endpoints for:
+The Andamio Gateway provides approximately 120 endpoints across these categories:
 
-| Category | Base Path | Description |
-|----------|-----------|-------------|
-| Auth | `/api/v2/auth/*` | Challenge/verify, JWT management |
-| Courses | `/api/v2/course/*` | Course CRUD, modules, enrollments |
-| Projects | `/api/v2/project/*` | Project CRUD, tasks, contributors |
-| Transactions | `/api/v2/tx/*` | Build and register on-chain transactions |
-| Global | `/api/v2/global/*` | Access tokens, platform config |
+| Category | Base Path | Description | Guide |
+|----------|-----------|-------------|-------|
+| User Auth | `/api/v2/auth/login/*` | Wallet challenge/verify, User JWT | [Authentication](/docs/guides/developers/authentication) |
+| Developer Auth | `/api/v2/auth/developer/*` | Registration, email verification, Developer JWT | [Developer Accounts](/docs/guides/developers/developer-accounts) |
+| API Keys | `/api/v2/apikey/*` | Key request, rotation, profile, usage | [API Keys](/docs/guides/developers/api-keys) |
+| Billing | `/api/v2/billing/*` | Plans, checkout, subscription management | [Billing](/docs/guides/developers/billing) |
+| Verification | `/api/v2/verify/*` | Access token ownership proof | [Verification](/docs/guides/developers/access-token-verification) |
+| Courses | `/api/v2/course/*` | Course CRUD, modules, enrollments, merged views | |
+| Projects | `/api/v2/project/*` | Project CRUD, tasks, contributors, merged views | |
+| Transactions | `/api/v2/tx/*` | Build, register, status, SSE stream (17 build endpoints) | [Transactions](/docs/guides/developers/transactions) |
+| Users | `/api/v2/users/*` | User state, owned/enrolled/completed resources | |
+| Events | `/api/v2/events/*` | Parse what happened in a confirmed transaction | [API Concepts](/docs/guides/developers/api-concepts) |
+| Token Registry | `/api/v2/token/*` | Native asset registration and listing | |
+| Dashboard | `/api/v2/user/dashboard` | Consolidated user view (courses + projects) | |
+
+For the complete endpoint reference with request/response schemas, see the [Preprod API Docs](https://preprod.api.andamio.io/reference).
 
 For transaction building and submission, see [Transaction Handling](/docs/guides/developers/transactions).
 
@@ -107,6 +116,7 @@ See [Error Handling](/docs/guides/developers/error-handling) for recovery patter
 
 ## Next Steps
 
+- [API Concepts](/docs/guides/developers/api-concepts) — Source field, safe refetch timing, event queries
 - [Transaction Handling](/docs/guides/developers/transactions) — Build, sign, and submit transactions
-- [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns for failed requests
+- [Error Handling](/docs/guides/developers/error-handling) — Recovery patterns and failure modes
 - [Preprod API Docs](https://preprod.api.andamio.io) — Full endpoint reference

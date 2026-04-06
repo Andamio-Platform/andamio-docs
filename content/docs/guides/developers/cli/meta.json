@@ -10,7 +10,8 @@
     "import-format",
     "managing-tasks",
     "task-import-export",
-    "transaction-signing"
+    "transaction-signing",
+    "hash-verification"
   ],
   "defaultOpen": false
 }
