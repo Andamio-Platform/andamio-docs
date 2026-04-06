@@ -5,13 +5,14 @@ description: User login, JWT creation, and session management in Andamio applica
 
 # Authentication
 
-Andamio uses three credential types. This page covers **User JWT** (wallet-based authentication for end users). For the other two, see the links below.
+Andamio uses [four credential types](/docs/guides/developers/developer-accounts#credential-types). This page covers **User JWT** — wallet-based authentication for end users.
 
 | Credential | Purpose | Guide |
 |-----------|---------|-------|
-| **API Key** | Application identity — required on every request | [API Keys](/docs/guides/developers/api-keys) |
+| **API Key** | Application identity — required on most requests | [API Keys](/docs/guides/developers/api-keys) |
 | **User JWT** | User identity — wallet-signed, authorizes actions | This page |
 | **Developer JWT** | Account management — email/password login | [Developer Accounts](/docs/guides/developers/developer-accounts) |
+| **Attestation JWT** | Offline identity proof for third parties | [Access Token Verification](/docs/guides/developers/access-token-verification) |
 
 ## Wallet Login
 

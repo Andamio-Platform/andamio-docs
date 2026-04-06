@@ -221,16 +221,7 @@ The API provides 17 transaction-building endpoints organized by role:
 
 ## Diagnostic Tools
 
-### Verify Task Hashes
-
-Compute task hashes locally and compare against API-returned hashes. Useful for diagnosing hash mismatches with on-chain tasks:
-
-```bash
-andamio project task verify-hash <project-id>
-andamio project task verify-hash <project-id> --output json
-```
-
-This fetches all tasks, computes the Blake2b-256 hash from the Plutus Data CBOR encoding (content, expiration, lovelace, native assets), and reports any mismatches between the API hash and the locally computed hash.
+For hash verification and diagnostics (compute-hash, verify-hash for both courses and tasks), see [Hash Verification](/docs/guides/developers/cli/hash-verification).
 
 ## Inspection Commands
 

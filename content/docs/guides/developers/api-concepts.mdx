@@ -62,7 +62,7 @@ The `confirmed` state means the transaction is on-chain, but the off-chain datab
 
 The transaction state machine has five states:
 
-```
+```text
 pending → confirmed → updated
                    ↘ failed
        ↘ expired
@@ -114,7 +114,7 @@ andamio tx status <tx-hash>
 
 After a transaction confirms, you can parse exactly what happened using event query endpoints:
 
-```
+```text
 GET /v2/events/{type}/{action}/{tx_hash}
 ```
 

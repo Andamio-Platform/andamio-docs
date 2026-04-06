@@ -5,17 +5,18 @@ description: Register a developer account, verify your email, and manage credent
 
 # Developer Accounts
 
-Andamio uses three types of credentials. Understanding which you need is the first step to building on the platform.
+Andamio uses four credential types. Understanding which you need is the first step to building on the platform.
 
-## Three Credential Types
+## Credential Types
 
 | Credential | What It Is | How to Get It | When to Use It |
 |------------|-----------|---------------|----------------|
-| **API Key** | Application identity — "who's asking" | Register a developer account, then request a key | Every API request (`X-API-Key` header) |
+| **API Key** | Application identity — "who's asking" | Register a developer account, then request a key | Most API requests (`X-API-Key` header) |
 | **User JWT** | Action authority — "who's acting" | User signs a wallet challenge ([Authentication](/docs/guides/developers/authentication)) | Requests that act on behalf of a user (`Authorization: Bearer` header) |
-| **Attestation JWT** | Offline proof — "prove it to a third party" | Returned by the access token verification flow | Verify Andamio identity without API access |
+| **Developer JWT** | Account management | Developer email/password login (see below) | API key creation, rotation, billing |
+| **Attestation JWT** | Offline proof — "prove it to a third party" | Returned by the [access token verification](/docs/guides/developers/access-token-verification) flow | Verify Andamio identity without API access |
 
-API Key is always required. User JWT is required for write operations. Attestation JWT is for third-party integrations that need to verify identity offline.
+API Key is required for most requests. User JWT is required for write operations on behalf of a user. Developer JWT is for managing your developer account. Attestation JWT is for third-party identity verification.
 
 ## Developer Registration
 
