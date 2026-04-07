@@ -48,26 +48,21 @@ export default async function Page(props: {
   // Detect protocol version from URL
   const protocolVersion = params.slug?.includes("v2") ? "v2" : "v1";
 
-  const docsWidth =
-    pageData.tx_file ||
-    pageData.validator_system ||
-    params.slug?.join("/") === "protocol/v1/validators"
-      ? ""
-      : "w-2/3";
+  const docsWidth = "";
 
   // Helper function to get access level badge styles
   const getAccessLevelBadge = (level: string) => {
     const badges = {
       public: {
-        color: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+        color: "bg-primary/10 text-primary border border-primary/20",
         label: "Public",
       },
       private: {
-        color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+        color: "bg-destructive/10 text-destructive border border-destructive/20",
         label: "Private",
       },
       internal: {
-        color: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200",
+        color: "bg-muted text-muted-foreground border border-border",
         label: "Internal",
       },
     };
@@ -90,7 +85,7 @@ export default async function Page(props: {
           {pageData.tags && pageData.tags.map((tag) => (
             <span
               key={tag}
-              className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+              className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-secondary/10 text-secondary border border-secondary/20"
             >
               {tag}
             </span>

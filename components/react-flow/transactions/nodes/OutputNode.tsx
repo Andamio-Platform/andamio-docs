@@ -30,9 +30,9 @@ function OutputNode({ data }: { data: OutputNodeData }) {
 
 
   return (
-    <div className="shadow-md rounded-md bg-green-100 border-2 border-green-700 text-green-700">
+    <div className="shadow-md rounded-md border-2" style={{ backgroundColor: 'var(--diagram-output-bg)', borderColor: 'var(--diagram-output-border)', color: 'var(--diagram-output-text)' }}>
       <Handle type="target" position={Position.Left} className="w-3 h-3" />
-      <div className="bg-green-700 text-green-100 rounded-t-[calc(0.375rem-2px)] p-2">
+      <div className="rounded-t-[calc(0.375rem-2px)] p-2" style={{ backgroundColor: 'var(--diagram-output-border)', color: 'var(--diagram-output-bg)' }}>
         <div className="text-sm">Output: {data.id}</div>
       </div>
       <div className="px-3 py-2 space-y-2 text-xs">
@@ -43,7 +43,7 @@ function OutputNode({ data }: { data: OutputNodeData }) {
           {data.type === "script" && addressInfo.linkUrl ? (
             <Link
               href={addressInfo.linkUrl}
-              className="text-blue-600 hover:text-blue-800 transition-colors"
+              className="text-[var(--diagram-output-text)] hover:opacity-70 transition-colors"
             >
               {addressInfo.displayName}
             </Link>
@@ -64,7 +64,7 @@ function OutputNode({ data }: { data: OutputNodeData }) {
                         {tokenInfo.amount}{" "}
                         <Link
                           href={tokenInfo.tokenLink ?? "#"}
-                          className="text-green-600 hover:text-green-800 transition-colors"
+                          className="text-[var(--diagram-output-text)] hover:opacity-70 transition-colors"
                         >
                           {tokenInfo.displayToken}
                         </Link>
@@ -84,7 +84,7 @@ function OutputNode({ data }: { data: OutputNodeData }) {
                         {tokenInfo.amount}{" "}
                         <Link
                           href={tokenInfo.tokenLink ?? "#"}
-                          className="text-green-600 hover:text-green-800 transition-colors"
+                          className="text-[var(--diagram-output-text)] hover:opacity-70 transition-colors"
                         >
                           {tokenInfo.displayToken}
                         </Link>
@@ -99,7 +99,7 @@ function OutputNode({ data }: { data: OutputNodeData }) {
       </div>
       <div className="text-xs">
         {hasDetails && (
-          <div className="px-0 pb-2 border-t border-green-500 pt-2">
+          <div className="px-0 pb-2 border-t border-[var(--diagram-output-border)] pt-2">
             <button
               onClick={() => setShowDetails(!showDetails)}
               className="flex items-center text-green-600 hover:text-green-800 transition-colors"
@@ -124,11 +124,11 @@ function OutputNode({ data }: { data: OutputNodeData }) {
         )}
 
         {showDetails && (
-          <div className="px-3 pb-2 pt-1 space-y-2 border-t border-green-300">
+          <div className="px-3 pb-2 pt-1 space-y-2 border-t border-[var(--diagram-output-border)]">
             {data.datum && (
               <div>
                 <p className="font-semibold mb-1">Datum:</p>
-                <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto">
+                <pre className="bg-[var(--diagram-pre-bg)] p-2 rounded text-xs overflow-x-auto">
                   {typeof data.datum === "string"
                     ? (() => {
                         try {

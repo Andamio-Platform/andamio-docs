@@ -222,7 +222,7 @@ export default function TokenInfo({ tokenSystem, tokenId, version = "v1" }: Toke
                   <li key={index} className="list-disc text-xs">
                     <Link
                       href={getTransactionLink(tx)}
-                      className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                      className="text-primary hover:text-primary/80 transition-colors"
                     >
                       {tx}
                     </Link>
@@ -310,7 +310,7 @@ export default function TokenInfo({ tokenSystem, tokenId, version = "v1" }: Toke
                             href={`https://cardanoscan.io/tokenPolicy/${policyId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                            className="text-primary hover:text-primary/80 transition-colors"
                           >
                             {policyId}
                           </Link>
@@ -352,7 +352,7 @@ export default function TokenInfo({ tokenSystem, tokenId, version = "v1" }: Toke
                             href={`https://preprod.cardanoscan.io/tokenPolicy/${policyId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                            className="text-primary hover:text-primary/80 transition-colors"
                           >
                             {policyId}
                           </Link>

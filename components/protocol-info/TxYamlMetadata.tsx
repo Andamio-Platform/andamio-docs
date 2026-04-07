@@ -47,7 +47,6 @@ export default function TxYamlMetadata({
         }
 
         const data = await response.json();
-        console.log("TxYamlMetadata received data:", data);
         // V2 API with format=v1 returns diagramData, V1 API returns data
         const txDataResult = version === "v2" ? data.diagramData : (data.data || data);
         setTxData(txDataResult);
@@ -172,7 +171,7 @@ export default function TxYamlMetadata({
                 <li key={index} className="list-disc text-xs">
                   <Link
                     href={getTokenLink(token)}
-                    className="text-emerald-700 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors"
+                    className="text-primary hover:text-primary/80 transition-colors"
                   >
                     {token}
                   </Link>

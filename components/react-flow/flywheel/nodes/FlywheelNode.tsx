@@ -38,18 +38,18 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
     left: true,
   };
 
-  // Default colors if none provided
+  // Default colors if none provided — use CSS custom properties
   const defaultColors = {
-    problemBg: "#FEF2F2",
-    problemBorder: "#F87171", 
-    problemText: "#7F1D1D",
-    problemBadgeBg: "#FECACA",
-    problemBadgeText: "#991B1B",
-    solutionBg: "#EFF6FF",
-    solutionBorder: "#60A5FA",
-    solutionText: "#1E3A8A",
-    solutionBadgeBg: "#DBEAFE", 
-    solutionBadgeText: "#1D4ED8",
+    problemBg: "var(--diagram-pre-bg)",
+    problemBorder: "var(--diagram-brand-blue)",
+    problemText: "var(--diagram-tx-text)",
+    problemBadgeBg: "var(--diagram-brand-blue)",
+    problemBadgeText: "var(--diagram-pre-bg)",
+    solutionBg: "var(--diagram-input-bg)",
+    solutionBorder: "var(--diagram-brand-sky)",
+    solutionText: "var(--diagram-tx-text)",
+    solutionBadgeBg: "var(--diagram-brand-sky)",
+    solutionBadgeText: "var(--diagram-pre-bg)",
   };
 
   const colors = data.colors || defaultColors;
@@ -83,13 +83,13 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
             id="top"
             type="source"
             position={Position.Top}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
           />
           <Handle
             id="top-target"
             type="target"
             position={Position.Top}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
             style={{ opacity: 0 }}
           />
         </>
@@ -100,13 +100,13 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
             id="bottom"
             type="source"
             position={Position.Bottom}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
           />
           <Handle
             id="bottom-target"
             type="target"
             position={Position.Bottom}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
             style={{ opacity: 0 }}
           />
         </>
@@ -117,13 +117,13 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
             id="left"
             type="source"
             position={Position.Left}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
           />
           <Handle
             id="left-target"
             type="target"
             position={Position.Left}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
             style={{ opacity: 0 }}
           />
         </>
@@ -134,13 +134,13 @@ const FlywheelNode = ({ data }: { data: FlywheelNodeData }) => {
             id="right"
             type="source"
             position={Position.Right}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
           />
           <Handle
             id="right-target"
             type="target"
             position={Position.Right}
-            className="w-4 h-4 border-2 border-gray-600"
+            className="w-4 h-4 border-2 border-[var(--diagram-group-border)]"
             style={{ opacity: 0 }}
           />
         </>

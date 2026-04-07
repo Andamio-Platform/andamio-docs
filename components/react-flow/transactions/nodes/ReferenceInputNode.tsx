@@ -30,8 +30,8 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
 
 
   return (
-    <div className="shadow-md rounded-md bg-orange-100 border-2 border-orange-700 text-orange-700">
-      <div className="bg-orange-700 text-orange-100 rounded-t-[calc(0.375rem-2px)] p-2">
+    <div className="shadow-md rounded-md border-2" style={{ backgroundColor: 'var(--diagram-ref-bg)', borderColor: 'var(--diagram-ref-border)', color: 'var(--diagram-ref-text)' }}>
+      <div className="rounded-t-[calc(0.375rem-2px)] p-2" style={{ backgroundColor: 'var(--diagram-ref-border)', color: 'var(--diagram-ref-bg)' }}>
         <div className="text-sm">Ref Input: {data.id}</div>
       </div>
       <div className="px-3 py-2 space-y-2 text-xs">
@@ -44,7 +44,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
           {data.type === "script" && addressInfo.linkUrl ? (
             <Link
               href={addressInfo.linkUrl}
-              className="text-orange-600 hover:text-orange-800 transition-colors"
+              className="text-[var(--diagram-ref-text)] hover:opacity-70 transition-colors"
             >
               {addressInfo.displayName}
             </Link>
@@ -65,7 +65,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
                         {tokenInfo.amount}{" "}
                         <Link
                           href={tokenInfo.tokenLink ?? "#"}
-                          className="text-orange-600 hover:text-orange-800 transition-colors"
+                          className="text-[var(--diagram-ref-text)] hover:opacity-70 transition-colors"
                         >
                           {tokenInfo.displayToken}
                         </Link>
@@ -85,7 +85,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
                         {tokenInfo.amount}{" "}
                         <Link
                           href={tokenInfo.tokenLink ?? "#"}
-                          className="text-orange-600 hover:text-orange-800 transition-colors"
+                          className="text-[var(--diagram-ref-text)] hover:opacity-70 transition-colors"
                         >
                           {tokenInfo.displayToken}
                         </Link>
@@ -100,7 +100,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
       </div>
       <div className="text-xs">
         {hasDetails && (
-          <div className="px-0 pb-2 border-t border-orange-500 pt-2">
+          <div className="px-0 pb-2 border-t border-[var(--diagram-ref-border)] pt-2">
             <button
               onClick={() => setShowDetails(!showDetails)}
               className="flex items-center text-orange-600 hover:text-orange-800 transition-colors"
@@ -125,11 +125,11 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
         )}
 
         {showDetails && (
-          <div className="px-3 pb-2 pt-1 space-y-2 border-t border-orange-300">
+          <div className="px-3 pb-2 pt-1 space-y-2 border-t border-[var(--diagram-ref-border)]">
             {data.datum && (
               <div>
                 <p className="font-semibold mb-1">Datum:</p>
-                <pre className="bg-gray-100 p-2 rounded text-xs overflow-x-auto">
+                <pre className="bg-[var(--diagram-pre-bg)] p-2 rounded text-xs overflow-x-auto">
                   {typeof data.datum === "string"
                     ? (() => {
                         try {

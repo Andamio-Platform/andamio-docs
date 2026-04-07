@@ -144,13 +144,13 @@ const protocolData = {
       targetHandle: "top",
       markerStart: {
         type: MarkerType.ArrowClosed,
-        color: "#6366f1",
+        color: "var(--diagram-validator-border)",
       },
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        color: "#6366f1",
+        color: "var(--diagram-validator-border)",
       },
-      style: { strokeWidth: 2, stroke: "#6366f1" }, // Indigo color
+      style: { strokeWidth: 2, stroke: "var(--diagram-validator-border)" }, // Indigo color
       animated: true,
     },
     {
@@ -161,13 +161,13 @@ const protocolData = {
       targetHandle: "top",
       markerStart: {
         type: MarkerType.ArrowClosed,
-        color: "#6366f1",
+        color: "var(--diagram-validator-border)",
       },
       markerEnd: {
         type: MarkerType.ArrowClosed,
-        color: "#6366f1",
+        color: "var(--diagram-validator-border)",
       },
-      style: { strokeWidth: 2, stroke: "#6366f1" }, // Indigo color
+      style: { strokeWidth: 2, stroke: "var(--diagram-validator-border)" }, // Indigo color
       animated: true,
     },
   ],
@@ -219,7 +219,7 @@ export default function ProtocolFlow() {
         <Panel position="top-right">
           <button
             onClick={toggleFullScreen}
-            className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded flex items-center shadow transition-colors"
+            className="bg-card text-card-foreground hover:bg-accent p-2 rounded flex items-center shadow transition-colors"
             title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
           >
             {isFullScreen ? (
@@ -261,7 +261,7 @@ export default function ProtocolFlow() {
 
   return (
     <div
-      className={`${isFullScreen ? "fixed inset-0 z-50 bg-white dark:bg-gray-900" : "w-full"} ${isFullScreen ? "h-screen" : "h-[600px]"} transition-all duration-300`}
+      className={`${isFullScreen ? "fixed inset-0 z-50 bg-background" : "w-full"} ${isFullScreen ? "h-screen" : "h-[600px]"} transition-all duration-300`}
     >
       <ReactFlowProvider>{renderDiagram()}</ReactFlowProvider>
     </div>

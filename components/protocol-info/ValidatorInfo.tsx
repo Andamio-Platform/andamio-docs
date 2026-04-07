@@ -305,7 +305,7 @@ export default function ValidatorInfo({
                         <li key={txIndex} className="list-disc text-sm">
                           <Link
                             href={getTransactionLink(tx)}
-                            className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                            className="text-primary hover:text-primary/80 transition-colors"
                           >
                             {tx}
                           </Link>
@@ -333,7 +333,7 @@ export default function ValidatorInfo({
                                 <li key={txIndex} className="list-disc text-sm">
                                   <Link
                                     href={getTransactionLink(tx)}
-                                    className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                                    className="text-primary hover:text-primary/80 transition-colors"
                                   >
                                     {tx}
                                   </Link>
@@ -400,7 +400,7 @@ export default function ValidatorInfo({
                                 href={`https://cardanoscan.io/address/${resolved}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                                className="text-primary hover:text-primary/80 transition-colors"
                               >
                                 {resolved}
                               </Link>
@@ -440,7 +440,7 @@ export default function ValidatorInfo({
                                 href={`https://cardanoscan.io/tokenPolicy/${policyId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                                className="text-primary hover:text-primary/80 transition-colors"
                               >
                                 {policyId}
                               </Link>
@@ -492,7 +492,7 @@ export default function ValidatorInfo({
                                 href={`https://preprod.cardanoscan.io/address/${resolved}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                                className="text-primary hover:text-primary/80 transition-colors"
                               >
                                 {resolved}
                               </Link>
@@ -532,7 +532,7 @@ export default function ValidatorInfo({
                                 href={`https://preprod.cardanoscan.io/tokenPolicy/${policyId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-blue-700 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors"
+                                className="text-primary hover:text-primary/80 transition-colors"
                               >
                                 {policyId}
                               </Link>

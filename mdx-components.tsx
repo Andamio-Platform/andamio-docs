@@ -2,10 +2,12 @@ import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
 import { Mermaid } from "@/components/mdx/mermaid";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Callout } from "fumadocs-ui/components/callout";
 import { FlywheelDiagram } from "@/components/mdx/flywheel-diagram";
 import { LinearDiagram } from "@/components/mdx/linear-diagram";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { ThemedImage } from "@/components/mdx/themed-image";
+import { GuideHeader } from "@/components/mdx/guide-header";
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
@@ -18,6 +20,8 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ThemedImage,
     Steps,
     Step,
+    Callout,
+    GuideHeader,
     ...components,
   };
 }

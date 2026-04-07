@@ -29,7 +29,7 @@ const ProtocolNode = ({ data }: { data: ProtocolNodeData }) => {
   };
 
   return (
-    <div className="px-4 py-4 shadow-md rounded-md bg-gray-100 border border-gray-700 text-gray-700 relative max-w-[200px]">
+    <div className="px-4 py-4 shadow-md rounded-md relative max-w-[200px]" style={{ backgroundColor: 'var(--diagram-system-bg)', borderColor: 'var(--diagram-system-border)', color: 'var(--diagram-system-text)', borderWidth: '1px', borderStyle: 'solid' }}>
       {/* Conditionally render handles based on props */}
       {handles.top && (
         <Handle
@@ -87,7 +87,8 @@ const ProtocolNode = ({ data }: { data: ProtocolNodeData }) => {
           {data.href ? (
             <Link 
               href={data.href}
-              className="font-bold text-lg text-gray-700 hover:text-blue-700 transition-colors"
+              className="font-bold text-lg hover:opacity-70 transition-colors"
+              style={{ color: 'var(--diagram-system-text)' }}
               onClick={(e) => e.stopPropagation()}
             >
               {data.label}
@@ -102,7 +103,8 @@ const ProtocolNode = ({ data }: { data: ProtocolNodeData }) => {
             <div className="mt-2">
               <Link 
                 href={data.href} 
-                className="text-blue-600 hover:text-blue-800 hover:underline text-xs flex items-center transition-colors"
+                className="hover:underline text-xs flex items-center transition-colors"
+                style={{ color: 'var(--diagram-validator-border)' }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
