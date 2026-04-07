@@ -143,12 +143,138 @@
     @apply bg-background text-foreground;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  /* Scope heading color to docs content only — avoid overriding Fumadocs sidebar/search/card headings */
+  [data-docs-body] h1,
+  [data-docs-body] h2,
+  [data-docs-body] h3,
+  [data-docs-body] h4,
+  [data-docs-body] h5,
+  [data-docs-body] h6,
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
     color: var(--secondary);
   }
+}
+
+/* ─── Diagram node tokens ─── */
+:root {
+  /* Transaction node */
+  --diagram-tx-bg: oklch(0.95 0.01 250);
+  --diagram-tx-border: oklch(0.45 0.12 250);
+  --diagram-tx-text: oklch(0.35 0.10 250);
+
+  /* Input node */
+  --diagram-input-bg: oklch(0.94 0.04 145);
+  --diagram-input-border: oklch(0.45 0.12 155);
+  --diagram-input-text: oklch(0.35 0.10 155);
+
+  /* Output node */
+  --diagram-output-bg: oklch(0.94 0.04 250);
+  --diagram-output-border: oklch(0.50 0.12 250);
+  --diagram-output-text: oklch(0.35 0.10 250);
+
+  /* Reference input node */
+  --diagram-ref-bg: oklch(0.95 0.03 85);
+  --diagram-ref-border: oklch(0.55 0.12 85);
+  --diagram-ref-text: oklch(0.40 0.10 85);
+
+  /* Mint node */
+  --diagram-mint-bg: oklch(0.93 0.05 310);
+  --diagram-mint-border: oklch(0.45 0.16 310);
+  --diagram-mint-text: oklch(0.35 0.14 310);
+  --diagram-mint-header-bg: oklch(0.45 0.16 310);
+  --diagram-mint-header-text: oklch(0.95 0.02 310);
+
+  /* Withdrawal node */
+  --diagram-withdraw-bg: oklch(0.93 0.04 200);
+  --diagram-withdraw-border: oklch(0.45 0.10 200);
+  --diagram-withdraw-text: oklch(0.35 0.08 200);
+  --diagram-withdraw-header-bg: oklch(0.45 0.10 200);
+  --diagram-withdraw-header-text: oklch(0.95 0.02 200);
+
+  /* Validator node */
+  --diagram-validator-bg: oklch(0.94 0.04 250);
+  --diagram-validator-border: oklch(0.50 0.14 250);
+  --diagram-validator-text: oklch(0.35 0.12 250);
+
+  /* Redeemer node */
+  --diagram-redeemer-bg: oklch(0.94 0.05 38);
+  --diagram-redeemer-border: oklch(0.55 0.16 38);
+  --diagram-redeemer-text: oklch(0.40 0.14 38);
+
+  /* System node */
+  --diagram-system-bg: oklch(0.96 0.01 250);
+  --diagram-system-border: oklch(0.70 0.03 250);
+  --diagram-system-text: oklch(0.35 0.05 250);
+
+  /* Group node */
+  --diagram-group-bg: oklch(0.97 0.005 250);
+  --diagram-group-border: oklch(0.80 0.02 250);
+  --diagram-group-text: oklch(0.40 0.05 250);
+
+  /* Flywheel / brand diagram colors */
+  --diagram-brand-blue: oklch(0.35 0.10 230);
+  --diagram-brand-sky: oklch(0.55 0.15 250);
+  --diagram-brand-coral: oklch(0.65 0.20 25);
+  --diagram-brand-mint: oklch(0.65 0.12 170);
+
+  /* Shared pre/code background in diagrams */
+  --diagram-pre-bg: oklch(0.96 0.005 250);
+}
+
+.dark {
+  --diagram-tx-bg: oklch(0.25 0.02 250);
+  --diagram-tx-border: oklch(0.55 0.10 250);
+  --diagram-tx-text: oklch(0.82 0.04 250);
+
+  --diagram-input-bg: oklch(0.22 0.03 155);
+  --diagram-input-border: oklch(0.55 0.10 155);
+  --diagram-input-text: oklch(0.82 0.04 155);
+
+  --diagram-output-bg: oklch(0.22 0.03 250);
+  --diagram-output-border: oklch(0.55 0.10 250);
+  --diagram-output-text: oklch(0.82 0.04 250);
+
+  --diagram-ref-bg: oklch(0.25 0.03 85);
+  --diagram-ref-border: oklch(0.60 0.10 85);
+  --diagram-ref-text: oklch(0.82 0.05 85);
+
+  --diagram-mint-bg: oklch(0.22 0.04 310);
+  --diagram-mint-border: oklch(0.55 0.12 310);
+  --diagram-mint-text: oklch(0.85 0.06 310);
+  --diagram-mint-header-bg: oklch(0.40 0.14 310);
+  --diagram-mint-header-text: oklch(0.92 0.02 310);
+
+  --diagram-withdraw-bg: oklch(0.22 0.03 200);
+  --diagram-withdraw-border: oklch(0.55 0.08 200);
+  --diagram-withdraw-text: oklch(0.85 0.04 200);
+  --diagram-withdraw-header-bg: oklch(0.40 0.08 200);
+  --diagram-withdraw-header-text: oklch(0.92 0.02 200);
+
+  --diagram-validator-bg: oklch(0.22 0.03 250);
+  --diagram-validator-border: oklch(0.55 0.12 250);
+  --diagram-validator-text: oklch(0.85 0.06 250);
+
+  --diagram-redeemer-bg: oklch(0.25 0.04 38);
+  --diagram-redeemer-border: oklch(0.60 0.14 38);
+  --diagram-redeemer-text: oklch(0.85 0.06 38);
+
+  --diagram-system-bg: oklch(0.22 0.01 250);
+  --diagram-system-border: oklch(0.45 0.03 250);
+  --diagram-system-text: oklch(0.82 0.03 250);
+
+  --diagram-group-bg: oklch(0.20 0.01 250);
+  --diagram-group-border: oklch(0.40 0.02 250);
+  --diagram-group-text: oklch(0.75 0.03 250);
+
+  --diagram-brand-blue: oklch(0.55 0.10 230);
+  --diagram-brand-sky: oklch(0.65 0.12 250);
+  --diagram-brand-coral: oklch(0.70 0.18 25);
+  --diagram-brand-mint: oklch(0.70 0.10 170);
+
+  --diagram-pre-bg: oklch(0.22 0.01 250);
 }

@@ -65,14 +65,6 @@ function DiagramTransactionFlow({
     useState<Registry | null>(registryData || null);
   const [isRegistryLoading, setIsRegistryLoading] = useState(!registryData);
 
-  console.log("Transaction data received:", txData);
-  console.log("Transaction data type:", typeof txData);
-  console.log("Transaction data keys:", txData ? Object.keys(txData) : "null");
-  console.log("Loading state:", loading);
-  console.log("Registry loading state:", isRegistryLoading);
-  console.log("Has metadata:", !!txData?.metadata);
-  console.log("Metadata content:", txData?.metadata);
-
   // Fetch registry data if not provided
   useEffect(() => {
     const fetchRegistryData = async () => {
@@ -99,36 +91,11 @@ function DiagramTransactionFlow({
   // Initialize the diagram with transaction data
   useEffect(() => {
     const initDiagram = async () => {
-      console.log(
-        "InitDiagram called - isRegistryLoading:",
-        isRegistryLoading,
-        "txData:",
-        !!txData,
-        "metadata:",
-        !!txData?.metadata
-      );
       if (isRegistryLoading || !txData || !txData.metadata) {
-        console.log("Skipping diagram init due to missing data");
         return;
       }
 
       try {
-        console.log(
-          "Initializing diagram with provided transaction data:",
-          txData
-        );
-
-        // Verify inputs and outputs arrays
-        console.log(`Received inputs: ${JSON.stringify(txData.inputs)}`);
-        console.log(`Received outputs: ${JSON.stringify(txData.outputs)}`);
-        console.log(
-          `Received reference inputs: ${JSON.stringify(txData.reference_inputs)}`
-        );
-        console.log(`Received mints: ${JSON.stringify(txData.mints)}`);
-        console.log(`Received withdraws: ${JSON.stringify(txData.withdraws)}`);
-        console.log(`Inputs length: ${(txData.inputs || []).length}`);
-        console.log(`Outputs length: ${(txData.outputs || []).length}`);
-
         const diagramNodes: Node[] = [];
         const diagramEdges: Edge[] = [];
 
@@ -249,13 +216,7 @@ function DiagramTransactionFlow({
         diagramNodes.push(txNode);
 
         // Process regular inputs
-        console.log(
-          `Processing ${(txData.inputs || []).length} inputs:`,
-          JSON.stringify(txData.inputs || [])
-        );
-
         (txData.inputs || []).forEach((input, index) => {
-          console.log(`Creating input node ${index} with ID ${input.id}`);
 
           const inputNode: Node = {
             id: `input-node-${input.id}-${index}`,
@@ -297,10 +258,6 @@ function DiagramTransactionFlow({
 
         // Process reference inputs if present
         if (txData.reference_inputs && txData.reference_inputs.length > 0) {
-          console.log(
-            `Processing ${txData.reference_inputs.length} reference inputs`
-          );
-
           txData.reference_inputs.forEach((refInput, index) => {
             const refInputNode: Node = {
               id: `ref-input-node-${refInput.id}-${index}`,
@@ -342,12 +299,7 @@ function DiagramTransactionFlow({
         }
 
         // Process outputs
-        console.log(
-          `Processing ${(txData.outputs || []).length} outputs:`,
-          JSON.stringify(txData.outputs || [])
-        );
         (txData.outputs || []).forEach((output, index) => {
-          console.log(`Creating output node ${index} with ID ${output.id}`);
 
           const outputNode: Node = {
             id: `output-node-${output.id}-${index}`,
@@ -439,10 +391,10 @@ function DiagramTransactionFlow({
   const renderDiagram = () => {
     if (loading || isRegistryLoading || !txData || !txData.metadata) {
       return (
-        <div className="flex items-center justify-center h-full bg-gray-800 bg-opacity-50 text-white">
+        <div className="flex items-center justify-center h-full bg-muted text-muted-foreground">
           <div className="text-center">
             <div className="mb-2">Loading diagram...</div>
-            <div className="text-sm text-gray-300">This may take a moment</div>
+            <div className="text-sm opacity-70">This may take a moment</div>
           </div>
         </div>
       );
@@ -461,7 +413,7 @@ function DiagramTransactionFlow({
         <Background color="#aaa" gap={16} />
         <Panel
           position="bottom-left"
-          className="bg-gray-800 text-gray-200 p-2 shadow-2xl"
+          className="bg-card text-card-foreground p-2 shadow-2xl rounded"
         >
           <div className="font-bold">{txData.name}</div>
           <div className="text-sm">{txData.metadata.description}</div>
@@ -469,7 +421,7 @@ function DiagramTransactionFlow({
         <Panel position="top-right">
           <button
             onClick={toggleFullScreen}
-            className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded flex items-center shadow transition-colors"
+            className="bg-card text-card-foreground hover:bg-accent p-2 rounded flex items-center shadow transition-colors"
             title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
           >
             {isFullScreen ? (
@@ -511,7 +463,7 @@ function DiagramTransactionFlow({
 
   return (
     <div
-      className={`${isFullScreen ? "fixed inset-0 z-50 bg-white dark:bg-gray-900" : "w-full"} ${isFullScreen ? "h-screen" : "h-[800px]"} transition-all duration-300`}
+      className={`${isFullScreen ? "fixed inset-0 z-50 bg-background" : "w-full"} ${isFullScreen ? "h-screen" : "h-[800px]"} transition-all duration-300`}
     >
       <ReactFlowProvider>{renderDiagram()}</ReactFlowProvider>
     </div>

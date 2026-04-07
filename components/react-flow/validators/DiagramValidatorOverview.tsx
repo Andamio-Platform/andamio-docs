@@ -54,8 +54,6 @@ function DiagramValidatorOverview({
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null);
 
-  console.log(system, validatorId);
-
   // State for registry data
   const [registryData, setRegistryData] = useState<Registry | null>(null);
   const [isRegistryLoading, setIsRegistryLoading] = useState(true);
@@ -84,8 +82,6 @@ function DiagramValidatorOverview({
       if (isRegistryLoading || !registryData) return;
 
       try {
-        console.log("Initializing validator diagram for:", system, validatorId);
-
         const diagramNodes: Node[] = [];
         const diagramEdges: Edge[] = [];
 
@@ -99,8 +95,6 @@ function DiagramValidatorOverview({
           setLoading(false);
           return;
         }
-
-        console.log(`Validator data for ${validatorId}:`, validator);
 
         // Create validator node
         const validatorNode: Node = {
@@ -266,10 +260,10 @@ function DiagramValidatorOverview({
   const renderDiagram = () => {
     if (loading || isRegistryLoading) {
       return (
-        <div className="flex items-center justify-center h-full bg-gray-800 bg-opacity-50 text-white">
+        <div className="flex items-center justify-center h-full bg-muted text-muted-foreground">
           <div className="text-center">
             <div className="mb-2">Loading validator diagram...</div>
-            <div className="text-sm text-gray-300">This may take a moment</div>
+            <div className="text-sm opacity-70">This may take a moment</div>
           </div>
         </div>
       );
@@ -281,10 +275,10 @@ function DiagramValidatorOverview({
 
     if (!validatorExists) {
       return (
-        <div className="flex items-center justify-center h-full bg-gray-800 bg-opacity-50 text-white">
+        <div className="flex items-center justify-center h-full bg-muted text-muted-foreground">
           <div className="text-center">
             <div className="mb-2">Validator not found</div>
-            <div className="text-sm text-gray-300">
+            <div className="text-sm opacity-70">
               Could not find validator {validatorId} in system {system}
             </div>
           </div>
@@ -305,7 +299,7 @@ function DiagramValidatorOverview({
         <Background color="#aaa" gap={16} />
         <Panel
           position="bottom-left"
-          className="bg-gray-800 text-gray-200 p-2 shadow-2xl"
+          className="bg-card text-card-foreground p-2 shadow-2xl rounded"
         >
           <div className="font-bold">
             {registryData?.systems[system]?.validators[validatorId]?.name}
@@ -315,7 +309,7 @@ function DiagramValidatorOverview({
         <Panel position="top-right">
           <button
             onClick={toggleFullScreen}
-            className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded flex items-center shadow transition-colors"
+            className="bg-card text-card-foreground hover:bg-accent p-2 rounded flex items-center shadow transition-colors"
             title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
           >
             {isFullScreen ? (
@@ -357,7 +351,7 @@ function DiagramValidatorOverview({
 
   return (
     <div
-      className={`${isFullScreen ? "fixed inset-0 z-50 bg-white dark:bg-gray-900" : "w-full"} ${isFullScreen ? "h-screen" : "h-[600px]"} transition-all duration-300`}
+      className={`${isFullScreen ? "fixed inset-0 z-50 bg-background" : "w-full"} ${isFullScreen ? "h-screen" : "h-[600px]"} transition-all duration-300`}
     >
       <ReactFlowProvider>{renderDiagram()}</ReactFlowProvider>
     </div>

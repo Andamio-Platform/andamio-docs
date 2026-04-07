@@ -32,25 +32,25 @@ const edgeStyles = {
 // Andamio Brand Color Scheme
 const colors = {
   // Problem to solution edges (solid lines) - using green for bi-directional flow
-  problemToSolution: "#00BFA5", // Mint Green
-  problemToSolutionBg: "#E6F0F5", // Light Background (more transparent)
+  problemToSolution: "var(--diagram-brand-mint)",
+  problemToSolutionBg: "var(--diagram-input-bg)",
 
   // Background
-  diagramBg: "#F3F4F6", // Light Grey
+  diagramBg: "var(--diagram-group-bg)",
 };
 
 // Node color scheme - using core Andamio brand colors
 const nodeColors = {
-  problemBg: "#FFFFFF", // White background
-  problemBorder: "#003C54", // Andamio Blue for problems
-  problemText: "#1E1E1E", // Black Text
-  problemBadgeBg: "#003C54", // Andamio Blue badge
-  problemBadgeText: "#FFFFFF", // White text on blue
-  solutionBg: "#E6F0F5", // Light Background for solutions
-  solutionBorder: "#007ACC", // Sky Blue for solutions
-  solutionText: "#1E1E1E", // Black Text
-  solutionBadgeBg: "#007ACC", // Sky Blue badge
-  solutionBadgeText: "#FFFFFF", // White text on blue
+  problemBg: "var(--diagram-pre-bg)",
+  problemBorder: "var(--diagram-brand-blue)",
+  problemText: "var(--diagram-tx-text)",
+  problemBadgeBg: "var(--diagram-brand-blue)",
+  problemBadgeText: "var(--diagram-pre-bg)",
+  solutionBg: "var(--diagram-input-bg)",
+  solutionBorder: "var(--diagram-brand-sky)",
+  solutionText: "var(--diagram-tx-text)",
+  solutionBadgeBg: "var(--diagram-brand-sky)",
+  solutionBadgeText: "var(--diagram-pre-bg)",
 };
 
 // Define custom node types
@@ -155,7 +155,7 @@ const createLinearEdges = (linearContent: LinearDiagramVersion["content"]) => {
       labelStyle: {
         fontSize: 14,
         fontWeight: 700,
-        fill: "#1E1E1E", // Black text for better readability
+        fill: "var(--diagram-tx-text)",
       },
       labelBgStyle: {
         fill: colors.problemToSolutionBg,
@@ -262,7 +262,7 @@ export default function LinearDiagram({
               <select
                 value={selectedVersion.id}
                 onChange={(e) => handleVersionChange(e.target.value)}
-                className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded text-sm font-medium shadow transition-colors border border-gray-600"
+                className="bg-[var(--diagram-tx-border)] hover:opacity-90 text-[var(--diagram-pre-bg)] px-3 py-2 rounded text-sm font-medium shadow transition-colors border border-[var(--diagram-group-border)]"
               >
                 {linearDiagramVersions.map((version) => (
                   <option key={version.id} value={version.id}>
@@ -273,7 +273,7 @@ export default function LinearDiagram({
             )}
             <button
               onClick={toggleFullScreen}
-              className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded flex items-center shadow transition-colors"
+              className="bg-[var(--diagram-tx-border)] hover:opacity-90 text-[var(--diagram-pre-bg)] p-2 rounded flex items-center shadow transition-colors"
               title={isFullScreen ? "Exit Full Screen" : "Full Screen"}
             >
               {isFullScreen ? (
@@ -316,7 +316,7 @@ export default function LinearDiagram({
 
   return (
     <div
-      className={`${isFullScreen ? "fixed inset-0 z-50 bg-white dark:bg-gray-900" : "w-full"} ${isFullScreen ? "h-screen" : "h-[600px]"} transition-all duration-300 border border-gray-200 rounded-lg overflow-hidden`}
+      className={`${isFullScreen ? "fixed inset-0 z-50 bg-[var(--background)]" : "w-full"} ${isFullScreen ? "h-screen" : "h-[600px]"} transition-all duration-300 border border-[var(--border)] rounded-lg overflow-hidden`}
     >
       <ReactFlowProvider>{renderDiagram()}</ReactFlowProvider>
     </div>

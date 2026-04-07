@@ -29,14 +29,14 @@ const ValidatorNode = ({ data }: { data: ValidatorNodeData }) => {
   const validatorLink = getValidatorLink(data.system, data.id);
 
   return (
-    <div className="px-4 py-4 shadow-md rounded-md bg-gray-100 border-2 border-blue-700 text-gray-700">
+    <div className="px-4 py-4 shadow-md rounded-md bg-[var(--diagram-validator-bg)] border-2 border-[var(--diagram-validator-border)] text-[var(--diagram-validator-text)]">
       <Handle type="target" position={Position.Left} className="w-3 h-3" />
       <div className="flex flex-col space-y-2">
         <div className="flex items-center justify-center">
           {validatorLink ? (
-            <Link 
+            <Link
               href={validatorLink}
-              className="font-bold text-lg text-blue-700 hover:text-blue-900 hover:underline transition-colors"
+              className="font-bold text-lg text-[var(--diagram-validator-border)] hover:opacity-80 hover:underline transition-colors"
             >
               {data.name}
             </Link>
@@ -49,10 +49,10 @@ const ValidatorNode = ({ data }: { data: ValidatorNodeData }) => {
             <span className="font-semibold mr-1">Purpose:</span> {data.purpose}
           </div>
           <div className="flex items-center">
-            <span className="font-semibold mr-1">System:</span> 
-            <Link 
+            <span className="font-semibold mr-1">System:</span>
+            <Link
               href={`/docs/protocol/v2/validators/${data.system}`}
-              className="text-blue-700 hover:text-blue-900 hover:underline transition-colors"
+              className="text-[var(--diagram-validator-border)] hover:opacity-80 hover:underline transition-colors"
             >
               {data.system}
             </Link>

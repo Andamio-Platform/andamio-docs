@@ -19,7 +19,6 @@ export default function TransactionDiagramWrapper({
     const fetchTransactionData = async () => {
       try {
         setLoading(true);
-        console.log("Fetching transaction data for:", txFilePath, "version:", version);
 
         // Use V2 API for v2 transactions, V1 API otherwise
         const apiEndpoint = version === "v2"
@@ -27,7 +26,6 @@ export default function TransactionDiagramWrapper({
           : `/api/transaction?file=${encodeURIComponent(txFilePath)}&version=${version}`;
 
         const response = await fetch(apiEndpoint);
-        console.log("Response status:", response.status);
 
         if (!response.ok) {
           throw new Error(
@@ -36,11 +34,9 @@ export default function TransactionDiagramWrapper({
         }
 
         const data = await response.json();
-        console.log("Received transaction data:", data);
 
         // V2 API with format=v1 returns diagramData, V1 API returns data
         const txDataResult = version === "v2" ? data.diagramData : data.data;
-        console.log("Extracted transaction data:", txDataResult);
 
         setTxData(txDataResult);
         setError(null);

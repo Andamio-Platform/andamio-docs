@@ -56,7 +56,7 @@ const RedeemerNode = ({ data }: { data: RedeemerNodeData }) => {
   };
 
   return (
-    <div className="px-4 py-4 shadow-md rounded-md bg-gray-100 border-2 border-green-700 text-gray-700">
+    <div className="px-4 py-4 shadow-md rounded-md bg-[var(--diagram-redeemer-bg)] border-2 border-[var(--diagram-redeemer-border)] text-[var(--diagram-redeemer-text)]">
       <Handle type="target" position={Position.Left} className="w-3 h-3" />
       <div className="flex flex-col space-y-2">
         <div className="flex items-center">
@@ -71,7 +71,7 @@ const RedeemerNode = ({ data }: { data: RedeemerNodeData }) => {
               {typeof data.transaction === "string" ? (
                 <Link
                   href={getTransactionLink(data.transaction)}
-                  className="text-blue-700 hover:underline"
+                  className="text-[var(--diagram-redeemer-text)] hover:underline"
                 >
                   {formatTransaction(data.transaction)}
                 </Link>
@@ -83,7 +83,7 @@ const RedeemerNode = ({ data }: { data: RedeemerNodeData }) => {
                       <li key={`tx-link-${i}`}>
                         <Link
                           href={getTransactionLink(tx)}
-                          className="text-blue-700 hover:underline"
+                          className="text-[var(--diagram-redeemer-text)] hover:underline"
                         >
                           {tx}
                         </Link>
