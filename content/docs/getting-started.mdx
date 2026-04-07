@@ -5,16 +5,18 @@ description: Set up local Andamio development in 15 minutes
 
 # Getting Started
 
+<GuideHeader time="~15 minutes" steps={6} level="beginner" />
+
 Set up your local development environment and run the Andamio app template.
 
-**Time**: ~15 minutes
-
-## Prerequisites
-
+<Callout title="Prerequisites">
 - **Node.js 20+** and **npm 10+**
 - **Cardano wallet on preprod with test ADA** — [Setup guide](/docs/guides/preprod-wallet-setup)
+</Callout>
 
-## 1. Mint Your Access Token
+<Steps>
+<Step>
+### Mint Your Access Token
 
 Your Access Token is your on-chain identity for Andamio.
 
@@ -24,8 +26,10 @@ Your Access Token is your on-chain identity for Andamio.
 4. Enter an alias (permanent)
 5. Click **Mint Access Token** and sign
 6. Wait ~20 seconds for confirmation
+</Step>
 
-## 2. Generate an API Key
+<Step>
+### Generate an API Key
 
 1. Go to [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup)
 2. Connect your wallet
@@ -33,17 +37,24 @@ Your Access Token is your on-chain identity for Andamio.
 4. Select **preprod**
 5. Click **Generate API Key**
 6. Name it (e.g., "local-dev")
-7. Copy the key immediately — it won't be shown again
 
-## 3. Clone and Install
+<Callout type="warn" title="Save your key">
+Copy the key immediately — it won't be shown again.
+</Callout>
+</Step>
+
+<Step>
+### Clone and Install
 
 ```bash
 git clone https://github.com/Andamio-Platform/andamio-app-template.git
 cd andamio-app-template
 npm install
 ```
+</Step>
 
-## 4. Configure Environment
+<Step>
+### Configure Environment
 
 ```bash
 cp .env.example .env
@@ -57,22 +68,28 @@ ANDAMIO_API_KEY="your-api-key-here"
 NEXT_PUBLIC_CARDANO_NETWORK="preprod"
 NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a94305c957508dc78"
 ```
+</Step>
 
-## 5. Start Development Server
+<Step>
+### Start Development Server
 
 ```bash
 npm run dev
 ```
 
 Open [localhost:3000](http://localhost:3000).
+</Step>
 
-## 6. Verify Setup
+<Step>
+### Verify Setup
 
 1. Click **Enter**
 2. Connect your wallet
 3. You should see your dashboard with your alias
 
-Setup complete.
+<Callout type="success">Setup complete.</Callout>
+</Step>
+</Steps>
 
 ---
 
