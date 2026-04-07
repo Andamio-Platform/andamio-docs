@@ -18,6 +18,7 @@
     "fs": "^0.0.1-security",
     "fumadocs-core": "15.4.1",
     "fumadocs-ui": "15.4.1",
+    "geist": "^1.7.0",
     "js-yaml": "^4.1.0",
     "lucide-react": "^0.511.0",
     "mermaid": "^11.6.0",
