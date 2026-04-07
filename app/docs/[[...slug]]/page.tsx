@@ -48,12 +48,7 @@ export default async function Page(props: {
   // Detect protocol version from URL
   const protocolVersion = params.slug?.includes("v2") ? "v2" : "v1";
 
-  const docsWidth =
-    pageData.tx_file ||
-    pageData.validator_system ||
-    params.slug?.join("/") === "protocol/v1/validators"
-      ? ""
-      : "w-2/3";
+  const docsWidth = "";
 
   // Helper function to get access level badge styles
   const getAccessLevelBadge = (level: string) => {

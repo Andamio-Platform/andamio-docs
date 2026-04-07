@@ -144,12 +144,6 @@
   }
 
   /* Scope heading color to docs content only — avoid overriding Fumadocs sidebar/search/card headings */
-  [data-docs-body] h1,
-  [data-docs-body] h2,
-  [data-docs-body] h3,
-  [data-docs-body] h4,
-  [data-docs-body] h5,
-  [data-docs-body] h6,
   .prose h1,
   .prose h2,
   .prose h3,
@@ -157,6 +151,55 @@
   .prose h5,
   .prose h6 {
     color: var(--secondary);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .prose h1 {
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+
+  .prose h2 {
+    font-size: 1.35rem;
+    line-height: 1.3;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose h3 {
+    font-size: 1.125rem;
+    line-height: 1.4;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  /* Hide duplicate h1 in MDX body — DocsTitle already renders the page title above */
+  .prose > h1:first-child {
+    display: none;
+  }
+
+  /* Tighter paragraph spacing in docs content */
+  .prose p {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.65;
+  }
+
+  /* Fumadocs page title — make it clean, not huge */
+  [class*="nd-page"] > h1:first-child,
+  .fd-page-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
   }
 }
 
