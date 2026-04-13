@@ -83,6 +83,13 @@ The documentation system includes several custom React components for interactiv
 
 - **Other diagram components**: `flywheel-diagram`, `linear-diagram`, `protocol-diagram`
 
+### MDX Gotchas
+
+- **Never use `replace_all` with strings that appear in frontmatter delimiters** (e.g. replacing `--` will corrupt `---` frontmatter fences). Always use targeted edits.
+- Content-collections silently drops MDX files with invalid frontmatter — no build error, just a missing page (404). Always verify with `grep 'path/to/file' .content-collections/generated/allDocs.js` after changes.
+- Em dash characters (`—`) are fine in MDX content. The issue is always frontmatter or JSX syntax.
+- To debug MDX build failures: simplify file to minimal content, then add sections back incrementally.
+
 ### MDX Frontmatter Schema
 MDX files support custom frontmatter fields defined in `content-collections.ts`:
 
