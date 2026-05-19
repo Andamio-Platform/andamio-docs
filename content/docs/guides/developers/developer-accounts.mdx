@@ -64,6 +64,14 @@ curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/account/login 
 
 The Developer JWT is used for account management operations (key creation, rotation, profile access). It is **not** the same as a User JWT from wallet authentication.
 
+### Wallet-Signature Login (CIP-30)
+
+Developers can also authenticate with a CIP-30 wallet signature instead of a password, using the same challenge/sign/verify pattern as [user wallet login](/docs/guides/developers/authentication). This issues a Developer JWT without a stored password.
+
+Developer JWT lifetimes are short-lived and paired with refresh-token rotation: exchange a refresh token for a new Developer JWT rather than re-running the full login when the JWT expires. Always read `exp` (or the returned `expires_at`) rather than assuming a fixed lifetime — do not hardcode an expiry window.
+
+See the [live API reference](https://preprod.api.andamio.io/reference) for the exact wallet-login and refresh endpoint schemas, which are versioned with the API.
+
 ### Developer JWT Claims
 
 ```json

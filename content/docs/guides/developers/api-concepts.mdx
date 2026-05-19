@@ -138,6 +138,23 @@ These endpoints extract structured data from on-chain transactions:
 
 These are useful for building activity feeds, audit logs, or debugging transaction contents.
 
+## Qualified Contributors
+
+For a project with prerequisite credentials, a manager can ask which aliases currently hold **every** required credential — useful for gating who may be assigned tasks:
+
+```text
+GET /v2/project/manager/contributors/get-qualified?project_id=<id>
+```
+
+The caller must be a manager of the project. The response includes a `status` field:
+
+| `status` | Meaning |
+|----------|---------|
+| `ok` | Prerequisites are configured; `aliases` is the set of fully-qualified contributors (may be empty if none qualify). |
+| `no_prerequisites_configured` | The project has no on-chain prerequisites; `aliases` is always empty. |
+
+The `no_prerequisites_configured` status lets you distinguish "no one qualifies yet" from "this project gates nothing" — they both return an empty list but mean very different things in your UI.
+
 ## Next Steps
 
 - [Transaction Handling](/docs/guides/developers/transactions) — The full transaction lifecycle

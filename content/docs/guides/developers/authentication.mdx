@@ -113,7 +113,7 @@ const { jwt, expires_at, user } = await verifyRes.json();
 
 The response includes:
 - `jwt` — The authentication token
-- `expires_at` — When the JWT expires (typically 24 hours)
+- `expires_at` — When the JWT expires (short-lived; always read this value rather than assuming a fixed window)
 - `user` — User profile (alias, roles, etc.)
 
 ## What the JWT Enables
@@ -189,7 +189,7 @@ if (isJwtExpired(jwt)) {
 
 ### Refresh Strategy
 
-No refresh tokens. When a JWT expires, the user signs a new challenge. Check expiration before sensitive actions and prompt re-authentication gracefully.
+JWT lifetimes are intentionally short. When a user JWT expires, the user signs a new challenge to obtain a fresh token. Check expiration (via `expires_at` / the `exp` claim) before sensitive actions and prompt re-authentication gracefully rather than hardcoding an interval.
 
 ### Logout
 
