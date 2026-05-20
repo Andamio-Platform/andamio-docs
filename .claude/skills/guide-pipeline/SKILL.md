@@ -213,6 +213,8 @@ The `guide-tracker.json` in this directory is the shared source of truth. The `u
 - Issue states are always verified live via `gh issue view`
 - Only one Claude session operates at a time, so no concurrent conflicts
 
+This skill handles the onboarding-guides surface specifically. The broader pattern (docs drift relative to the platform release cycle) is captured in `docs/solutions/workflow-issues/docs-release-sync-drift-2026-05-20.md`, with the version-pin drift detector at `npm run docs-drift` (`.claude/skills/audit-docs/`). Before publishing a pipeline status update, run the drift detector so status reflects current reality.
+
 ## Tracker Schema Reference
 
 ```jsonc

@@ -15,6 +15,8 @@ This skill is the **documentation manager** for V2 transaction MDX files in `con
 **Related Skills**:
 - `/transaction-audit` - Tracks CBOR analysis and YAML creation
 - `/analyze-transaction` - Creates YAML + TypeScript from CBOR
+
+**Scope note**: This skill covers MDX coverage for V2 transactions only. Drift in the developer-facing guides surface (auth, CLI, sponsorship, billing) is owned by `npm run docs-drift` (`.claude/skills/audit-docs/`). The umbrella practice is `docs/solutions/workflow-issues/docs-release-sync-drift-2026-05-20.md`.
 </introduction>
 
 <workflow>

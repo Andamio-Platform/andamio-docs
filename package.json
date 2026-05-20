@@ -6,7 +6,8 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "docs-coverage": "npx tsx scripts/docs-coverage-check.ts"
+    "docs-coverage": "npx tsx scripts/docs-coverage-check.ts",
+    "docs-drift": ".claude/skills/audit-docs/detect-drift.sh"
   },
   "dependencies": {
     "@content-collections/core": "^0.14.2",
