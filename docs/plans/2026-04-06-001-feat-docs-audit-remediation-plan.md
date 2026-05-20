@@ -477,3 +477,7 @@ Developers building on Andamio hit gaps when the docs don't reflect the current 
 - andamio-api `internal/config/config.yaml` — canonical tier/pricing configuration
 - andamio-app-v2 `docs/solutions/architecture/stripe-redirect-billing-integration-pattern.md` — billing implementation details
 - andamio-docs `docs/solutions/integration-issues/fumadocs-broken-directory-links.md` — Fumadocs navigation gotchas
+
+## Follow-up (2026-05-20)
+
+This plan was remediation, not prevention. The v2.3 audit (PR #16, 2026-05-19) found the same drift pattern had recurred — the `51f5b93` commit was already stale on merge because no gate ties docs sync to the release cycle. The recurring fix is captured in `docs/solutions/workflow-issues/docs-release-sync-drift-2026-05-20.md` (release-cycle hook + drift detector + scheduled audit). The drift detector (`npm run docs-drift`, `.claude/skills/audit-docs/`) is now implemented; the release-cycle hook is the next step.

@@ -11,6 +11,8 @@ This skill is the **project manager** for V2 transaction documentation. It track
 **Worker Skill**: Use `/analyze-transaction` to process individual transactions.
 
 **Tracking File**: `.claude/skills/transaction-audit/v2-transaction-tracker.json`
+
+**Scope note**: This skill is the V2-transactions-specific instance of the broader release-cycle drift practice. For the cross-cutting pattern (release-cycle hook + drift detector + scheduled audit across the developer-facing surface), see `docs/solutions/workflow-issues/docs-release-sync-drift-2026-05-20.md`.
 </introduction>
 
 <workflow>

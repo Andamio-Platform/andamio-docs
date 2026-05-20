@@ -1,0 +1,12 @@
+# .drift-allowlist — patterns to ignore in detect-drift.sh output.
+#
+# One pattern per line; matched as a literal substring against
+# "relative/path:line:match" findings. Blank lines and # comments are skipped.
+#
+# Use for intentional historical references (changelog entries, migration notes,
+# "as of vX" call-outs that should not auto-update).
+#
+# Example:
+#   content/docs/protocol/v2/whats-new.mdx:v2.0.0
+#
+# (whats-new.mdx is already excluded by EXCLUDE_REGEX, shown only as a template.)
