@@ -39,13 +39,13 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: calc(var(--radius) - 1px);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+  --radius-xl: calc(var(--radius) + 2px);
+  --radius-2xl: calc(var(--radius) + 4px);
+  --radius-3xl: calc(var(--radius) + 6px);
+  --radius-4xl: calc(var(--radius) + 8px);
 
   /* Fumadocs overrides */
   --color-fd-background: var(--background);
@@ -67,7 +67,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.25rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -220,6 +220,62 @@
     color: var(--muted-foreground);
     line-height: 1.6;
   }
+
+}
+
+/* Compact Fumadocs Cards: tighter padding, denser type */
+[data-card][data-card] {
+  padding: 0.75rem 0.875rem;
+}
+
+[data-card][data-card] h3 {
+  margin-top: 0;
+  margin-bottom: 0.125rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+[data-card][data-card] p,
+[data-card][data-card] > div:last-child {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+[data-card][data-card] > div:last-child p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Icon cards: 2-column grid with icon beside text, vertically centered */
+[data-card][data-card]:has(> div.not-prose) {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 0.625rem;
+  row-gap: 0.125rem;
+  align-items: center;
+}
+
+[data-card][data-card]:has(> div.not-prose) > div.not-prose {
+  grid-row: 1 / span 2;
+  margin-bottom: 0;
+  padding: 0.25rem;
+}
+
+[data-card][data-card]:has(> div.not-prose) > div.not-prose svg {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+[data-card][data-card]:has(> div.not-prose) h3 {
+  margin-bottom: 0;
+  align-self: end;
+}
+
+[data-card][data-card]:has(> div.not-prose) > p,
+[data-card][data-card]:has(> div.not-prose) > div:last-child {
+  align-self: start;
 }
 
 /* ─── Diagram node tokens ─── */

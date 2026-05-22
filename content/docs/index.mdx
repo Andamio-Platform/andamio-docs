@@ -3,45 +3,49 @@ title: Home
 icon: House
 ---
 
-import { Code, BookText, Workflow, BookOpen, Rocket, ExternalLink, Key, Users } from "lucide-react";
+Andamio is an open credential protocol. Anyone can issue credentials, and these credentials can serve as prerequisites for new ones. They compose into permissions, learning paths, and access rules across applications.
 
-# Welcome to Andamio
+Andamio uses the Cardano blockchain to store these credentials. This makes the credentials permanent and tamper-proof, and it also enables a new class off applications that use programmable credentials. 
 
-Andamio is an open protocol for credential-gated collaboration on Cardano. Create courses that issue verifiable credentials. Launch projects where qualified contributors earn rewards. Build applications that read and write to shared, auditable state.
-
-## Build on Open Credentials
-
-- Issue interoperable credentials via API
-- Cardano is always the source of truth
-- Your users own their credentials; your app just reads them
+Andamio provides convenient abstractions that make it possible to ignore the blockchain entirely. It also provides a toolkit for anyone who wants to build directly with the on-chain protocol.
 
 <Cards>
-  <Card title="Getting Started" href="/docs/getting-started" icon={<Rocket />}>
-    Clone the app template and run locally in 15 minutes
+  <Card title="Try Andamio" href="https://app.andamio.io">
+    Learn what Andamio can do by exploring the Andamio App.
   </Card>
-  <Card title="API Quickstart" href="/docs/guides/developers/api-quickstart" icon={<Code />}>
-    Make your first API call in 5 minutes
+  <Card title="Build an App" href="/docs/getting-started">
+    Get started with the Andamio App template and build your own solution.
+  </Card>
+  <Card title="API Quickstart" href="/docs/guides/developers/api-quickstart">
+    Make your first Andamio API call.
   </Card>
 </Cards>
 
-## What Can You Build?
+## What makes Andamio different
+
+**Open.** Anyone can issue, not just approved institutions.
+
+**Persistent.** Credentials live on a blockchain, where they are permanently held by the people who earn them. They outlast the apps that issued them.
+
+**Composable.** Any issuer's credentials can be prerequisites for new ones.
+
+**Functional.** Use credentials to unlock funds, governance, and access, not just signal.
+
+## How to build on Andamio
 
 <Cards>
-  <Card title="Treasury Governance" icon={<Key />}>
-    Credential-gated access to shared funds. Verified contributors unlock spending and delegation.
+  <Card title="Issue Credentials" href="/docs/issuer">
+    No-code issuance for organizations, via Enterprise Issuer.
   </Card>
-  <Card title="Onboarding Platforms" icon={<Users />}>
-    Guide team members through structured learning paths. Issue credentials as they progress.
+  <Card title="Build with the API" href="/docs/getting-started">
+    Read, mint, and gate credentials in your own app.
   </Card>
-  <Card title="Coordination Infrastructure" icon={<Workflow />}>
-    For guilds, collectives, and DAOs. Credentials define permissions and decision-making authority.
-  </Card>
-  <Card title="Co-op Social Media" icon={<BookOpen />}>
-    Community-owned platforms where credentials control moderation, curation, and governance.
+  <Card title="Use the App" href="/docs/guides">
+    Earn credentials, take courses, build a verifiable portfolio.
   </Card>
 </Cards>
 
-These are just a few ideas. Andamio is built for you to create your own systems and tools. If you want to explore what's possible, join [Andamio Pioneers](https://discord.gg/wfGrgJJheS) where builders share what they're making.
+To see what others are building, join [Andamio Pioneers](https://discord.gg/wfGrgJJheS).
 
 ## Developer Guides
 
@@ -62,54 +66,37 @@ The API separates app identity from user identity:
 | `X-API-Key` | Identifies your app. Used for rate limits and quotas. One key serves all your users. |
 | `Authorization` | Identifies the user. A JWT issued when users sign a challenge with their Cardano wallet. |
 
-Users never expose private keys or sign transactions during authentication. They sign a challenge, nothing more. Tokens are valid for 24 hours.
+Users never expose private keys. They sign a challenge, nothing more. Tokens are valid for 24 hours.
 
 → [Authentication guide](/docs/guides/developers/authentication)
 
 ## Reference
 
 <Cards>
-  <Card title="Preprod API" href="https://preprod.api.andamio.io" icon={<ExternalLink />}>
-    Full endpoint documentation (development)
+  <Card title="Preprod API" href="https://preprod.api.andamio.io">
+    Endpoint documentation for development
   </Card>
-  <Card title="Mainnet API" href="https://mainnet.api.andamio.io" icon={<ExternalLink />}>
-    Full endpoint documentation (production)
+  <Card title="Mainnet API" href="https://mainnet.api.andamio.io">
+    Endpoint documentation for production
   </Card>
-  <Card title="SDK" href="/docs/sdk" icon={<Code />}>
+  <Card title="SDK" href="/docs/sdk">
     TypeScript packages for transaction building
   </Card>
-  <Card title="Protocol" href="/docs/protocol" icon={<Workflow />}>
+  <Card title="Protocol" href="/docs/protocol">
     On-chain architecture, validators, and state machines
   </Card>
 </Cards>
 
----
-
-## Want to Try Andamio First?
-
-Before you build, experience the platform as a user. Mint an access token, take a course, earn a credential. Takes about 2 minutes with a Cardano wallet (Nami, Eternl, or Lace).
-
-<Cards>
-  <Card title="Try the App" href="https://preprod.app.andamio.io" icon={<ExternalLink />}>
-    Explore Andamio on preprod (free test ADA)
-  </Card>
-  <Card title="Platform Guides" href="/docs/guides" icon={<BookOpen />}>
-    Step-by-step guides for courses, projects, and credentials
-  </Card>
-</Cards>
-
----
-
 ## Go Deeper
 
 <Cards>
-  <Card title="Whitepaper" href="/docs/whitepaper" icon={<BookText />}>
+  <Card title="Whitepaper" href="/docs/whitepaper">
     Why and how Andamio was designed
   </Card>
-  <Card title="Glossary" href="/docs/glossary" icon={<BookText />}>
+  <Card title="Glossary" href="/docs/glossary">
     Key terms and concepts
   </Card>
-  <Card title="Repositories" href="/docs/repositories" icon={<Code />}>
+  <Card title="Repositories" href="/docs/repositories">
     Source code for smart contracts and tools
   </Card>
 </Cards>
