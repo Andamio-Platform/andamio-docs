@@ -15,16 +15,6 @@ export default function Layout({ children }: { children: ReactNode }) {
             description: "Get started with Andamio",
             url: "/docs/guides",
           },
-          {
-            title: "Protocol",
-            description: "V1 & V2 specifications",
-            url: "/docs/protocol",
-          },
-          {
-            title: "Whitepaper",
-            description: "Design & architecture",
-            url: "/docs/whitepaper",
-          },
         ],
       }}
     >
