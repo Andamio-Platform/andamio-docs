@@ -66,7 +66,7 @@ This is a Next.js documentation site built with Fumadocs, using content collecti
 - Transaction documentation in `content/docs/protocol/v2/transactions/`
 - Validator documentation in `content/docs/protocol/v2/validators/`
 - Token documentation in `content/docs/protocol/v2/tokens/`
-- Whitepaper content in `content/docs/whitepaper/`
+- The Andamio papers (placeholders, drafts in progress): `content/docs/light-paper.mdx`, `content/docs/andamio-issuer.mdx`, `content/docs/building-on-andamio.mdx`
 
 ### Special Features
 - Mermaid diagram support via `components/mdx/mermaid.tsx`
