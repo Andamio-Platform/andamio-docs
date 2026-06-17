@@ -3,21 +3,19 @@ title: Home
 icon: House
 ---
 
-Andamio is an open credential protocol. Anyone can issue credentials, and these credentials can serve as prerequisites for new ones. They compose into permissions, learning paths, and access rules across applications.
+Andamio is an open credentialing protocol: a way for groups of people to issue, earn, and verify proof of real work. Anyone can issue a credential, and one credential can be a prerequisite for earning another, so credentials compose into learning paths, permissions, and access rules across applications.
 
-Andamio uses the Cardano blockchain to store these credentials. This makes the credentials permanent and tamper-proof, and it also enables a new class off applications that use programmable credentials. 
-
-Andamio provides convenient abstractions that make it possible to ignore the blockchain entirely. It also provides a toolkit for anyone who wants to build directly with the on-chain protocol.
+Credentials live on public infrastructure, the Cardano blockchain, which keeps them permanent and tamper-proof and lets them outlast the apps that issue them. You can build on Andamio without touching the blockchain, or work directly with the on-chain protocol.
 
 <Cards>
-  <Card title="Try Andamio" href="https://app.andamio.io">
-    Learn what Andamio can do by exploring the Andamio App.
+  <Card title="Issue credentials" href="/docs/andamio-issuer">
+    No-code issuance for organizations.
   </Card>
-  <Card title="Build an App" href="/docs/getting-started">
-    Get started with the Andamio App template and build your own solution.
+  <Card title="Build with the API" href="/docs/getting-started">
+    Read, mint, and gate credentials in your own app.
   </Card>
-  <Card title="API Quickstart" href="/docs/guides/developers/api-quickstart">
-    Make your first Andamio API call.
+  <Card title="Use the app" href="https://app.andamio.io">
+    Earn credentials, take courses, and build a verifiable portfolio.
   </Card>
 </Cards>
 
@@ -25,50 +23,15 @@ Andamio provides convenient abstractions that make it possible to ignore the blo
 
 **Open.** Anyone can issue, not just approved institutions.
 
-**Persistent.** Credentials live on a blockchain, where they are permanently held by the people who earn them. They outlast the apps that issued them.
+**Persistent.** Credentials are permanently held by the people who earn them, and they outlast the apps that issued them.
 
 **Composable.** Any issuer's credentials can be prerequisites for new ones.
 
-**Functional.** Use credentials to unlock funds, governance, and access, not just signal.
+**Private.** A credential's proof is public and verifiable; the evidence behind it stays yours.
 
-## How to build on Andamio
-
-<Cards>
-  <Card title="Issue Credentials" href="/docs/issuer">
-    No-code issuance for organizations, via Enterprise Issuer.
-  </Card>
-  <Card title="Build with the API" href="/docs/getting-started">
-    Read, mint, and gate credentials in your own app.
-  </Card>
-  <Card title="Use the App" href="/docs/guides">
-    Earn credentials, take courses, build a verifiable portfolio.
-  </Card>
-</Cards>
+**Functional.** Use credentials to unlock funds, governance, and access, not just to signal.
 
 To see what others are building, join [Andamio Pioneers](https://discord.gg/wfGrgJJheS).
-
-## Developer Guides
-
-| Guide | Description |
-|-------|-------------|
-| [Your First App](/docs/guides/developers/first-app) | Build a course, enroll a student, submit an assignment |
-| [API Integration](/docs/guides/developers/api-integration) | Environment URLs, auth headers, request patterns |
-| [Authentication](/docs/guides/developers/authentication) | Wallet-based login and JWT flow |
-| [Transactions](/docs/guides/developers/transactions) | Build → sign → submit lifecycle |
-| [Error Handling](/docs/guides/developers/error-handling) | Recovery patterns for failed transactions |
-
-## Built-in Access Control
-
-The API separates app identity from user identity:
-
-| Header | Purpose |
-|--------|---------|
-| `X-API-Key` | Identifies your app. Used for rate limits and quotas. One key serves all your users. |
-| `Authorization` | Identifies the user. A JWT issued when users sign a challenge with their Cardano wallet. |
-
-Users never expose private keys. They sign a challenge, nothing more. Tokens are valid for 24 hours.
-
-→ [Authentication guide](/docs/guides/developers/authentication)
 
 ## Reference
 
