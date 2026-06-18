@@ -10,10 +10,11 @@ export default function Layout({ children }: { children: ReactNode }) {
       {...baseOptions}
       sidebar={{
         tabs: [
+          { title: "Documentation", url: "/docs" },
           {
-            title: "Guides",
-            description: "Get started with Andamio",
-            url: "/docs/guides",
+            title: "Protocol",
+            description: "On-chain internals · advanced",
+            url: "/docs/protocol",
           },
         ],
       }}
