@@ -2,13 +2,10 @@
     "title": "Protocol V2",
     "pages": [
         "index",
-        "whats-new",
-        "cost-estimation",
         "state-machine",
         "validators",
         "transactions",
-        "tokens",
-        "security-audit"
+        "tokens"
     ],
     "defaultOpen": false
 }

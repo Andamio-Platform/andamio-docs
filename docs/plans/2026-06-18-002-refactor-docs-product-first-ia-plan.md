@@ -1,7 +1,7 @@
 ---
 title: "refactor: Product-first docs IA — API + Issuer up top, protocol layer demoted"
 type: refactor
-status: active
+status: completed
 date: 2026-06-18
 ---
 
