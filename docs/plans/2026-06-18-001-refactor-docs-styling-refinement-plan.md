@@ -1,7 +1,7 @@
 ---
 title: "refactor: Styling refinement pass for docs.andamio.io (typography, color, chrome)"
 type: refactor
-status: active
+status: completed
 date: 2026-06-18
 deepened:
 ---
