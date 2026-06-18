@@ -69,70 +69,70 @@
 :root {
   --radius: 0.5rem; /* 8px surfaces; --radius-sm/-md derive 6/7px for controls */
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0.205 0.012 65);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.205 0.012 65);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.669 0.199 38.581);
+  --popover-foreground: oklch(0.205 0.012 65);
+  --primary: oklch(0.62 0.15 48);
   --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.387 0.134 250.505);
+  --secondary: oklch(0.45 0.115 250);
   --secondary-foreground: oklch(1 0 0);
-  --muted: oklch(0.985 0.002 106.423);
-  --muted-foreground: oklch(0.478 0.029 255.508);
+  --muted: oklch(0.975 0.005 75);
+  --muted-foreground: oklch(0.485 0.016 65);
   --accent: oklch(0.988 0.008 79.439);
-  --accent-foreground: oklch(0.145 0 0);
+  --accent-foreground: oklch(0.205 0.012 65);
   --destructive: oklch(0.608 0.227 27.325);
-  --border: oklch(0.922 0.003 106.423);
-  --input: oklch(0.922 0.003 106.423);
-  --ring: oklch(0.669 0.199 38.581);
+  --border: oklch(0.915 0.006 70);
+  --input: oklch(0.915 0.006 70);
+  --ring: oklch(0.62 0.15 48);
   --chart-1: oklch(0.719 0.140 38.581);
   --chart-2: oklch(0.605 0.155 250.505);
   --chart-3: oklch(0.627 0.106 181.764);
-  --chart-4: oklch(0.669 0.199 38.581);
-  --chart-5: oklch(0.387 0.134 250.505);
+  --chart-4: oklch(0.62 0.15 48);
+  --chart-5: oklch(0.45 0.115 250);
   --sidebar: oklch(0.988 0.008 79.439);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.669 0.199 38.581);
+  --sidebar-foreground: oklch(0.205 0.012 65);
+  --sidebar-primary: oklch(0.62 0.15 48);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(1 0 0);
-  --sidebar-accent-foreground: oklch(0.145 0 0);
-  --sidebar-border: oklch(0.922 0.003 106.423);
-  --sidebar-ring: oklch(0.669 0.199 38.581);
+  --sidebar-accent-foreground: oklch(0.205 0.012 65);
+  --sidebar-border: oklch(0.915 0.006 70);
+  --sidebar-ring: oklch(0.62 0.15 48);
 }
 
 .dark {
   --background: oklch(0.188 0.013 257.128);
-  --foreground: oklch(0.922 0.003 106.423);
+  --foreground: oklch(0.915 0.006 70);
   --card: oklch(0.241 0.018 257.128);
-  --card-foreground: oklch(0.922 0.003 106.423);
+  --card-foreground: oklch(0.915 0.006 70);
   --popover: oklch(0.241 0.018 257.128);
-  --popover-foreground: oklch(0.922 0.003 106.423);
-  --primary: oklch(0.719 0.174 38.581);
+  --popover-foreground: oklch(0.915 0.006 70);
+  --primary: oklch(0.74 0.145 50);
   --primary-foreground: oklch(0.188 0.013 257.128);
   --secondary: oklch(0.605 0.155 250.505);
   --secondary-foreground: oklch(1 0 0);
   --muted: oklch(0.241 0.018 257.128);
   --muted-foreground: oklch(0.717 0.014 257.128);
   --accent: oklch(0.338 0.024 257.128);
-  --accent-foreground: oklch(0.922 0.003 106.423);
+  --accent-foreground: oklch(0.915 0.006 70);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(0.338 0.024 257.128);
   --input: oklch(0.338 0.024 257.128);
-  --ring: oklch(0.719 0.174 38.581);
+  --ring: oklch(0.74 0.145 50);
   --chart-1: oklch(0.719 0.140 38.581);
   --chart-2: oklch(0.605 0.155 250.505);
   --chart-3: oklch(0.696 0.090 181.764);
-  --chart-4: oklch(0.719 0.174 38.581);
+  --chart-4: oklch(0.74 0.145 50);
   --chart-5: oklch(0.605 0.155 250.505);
   --sidebar: oklch(0.241 0.018 257.128);
-  --sidebar-foreground: oklch(0.922 0.003 106.423);
-  --sidebar-primary: oklch(0.719 0.174 38.581);
+  --sidebar-foreground: oklch(0.915 0.006 70);
+  --sidebar-primary: oklch(0.74 0.145 50);
   --sidebar-primary-foreground: oklch(0.188 0.013 257.128);
   --sidebar-accent: oklch(0.338 0.024 257.128);
-  --sidebar-accent-foreground: oklch(0.922 0.003 106.423);
+  --sidebar-accent-foreground: oklch(0.915 0.006 70);
   --sidebar-border: oklch(0.338 0.024 257.128);
-  --sidebar-ring: oklch(0.719 0.174 38.581);
+  --sidebar-ring: oklch(0.74 0.145 50);
 }
 
 @layer base {
@@ -222,6 +222,21 @@
     margin-top: 0.75rem;
     margin-bottom: 0.75rem;
     line-height: 1.7;
+  }
+
+  /* Links — accent as seasoning. Darker amber for AA as body text;
+     underline on hover only (restrained, not candy). */
+  .prose a {
+    color: oklch(0.52 0.15 48);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .prose a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .dark .prose a {
+    color: oklch(0.78 0.13 55);
   }
 
   /* Fumadocs page title — Geist Sans */
