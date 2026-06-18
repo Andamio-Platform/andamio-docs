@@ -212,8 +212,11 @@
     margin-bottom: 0.25rem;
   }
 
-  /* Hide duplicate h1 in MDX body — DocsTitle already renders the page title above */
-  .prose > h1:first-child {
+  /* Last-resort net: the page title is rendered by <DocsTitle>, so a body
+     H1 is always a duplicate. The real guard is scripts/check-doc-headings.ts
+     (runs on prebuild); this just ensures a stray one never renders the
+     amateurish double-title in any path that skips the build. */
+  .prose h1 {
     display: none;
   }
 
