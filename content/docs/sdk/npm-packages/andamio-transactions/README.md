@@ -22,7 +22,7 @@ docs-mdx/
 
 When ready to publish these docs:
 
-1. Copy the entire `docs-mdx/` folder to `andamio-docs/content/docs/sdk/transactions/`
+1. Copy the entire `docs-mdx/` folder to `andamio-docs/content/docs/sdk/npm-packages/andamio-transactions/`
 
 2. Rename the folder:
    ```bash
@@ -40,7 +40,7 @@ When ready to publish these docs:
    }
    ```
 
-4. Update internal links if the path structure differs from `/docs/sdk/transactions/`
+4. Update internal links if the path structure differs from `/docs/sdk/npm-packages/andamio-transactions/`
 
 ## MDX Style Guide
 
