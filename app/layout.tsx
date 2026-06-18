@@ -16,21 +16,11 @@ const monaSans = localFont({
   ],
 });
 
-// Display / headings: Hubot Sans (Mona's geometric, technical sibling) — self-hosted, OFL.
-const hubotSans = localFont({
-  variable: '--font-hubot',
-  display: 'swap',
-  src: [
-    { path: './fonts/HubotSans-SemiBold.woff2', weight: '600', style: 'normal' },
-    { path: './fonts/HubotSans-Bold.woff2', weight: '700', style: 'normal' },
-  ],
-});
-
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${monaSans.variable} ${hubotSans.variable} ${GeistMono.variable} ${monaSans.className}`}
+      className={`${monaSans.variable} ${GeistMono.variable} ${monaSans.className}`}
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">
