@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "prebuild": "npx tsx scripts/check-doc-headings.ts",
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
+    "docs-headings": "npx tsx scripts/check-doc-headings.ts",
+    "docs-headings:fix": "npx tsx scripts/check-doc-headings.ts --fix",
     "docs-coverage": "npx tsx scripts/docs-coverage-check.ts",
     "docs-drift": ".claude/skills/audit-docs/detect-drift.sh"
   },
