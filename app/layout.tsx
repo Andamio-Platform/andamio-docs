@@ -1,18 +1,38 @@
 import './global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
-import { Inter } from 'next/font/google';
-import { GeistSans } from 'geist/font/sans';
+import localFont from 'next/font/local';
 import { GeistMono } from 'geist/font/mono';
 import type { ReactNode } from 'react';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
+// Body: Mona Sans (GitHub's industrial grotesque) — self-hosted, OFL.
+const monaSans = localFont({
+  variable: '--font-mona',
+  display: 'swap',
+  src: [
+    { path: './fonts/MonaSans-Regular.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/MonaSans-Medium.woff2', weight: '500', style: 'normal' },
+    { path: './fonts/MonaSans-SemiBold.woff2', weight: '600', style: 'normal' },
+    { path: './fonts/MonaSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
+});
+
+// Display / headings: Hubot Sans (Mona's geometric, technical sibling) — self-hosted, OFL.
+const hubotSans = localFont({
+  variable: '--font-hubot',
+  display: 'swap',
+  src: [
+    { path: './fonts/HubotSans-SemiBold.woff2', weight: '600', style: 'normal' },
+    { path: './fonts/HubotSans-Bold.woff2', weight: '700', style: 'normal' },
+  ],
 });
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${GeistSans.variable} ${GeistMono.variable} ${inter.className}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${monaSans.variable} ${hubotSans.variable} ${GeistMono.variable} ${monaSans.className}`}
+      suppressHydrationWarning
+    >
       <body className="flex flex-col min-h-screen">
         <RootProvider>{children}</RootProvider>
       </body>
