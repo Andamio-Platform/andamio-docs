@@ -4,8 +4,6 @@ description: "Database updates and notifications on transaction submission and c
 icon: Zap
 ---
 
-# Side Effects
-
 Side effects are declarative specifications for database updates that should occur when a transaction is submitted or confirmed on-chain. The `@andamio/transactions` package defines WHAT should happen; execution is handled by:
 
 - **Frontend (T3 App Template)** - Executes `onSubmit` side effects immediately after transaction submission
