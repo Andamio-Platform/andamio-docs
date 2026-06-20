@@ -9,6 +9,7 @@ const monaSans = localFont({
   variable: '--font-mona',
   display: 'swap',
   src: [
+    { path: './fonts/MonaSans-Light.woff2', weight: '300', style: 'normal' },
     { path: './fonts/MonaSans-Regular.woff2', weight: '400', style: 'normal' },
     { path: './fonts/MonaSans-Medium.woff2', weight: '500', style: 'normal' },
     { path: './fonts/MonaSans-SemiBold.woff2', weight: '600', style: 'normal' },
