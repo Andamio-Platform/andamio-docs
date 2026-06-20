@@ -32,7 +32,7 @@ export default function HomePage() {
           Get Started
         </Link>
         <Link
-          href="https://mainnet.api.andamio.io/reference"
+          href="https://api.andamio.io"
           className="inline-flex items-center rounded-lg border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-accent"
         >
           API Reference
