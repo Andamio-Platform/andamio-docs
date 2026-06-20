@@ -1,0 +1,44 @@
+---
+title: How it works
+description: The design decisions that make an Andamio credential a building block
+---
+
+<Callout type="info">
+  Scaffold in progress. The model below is stable; worked examples and screenshots will follow as the product firms up.
+</Callout>
+
+An Andamio credential behaves differently from a badge because of a few deliberate design decisions. Each one follows from anchoring credentials on a public ledger instead of inside a single company's database.
+
+## The credential model
+
+### It outlives whoever issued it
+
+The credential is immutable and stored on public infrastructure that no single company owns. It cannot be altered after the fact, and it does not disappear when a vendor or contract ends. You are not locked in, and neither are the people you credential.
+
+### It can build on other credentials
+
+A credential can be required before someone takes on the work that earns another, so what someone holds opens the door to what comes next.
+
+<Callout type="warn">
+  Cross-organization prerequisite enforcement (a credential from one issuer gating another issuer's program automatically, on-chain) is on the roadmap and not yet a shipped capability. This page will state precisely what is enforced today once that line is settled.
+</Callout>
+
+### Software can act on it
+
+The credential is machine-readable. An application can check that someone holds it and gate access on that, unlock the next step, or drive what happens next. It stops being something to look at and becomes something your systems use.
+
+### Proof is public; evidence is private
+
+Anyone can verify that a credential is real, while the work behind it stays with the person who earned it. This is how a diploma works: the credential is public, the exam papers are not. Andamio puts a hash of the evidence on-chain; the evidence itself never leaves your control.
+
+### You own what it means
+
+The barrier to issue is low, and the credential makes no claim about its own value. You define what it certifies; its value comes from the track record it earns once it is in the world. Andamio provides the issuance infrastructure; the meaning is yours.
+
+### The earner keeps it
+
+The credential lives with the person who earned it, not in your system, and they can carry it anywhere it is useful, even if they leave your program.
+
+## No blockchain to learn
+
+Issuer covers the chain entirely. Transactions are sponsored, so the people you credential never hold ADA or manage a wallet. From your side, you call an API; from their side, they earn a credential. The ledger is invisible to both.

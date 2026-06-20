@@ -3,52 +3,51 @@ title: Home
 icon: House
 ---
 
-Andamio is an open credentialing protocol: a way for groups of people to issue, earn, and verify proof of real work. Anyone can issue a credential, and one credential can be a prerequisite for earning another, so credentials compose into learning paths, permissions, and access rules across applications.
+Andamio is a credentialing solution: a way for groups of people to issue, earn, and verify proof of real work. Credentials live on public infrastructure, the Cardano blockchain, which keeps them permanent and independently verifiable, and lets them outlast the apps that issue them.
 
-Credentials live on public infrastructure, the Cardano blockchain, which keeps them permanent and tamper-proof and lets them outlast the apps that issue them. You can build on Andamio without touching the blockchain, or work directly with the on-chain protocol.
+There are two ways to build with Andamio, plus a live app to see it in action.
 
 <Cards>
-  <Card title="Issue credentials" href="/docs/andamio-issuer">
-    No-code issuance for organizations.
+  <Card title="Andamio API" href="/docs/getting-started">
+    The developer product. Read, mint, and gate credentials in your own app or system.
   </Card>
-  <Card title="Build with the API" href="/docs/getting-started">
-    Read, mint, and gate credentials in your own app.
+  <Card title="Andamio Issuer" href="/docs/issuer">
+    Low-code credentialing for organizations. Add verifiable credentials to programs you already run, with no wallets or tokens to manage.
   </Card>
-  <Card title="Use the app" href="https://app.andamio.io">
-    Earn credentials, take courses, and build a verifiable portfolio.
+  <Card title="Explore the app" href="https://app.andamio.io">
+    Take a course, complete work, and earn a credential. Built entirely on the Andamio API.
   </Card>
 </Cards>
 
-## What makes Andamio different
+## Two products, one protocol
 
-**Open.** Anyone can issue, not just approved institutions.
+**Andamio API** wraps the on-chain protocol into endpoints you build on. Most developers work at this level; you can also transact against the smart contracts directly. See [Building on Andamio](/docs/building-on-andamio).
 
-**Persistent.** Credentials are permanently held by the people who earn them, and they outlast the apps that issued them.
+**Andamio Issuer** is built on the API and abstracts the chain away entirely. It adds a verifiable credential layer to the systems an organization already runs, with no wallets or tokens for anyone to learn.
 
-**Composable.** Any issuer's credentials can be prerequisites for new ones.
+The **app** at [app.andamio.io](https://app.andamio.io) is a reference implementation on the API, open to anyone who wants to explore.
 
-**Private.** A credential's proof is public and verifiable; the evidence behind it stays yours.
+## What makes an Andamio credential different
 
-**Functional.** Use credentials to unlock funds, governance, and access, not just to signal.
+**Persistent.** Immutable and stored on public infrastructure no single company owns. A credential outlives whoever issued it.
+
+**Composable.** One credential can be required before someone earns the next, so credentials build on each other instead of piling up.
+
+**Useful.** Machine-readable. Software can verify that someone holds a credential and act on it: gate access, unlock the next step, or drive what an app does.
+
+**Private.** The proof is public and verifiable; the evidence behind it stays with the person who earned it.
+
+**Open.** Anyone can issue. A credential makes no claim about its own value; value comes from use.
+
+**Owned by the earner.** It lives with the person who earned it, not in the issuer's system, and they can carry it anywhere it is useful.
 
 To see what others are building, join [Andamio Pioneers](https://discord.gg/wfGrgJJheS).
 
-## Reference
-
-<Cards>
-  <Card title="API Reference" href="https://api.andamio.io">
-    Full endpoint documentation
-  </Card>
-  <Card title="SDK" href="/docs/sdk">
-    TypeScript packages for transaction building
-  </Card>
-</Cards>
-
-## Go Deeper
+## Go deeper
 
 <Cards>
   <Card title="Light Paper" href="/docs/light-paper">
-    What Andamio is and why it exists (coming soon)
+    What Andamio is and the design decisions behind it
   </Card>
   <Card title="Glossary" href="/docs/glossary">
     Key terms and concepts
