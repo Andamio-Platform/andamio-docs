@@ -1,8 +1,9 @@
 {
     "pages": [
         "index",
+        "[Guides](/docs/guides)",
+        "--- Andamio API ---",
         "guides/developers/api-quickstart",
-        "--- Use the API ---",
         "getting-started",
         "guides/developers",
         "sdk",
