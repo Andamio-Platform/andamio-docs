@@ -1,0 +1,33 @@
+---
+title: Integrate via API
+description: How Andamio Issuer plugs into the systems you already run
+---
+
+<Callout type="info">
+  Preview. The Issuer API surface is taking shape: the write plane is live on preprod and the read-plane endpoint list is locked, with response payloads still in progress. Endpoint details and schemas will be published here as they settle.
+</Callout>
+
+Andamio Issuer exposes a single, versioned API surface that you call from the systems you already run. It builds and submits the on-chain transactions for you, so your integration is ordinary REST: you make a request, Andamio handles the chain.
+
+## The shape
+
+**One namespace: `/issuer/v1/`.** Two kinds of endpoint:
+
+- **Write (`POST`)** builds a sponsored transaction that Andamio signs, sponsors, and submits on the caller's behalf. No wallets, no ADA, no signing on your side.
+- **Read (`GET`)** returns on-chain data, scoped server-side to the caller.
+
+**Authentication.** The tenant is your organization, identified by an `X-API-Key`. The caller is the authenticated person within it, acting in one of four roles: User, Admin, Teacher, or Learner.
+
+## What you can do
+
+The write plane covers the full credential lifecycle: create user accounts, create courses, manage teachers, define and remove credentials, submit and approve evidence, and claim earned credentials.
+
+The read plane covers the data you build on: course catalogs and structure, teachers and learners, and per-person views of the credentials someone holds, their submissions, and the reviews awaiting them.
+
+## How it relates to the Andamio API
+
+Issuer is a higher-level surface built on the [Andamio API](/docs/getting-started). The API gives developers the full protocol; Issuer narrows it to the credentialing job and removes the blockchain entirely. If you want lower-level control or are building something beyond credential issuance, build on the API directly.
+
+<Callout type="info">
+  Want early access or have integration questions? Reach out via [Andamio Pioneers](https://discord.gg/wfGrgJJheS).
+</Callout>

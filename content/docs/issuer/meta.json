@@ -1,0 +1,10 @@
+{
+    "title": "Andamio Issuer",
+    "icon": "BadgeCheck",
+    "pages": [
+        "index",
+        "how-it-works",
+        "quickstart",
+        "integrate"
+    ]
+}
