@@ -411,11 +411,15 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted-foreground);
-  padding: 0 0.875rem 0.4rem;
+  padding: 0 0.875rem 0.65rem;
   border: none;
 }
 .prose td {
-  padding: 0.45rem 0.875rem;
+  /* Row breathing room: the density pass over-tightened these to 0.45rem,
+     leaving rows cramped against the hairline dividers. 0.75rem gives a
+     comfortable ~46px row at the 15px body size without losing the
+     borderless, scannable Stripe rhythm. */
+  padding: 0.75rem 0.875rem;
   border: none;
   border-top: 1px solid var(--border);
   vertical-align: top;
