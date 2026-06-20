@@ -181,15 +181,15 @@
   }
 
   .prose h2 {
-    font-size: 1.25rem;    /* 20px */
-    font-weight: 600;
+    font-size: 1.125rem;   /* 18px */
+    font-weight: 500;
     line-height: 1.3;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.011em;
     /* Each H2 opens a section with a faint top rule (Stripe pattern). The
        rule lives in the gap; padding-top sets distance from line to text. */
-    margin-top: 1.5rem;
-    margin-bottom: 0.35rem;
-    padding-top: 1rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.3rem;
+    padding-top: 0.85rem;
     border-top: 1px solid var(--border);
   }
   /* First section needs no divider above it. */
@@ -201,32 +201,32 @@
   }
 
   .prose h3 {
-    font-size: 1.0625rem;  /* 17px */
-    font-weight: 600;
+    font-size: 1rem;       /* 16px */
+    font-weight: 500;
     line-height: 1.35;
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
+    margin-top: 0.8rem;
+    margin-bottom: 0.2rem;
   }
 
   .prose h4 {
     font-size: 0.9375rem;  /* 15px */
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.4;
-    margin-top: 0.85rem;
-    margin-bottom: 0.2rem;
+    margin-top: 0.7rem;
+    margin-bottom: 0.15rem;
   }
 
   .prose h5 {
     font-size: 0.875rem;   /* 14px */
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.45;
-    margin-top: 1rem;
-    margin-bottom: 0.25rem;
+    margin-top: 0.85rem;
+    margin-bottom: 0.2rem;
   }
 
   .prose h6 {
     font-size: 0.8125rem;  /* 13px — eyebrow; tight tracking, not uppercase */
-    font-weight: 600;
+    font-weight: 500;
     line-height: 1.45;
     letter-spacing: 0.01em;
     color: var(--muted-foreground);
@@ -271,10 +271,11 @@
     margin-top: 0.15rem;
     margin-bottom: 0.15rem;
   }
+  /* Inline emphasis stays a notch under headings: 500, not 600, so bold
+     body text never out-weighs a section heading. */
   .prose strong,
-  .prose b,
-  .prose th {
-    font-weight: 600;
+  .prose b {
+    font-weight: 500;
     color: var(--foreground);
   }
 
@@ -284,7 +285,7 @@
   .prose hr {
     border: none;
     border-top: 1px solid var(--border);
-    margin: 1.25rem 0;
+    margin: 1rem 0;
   }
   .prose hr:has(+ h2),
   .prose hr:has(+ h3) {
@@ -315,10 +316,10 @@
   [class*="nd-page"] > h1:first-child,
   .fd-page-header h1 {
     font-family: var(--font-heading), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-size: 1.625rem; /* 26px — matches .prose h1, single scale */
+    font-size: 1.5rem; /* 24px — page-title anchor; one notch above H2 */
     font-weight: 600;
     line-height: 1.2;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.018em;
     color: var(--foreground);
   }
 
@@ -446,7 +447,7 @@ span.truncate.text-fd-primary.font-medium {
 /* Header region: less air between title, description, and first section,
    and a shorter drop from the top of the viewport. */
 #nd-page > article {
-  gap: 1rem;            /* was gap-6 (1.5rem) */
+  gap: 0.85rem;         /* was gap-6 (1.5rem) */
   padding-top: 2rem;    /* was pt-12 (3rem) on desktop */
 }
 
