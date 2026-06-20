@@ -30,10 +30,7 @@ export const baseOptions: BaseLayoutProps = {
     ),
     url: "https://andamio.io",
   },
-  links: [
-    {
-      text: "Guides",
-      url: "/docs/guides",
-    },
-  ],
+  // Guides lives in the docs sidebar tree (below Home), not as a nav link,
+  // so Home can sit at the very top of the sidebar.
+  links: [],
 };
