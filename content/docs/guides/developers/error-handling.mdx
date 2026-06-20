@@ -19,7 +19,7 @@ Transactions can reach three terminal states:
 
 | Code | Meaning | Resolution |
 |------|---------|------------|
-| `400` | Bad request / validation error | Check request body against [API Reference](https://preprod.api.andamio.io/reference) |
+| `400` | Bad request / validation error | Check request body against [API Reference](https://api.andamio.io) |
 | `401` | Invalid or expired JWT | Re-authenticate user via wallet signature |
 | `403` | Insufficient permissions | User lacks required role (e.g., not a teacher) |
 | `409` | Duplicate registration | Transaction already registered — safe to ignore |
@@ -215,4 +215,4 @@ curl https://andamioscan.io/api/tx/$TX_HASH
 - [API Concepts](/docs/guides/developers/api-concepts) — Safe refetch timing and the source field
 - [API Integration](/docs/guides/developers/api-integration) — Complete transaction flow
 - [Transaction State Machine](/docs/protocol/v2/state-machine) — State transition details
-- [API Reference](https://preprod.api.andamio.io/reference) — Endpoint documentation
+- [API Reference](https://api.andamio.io) — Endpoint documentation

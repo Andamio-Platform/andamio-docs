@@ -20,17 +20,14 @@
         "--- Reference ---",
         "reference",
         "[Protocol internals →](/docs/protocol)",
-        "--- Resources ---",
         "repositories",
         "pioneers",
         "demo",
         "--- External ---",
-        "[Mainnet API](https://mainnet.api.andamio.io)",
-        "[Preprod API](https://preprod.api.andamio.io)",
-        "[API Reference](https://mainnet.api.andamio.io/reference)",
+        "[API Reference](https://api.andamio.io)",
         "[Andamio SDK](https://sdk.andamio.io/)",
-        "[andamio.io](https://andamio.io)",
         "[Andamio App](https://mainnet.app.andamio.io)",
+        "[andamio.io](https://andamio.io)",
         "[GitHub](https://github.com/Andamio-Platform)"
     ]
 }
