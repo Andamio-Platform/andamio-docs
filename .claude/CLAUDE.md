@@ -19,6 +19,7 @@ Specialized tasks are organized into skills located in `.claude/skills/`. Each s
 | **glossary-game** | Collaborative terminology validation and refinement | `.claude/skills/glossary-game/` |
 | **scribe-walkthrough** | Convert Scribe markdown into polished MDX walkthrough pages | `.claude/skills/scribe-walkthrough/` |
 | **guide-pipeline** | Track guide writing progress, manage blockers, and publish pipeline | `.claude/skills/guide-pipeline/` |
+| **docs-governance** | Position complementary tools/support repos (CLI, SDK, templates, bots, dev repos) so they aid sales/contributions without competing with the products; holds the Phase 2 IA restructure plan | `.claude/skills/docs-governance/` |
 
 When working on tasks that match a skill's domain, read the skill's `SKILL.md` for specific instructions and supporting docs for context.
 
