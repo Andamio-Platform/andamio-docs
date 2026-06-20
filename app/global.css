@@ -187,9 +187,9 @@
     letter-spacing: -0.012em;
     /* Each H2 opens a section with a faint top rule (Stripe pattern). The
        rule lives in the gap; padding-top sets distance from line to text. */
-    margin-top: 2.25rem;
-    margin-bottom: 0.5rem;
-    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+    margin-bottom: 0.35rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--border);
   }
   /* First section needs no divider above it. */
@@ -203,17 +203,17 @@
   .prose h3 {
     font-size: 1.0625rem;  /* 17px */
     font-weight: 600;
-    line-height: 1.4;
-    margin-top: 1.4rem;
-    margin-bottom: 0.3rem;
+    line-height: 1.35;
+    margin-top: 1rem;
+    margin-bottom: 0.25rem;
   }
 
   .prose h4 {
     font-size: 0.9375rem;  /* 15px */
     font-weight: 600;
-    line-height: 1.45;
-    margin-top: 1.15rem;
-    margin-bottom: 0.25rem;
+    line-height: 1.4;
+    margin-top: 0.85rem;
+    margin-bottom: 0.2rem;
   }
 
   .prose h5 {
@@ -255,11 +255,21 @@
   .prose li,
   .prose td {
     font-weight: 300;
-    line-height: 1.6;
+    line-height: 1.55;
   }
   .prose p {
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+  /* Tighter lists — Fumadocs defaults run loose. */
+  .prose ul,
+  .prose ol {
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+  .prose li {
+    margin-top: 0.15rem;
+    margin-bottom: 0.15rem;
   }
   .prose strong,
   .prose b,
@@ -274,7 +284,7 @@
   .prose hr {
     border: none;
     border-top: 1px solid var(--border);
-    margin: 2rem 0;
+    margin: 1.25rem 0;
   }
   .prose hr:has(+ h2),
   .prose hr:has(+ h3) {
@@ -298,22 +308,27 @@
     text-decoration-thickness: 1px;
   }
 
-  /* Fumadocs page title — Geist Sans */
+  /* Fumadocs page title. The wrapper is id="nd-page" (NOT a class), so the
+     old [class*="nd-page"] selector silently never matched and the title
+     rendered at the framework default text-3xl/30px. Scope by id. */
+  #nd-page h1,
   [class*="nd-page"] > h1:first-child,
   .fd-page-header h1 {
     font-family: var(--font-heading), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-size: 1.625rem; /* matches .prose h1 — single scale */
+    font-size: 1.625rem; /* 26px — matches .prose h1, single scale */
     font-weight: 600;
+    line-height: 1.2;
     letter-spacing: -0.02em;
     color: var(--foreground);
   }
 
   /* Description text under page title */
+  #nd-page h1 + p,
   .fd-page-header p,
   [class*="nd-page"] > p:first-of-type {
     font-size: 0.9375rem;
     color: var(--muted-foreground);
-    line-height: 1.55;
+    line-height: 1.5;
   }
 
 }
@@ -395,11 +410,11 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted-foreground);
-  padding: 0 0.875rem 0.5rem;
+  padding: 0 0.875rem 0.4rem;
   border: none;
 }
 .prose td {
-  padding: 0.625rem 0.875rem;
+  padding: 0.45rem 0.875rem;
   border: none;
   border-top: 1px solid var(--border);
   vertical-align: top;
@@ -419,6 +434,25 @@
 span.truncate.text-fd-primary.font-medium {
   color: var(--muted-foreground);
   font-weight: 500;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Density pass. Fumadocs' default page shell is generous (gap-6 between
+   header/content blocks, pt-12 at the top, 15px sidebar). Reference docs
+   read as more professional when denser, so tighten the container shell.
+   Scoped to Fumadocs' #nd-page / #nd-sidebar ids to stay surgical.
+   ───────────────────────────────────────────────────────────── */
+
+/* Header region: less air between title, description, and first section,
+   and a shorter drop from the top of the viewport. */
+#nd-page > article {
+  gap: 1rem;            /* was gap-6 (1.5rem) */
+  padding-top: 2rem;    /* was pt-12 (3rem) on desktop */
+}
+
+/* Sidebar: smaller type reads denser and more pro (Stripe ~13–14px). */
+#nd-sidebar a {
+  font-size: 0.875rem;  /* 14px, was 15px */
 }
 
 /* ─── Diagram node tokens ─── */
