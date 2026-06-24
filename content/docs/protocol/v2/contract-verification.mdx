@@ -62,10 +62,10 @@ cardano-cli hash script --script-file script.plutus   # must equal <script_hash>
 **A spend validator** — extract the script hash from the address, then verify as above:
 
 ```bash
-# Decode the address to its payment credential (the script hash):
-cardano-cli address info --address <addr1x...>
-# → "paymentCredential": { "scriptHash": "..." }
-# Then fetch + verify that script hash exactly as for a minting policy.
+# The script hash is the payment credential embedded in the address: the
+# 28 bytes right after the 1-byte header. Decode to base16 and slice it out:
+cardano-cli address info --address <addr1x...> | jq -r .base16 | cut -c3-58
+# → the script hash. Then fetch + verify it exactly as for a minting policy.
 ```
 
 A match proves the address or policy is governed by exactly the compiled validator we publish the hash for. No source, no trust in Andamio.
