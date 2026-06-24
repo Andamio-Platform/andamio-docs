@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prebuild": "npx tsx scripts/check-doc-headings.ts",
+    "prebuild": "npx tsx scripts/check-doc-headings.ts && npx tsx scripts/check-contract-manifest.ts",
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
     "docs-headings": "npx tsx scripts/check-doc-headings.ts",
     "docs-headings:fix": "npx tsx scripts/check-doc-headings.ts --fix",
+    "docs-manifest": "npx tsx scripts/check-contract-manifest.ts",
     "docs-coverage": "npx tsx scripts/docs-coverage-check.ts",
     "docs-drift": ".claude/skills/audit-docs/detect-drift.sh"
   },
