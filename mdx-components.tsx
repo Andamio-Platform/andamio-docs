@@ -8,6 +8,7 @@ import { LinearDiagram } from "@/components/mdx/linear-diagram";
 import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { ThemedImage } from "@/components/mdx/themed-image";
 import { GuideHeader } from "@/components/mdx/guide-header";
+import TreasuryVerifier from "@/components/protocol-info/TreasuryVerifier";
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
@@ -22,6 +23,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Step,
     Callout,
     GuideHeader,
+    TreasuryVerifier,
     ...components,
   };
 }
