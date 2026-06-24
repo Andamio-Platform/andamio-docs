@@ -9,7 +9,7 @@ This page proves **which code is deployed** (identity). For **whether that code 
 
 ## How verification works
 
-Every Andamio on-chain contract is identified by a **script hash** — a `blake2b-224` hash of the *compiled* validator bytes (CIP-19). A script address embeds that hash as its payment credential; a minting policy ID **is** that hash. Because the hash binds to the compiled artifact rather than the source, anyone can confirm that a given address or policy is governed by exactly the code we publish the hash for — **without Andamio releasing the source**.
+Every Andamio on-chain contract is identified by a **script hash** — a `blake2b-224` hash of the *compiled* validator bytes. A script address embeds that hash as its payment credential (CIP-19); a minting policy ID **is** that hash. Because the hash binds to the compiled artifact rather than the source, anyone can confirm that a given address or policy is governed by exactly the code we publish the hash for — **without Andamio releasing the source**.
 
 The compiled bytes are already public: each validator is deployed on mainnet as a **reference script** (CIP-33), so the bytecode lives permanently in the UTxO set. To verify, you fetch those bytes, hash them, and confirm the result equals the published hash.
 
@@ -26,7 +26,7 @@ The policy ID **is** the script hash — verify it directly.
 | Instance Admin | `16c5b8eaf75a95d04cfdaa20d4a227835ec9c52db75ff0df12806a5f` |
 | Instance Provider | `da109ad01a8d7050e079ed7537930ba074b37fa3fdad76320788b2e8` |
 | Index Admin | `0de83d7df97fcf539c56a43605d77800d93917a678af5d2c1702c423` |
-| Index Ref | `98128687f1622463d2d37cba33150c14b32651ebc96cbb52ad975cba` |
+| Index Ref Token | `98128687f1622463d2d37cba33150c14b32651ebc96cbb52ad975cba` |
 
 ### Spend validators
 
@@ -35,7 +35,7 @@ The script hash is the address's payment credential.
 | Contract | Script address |
 |---|---|
 | Global State | `addr1x84ulqv75kc4880kx3e22jwec55n7arkazjljy34q5axxuvch6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6psypmkwq` |
-| Index Ref | `addr1xyp6xrsf4z9tl7r2dkydg75763e2g5vjpawt9uksgjwetpuch6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6ps4hvn9s` |
+| Index Ref Validator | `addr1xyp6xrsf4z9tl7r2dkydg75763e2g5vjpawt9uksgjwetpuch6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6ps4hvn9s` |
 | Index Scripts | `addr1x8nkqvydps2qjml508k97fy4g42stl4hjpgrjql7jakyl55ch6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6psfdeh90` |
 | Instance Governance Scripts | `addr1x9jptucmd72z6g2qw9c8dm4try6w8y34ac2a7ntudj0m8luch6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6ps6tp63q` |
 | Instance Provider Scripts | `addr1x8dppxksr2xhq58q08kh2dunpws8fvml50766a3jq7yt96ych6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6pse7ytve` |
@@ -46,8 +46,9 @@ The script hash is the address's payment credential.
 **A minting policy** — confirm the on-chain script hashes to the listed policy ID:
 
 ```bash
-# The /scripts/{hash} endpoint is keyed BY the hash, so a 200 with the script
-# is itself proof the compiled bytes hash to that value. Fetch the CBOR:
+# The /scripts/{hash} endpoint is keyed by the hash, so this only fetches the
+# bytes Blockfrost holds for that key — a 200 alone is not proof (any source
+# works). The proof is recomputing the hash yourself and matching it. Fetch:
 curl -s -H "project_id: $BLOCKFROST" \
   https://cardano-mainnet.blockfrost.io/api/v0/scripts/<script_hash>/cbor
 # To recompute locally: blake2b-224 over the language-tagged CBOR == <script_hash>
