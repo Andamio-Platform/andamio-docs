@@ -49,9 +49,14 @@ The script hash is the address's payment credential.
 # The /scripts/{hash} endpoint is keyed by the hash, so this only fetches the
 # bytes Blockfrost holds for that key — a 200 alone is not proof (any source
 # works). The proof is recomputing the hash yourself and matching it. Fetch:
-curl -s -H "project_id: $BLOCKFROST" \
-  https://cardano-mainnet.blockfrost.io/api/v0/scripts/<script_hash>/cbor
-# To recompute locally: blake2b-224 over the language-tagged CBOR == <script_hash>
+CBOR=$(curl -s -H "project_id: $BLOCKFROST" \
+  https://cardano-mainnet.blockfrost.io/api/v0/scripts/<script_hash>/cbor | jq -r .cbor)
+# Andamio's validators are Plutus V3 (language-tag byte 0x03). Let cardano-cli
+# prepend the tag and hash — it computes blake2b-224(0x03 || script):
+printf '{"type":"PlutusScriptV3","description":"","cborHex":"%s"}' "$CBOR" > script.plutus
+cardano-cli hash script --script-file script.plutus   # must equal <script_hash>
+# If it does not match, the bytes are double-CBOR-wrapped: decode one CBOR
+# bytestring layer (e.g. `cbor2`/`xxd`) before re-wrapping, then hash again.
 ```
 
 **A spend validator** — extract the script hash from the address, then verify as above:
