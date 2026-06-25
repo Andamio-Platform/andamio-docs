@@ -70,7 +70,13 @@ export default async function Page(props: {
   };
 
   return (
-    <DocsPage full={pageData.full}>
+    <DocsPage
+      full={pageData.full}
+      // On full-width pages, drop Fumadocs' default article max-width (1120px)
+      // so the content can span the whole content area. Gated on `full`, so
+      // only pages that opt in are affected; every other page is unchanged.
+      article={pageData.full ? { className: "max-w-none" } : undefined}
+    >
       <DocsTitle>{pageData.title}</DocsTitle>
       <DocsDescription>{pageData.description}</DocsDescription>
       {(pageData.tags && pageData.tags.length > 0) || pageData["access-level"] ? (
