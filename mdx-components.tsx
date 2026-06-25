@@ -9,6 +9,7 @@ import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { ThemedImage } from "@/components/mdx/themed-image";
 import { GuideHeader } from "@/components/mdx/guide-header";
 import TreasuryVerifier from "@/components/protocol-info/TreasuryVerifier";
+import BadgeAnatomyExplorer from "@/components/credential-badges/BadgeAnatomyExplorer";
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
@@ -24,6 +25,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     Callout,
     GuideHeader,
     TreasuryVerifier,
+    BadgeAnatomyExplorer,
     ...components,
   };
 }

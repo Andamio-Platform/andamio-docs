@@ -1,145 +1,25 @@
 ---
 title: Anatomy of a Credential Badge
 description: What an Andamio Credential Badge actually is, layer by layer — the image, what travels inside it, the Open Badges form, and the on-chain anchor that makes it a credential rather than a picture.
+full: true
 ---
 
 An Andamio credential is the first part of the protocol you can actually *see* — a real
-image, with genuinely novel tech underneath. This page takes one apart, layer by layer, so
-that before you build on it you understand exactly what you're getting: what's a picture,
-what's a standard, and what's anchored on a public ledger.
-
-It is written for the **technical integrator, not the buyer**. The goal is credibility —
-enough real mechanics that you can trust the badge is what we claim — not a sales pitch.
+image, with genuinely novel tech underneath. Click through the four layers below to take one
+apart, layer by layer, so that before you build on it you understand exactly what you're
+getting: what's a picture, what's a standard, and what's anchored on a public ledger. It is
+written for the **technical integrator, not the buyer** — credibility, not a sales pitch.
 
 <Callout type="info" title="Honest reporting: live / coming / in-dev">
-  Andamio is mid-build, and this page situates you in **current state**. Every technical
-  claim below carries a label, and each label is true as of writing:
+  Andamio is mid-build, and this page situates you in **current state**. Every claim in the
+  explorer carries a label, and each label is true as of writing:
 
-  - **[live]** — deployed and verifiable today.
-  - **[in-dev]** — the data or mechanism exists, but a surface around it is still being built.
-  - **[coming]** — designed and specified, not yet implemented.
+  - **Live** — deployed and verifiable today.
+  - **In dev** — the data or mechanism exists, but a surface around it is still being built.
+  - **Coming** — designed and specified, not yet implemented.
 
-  Today's live system runs on **Cardano preprod** (the *Andamio for Developers* course is
-  the first target). Nothing undelivered is described as if it shipped.
+  Today's live system runs on **Cardano preprod** (the *Andamio for Developers* course is the
+  first target). Nothing undelivered is described as if it shipped.
 </Callout>
 
-Here is a real Andamio **Proof Rings** badge — *Andamio for Developers, Module 3*:
-
-![An Andamio Proof Rings credential badge: Andamio for Developers, Module 3 — App Template](/images/credential-badges/credential-badge-sample.svg)
-
-<Callout type="info">
-  Rendered from the current **Proof Rings** generator using the real on-chain identifiers
-  (`policy_id` `6348bba0…a677`, `slt_hash` `a8912039…a045` — *Module 3: App Template*). The
-  public `credentials.andamio.io` deployment is mid-refresh to this design, so it isn't cited
-  as the source here. That's fine by design: badge art is presentation-layer and **mutable**,
-  and may be refreshed without invalidating any credential.
-</Callout>
-
-## 1. The Image
-
-**What it is.** A self-contained SVG served at
-`credentials.andamio.io/badges/<policy_id>.<slt_hash>.svg`. The filename keys off the
-course's on-chain **`policy_id`** and the **`slt_hash`** (the Student Learning Target it
-attests). The design is a "Proof Ring" shield: the **outer ring encodes the `policy_id`,
-the inner ring encodes the `slt_hash`**, on a per-course colour palette.
-
-**Why it matters.** It's a normal image file. It can be posted on social media, dropped
-into a portfolio, or embedded anywhere — and it renders standalone, with no call back to
-Andamio. **[live]** — 62 badges are served today (`HTTP 200`, `image/svg+xml`).
-
-What's genuinely novel: the `(policy_id, slt_hash)` pair is **decodable straight from the
-pixels**, and a badge provably round-trips to its on-chain hashes (the generator ships a
-ring-geometry verifier, `make verify`). **[live]**
-
-<Callout type="warn" title="The image is never the identity">
-  Critical, and easy to get wrong: the badge image is **presentation-layer only — never
-  identity-bearing**. The Proof Rings *encode* the identifying hashes as a neat, verifiable
-  property, but a credential's identity is its **on-chain anchor** (Section 4), not its
-  picture. An issuer can refresh the art at any time without invalidating a single issued
-  credential. **[live]** — this is an explicit design invariant.
-</Callout>
-
-## 2. The SVG Metadata — what travels with the file
-
-**What it is.** Because the badge is a self-contained SVG, the identifying data travels
-*with the image*. Today that is the Proof-Ring encoding of the `(policy_id, slt_hash)`
-pair — readable back out of the file itself, wherever it ends up. **[live]**
-
-**Why it matters.** The file can be stored anywhere and the identifiers it carries can be
-recomputed by anyone — no Andamio lookup required to know *which* course and target it
-refers to.
-
-The next step is to embed the full **signed** credential inside the image:
-
-<Callout type="warn" title="Badge baking — coming">
-  **Open Badges "baking"** embeds the signed verifiable credential directly inside the
-  SVG/PNG (e.g. `<openbadges:credential verify="<JWS>">`), so the image **self-verifies
-  offline** — no call to Andamio's server at all. This is the "lives outside the walls"
-  portability mechanic. The spec is finalized; it is **[coming]**, not yet implemented.
-  Today's badges carry the Proof-Ring encoding, **not** an embedded signed credential.
-</Callout>
-
-## 3. Open Badges, W3C VC & DID
-
-**What it is.** Andamio expresses each credential in the **Open Badges 3.0 / W3C
-Verifiable Credentials 2.0** JSON-LD form — a standards-based shape that any compliant
-verifier can read. The Andamio-specific terms (`onChainAnchor`, `onChainAttestation`,
-`accessToken`, `requires`, `prereqAttestation`) are defined in a hosted, versioned JSON-LD
-context, and a hosted **issuer Profile** identifies Andamio as the issuer. **[live]** —
-both are served:
-
-| Endpoint | Serves | Status |
-|---|---|---|
-| `/context/v0.jsonld` | Andamio's OB 3.0 extension terms (versioned, immutable) | **[live]** |
-| `/issuer` | Hosted OB 3.0 issuer `Profile` (`application/ld+json`) | **[live]** |
-
-**Why it matters.** The OB3 / W3C VC form is a **portable view of the on-chain anchor**, so
-a verifier that has never heard of Cardano can still read and trust the credential. That's
-what makes an Andamio credential integrate with any app that speaks Open Badges.
-
-**The DID layer — why it's there, and where it stands.** A verifiable credential needs a
-cryptographic issuer identity (a DID) so a verifier can check *who* signed it. Andamio's
-chosen production target is **`did:web:credentials.andamio.io`**.
-
-<Callout type="warn" title="DID status — coming">
-  `did:web:credentials.andamio.io` is the **[coming]** production identity — its
-  `/.well-known/did.json` is not yet published. Pre-stable credentials today identify their
-  issuer with a throwaway `did:key` and reference the hosted Profile URL informationally.
-  Likewise, the **signing service** that emits and lets you verify a credential is
-  **[coming]** (the Open Badges shape and issuer Profile are live; KMS-backed signing and a
-  human-facing verification page are next).
-</Callout>
-
-## 4. The Andamio layer on the public ledger
-
-**What it is.** Underneath the image and the standards form sits the part that makes this a
-*credential* and not a certificate: an anchor on Cardano. Each credential's `onChainAnchor`
-carries the `policyId`, asset identifiers, and the transaction hashes that bind the
-attestation into the recipient's on-chain **Access Token global state**, governed by
-Andamio's [deployed protocol validators](/docs/protocol/v2/contract-verification).
-**[live]** — the on-chain course and target identity (the `policy_id` / `slt_hash` the
-badges are built from) is real on preprod, and badges provably round-trip to those hashes.
-
-**Why it matters.** The ledger — not Andamio's server, and not the picture — is the source
-of truth. Anyone can independently confirm the anchor without trusting us.
-
-Two honest gaps in the recipient-facing path:
-
-<Callout type="warn" title="Recipient evidence — in-dev">
-  A recipient's `evidence_hash` is anchored on-chain and retrievable through the
-  authenticated Andamio CLI, but minting a real end-to-end recipient `credential_claim` on
-  preprod is still in flight — so treat per-recipient evidence retrieval as **[in-dev]**.
-  Separately, the public **andamioscan** explorer does **not** yet surface `evidence_hash`:
-  the data is on-chain, but the public reader hasn't exposed it. That's an API-surface gap,
-  **[in-dev]**, not a data gap.
-</Callout>
-
----
-
-## Where this is going
-
-The badge you can hold today is the image, its Proof-Ring encoding, the live Open Badges
-context and issuer Profile, and a real on-chain anchor on preprod. What's **[coming]** is
-the layer that closes the loop: a signing service that emits verifiable credentials,
-`did:web` as the production issuer identity, baked self-verifying badges, and a public
-verification surface. This page will track that progression honestly as each piece lands.
+<BadgeAnatomyExplorer />
