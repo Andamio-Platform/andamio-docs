@@ -176,7 +176,7 @@ export default function BadgeAnatomyExplorer() {
 
         {/* Badge stage */}
         <div className="flex min-h-0 flex-col items-center justify-center">
-          <div className="relative aspect-square w-full max-w-[min(100%,52vh)]">
+          <div className="relative aspect-square w-full max-w-[min(100%,60vh)]">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={BADGE_SRC}
