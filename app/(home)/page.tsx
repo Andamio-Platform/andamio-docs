@@ -1,10 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
 
-/* Editorial "specimen sheet" home page — the bold front door. Mirrors the
-   marketing site's aesthetic (mono kickers, Sora headline, hairline rules,
-   watermark numerals) using docs' own tokens. Static / CSS-only; the calm
-   reading experience lives behind /docs and is untouched. */
+/* Editorial home page — the bold front door. Mono kicker + Sora headline in
+   docs' own tokens, then a few quick, low-friction calls to action. Static /
+   CSS-only; the calm reading experience lives behind /docs and is untouched. */
 
 const ENTRIES = [
   {
@@ -32,7 +30,7 @@ const ENTRIES = [
 
 export default function HomePage() {
   return (
-    <main className="mx-auto w-full max-w-6xl px-6 sm:px-10">
+    <main className="mx-auto w-full max-w-5xl px-6 sm:px-10">
       {/* ── Hero ───────────────────────────────────────────────── */}
       <section className="border-b border-border py-16 sm:py-24">
         <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
@@ -40,59 +38,32 @@ export default function HomePage() {
           <span aria-hidden className="h-px flex-1 bg-border" />
         </div>
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:items-center">
-          <div>
-            <h1 className="font-display text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-6xl">
-              Build on{" "}
-              <span className="text-brand">Andamio</span>
-            </h1>
-            <p className="mt-6 max-w-md text-lg font-light leading-relaxed text-muted-foreground">
-              Protocol specifications, guides, and API reference for issuing
-              verifiable, on-chain credentials.
-            </p>
+        <h1 className="mt-10 max-w-3xl font-display text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-7xl">
+          Build on <span className="text-brand">Andamio</span>
+        </h1>
+        <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-muted-foreground">
+          Issue verifiable, on-chain credentials. Pick where to start — you can
+          go deeper from anywhere.
+        </p>
 
-            <div className="mt-8 flex flex-wrap gap-px">
-              <Link
-                href="/docs"
-                className="inline-flex items-center gap-2 bg-foreground px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-background transition-opacity hover:opacity-90"
-              >
-                Get Started
-                <span aria-hidden>&rarr;</span>
-              </Link>
-              <Link
-                href="https://api.andamio.io"
-                className="inline-flex items-center px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground ring-1 ring-inset ring-border transition-colors hover:bg-accent"
-              >
-                API Reference
-              </Link>
-            </div>
-          </div>
-
-          {/* Specimen frame */}
-          <figure className="border border-border">
-            <figcaption className="flex items-center justify-between border-b border-border px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              <span>Fig. 01 &mdash; Specimen</span>
-              <span>SVG &middot; On-chain</span>
-            </figcaption>
-            <div className="bg-muted/40 p-6">
-              <Image
-                src="/andamio-credential-badge.svg"
-                width={620}
-                height={620}
-                alt="An Andamio credential. Its rings encode where it came from and what it certifies."
-                className="mx-auto h-auto w-full max-w-[420px]"
-                priority
-              />
-            </div>
-            <p className="border-t border-border px-4 py-3 text-xs font-light text-muted-foreground">
-              A real Andamio credential. Its rings encode where it came from and
-              what it certifies.
-            </p>
-          </figure>
+        <div className="mt-8 flex flex-wrap gap-px">
+          <Link
+            href="/docs"
+            className="inline-flex items-center gap-2 bg-foreground px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-background transition-opacity hover:opacity-90"
+          >
+            Get Started
+            <span aria-hidden>&rarr;</span>
+          </Link>
+          <Link
+            href="https://api.andamio.io"
+            className="inline-flex items-center px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground ring-1 ring-inset ring-border transition-colors hover:bg-accent"
+          >
+            API Reference
+          </Link>
         </div>
       </section>
 
-      {/* ── Entry points ───────────────────────────────────────── */}
+      {/* ── Quick paths ────────────────────────────────────────── */}
       <section className="grid gap-px sm:grid-cols-3">
         {ENTRIES.map((e) => (
           <Link
