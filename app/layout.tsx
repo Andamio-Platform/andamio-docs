@@ -1,6 +1,7 @@
 import './global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
 import localFont from 'next/font/local';
+import { Sora } from 'next/font/google';
 import { GeistMono } from 'geist/font/mono';
 import type { ReactNode } from 'react';
 
@@ -17,11 +18,21 @@ const monaSans = localFont({
   ],
 });
 
+// Display: Sora — the marketing site's headline face. Wired as a CSS variable
+// so it can be applied surgically (the editorial home page only). Body and
+// in-article headings stay on Mona Sans via --font-heading.
+const sora = Sora({
+  variable: '--font-sora',
+  display: 'swap',
+  subsets: ['latin'],
+  weight: ['600', '700'],
+});
+
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${monaSans.variable} ${GeistMono.variable} ${monaSans.className}`}
+      className={`${monaSans.variable} ${sora.variable} ${GeistMono.variable} ${monaSans.className}`}
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">
