@@ -89,11 +89,11 @@ andamio course create-module ./compiled/my-course/101 --course-id <id>
 andamio course create-module --course-id <id> --code 101 --title "My Module"
 ```
 
-Requires [user authentication](/docs/api/guides/cli/authentication) (wallet login) and teacher access on the course.
+Requires [user authentication](/docs/apps-tooling/cli/authentication) (wallet login) and teacher access on the course.
 
 ## Course Owner Commands
 
-If you own courses (created via on-chain transaction), manage them with the `course owner` subgroup. All require [user authentication](/docs/api/guides/cli/authentication).
+If you own courses (created via on-chain transaction), manage them with the `course owner` subgroup. All require [user authentication](/docs/apps-tooling/cli/authentication).
 
 ### List Your Courses
 
@@ -146,7 +146,7 @@ At least one of `--add` or `--remove` must be provided.
 
 ## Course Teacher Commands
 
-Teachers manage module lifecycle and review student submissions. All `course teacher` commands require [user authentication](/docs/api/guides/cli/authentication) and teacher access on the course.
+Teachers manage module lifecycle and review student submissions. All `course teacher` commands require [user authentication](/docs/apps-tooling/cli/authentication) and teacher access on the course.
 
 ### Module Lifecycle
 
@@ -212,7 +212,7 @@ andamio course teacher commitments --course-id "$COURSE_ID" -o json | \
 
 ## Course Student Commands
 
-Students enroll in modules, submit evidence, and claim credentials. All `course student` commands require [user authentication](/docs/api/guides/cli/authentication).
+Students enroll in modules, submit evidence, and claim credentials. All `course student` commands require [user authentication](/docs/apps-tooling/cli/authentication).
 
 ### List Enrolled Courses and Credentials
 
@@ -269,7 +269,7 @@ The `--pending-tx-hash` is required — provide the hash of the on-chain claim t
 
 ### On-Chain Transactions
 
-For on-chain operations (assignment commitment, evidence update, credential claim), use `tx run` with the appropriate transaction endpoint. See [Transaction Signing](/docs/api/guides/cli/transaction-signing) for the full workflow.
+For on-chain operations (assignment commitment, evidence update, credential claim), use `tx run` with the appropriate transaction endpoint. See [Transaction Signing](/docs/apps-tooling/cli/transaction-signing) for the full workflow.
 
 ### Leave a Commitment
 
@@ -348,7 +348,7 @@ andamio tx submit --tx <signed-cbor>
 andamio tx status <tx-hash>
 ```
 
-See [Transaction Signing](/docs/api/guides/cli/transaction-signing) for the full workflow.
+See [Transaction Signing](/docs/apps-tooling/cli/transaction-signing) for the full workflow.
 
 ### API Exploration
 

@@ -5,7 +5,7 @@ description: Create and manage project tasks, contribute to bounties, and review
 
 ## Project Owner Commands
 
-If you own projects (created via on-chain transaction), manage them with the `project owner` subgroup. All require [user authentication](/docs/api/guides/cli/authentication).
+If you own projects (created via on-chain transaction), manage them with the `project owner` subgroup. All require [user authentication](/docs/apps-tooling/cli/authentication).
 
 ### List Your Projects
 
@@ -43,7 +43,7 @@ andamio project owner register --project-id <id> --title "Community Dev"
 
 Project tasks represent on-chain bounties tied to work items. Managers create tasks in DRAFT state, set a lovelace reward and expiration, and optionally link them to a GitHub issue. Learners complete the work and claim the reward on-chain.
 
-All task commands require [user authentication](/docs/api/guides/cli/authentication) (wallet login) and manager access on the project.
+All task commands require [user authentication](/docs/apps-tooling/cli/authentication) (wallet login) and manager access on the project.
 
 ## Setup
 
@@ -236,7 +236,7 @@ This uses the public user endpoint, unlike `project task list` which requires ma
 
 ## Project Manager: Review Commitments
 
-Managers review contributor commitments on their projects. Requires [user authentication](/docs/api/guides/cli/authentication) and manager access.
+Managers review contributor commitments on their projects. Requires [user authentication](/docs/apps-tooling/cli/authentication) and manager access.
 
 ```bash
 andamio project manager commitments --project-id <id>
@@ -251,7 +251,7 @@ andamio project manager commitments --project-id "$PROJECT_ID" --output json | \
 
 ## Project Contributor Commands
 
-Contributors commit to tasks, submit evidence, and track their work. All `project contributor` commands require [user authentication](/docs/api/guides/cli/authentication).
+Contributors commit to tasks, submit evidence, and track their work. All `project contributor` commands require [user authentication](/docs/apps-tooling/cli/authentication).
 
 ### List Your Projects and Commitments
 
@@ -289,7 +289,7 @@ andamio project contributor update --project-id <id> --task-hash 9672454f... --e
 
 ### On-Chain Transactions
 
-For on-chain operations (task commitment, credential claim), use `tx run` with the appropriate transaction endpoint. See [Transaction Signing](/docs/api/guides/cli/transaction-signing) for the full workflow.
+For on-chain operations (task commitment, credential claim), use `tx run` with the appropriate transaction endpoint. See [Transaction Signing](/docs/apps-tooling/cli/transaction-signing) for the full workflow.
 
 ### Delete a Commitment
 
