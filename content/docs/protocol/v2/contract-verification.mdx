@@ -41,6 +41,16 @@ The script hash is the address's payment credential.
 | Instance Provider Scripts | `addr1x8dppxksr2xhq58q08kh2dunpws8fvml50766a3jq7yt96ych6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6pse7ytve` |
 | Instance Scripts | `addr1xx5d9us4tzp3vf4y4vq4s2j9dzlpmtpjnrntjfzs4r5rnguch6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6psl3she9` |
 
+## Prerequisites
+
+The commands below assume a small toolchain:
+
+- A **Blockfrost mainnet project ID** (the free tier is fine), exported as `$BLOCKFROST`. It must be a *mainnet* key — a preprod key returns `404` for these hashes.
+- [`jq`](https://jqlang.github.io/jq/) to pull fields out of JSON responses.
+- `cardano-cli`, recent enough for `hash script` and `address info --address … | jq .base16`.
+
+Blockfrost is only a convenient way to fetch the on-chain bytes — it is **not** a trusted party. Any source works (for a keyless fetch, [Koios](https://koios.rest/) needs no account); the proof is that *you* recompute the hash and it matches.
+
 ## Verify it yourself
 
 **A minting policy** — confirm the on-chain script hashes to the listed policy ID:
@@ -69,6 +79,28 @@ cardano-cli address info --address <addr1x...> | jq -r .base16 | cut -c3-58
 ```
 
 A match proves the address or policy is governed by exactly the compiled validator we publish the hash for. No source, no trust in Andamio.
+
+### A worked example
+
+The commands above use placeholders, so a reader can't tell success from a subtle mistake. Here is the full minting-policy path with real values — the **Access Token** policy:
+
+```bash
+HASH=e760308d0c14096ff479ec5f2495455505feb790503903fe976c4fd2
+CBOR=$(curl -s -H "project_id: $BLOCKFROST" \
+  "https://cardano-mainnet.blockfrost.io/api/v0/scripts/$HASH/cbor" | jq -r .cbor)
+printf '{"type":"PlutusScriptV3","description":"","cborHex":"%s"}' "$CBOR" > script.plutus
+cardano-cli hash script --script-file script.plutus
+# → e760308d0c14096ff479ec5f2495455505feb790503903fe976c4fd2   ✓ matches HASH
+```
+
+And the spend-validator path, using the **Global State** address — extract its script hash, then fetch + hash it exactly as above:
+
+```bash
+ADDR=addr1x84ulqv75kc4880kx3e22jwec55n7arkazjljy34q5axxuvch6g0j0xe5272m2ysjs698fnmdlrpt4qseng6wp04z6psypmkwq
+cardano-cli address info --address "$ADDR" | jq -r .base16 | cut -c3-58
+# → ebcf819ea5b1539df63472a549d9c5293f7476e8a5f91235053a6371
+# Feed that script hash into the minting-policy steps above; it recomputes to itself.
+```
 
 ## Project treasuries
 
