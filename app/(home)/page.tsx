@@ -63,23 +63,15 @@ export default function HomePage() {
           docs, or pick a section below.
         </p>
 
-        <LargeSearchToggle className="mt-8 w-full max-w-xl" />
+        <Link
+          href="/docs/getting-started"
+          className="mt-8 flex w-fit items-center gap-2 bg-foreground px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-background transition-opacity hover:opacity-90"
+        >
+          Quickstart
+          <span aria-hidden>&rarr;</span>
+        </Link>
 
-        <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-          New here?{" "}
-          <Link href="/docs/getting-started" className="text-brand hover:underline">
-            Start with the Quickstart &rarr;
-          </Link>
-          <span aria-hidden className="px-2 text-border">
-            /
-          </span>
-          <Link
-            href="https://api.andamio.io"
-            className="text-foreground hover:underline"
-          >
-            API Reference &#8599;
-          </Link>
-        </p>
+        <LargeSearchToggle className="mt-4 w-full max-w-xl" />
       </section>
 
       {/* ── Browse by section (the six-root spine) ─────────────── */}
