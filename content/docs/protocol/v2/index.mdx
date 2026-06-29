@@ -1,102 +1,91 @@
 ---
-title: "Protocol V2"
-description: "Andamio Protocol V2 - Enhanced state management, simplified roles, and migration support"
+title: "Andamio Protocol"
+description: "The four-layer on-chain model behind Andamio credentials — and the transaction lifecycle every Andamio app shares."
 ---
 
-Protocol V2 features a streamlined role structure, enhanced state management, and efficient batch operations.
+Andamio is a set of deployed Cardano smart contracts that issue and verify credentials. You don't have to build on the protocol directly — the [API](/docs/api) and the [SDK](/docs/apps-tooling/sdk) handle transaction building, signing flows, and state sync for you. This section explains *what the protocol does underneath* so you can reason about what your app is anchoring on-chain.
 
-<Callout type="info">
-**New to V2?** Check out [What's New in V2](/docs/protocol/v2/whats-new) for a detailed look at batch module management, SLT hash encoding, and cost savings. For hands-on walkthroughs, see the [Platform Guides](/docs/apps-tooling). To start building, see the [SDK Getting Started](/docs/apps-tooling/sdk/npm-packages/andamio-transactions/getting-started).
+Three pages cover it:
+
+- **This page** — the four-layer model and the transaction lifecycle every Andamio transaction shares.
+- **[Validators](/docs/protocol/v2/validators)** — the 12 on-chain validators and the actions each authorizes, generated from the compiled contracts so it can't drift.
+- **[Transaction sequences](/docs/protocol/v2/sequences)** — interactive walkthroughs of the workflows that issue a credential, from onboarding to claim.
+
+## The four-layer model
+
+Andamio's on-chain state is organized into four nested layers. Each layer governs who can act on the layer below it.
+
+<Mermaid chart='flowchart TD\n    G["Global registry\n(identity + local-state registry)"] --> I["Instances\n(org governance: who may create courses and projects)"]\n    I --> C["Course\n(modules, enrollment, assessment, credentials)"]\n    I --> P["Project\n(tasks, treasury, contribution, credentials)"]' />
+
+| Layer | What it holds | What it governs |
+|-------|---------------|-----------------|
+| **Global registry** | A person's on-chain identity (their Access Token) and the registry of local states attached to it | Who exists in the protocol and what credentials/commitments they carry |
+| **Instances** | Organization-level governance | Who is allowed to create and administer courses and projects |
+| **Course** | Course modules, enrollments, assignment commitments, and assessments | The learn-and-earn loop that issues a course credential |
+| **Project** | Project tasks, treasury funds, and contributor commitments | The contribute-and-earn loop that issues a project credential |
+
+Course and Project are deliberately symmetric — both run a five-beat loop (create → populate → commit → assess → claim). The [transaction sequences](/docs/protocol/v2/sequences) make that symmetry concrete.
+
+## Two design patterns worth knowing
+
+### Hash on-chain, data off-chain
+
+Andamio stores **hashes** on the blockchain, not raw data:
+
+```
+On-chain:  assignment_info: "sha256:abc123def456..."
+Off-chain: evidence: { url: "https://...", text: "My submission notes" }
+```
+
+| Aspect | On-chain | Off-chain |
+|--------|----------|-----------|
+| **Stored** | Commitment hash (32 bytes) | Full evidence payload |
+| **Cost** | Minimal (~0.02 ADA) | Database storage |
+| **Privacy** | Public but opaque | Access-controlled |
+| **Verifiability** | Anyone can verify | Hash proves integrity |
+
+The chain holds a small, fixed-size commitment; the raw evidence (URLs, text, files) never touches it. Anyone can later prove that a piece of off-chain evidence matches its on-chain hash — that's what makes a credential verifiable without exposing private work.
+
+### Check–Effect–Interact (CEI)
+
+Every Andamio transaction follows a layered CEI pattern across the client and the gateway:
+
+| Phase | Client | Gateway |
+|-------|--------|---------|
+| **Check** | Validate params | Validate eligibility, balances, permissions |
+| **Effect** | Sign transaction in wallet | Confirm transaction on-chain |
+| **Interact** | Submit to blockchain | Sync state to the database |
+
+The client never writes to the database directly — the gateway syncs state only *after* on-chain confirmation. The blockchain stays the source of truth.
+
+## The transaction lifecycle
+
+Every Andamio transaction — minting an Access Token, committing to an assignment, claiming a credential — moves through the same six steps. The [transaction sequences](/docs/protocol/v2/sequences) link here rather than repeating this, so learn it once:
+
+<Mermaid chart='flowchart LR
+    BUILD["BUILD\n(API builds CBOR)"] --> SIGN["SIGN\n(wallet signs)"]
+    SIGN --> SUBMIT["SUBMIT\n(wallet submits)"]
+    SUBMIT --> REGISTER["REGISTER\n(app registers tx)"]
+    REGISTER --> CONFIRM["CONFIRM\n(auto: polls chain)"]
+    CONFIRM --> UPDATE["UPDATE\n(auto: syncs DB)"]' />
+
+| Step | Who | What happens |
+|------|-----|--------------|
+| **Build** | API / gateway | Builds an unsigned transaction (CBOR) from your request |
+| **Sign** | User's wallet | The user approves and signs in their browser wallet (CIP-30) |
+| **Submit** | User's wallet | The signed transaction is submitted to Cardano |
+| **Register** | Your app | Calls the registration endpoint with the transaction hash and type |
+| **Confirm** | Gateway (automatic) | Polls the chain until the transaction is on-chain |
+| **Update** | Gateway (automatic) | Syncs the confirmed on-chain state into the Andamio database |
+
+<Callout type="warn">
+**`confirmed` is not the finish line.** The gateway reaches `confirmed` when the transaction is found on-chain, but the database hasn't synced yet. Wait for `updated` before you refetch data — only then is the off-chain state fresh.
 </Callout>
 
-## V2 Architecture Overview
+You build the UX; Andamio handles the credential. For the request/response details and code, see the [API](/docs/api) and [SDK](/docs/apps-tooling/sdk) docs.
 
-### Role Structure
+## Where to go next
 
-V2 uses six canonical roles across the Course and Project systems:
-
-**Course System:**
-- **Course Owner** - Creates courses, manages teacher access
-- **Course Teacher** - Manages modules, assesses student assignments
-- **Course Student** - Enrolls in courses, completes assignments, claims credentials
-
-**Project System:**
-- **Project Owner** - Creates projects, manages treasury and requirements
-- **Project Manager** - Oversees contributor work and approvals
-- **Project Contributor** - Commits to tasks, earns rewards
-
-**Protocol-Wide:**
-- **General** - Protocol entry point (access tokens, registration)
-
-### New Systems in V2
-
-1. **Local State Registration** - New `global` validator system for registering local states to the global V2 system
-2. **Global State V2** - Enhanced state management with improved tracking and coordination
-3. **Course State V2** - Upgraded course validators with better state handling
-4. **Contributor State V2** - Enhanced contributor tracking and reward distribution
-
-## Protocol Components
-
-### Validators
-
-V2 validators organized by system:
-
-| System | Validators | Purpose |
-|--------|------------|---------|
-| [Global State](/docs/protocol/v2/validators/global-state) | 2 | Core protocol state (V1 compat + V2 enhanced) |
-| [Global](/docs/protocol/v2/validators/global/local-state-registration) | 1 | Local state registration |
-| [Index Validators](/docs/protocol/v2/validators/index-validators) | 3 | Access token minting and index references |
-| [Instance](/docs/protocol/v2/validators/instance) | 3 | Instance-level management |
-| [Course](/docs/protocol/v2/validators/course) | 4 + 3 observers | Course and assignment management |
-| [Project](/docs/protocol/v2/validators/project) | 3 + 4 observers | Contributor and treasury management |
-
-### Transactions
-
-V2 transactions organized by system and role:
-
-| System | Role | Transactions | Key Operations |
-|--------|------|--------------|----------------|
-| [General](/docs/protocol/v2/transactions/global/general/access-token/mint) | Open | 1 | [mint-access-token](/docs/protocol/v2/transactions/global/general/access-token/mint) (~7.9 ADA) |
-| [Course](/docs/protocol/v2/transactions/course) | Owner | 2 | [create](/docs/protocol/v2/transactions/instance/owner/course/create) (~45 ADA), [teachers-manage](/docs/protocol/v2/transactions/course/owner/teachers/manage) (~5.3 ADA) |
-| [Course](/docs/protocol/v2/transactions/course) | Teacher | 2 | [modules-manage](/docs/protocol/v2/transactions/course/teacher/modules/manage), [assignments-assess](/docs/protocol/v2/transactions/course/teacher/assignments/assess) |
-| [Course](/docs/protocol/v2/transactions/course) | Student | 3 | [assignment-commit](/docs/protocol/v2/transactions/course/student/assignment/commit), [assignment-update](/docs/protocol/v2/transactions/course/student/assignment/update), [credential-claim](/docs/protocol/v2/transactions/course/student/credential/claim) |
-
-**Single Credential Loop Cost:** Student ~1.11 ADA + Teacher ~0.21 ADA = **~1.32 ADA total**
-
-### Tokens
-
-V2 tokens organized by system:
-
-| System | Key Tokens |
-|--------|------------|
-| [Global State](/docs/protocol/v2/tokens/global-state) | access-token-user, access-token-global-state, access-token-index |
-| [Global](/docs/protocol/v2/tokens/global/local-state-registration) | local-state-registration |
-| [Local State](/docs/protocol/v2/tokens/local-state/local-state-nft) | local-state-nft |
-| [Instance](/docs/protocol/v2/tokens/instance/instance-admin-token) | instance-admin-token, course-nft, project-nft |
-| [Course](/docs/protocol/v2/tokens/course/course-state-v2-token) | course-state-v2-token, module-token |
-| [Project](/docs/protocol/v2/tokens/project/contributor-state-v2-token) | contributor-state-v2-token, treasury-token |
-
-## Migration from V1
-
-Users with V1 global state can migrate to V2 using the move-global-state-v1-to-v2 transaction. This preserves existing access tokens while enabling V2 features.
-
-## Source of Truth
-
-V2 protocol documentation is built from multiple registry files:
-
-| Registry | Purpose |
-|----------|---------|
-| [address-registry.json](/yaml/transactions/v2/address-registry.json) | Validators, policies, observers with addresses |
-| [endpoint-registry.json](/yaml/transactions/v2/endpoint-registry.json) | API endpoints with request/response schemas |
-| [cost-registry.json](/yaml/transactions/v2/cost-registry.json) | Transaction fees, protocol fees, loop costs |
-
-**API Endpoints:**
-- `/api/transaction-v2?file=<path>&format=v1` - Transaction YAML data
-- `/api/costs/v2` - Cost registry (supports `?tx=`, `?loop=`, `?summary=true`)
-
-## Status
-
-**Course System:** ✅ Complete (8 transactions documented)
-**Project System:** In progress — transaction documentation being added
-
-Documentation is aligned with the [Atlas API Preprod](https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json) swagger.
+- **[Validators →](/docs/protocol/v2/validators)** — what each of the 12 on-chain validators does, and the tokens they mint or burn.
+- **[Transaction sequences →](/docs/protocol/v2/sequences)** — interactive, step-by-step walkthroughs of the credential workflows.
+- **[Contract verification →](/docs/protocol/v2/contract-verification)** — verify the deployed contracts against published script hashes.

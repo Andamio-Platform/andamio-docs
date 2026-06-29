@@ -1,9 +1,0 @@
-{
-    "title": "Observers",
-    "description": "Index validator observers for transaction validation",
-    "icon": "Eye",
-    "pages": [
-        "init-index-observer-v2"
-    ],
-    "defaultOpen": false
-}

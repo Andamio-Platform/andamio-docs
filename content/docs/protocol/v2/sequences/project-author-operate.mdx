@@ -1,0 +1,15 @@
+---
+title: "Project · Author & operate"
+description: "How an owner creates a project with a treasury and managers define funded tasks."
+full: true
+---
+
+import { projectAuthorOperate } from "@/components/protocol/sequences/project-author-operate";
+
+Standing up a project mirrors a course: an owner mints the project instance and treasury, adds managers, and managers define funded tasks. Anyone can top up the treasury that pays task rewards.
+
+<TransactionStepper
+  title={projectAuthorOperate.title}
+  intro={projectAuthorOperate.intro}
+  steps={projectAuthorOperate.steps}
+/>

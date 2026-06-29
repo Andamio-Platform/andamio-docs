@@ -12,25 +12,25 @@ Andamio uses six canonical roles organized across two systems: **Course** and **
 Creates and manages courses on-chain. Sets up teacher access and controls the course lifecycle.
 
 **Key actions:**
-- Create a course ([create transaction](/docs/protocol/v2/transactions/instance/owner/course/create))
-- Add or remove teachers ([teachers manage](/docs/protocol/v2/transactions/course/owner/teachers/manage))
+- Create a course ([create transaction](/docs/protocol/v2/sequences/course-author-operate))
+- Add or remove teachers ([teachers manage](/docs/protocol/v2/sequences/course-author-operate))
 
 ### Course Teacher
 
 Manages course content and assesses student work within courses they are authorized for.
 
 **Key actions:**
-- Mint, update, or burn modules ([modules manage](/docs/protocol/v2/transactions/course/teacher/modules/manage))
-- Accept or refuse student assignments ([assignments assess](/docs/protocol/v2/transactions/course/teacher/assignments/assess))
+- Mint, update, or burn modules ([modules manage](/docs/protocol/v2/sequences/course-author-operate))
+- Accept or refuse student assignments ([assignments assess](/docs/protocol/v2/sequences/course-learn-earn))
 
 ### Course Student
 
 Enrolls in courses, completes assignments, and earns verifiable credentials.
 
 **Key actions:**
-- Enroll in a course ([assignment commit](/docs/protocol/v2/transactions/course/student/assignment/commit))
-- Update assignment evidence ([assignment update](/docs/protocol/v2/transactions/course/student/assignment/update))
-- Claim completed credential ([credential claim](/docs/protocol/v2/transactions/course/student/credential/claim))
+- Enroll in a course ([assignment commit](/docs/protocol/v2/sequences/course-learn-earn))
+- Update assignment evidence ([assignment update](/docs/protocol/v2/sequences/course-learn-earn))
+- Claim completed credential ([credential claim](/docs/protocol/v2/sequences/course-learn-earn))
 
 ## Project System
 

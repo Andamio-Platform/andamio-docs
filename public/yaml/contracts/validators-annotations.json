@@ -1,0 +1,77 @@
+{
+  "_comment": "Hand-curated annotations for the Andamio V2 validators (Surface 2). Keyed by blueprint validator name (validators[].title.split('.')[0] in public/yaml/contracts/plutus.json). The machine skeleton (validator name + authorized actions) comes from the blueprint; THESE facts (layer, purpose, governs) are hand-authored and cannot be derived from the blueprint. scripts/generate-validators.mjs joins this with the skeleton and fails loudly if the key sets diverge. Layer assignment is fixed per the protocol-docs-redesign handoff. After re-vendoring plutus.json, re-run `npm run docs-validators` to regenerate components/protocol/validators-data.ts.",
+  "validators": {
+    "global/global_state": {
+      "displayName": "Global State",
+      "layer": "Global registry",
+      "purpose": "The protocol-wide registry of participant identities and their local-state pointers — the on-chain identity every course and project interaction checks.",
+      "governs": "Governs the **Access Token** global state. Mints a `g`-prefixed global-state token per registered alias (datum `{alias, local_state_information}`); the user's wallet holds the matching `u`-prefixed **user access token** from the index policy. Records credential-claim attestations back into a user's global state, and moves or retires that state as users enroll, claim, and update."
+    },
+    "global/global_state_ref": {
+      "displayName": "Global State Reference",
+      "layer": "Global registry",
+      "purpose": "Bootstraps a new entry in the registry's index linked list so the global state stays ordered and append-only.",
+      "governs": "Creates a new global reference pair — the **index linked-list marker** (the `0x20` space-prefixed token in the index policy) carrying `{prev_alias, next_alias}` so each new alias inserts in order. This is the index/reference plumbing behind access-token minting."
+    },
+    "ls_instances/instances": {
+      "displayName": "Instances",
+      "layer": "Instances",
+      "purpose": "Registers a new instance — the on-chain container for a single course or project — and links its local state into the global registry.",
+      "governs": "Mints the **LocalStateNFT** (`LocalStateNFT`), whose minting-policy ID **is** the course/project identifier (the courseId/projectId), and the **Local State Registration** token that connects the instance's local state to global V2 state. `MintInstanceRefScr`/`RemoveInstanceRefScr` manage its reference scripts; `BurnInstance` retires it."
+    },
+    "ls_instances/governance": {
+      "displayName": "Governance",
+      "layer": "Instances",
+      "purpose": "The shared authorization registry for an instance — who may act as a course's teachers or a project's managers.",
+      "governs": "Holds the **governance token** (course-governance policy, token name = the courseId) in a UTxO with datum `{participants: [aliases]}`. The same validator backs both course teachers and project managers (the instance-admin role). `AddInstanceCreators`/`RemoveInstanceCreators` edit the participant set; `MoveNew` rolls it forward."
+    },
+    "ls_instances/instance_provider": {
+      "displayName": "Instance Provider",
+      "layer": "Instances",
+      "purpose": "Authorizes minting and burning on behalf of an instance, letting a course or project's sub-validators issue their own state tokens.",
+      "governs": "Provides the mint/burn authority (`ProvideMint`/`ProvideBurn`) for instance-scoped tokens — notably the **LocalStateToken**, the UTxO that registers a course/project and embeds that instance's own validator as a script reference."
+    },
+    "course/course_state": {
+      "displayName": "Course State",
+      "layer": "Course",
+      "purpose": "Tracks each student's enrollment and progress within one specific course.",
+      "governs": "Mints the **Course State token** (course-state policy, parameterized per course; token name = the student's alias, so one enrollment per student per course). The datum holds the student's completed modules and any active assignment commitment. `CommitAssignment` records a commitment; `BurnCourseState` retires the token on credential claim."
+    },
+    "course/module_scripts": {
+      "displayName": "Module Scripts",
+      "layer": "Course",
+      "purpose": "Manages a course's modules — the published units of learning content and the Student Learning Targets they require.",
+      "governs": "Mints **module tokens** (module policy; token name = the 32-byte hash of the module's SLT list), held with datum `{courseId, allowed_course_state_ids, prereq_slt_hashes}`. `UpdateModule` revises a module; `BurnModule` removes it."
+    },
+    "course/assignment_validator": {
+      "displayName": "Assignment Validator",
+      "layer": "Course",
+      "purpose": "Adjudicates assignment evidence — students submit, teachers accept or refuse.",
+      "governs": "Drives the assignment lifecycle on the student's Course State UTxO (it mints no token of its own). `StudentAction` submits or updates evidence; `Accept` (a teacher) records the completion that advances the Course State token; `Refuse` rejects the submission."
+    },
+    "project/contributor_state": {
+      "displayName": "Contributor State",
+      "layer": "Project",
+      "purpose": "Tracks each contributor's enrollment, task commitments, and completed work within one specific project.",
+      "governs": "Mints the **Contributor State token** (contributor-state policy, parameterized per project; token name = the contributor's alias). The mint redeemer carries prerequisite proof (courseId + completed SLTs). `CommitProject` commits to a task, `AddCompleted` records finished tasks, `SpendingBurnRewards` distributes rewards, `BurnContributor` retires the token on credential claim, and `AdminAdd`/`AdminRemove` are manager overrides."
+    },
+    "project/treasury": {
+      "displayName": "Treasury",
+      "layer": "Project",
+      "purpose": "Holds and disburses a project's shared funds and defines its tasks.",
+      "governs": "Custodies treasury funds keyed by the **TreasuryScriptV2 token** (treasury-script policy) in a UTxO with datum `{projectId}` and the treasury validator's embedded script reference. `Manage` defines and edits tasks; `CommitFunds`/`CommitToken` add ADA or native tokens; `BurnTreasuryToken` tears the treasury down."
+    },
+    "project/treasury_token": {
+      "displayName": "Treasury Token",
+      "layer": "Project",
+      "purpose": "Mints the per-task treasury tokens that earmark funds for individual tasks.",
+      "governs": "Mints **treasury tokens** (treasury-token policy; token name = a hash tied to the contributor_state_id) that sit in the treasury/escrow to back each task's reward. `MintTT` issues them; `BurnTT` releases them on payout."
+    },
+    "project/escrow1": {
+      "displayName": "Task Escrow",
+      "layer": "Project",
+      "purpose": "Holds task deposits in escrow and settles them when a manager assesses a contributor's work.",
+      "governs": "Custodies task-escrow UTxOs (datum = the list of task content hashes) plus the treasury deposits backing them. `UserAction` is the contributor's move; `Accept` (a manager) releases the reward and pairs with `contributor_state: AddCompleted`; `Deny`/`Refuse` reject the submission."
+    }
+  }
+}

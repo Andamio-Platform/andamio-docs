@@ -10,6 +10,7 @@ import { ThemedImage } from "@/components/mdx/themed-image";
 import { GuideHeader } from "@/components/mdx/guide-header";
 import TreasuryVerifier from "@/components/protocol-info/TreasuryVerifier";
 import BadgeAnatomyExplorer from "@/components/credential-badges/BadgeAnatomyExplorer";
+import TransactionStepper from "@/components/protocol/TransactionStepper";
 
 // use this function to get MDX components, you will need it for rendering MDX
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
@@ -26,6 +27,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     GuideHeader,
     TreasuryVerifier,
     BadgeAnatomyExplorer,
+    TransactionStepper,
     ...components,
   };
 }

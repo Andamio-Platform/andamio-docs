@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prebuild": "npx tsx scripts/check-doc-headings.ts && npx tsx scripts/check-contract-manifest.ts && npx tsx scripts/check-treasury-reference.ts",
+    "prebuild": "npx tsx scripts/check-doc-headings.ts && npx tsx scripts/check-contract-manifest.ts && npx tsx scripts/check-treasury-reference.ts && npx tsx scripts/check-validators-manifest.ts",
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
@@ -12,7 +12,9 @@
     "docs-manifest": "npx tsx scripts/check-contract-manifest.ts",
     "docs-treasury": "npx tsx scripts/check-treasury-reference.ts",
     "docs-coverage": "npx tsx scripts/docs-coverage-check.ts",
-    "docs-drift": ".claude/skills/audit-docs/detect-drift.sh"
+    "docs-drift": ".claude/skills/audit-docs/detect-drift.sh",
+    "docs-validators": "node scripts/generate-validators.mjs",
+    "docs-validators:check": "npx tsx scripts/check-validators-manifest.ts"
   },
   "dependencies": {
     "@content-collections/core": "^0.14.2",
