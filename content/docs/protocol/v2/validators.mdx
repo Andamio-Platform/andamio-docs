@@ -1,0 +1,25 @@
+---
+title: Validators
+description: The 12 Andamio V2 validators across four protocol layers, with each validator's authorized actions sourced directly from the compiled on-chain contracts.
+---
+
+import { ValidatorsReference } from "@/components/protocol/ValidatorsReference";
+
+Andamio's on-chain logic is enforced by **12 validators** organized into the
+[four-layer model](/docs/protocol/v2): a **Global registry** of identities, the
+**Instances** that hold a course or project, and the **Course** and **Project**
+layers that run each one. Every validator below lists its authorized redeemer
+actions and the token or state it mints, burns, or governs — tokens are
+explained inline, in the validator that controls them.
+
+<Callout title="Sourced from the compiled contracts">
+  Each validator's name and authorized actions are extracted mechanically from
+  the pinned `plutus.json` blueprint (the deployed, immutable on-chain code), so
+  this page cannot drift from the contracts. The layer, purpose, and
+  token/state notes are hand-curated; a prebuild guard fails the build if they
+  ever disagree with the blueprint. See
+  [Contract Verification](/docs/protocol/v2/contract-verification) to check the
+  deployed scripts yourself.
+</Callout>
+
+<ValidatorsReference />
