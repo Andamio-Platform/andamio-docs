@@ -116,7 +116,7 @@ export default function HomePage() {
 
       {/* ── Quiet meta line ────────────────────────────────────── */}
       <div className="py-8 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-        Live on Cardano mainnet &middot; Audited by TxPipe
+        Andamio Documentation &#124; 2026
       </div>
     </main>
   );
