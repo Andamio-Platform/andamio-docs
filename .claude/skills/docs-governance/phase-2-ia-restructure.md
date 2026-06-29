@@ -1,7 +1,7 @@
 # Phase 2: IA Restructure (plan)
 
 A confirm-first plan to make the [six roots](./SKILL.md#context-the-spine-the-rules-protect)
-**structural**, so each product/zone owns a scoped sidebar, and to place tools per the
+**structural**, so each product/zone is a collapsible section in one sidebar, and to place tools per the
 [governance rules](./SKILL.md). This is a one-time migration plan, not a durable rule; it lives
 here because it is the first major application of the governance.
 
@@ -11,25 +11,30 @@ here because it is the first major application of the governance.
 
 ## Goal
 
-- Each product/zone is a real sidebar **root** that scopes the tree (when you're in Andamio API you
-  see only API; in Apps & Tooling only Apps & Tooling).
-- `/docs` is a neutral **front door**, no product preselected. (Per decision: API is *not* the default.)
+- One **unified sidebar**: each namespace is a collapsible section, grouped under Products /
+  Explore & build / Reference. No root-toggle dropdown — the section holding the current page
+  auto-expands, the rest stay collapsed.
+- `/docs` is a neutral **front door**, no product preselected.
 - Tools and support repos are placed by the governance schema, not scattered.
 
-## The roots (mirror the #28 Roadmap initiatives)
+## The namespaces (mirror the #28 Roadmap initiatives)
 
-The docs roots use exactly the #28 Roadmap initiative names so the docs and roadmap stay legible
-together:
+The docs sections use exactly the #28 Roadmap initiative names so the docs and roadmap stay legible
+together. They are ordinary collapsible folders in one sidebar (not `root` folders), grouped:
 
 ```
-/docs                          Front door (neutral — no product preselected)
-├─ api/               (root)   Andamio API — developer product
-├─ issuer/            (root)   Andamio Issuer — low-code product
-├─ credential-badges/ (root)   Credential Badges — flagship (already top-level; keep)
-├─ apps-tooling/      (root)   Apps & Tooling — Explore the App · Andamio Bot · CLI · App Template · SDK · Andamioscan
-├─ developer-community/ (root) Developer Community — Pioneers · Repositories · community tools
-└─ protocol/          (root)   Protocol — internals  ⚠️ contents NOT triaged here (see out of scope)
-   cross-cutting (NOT a root): Glossary · Light Paper → front door / Reference zone
+/docs                            Front door (neutral — no product preselected)
+─ Products
+  ├─ api/                        Andamio API — developer product
+  └─ issuer/                     Andamio Issuer — low-code product
+─ Explore & build
+  ├─ apps-tooling/               Apps & Tooling — Explore the App · Andamio Bot · CLI · App Template · SDK · Andamioscan
+  ├─ credential-badges/          Credential Badges — flagship
+  ├─ developer-community/        Developer Community — Pioneers · Repositories · community tools
+  └─ protocol/                   Protocol — internals  ⚠️ contents NOT triaged here (see out of scope)
+─ Reference
+  ├─ glossary                    (cross-cutting page, not a section)
+  └─ light-paper                 (cross-cutting page, not a section)
 ```
 
 **Resolved placement decisions** (do not re-open):
@@ -40,26 +45,21 @@ together:
 - **Glossary + Light Paper → cross-cutting Reference zone** on the front door, not roots. (Papers stay
   woven per the locked papers decision: the landing page is the artifact home; docs gets only woven content.)
 
-## How scoping actually works (the mechanism, verified)
+## How the sidebar works (single tree, no toggle)
 
-Verified against `fumadocs-ui` / `fumadocs-core` **15.4.1**:
+The namespaces are **ordinary folders** (no `root: true`) listed in the front-door
+`content/docs/meta.json`. Fumadocs renders them as collapsible sections in one sidebar; the folder
+containing the current page auto-expands, the rest stay collapsed. `app/docs/layout.tsx` uses the
+default `DocsLayout` with no `sidebar.tabs` — so there is no root-toggle dropdown.
 
-- The sidebar tree is scoped **automatically** by Fumadocs' `TreeContext` (`contexts/tree.js`): it
-  runs `searchPath(tree, pathname)` then `findLast(folder.root === true)` and renders only that
-  folder's children. **A folder with `root: true` already gets a scoped subtree today** — `protocol/`
-  does. The tree filtering is *not* the tabs' job.
-- `RootToggle` and a tab's `urls` set only drive the **dropdown selector and active-highlight** —
-  they do not filter the tree.
-- The fix is therefore to switch `app/docs/layout.tsx` from a hand-written `sidebar.tabs` array to
-  **`sidebar={{ tabs: true }}`** (auto-derive). `DocsLayout` calls `getSidebarTabs(tree)` internally,
-  walking the tree for `root: true` folders and computing each tab's `urls` set. This makes the
-  dropdown list all roots and highlight the active one robustly.
+> **Mechanism note (why not the root toggle).** Fumadocs also supports a `root: true` model where each
+> root folder gets its own *scoped* sidebar and you switch between them with a `RootToggle` dropdown
+> (scoping comes from `TreeContext.findLast(folder.root)`; auto-derived tabs via `getSidebarTabs`).
+> A spike proved that worked, but the dropdown-to-switch-namespace UX was rejected in favor of one
+> unified, collapsible sidebar. Keep the namespaces as plain folders; do **not** add `root: true`
+> back unless the navigation model is deliberately revisited.
 
-> Note: this corrects the earlier "manual tabs carry no `urls` set, so the tree isn't filtered"
-> framing. The tree filtering was never the tabs' job — it comes from `TreeContext`. Don't hunt for
-> a `urls`-based tree filter; it does not exist.
-
-## Content moves (today → target root)
+## Content moves (today → target section)
 
 `(soft)` = reasonable call, revisit if it reads wrong in situ.
 
@@ -71,28 +71,29 @@ Verified against `fumadocs-ui` / `fumadocs-core` **15.4.1**:
 | `guides/developers/cli/`, `sdk/` | `apps-tooling/` (tools) |
 | Andamioscan · App Template · Andamio Bot (pages where they exist) | `apps-tooling/` |
 | `repositories`, `pioneers` | `developer-community/` |
-| `issuer`, `credential-badges` | stay — add `root: true` |
-| `protocol` | stay — already `root: true`, **contents untouched** |
+| `issuer`, `credential-badges` | stay — collapsible section |
+| `protocol` | stay — collapsible section, **contents untouched** |
 | `light-paper`, `glossary` | stay top-level; surfaced in front-door Reference zone (no move) |
 
 Tools placement (per [registry](./tool-registry.md)): CLI, App Template, SDK, Andamioscan, Andamio Bot
 → **Apps & Tooling**. Pioneers, Repositories → **Developer Community**. SDK stops being a top-level
 section. The "External" link group is absorbed (canonical pages where they exist, zone index otherwise).
 
-## Sequencing
+## Sequencing (as shipped)
 
-- **2a: Mechanism spike (do first, small):** switch to auto-derived tabs and stand up a minimal `api/`
-  root **alongside** the existing `protocol/` root; prove both scope and that `/docs` shows the neutral
-  front door. De-risks everything below. **Hard gate — if it does not scope, stop and report.**
-- **2b: Create the six roots + move content** with redirects (see below).
-- **2c: Apply governance:** add per-product Tools groups + the Apps & Tooling / Developer Community
-  zones; absorb External/SDK.
-- **2d: Front door + polish:** finalize the neutral landing and the Reference zone (Glossary, Light Paper).
+- **Mechanism spike:** stood up a `root: true` `api/` root beside `protocol/` and proved the scoped
+  root-toggle worked. The dropdown-to-switch-namespace UX was then rejected (see the mechanism note
+  above), so the roots were converted to plain collapsible folders in one sidebar.
+- **Content moves:** the six namespaces created and content moved per the table, with a `permanent`
+  redirect for every moved URL (see below).
+- **Governance applied:** per-product Tools groups + the Apps & Tooling / Developer Community zones;
+  External/SDK absorbed.
+- **Front door:** neutral landing + the Reference zone (Glossary, Light Paper).
 
 ## Redirects (URL churn)
 
-Moving content under roots changes many URLs. Every moved page needs a `permanent: true` redirect in
-`next.config.mjs` — generate the full list from a pre/post route diff during 2b. Examples:
+Moving content into the new sections changes many URLs. Every moved page needs a `permanent: true`
+redirect in `next.config.mjs` — generate the full list from a pre/post route diff. Examples:
 
 - `/docs/getting-started` → `/docs/api/getting-started`
 - `/docs/guides/developers/*` → `/docs/api/guides/*`
