@@ -7,113 +7,133 @@
  * annotations (public/yaml/contracts/validators-annotations.json), via
  * `npm run docs-validators`. The Validators MDX page imports that data module.
  *
- * Two ways the page can silently go stale:
+ * Ways the page can silently go stale:
  *   1. Someone re-vendors plutus.json (a contract redeploy/rename) but forgets
- *      to re-run the generator — the page then publishes wrong validators/actions.
- *   2. Someone hand-edits validators-data.ts (which is supposed to be generated).
+ *      to re-run the generator — wrong validators/actions ship.
+ *   2. Someone edits the curated annotations (layer/purpose/governs/displayName)
+ *      without regenerating — stale descriptions ship.
+ *   3. Someone hand-edits the generated validators-data.ts directly — and a bad
+ *      `layer` value would make ValidatorsReference silently drop that validator
+ *      (its `.filter(v => v.layer === layer)` matches no section).
  *
- * This guard re-extracts the skeleton from the blueprint and asserts the
- * committed data module still matches it, BIDIRECTIONALLY:
- *   - every blueprint validator is present in the data module, and vice versa
- *     (no missing validator, no phantom);
- *   - each validator's authorized action list matches the blueprint exactly.
- * Unlike the contract-manifest guard (intentionally one-directional), a missing
- * validator here is a real regression, so the check runs both ways.
- *
- * Curated-annotation integrity (every blueprint validator has an annotation, no
- * phantom keys, valid layers) is enforced by the generator's join contract; this
- * guard covers the blueprint↔page axis that the generator can't re-check at build.
+ * This guard re-runs the SAME generation pipeline the build trusts — extract the
+ * skeleton from the blueprint, load the curated annotations, and join them
+ * (the join contract itself rejects missing/phantom validators, unknown layers,
+ * and empty fields) — then deep-compares the freshly-joined result against the
+ * committed data module, field by field. Any divergence in id, name, layer,
+ * purpose, actions, or governs fails the build. This is strictly stronger than
+ * an id+actions check: it covers every curated field too.
  *
  * Usage:
  *   npx tsx scripts/check-validators-manifest.ts     # report + exit 1 on drift
  *
- * Runs automatically before every build via the `prebuild` npm script, so drift
- * fails `next build` locally and in CI/Vercel.
+ * Runs automatically before every build via the `prebuild` npm script.
  */
 import fs from "fs";
 import path from "path";
-import { extractSkeleton } from "./generate-validators.mjs";
+import {
+  extractSkeleton,
+  loadAnnotations,
+  joinValidators,
+} from "./generate-validators.mjs";
 import { VALIDATORS } from "../components/protocol/validators-data";
 
 const BLUEPRINT_PATH = path.join("public", "yaml", "contracts", "plutus.json");
+const ANNOTATIONS_PATH = path.join(
+  "public",
+  "yaml",
+  "contracts",
+  "validators-annotations.json",
+);
 const DATA_MODULE = "components/protocol/validators-data.ts";
-
-function fail(msg: string): never {
-  console.error(`✗ Validators manifest drift check failed.\n${msg}`);
-  process.exit(1);
-}
-
-if (!fs.existsSync(BLUEPRINT_PATH)) {
-  fail(
-    `Missing vendored blueprint: ${BLUEPRINT_PATH} (see public/yaml/contracts/PINNED-REV.md).`,
-  );
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let blueprint: any;
-try {
-  blueprint = JSON.parse(fs.readFileSync(BLUEPRINT_PATH, "utf8"));
-} catch (error) {
-  fail(`Could not parse ${BLUEPRINT_PATH}: ${(error as Error).message}`);
-}
-
-// Re-extract the mechanical skeleton straight from the blueprint.
-const skeleton = extractSkeleton(blueprint) as Array<{
-  name: string;
-  actions: string[];
-}>;
-
-const blueprintByName = new Map(skeleton.map((s) => [s.name, s.actions]));
-const dataById = new Map(VALIDATORS.map((v) => [v.id, v.actions]));
 
 const remediation =
   `\n\nThe Validators page is generated, not hand-written. Re-vendor ` +
-  `plutus.json if a contract changed, then run \`npm run docs-validators\` ` +
-  `to regenerate ${DATA_MODULE}, and commit the result.`;
+  `plutus.json if a contract changed and/or update validators-annotations.json, ` +
+  `then run \`npm run docs-validators\` to regenerate ${DATA_MODULE}, and commit the result.`;
 
-// 1. Bidirectional set equality on validator names.
-const missingInData = [...blueprintByName.keys()].filter(
-  (name) => !dataById.has(name),
-);
-const phantomInData = [...dataById.keys()].filter(
-  (id) => !blueprintByName.has(id),
-);
+function fail(msg: string): never {
+  console.error(`✗ Validators manifest drift check failed.\n${msg}${remediation}`);
+  process.exit(1);
+}
+
+for (const p of [BLUEPRINT_PATH, ANNOTATIONS_PATH]) {
+  if (!fs.existsSync(p)) fail(`Missing required file: ${p}`);
+}
+
+// Re-run the generation pipeline (the same functions the generator uses).
+// Each of these throws on its own invariants (no validators[], unrecognized
+// redeemer shape → zero actions, missing/phantom annotation, unknown layer,
+// empty curated field); surface those as a drift failure.
+type Expected = {
+  id: string;
+  name: string;
+  layer: string;
+  purpose: string;
+  actions: string[];
+  governs: string;
+};
+let expected: Expected[];
+try {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const blueprint: any = JSON.parse(fs.readFileSync(BLUEPRINT_PATH, "utf8"));
+  const skeleton = extractSkeleton(blueprint);
+  const annotations = loadAnnotations(ANNOTATIONS_PATH);
+  expected = joinValidators(skeleton, annotations) as Expected[];
+} catch (error) {
+  fail((error as Error).message);
+}
+
+// Deep-compare the freshly-joined result against the committed data module.
+const expectedById = new Map(expected.map((e) => [e.id, e]));
+const committedById = new Map(VALIDATORS.map((v) => [v.id, v]));
 
 const problems: string[] = [];
-if (missingInData.length) {
+
+const missing = [...expectedById.keys()].filter((id) => !committedById.has(id));
+const extra = [...committedById.keys()].filter((id) => !expectedById.has(id));
+if (missing.length) {
   problems.push(
-    `Blueprint validators absent from ${DATA_MODULE} (page is missing them):\n` +
-      missingInData.map((n) => `  - ${n}`).join("\n"),
+    `Validators the generator would produce but absent from ${DATA_MODULE}:\n` +
+      missing.map((id) => `  - ${id}`).join("\n"),
   );
 }
-if (phantomInData.length) {
+if (extra.length) {
   problems.push(
-    `Validators in ${DATA_MODULE} with no blueprint match (phantom/stale):\n` +
-      phantomInData.map((n) => `  - ${n}`).join("\n"),
+    `Validators in ${DATA_MODULE} the generator would NOT produce (stale/phantom):\n` +
+      extra.map((id) => `  - ${id}`).join("\n"),
   );
 }
 
-// 2. Action-list equality for validators present in both (exact, order-sensitive —
-//    the generator preserves blueprint order, so any difference is real drift).
-for (const [name, blueprintActions] of blueprintByName) {
-  const dataActions = dataById.get(name);
-  if (!dataActions) continue; // already reported as missing above
-  const a = blueprintActions.join(" · ");
-  const b = dataActions.join(" · ");
-  if (a !== b) {
+for (const [id, exp] of expectedById) {
+  const got = committedById.get(id);
+  if (!got) continue; // already reported as missing
+  for (const field of ["name", "layer", "purpose", "governs"] as const) {
+    if (exp[field] !== got[field]) {
+      problems.push(
+        `"${id}" field "${field}" drifted:\n` +
+          `  generated: ${JSON.stringify(exp[field])}\n` +
+          `  committed: ${JSON.stringify(got[field])}`,
+      );
+    }
+  }
+  const expActions = exp.actions.join(" · ");
+  const gotActions = got.actions.join(" · ");
+  if (expActions !== gotActions) {
     problems.push(
-      `Action list for "${name}" differs:\n` +
-        `  blueprint: ${a || "(none)"}\n` +
-        `  page:      ${b || "(none)"}`,
+      `"${id}" actions drifted:\n` +
+        `  blueprint: ${expActions || "(none)"}\n` +
+        `  committed: ${gotActions || "(none)"}`,
     );
   }
 }
 
 if (problems.length) {
-  fail(problems.join("\n\n") + remediation);
+  fail(problems.join("\n\n"));
 }
 
 console.log(
-  `✓ Validators manifest in sync: ${VALIDATORS.length} validators, ` +
-    `actions match the pinned blueprint.`,
+  `✓ Validators manifest in sync: ${VALIDATORS.length} validators — ids, ` +
+    `actions, and every curated field (layer, purpose, governs) match a fresh ` +
+    `generation from the pinned blueprint + annotations.`,
 );

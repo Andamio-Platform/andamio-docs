@@ -191,7 +191,25 @@ export function extractSkeleton(blueprint) {
     byName.set(name, { name, actions });
   }
 
-  return [...byName.values()];
+  const entries = [...byName.values()];
+
+  // A validator with zero resolved actions means the redeemer schema took a
+  // shape actionsFromDef doesn't recognize (e.g. a $ref-to-$ref indirection in
+  // a future re-vendored blueprint). Fail loudly rather than silently shipping
+  // a validator with "(no redeemer actions)" — every real validator has >= 1.
+  const empty = entries.filter((e) => e.actions.length === 0);
+  if (empty.length) {
+    throw new Error(
+      `extractSkeleton: ${empty.length} validator(s) resolved to ZERO actions ` +
+        `— the redeemer schema shape is unrecognized (actionsFromDef handles ` +
+        `anyOf[].title and bare {title} only):\n    - ${empty
+          .map((e) => e.name)
+          .join("\n    - ")}\n` +
+        `Extend actionsFromDef/resolveRef to handle the new shape.`
+    );
+  }
+
+  return entries;
 }
 
 /**
@@ -199,7 +217,7 @@ export function extractSkeleton(blueprint) {
  * blueprint validator name. Throws with a clear message on a missing/malformed
  * file so callers can exit non-zero.
  */
-function loadAnnotations(filePath) {
+export function loadAnnotations(filePath) {
   let raw;
   try {
     raw = fs.readFileSync(filePath, "utf-8");

@@ -91,7 +91,7 @@ export const VALIDATORS: ValidatorEntry[] = [
       "RemoveInstanceRefScr",
       "BurnInstance"
     ],
-    "governs": "Mints the **LocalStateNFT** (`LocalStateNFT`), whose minting-policy ID *is* the course/project identifier (the courseId/projectId), and the **Local State Registration** token that connects the instance's local state to global V2 state. `MintInstanceRefScr`/`RemoveInstanceRefScr` manage its reference scripts; `BurnInstance` retires it."
+    "governs": "Mints the **LocalStateNFT** (`LocalStateNFT`), whose minting-policy ID **is** the course/project identifier (the courseId/projectId), and the **Local State Registration** token that connects the instance's local state to global V2 state. `MintInstanceRefScr`/`RemoveInstanceRefScr` manage its reference scripts; `BurnInstance` retires it."
   },
   {
     "id": "course/assignment_validator",

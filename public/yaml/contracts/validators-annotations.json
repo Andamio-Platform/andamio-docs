@@ -17,7 +17,7 @@
       "displayName": "Instances",
       "layer": "Instances",
       "purpose": "Registers a new instance — the on-chain container for a single course or project — and links its local state into the global registry.",
-      "governs": "Mints the **LocalStateNFT** (`LocalStateNFT`), whose minting-policy ID *is* the course/project identifier (the courseId/projectId), and the **Local State Registration** token that connects the instance's local state to global V2 state. `MintInstanceRefScr`/`RemoveInstanceRefScr` manage its reference scripts; `BurnInstance` retires it."
+      "governs": "Mints the **LocalStateNFT** (`LocalStateNFT`), whose minting-policy ID **is** the course/project identifier (the courseId/projectId), and the **Local State Registration** token that connects the instance's local state to global V2 state. `MintInstanceRefScr`/`RemoveInstanceRefScr` manage its reference scripts; `BurnInstance` retires it."
     },
     "ls_instances/governance": {
       "displayName": "Governance",
