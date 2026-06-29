@@ -1,0 +1,38 @@
+---
+title: "Transaction sequences"
+description: "The transaction workflows that issue an Andamio credential — and the course↔project symmetry that runs through all of them."
+---
+
+A single Andamio transaction rarely means much on its own. What issues a credential is a *sequence* of transactions — onboarding, authoring, committing, assessing, claiming. These pages walk each essential sequence step by step: for every step you see who acts, the transaction they submit, its on-chain effect (validator action + token change), and the resulting state. Every step shares the same [transaction lifecycle](/docs/protocol/v2#the-transaction-lifecycle), so that's explained once on the protocol intro and linked from each step rather than repeated.
+
+## Start here: onboarding
+
+Everything else assumes the participant already holds an Access Token. Minting one is the protocol's front door:
+
+- **[Onboarding — Mint Access Token →](/docs/protocol/v2/sequences/onboarding)** (`global_state: MintLocalState`)
+
+## The course ↔ project symmetry
+
+Courses and projects are deliberately symmetric. Both run the same five-beat loop — **create → populate → commit → assess → claim** — one for learners, one for contributors. Read across a row to see the same beat on each side; follow a cell into its interactive sequence.
+
+| Beat | Course | Project |
+|------|--------|---------|
+| **Create** | [Create Course](/docs/protocol/v2/sequences/course-author-operate) | [Create Project](/docs/protocol/v2/sequences/project-author-operate) |
+| **Populate** | [Add Modules](/docs/protocol/v2/sequences/course-author-operate) | [Add Tasks + Fund Treasury](/docs/protocol/v2/sequences/project-author-operate) |
+| **Commit** | [Student commits to an assignment](/docs/protocol/v2/sequences/course-learn-earn) | [Contributor commits to a task](/docs/protocol/v2/sequences/project-contribute-earn) |
+| **Assess** | [Teacher assesses](/docs/protocol/v2/sequences/course-learn-earn) | [Manager assesses](/docs/protocol/v2/sequences/project-contribute-earn) |
+| **Claim** | [Student earns a credential](/docs/protocol/v2/sequences/course-learn-earn) | [Contributor earns a credential](/docs/protocol/v2/sequences/project-contribute-earn) |
+
+The two left-hand sequences cover the operator side of each loop (create + populate); the two right-hand sequences cover the participant side (commit + assess + claim).
+
+## The sequences
+
+**Course**
+- **[Author & operate →](/docs/protocol/v2/sequences/course-author-operate)** — create a course, manage its modules, manage teachers.
+- **[Learn & earn →](/docs/protocol/v2/sequences/course-learn-earn)** — commit to an assignment, submit evidence, get assessed, claim the credential.
+
+**Project**
+- **[Author & operate →](/docs/protocol/v2/sequences/project-author-operate)** — create a project, manage managers, manage tasks, fund the treasury.
+- **[Contribute & earn →](/docs/protocol/v2/sequences/project-contribute-earn)** — commit to a task, submit work, get assessed, claim the credential.
+
+For what each validator action does, see [Validators](/docs/protocol/v2/validators). To start building these transactions, see the [API](/docs/api) and [SDK](/docs/apps-tooling/sdk).
