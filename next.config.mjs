@@ -46,6 +46,52 @@ const config = {
       // legacy redirects collapse into this one rule pointing at the new home.
       { source: '/docs/pioneers/:path*', destination: '/docs/developer-community/pioneers/:path*', permanent: true },
       { source: '/docs/repositories/:path*', destination: '/docs/developer-community/repositories', permanent: true },
+
+      // Protocol docs redesign — the transactions/, validators/(deep), tokens/,
+      // and state-machine/ trees were retired in favour of three surfaces:
+      // the intro (/docs/protocol/v2), the single Validators page, and the
+      // transaction-sequence steppers. Specific transaction pages point at the
+      // sequence stepper that now covers their workflow; the rest fall through
+      // to broader rules. Order matters (specific before the :path+ catch-alls).
+      //
+      // NOTE: /docs/protocol/v2/validators (bare) is the NEW Validators page —
+      // only the deep validators/:path+ tree is redirected, never the bare path.
+
+      // Course transactions → course steppers
+      { source: '/docs/protocol/v2/transactions/instance/owner/course/create', destination: '/docs/protocol/v2/sequences/course-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/transactions/course/owner/teachers/manage', destination: '/docs/protocol/v2/sequences/course-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/transactions/course/teacher/modules/manage', destination: '/docs/protocol/v2/sequences/course-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/transactions/course/teacher/assignments/assess', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+      { source: '/docs/protocol/v2/transactions/course/student/assignment/commit', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+      { source: '/docs/protocol/v2/transactions/course/student/assignment/update', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+      { source: '/docs/protocol/v2/transactions/course/student/credential/claim', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+
+      // Project transactions → project steppers
+      { source: '/docs/protocol/v2/transactions/instance/owner/project/create', destination: '/docs/protocol/v2/sequences/project-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/transactions/project/owner/managers/manage', destination: '/docs/protocol/v2/sequences/project-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/transactions/project/manager/tasks/manage', destination: '/docs/protocol/v2/sequences/project-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/transactions/project/manager/tasks/assess', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
+      { source: '/docs/protocol/v2/transactions/project/contributor/task/commit', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
+      { source: '/docs/protocol/v2/transactions/project/contributor/credential/claim', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
+
+      // Onboarding
+      { source: '/docs/protocol/v2/transactions/global/general/access-token/mint', destination: '/docs/protocol/v2/sequences/onboarding', permanent: true },
+
+      // Remaining transactions (index pages, anything unmapped) → sequences overview
+      { source: '/docs/protocol/v2/transactions/:path+', destination: '/docs/protocol/v2/sequences', permanent: true },
+      { source: '/docs/protocol/v2/transactions', destination: '/docs/protocol/v2/sequences', permanent: true },
+
+      // Token stubs → the Validators page (tokens are now explained inline there)
+      { source: '/docs/protocol/v2/tokens/:path+', destination: '/docs/protocol/v2/validators', permanent: true },
+      { source: '/docs/protocol/v2/tokens', destination: '/docs/protocol/v2/validators', permanent: true },
+
+      // Validator stub tree (deep only — the bare path is the new Validators page)
+      { source: '/docs/protocol/v2/validators/:path+', destination: '/docs/protocol/v2/validators', permanent: true },
+
+      // State-machine tree → the protocol intro (which now carries the shared
+      // transaction lifecycle).
+      { source: '/docs/protocol/v2/state-machine/:path+', destination: '/docs/protocol/v2', permanent: true },
+      { source: '/docs/protocol/v2/state-machine', destination: '/docs/protocol/v2', permanent: true },
     ];
   },
 };
