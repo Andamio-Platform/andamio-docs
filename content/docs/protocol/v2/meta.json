@@ -2,14 +2,12 @@
     "title": "Protocol V2",
     "pages": [
         "index",
-        "whats-new",
+        "validators",
+        "sequences",
         "contract-verification",
         "security-audit",
         "cost-estimation",
-        "state-machine",
-        "validators",
-        "transactions",
-        "tokens"
+        "whats-new"
     ],
     "defaultOpen": false
 }
