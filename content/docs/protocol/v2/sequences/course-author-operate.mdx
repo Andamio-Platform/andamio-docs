@@ -1,0 +1,15 @@
+---
+title: "Course · Author & operate"
+description: "How an owner creates a course and teachers populate it with learning modules."
+full: true
+---
+
+import { courseAuthorOperate } from "@/components/protocol/sequences/course-author-operate";
+
+Standing up a course is three beats: an owner mints the course instance, teachers add the learning modules, and the owner manages who can teach. Each beat is one transaction keyed on the course's policy ID.
+
+<TransactionStepper
+  title={courseAuthorOperate.title}
+  intro={courseAuthorOperate.intro}
+  steps={courseAuthorOperate.steps}
+/>
