@@ -1,38 +1,31 @@
 import './global.css';
 import { RootProvider } from 'fumadocs-ui/provider';
-import localFont from 'next/font/local';
-import { Sora } from 'next/font/google';
-import { GeistMono } from 'geist/font/mono';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import type { ReactNode } from 'react';
 
-// Body: Mona Sans (GitHub's industrial grotesque) — self-hosted, OFL.
-const monaSans = localFont({
-  variable: '--font-mona',
-  display: 'swap',
-  src: [
-    { path: './fonts/MonaSans-Light.woff2', weight: '300', style: 'normal' },
-    { path: './fonts/MonaSans-Regular.woff2', weight: '400', style: 'normal' },
-    { path: './fonts/MonaSans-Medium.woff2', weight: '500', style: 'normal' },
-    { path: './fonts/MonaSans-SemiBold.woff2', weight: '600', style: 'normal' },
-    { path: './fonts/MonaSans-Bold.woff2', weight: '700', style: 'normal' },
-  ],
-});
-
-// Display: Sora — the marketing site's headline face. Wired as a CSS variable
-// so it can be applied surgically (the editorial home page only). Body and
-// in-article headings stay on Mona Sans via --font-heading.
-const sora = Sora({
-  variable: '--font-sora',
+// Brand canon (andamio-brand-guide.md §4, locked 2026-06-28):
+//   Sans (display + UI) = Inter; Mono = JetBrains Mono. Never a serif.
+// Loaded as CSS variables and consumed by --font-sans / --font-heading /
+// --font-display / --font-mono in global.css. Inter and JetBrains Mono are
+// variable fonts, so the full weight axis (incl. the 300 body and 600
+// display weights the brand calls for) is available without listing weights.
+const inter = Inter({
+  variable: '--font-inter',
   display: 'swap',
   subsets: ['latin'],
-  weight: ['600', '700'],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
+  display: 'swap',
+  subsets: ['latin'],
 });
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${monaSans.variable} ${sora.variable} ${GeistMono.variable} ${monaSans.className}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${inter.className}`}
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">

@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { LargeSearchToggle } from "fumadocs-ui/components/layout/search-toggle";
 
-/* Documentation entry point — search-forward, then a browse-by-section index
-   that mirrors the six-root IA spine. Editorial brand tokens (mono kickers,
-   Sora display, thin rules) are kept; the marketing chrome (oversized hero,
-   ghost numerals, CTA buttons, trust footer) is dialed down so the page reads
-   as an index, not a landing page. */
+/* Documentation entry point — a single Quickstart CTA over a browse-by-section
+   index that mirrors the six-root IA spine. Editorial brand tokens (mono
+   kickers, Inter display, thin rules) are kept; the marketing chrome (oversized
+   hero, ghost numerals, eyebrow, trust footer) is dialed down so the page reads
+   as an index, not a landing page. Top-nav search covers find — no in-page box. */
 
 /* The six roots. api/, apps-tooling/, and developer-community/ do not exist as
    routes yet — they are created in the Phase 2 IA restructure (Phase C). Until
@@ -55,23 +54,21 @@ export default function HomePage() {
     <main className="mx-auto w-full max-w-5xl px-6 sm:px-10">
       {/* ── Hero: orient, then search ──────────────────────────── */}
       <section className="py-14 sm:py-20">
-        <h1 className="max-w-3xl font-display text-4xl font-bold leading-[1.05] tracking-[-0.02em] text-foreground sm:text-5xl">
-          Build on <span className="text-brand">Andamio</span>
+        <h1 className="max-w-3xl font-display text-4xl font-semibold leading-[0.95] tracking-[-0.045em] text-foreground sm:text-5xl">
+          Build on Andamio
         </h1>
         <p className="mt-4 max-w-xl text-base font-light leading-relaxed text-muted-foreground">
-          Everything to issue, verify, and gate on-chain credentials. Search the
-          docs, or pick a section below.
+          Everything to issue, verify, and gate on-chain credentials. Pick a
+          section below to dive in.
         </p>
 
         <Link
           href="/docs/getting-started"
-          className="mt-8 flex w-fit items-center gap-2 bg-foreground px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-background transition-opacity hover:opacity-90"
+          className="mt-8 flex w-fit items-center gap-2 bg-brand px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-brand-foreground transition-opacity hover:opacity-90"
         >
           Quickstart
           <span aria-hidden>&rarr;</span>
         </Link>
-
-        <LargeSearchToggle className="mt-4 w-full max-w-xl" />
       </section>
 
       {/* ── Browse by section (the six-root spine) ─────────────── */}
@@ -88,7 +85,7 @@ export default function HomePage() {
             >
               <span
                 aria-hidden
-                className="absolute right-5 top-6 font-mono text-sm text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-brand"
+                className="absolute right-5 top-6 font-mono text-sm text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
               >
                 &rarr;
               </span>
