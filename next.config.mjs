@@ -119,6 +119,13 @@ const config = {
       { source: '/docs/protocol/v2/state-machine/project/contributor-credential-claim', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
       { source: '/docs/protocol/v2/state-machine/:path+', destination: '/docs/protocol/v2', permanent: true },
       { source: '/docs/protocol/v2/state-machine', destination: '/docs/protocol/v2', permanent: true },
+
+      // Trust & Verification zone — contract-verification + security-audit were
+      // promoted out of Protocol to top-level horizontal pages (peer to the
+      // Reference zone). Exact-match sources: no existing protocol/v2 rule
+      // matches these paths, so they resolve in a single hop with no shadowing.
+      { source: '/docs/protocol/v2/contract-verification', destination: '/docs/contract-verification', permanent: true },
+      { source: '/docs/protocol/v2/security-audit', destination: '/docs/security-audit', permanent: true },
     ];
   },
 };
