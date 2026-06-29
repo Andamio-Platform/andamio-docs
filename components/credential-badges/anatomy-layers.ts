@@ -52,7 +52,13 @@ export const LAYERS: Layer[] = [
       "It's a normal image file — postable on social media, droppable into a portfolio, " +
       "embeddable anywhere — and it renders standalone, with no call back to Andamio.",
     claims: [
-      { text: "62 badges are served today (HTTP 200, image/svg+xml).", label: "live" },
+      {
+        text:
+          "Any credential serves on demand at credentials.andamio.io/badges/<policy_id>.<slt_hash>.svg " +
+          "(HTTP 200, image/svg+xml). Serving is static-first, with an on-demand render fallback, so " +
+          "a badge resolves even if it was never pre-generated.",
+        label: "live",
+      },
       {
         text:
           "The (policy_id, slt_hash) pair is decodable straight from the pixels, and a badge " +
@@ -159,15 +165,15 @@ export const LAYERS: Layer[] = [
       {
         text:
           "The on-chain course and target identity (the policy_id / slt_hash the badges are built " +
-          "from) is real on preprod, and badges provably round-trip to those hashes; anchored via " +
-          "deployed protocol validators.",
+          "from) is real on Cardano mainnet, and badges provably round-trip to those hashes; " +
+          "anchored via deployed protocol validators.",
         label: "live",
       },
       {
         text:
           "A recipient's evidence_hash is anchored on-chain and retrievable through the " +
-          "authenticated Andamio CLI, but minting a real end-to-end recipient credential_claim on " +
-          "preprod is still in flight.",
+          "authenticated Andamio CLI; exercising a full end-to-end recipient credential_claim flow " +
+          "is still in progress.",
         label: "in-dev",
       },
       {
