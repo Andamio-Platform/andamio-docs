@@ -26,6 +26,13 @@ const ENTRIES = [
     href: "https://api.andamio.io",
     cta: "Open the API docs",
   },
+  {
+    n: "04",
+    title: "Issuer",
+    body: "Issue and manage on-chain credentials with a low-code, API-backed product.",
+    href: "/docs/issuer",
+    cta: "Explore Issuer",
+  },
 ];
 
 export default function HomePage() {
@@ -64,7 +71,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Quick paths ────────────────────────────────────────── */}
-      <section className="grid gap-px sm:grid-cols-3">
+      <section className="grid gap-px sm:grid-cols-4">
         {ENTRIES.map((e) => (
           <Link
             key={e.n}
