@@ -15,7 +15,7 @@
       "id": "getting-started",
       "title": "Getting Started",
       "role": "general",
-      "guideFile": "content/docs/guides/getting-started.mdx",
+      "guideFile": "content/docs/apps-tooling/explore-getting-started.mdx",
       "description": "Create your on-chain identity and mint an access token",
       "status": "published",
       "uxReadiness": {
@@ -37,7 +37,7 @@
       "id": "creating-your-first-course",
       "title": "Creating Your First Course",
       "role": "courses",
-      "guideFile": "content/docs/guides/courses/creating-your-first-course.mdx",
+      "guideFile": "content/docs/apps-tooling/courses/creating-your-first-course.mdx",
       "description": "Create a course and first module in Andamio Studio",
       "status": "draft",
       "uxReadiness": {
@@ -63,7 +63,7 @@
       "id": "publishing-and-modules",
       "title": "Publishing and Modules",
       "role": "courses",
-      "guideFile": "content/docs/guides/courses/publishing-and-modules.mdx",
+      "guideFile": "content/docs/apps-tooling/courses/publishing-and-modules.mdx",
       "description": "Publish a course on-chain and manage its modules",
       "status": "not-started",
       "uxReadiness": {
@@ -85,7 +85,7 @@
       "id": "managing-students",
       "title": "Managing Students and Grading",
       "role": "courses",
-      "guideFile": "content/docs/guides/courses/managing-students.mdx",
+      "guideFile": "content/docs/apps-tooling/courses/managing-students.mdx",
       "description": "Review student work, assess assignments, and issue credentials",
       "status": "not-started",
       "uxReadiness": {
@@ -107,7 +107,7 @@
       "id": "setting-up-prerequisites",
       "title": "Setting Up Prerequisites",
       "role": "projects",
-      "guideFile": "content/docs/guides/projects/setting-up-prerequisites.mdx",
+      "guideFile": "content/docs/apps-tooling/projects/setting-up-prerequisites.mdx",
       "description": "Connect courses to projects — shows the Course-Project relationship, branches to course creation if needed, and walks through assigning credentials as project prerequisites",
       "status": "not-started",
       "uxReadiness": {
@@ -129,7 +129,7 @@
       "id": "creating-your-first-project",
       "title": "Creating Your First Project",
       "role": "projects",
-      "guideFile": "content/docs/guides/projects/creating-your-first-project.mdx",
+      "guideFile": "content/docs/apps-tooling/projects/creating-your-first-project.mdx",
       "description": "Set up a collaborative project with credential requirements",
       "status": "not-started",
       "uxReadiness": {
@@ -151,7 +151,7 @@
       "id": "managing-contributors",
       "title": "Managing Contributors and Tasks",
       "role": "projects",
-      "guideFile": "content/docs/guides/projects/managing-contributors.mdx",
+      "guideFile": "content/docs/apps-tooling/projects/managing-contributors.mdx",
       "description": "Manage project tasks, assess contributor work, and distribute rewards",
       "status": "not-started",
       "uxReadiness": {
@@ -173,7 +173,7 @@
       "id": "earning-credentials",
       "title": "Earning Credentials",
       "role": "contributors",
-      "guideFile": "content/docs/guides/contributors/earning-credentials.mdx",
+      "guideFile": "content/docs/apps-tooling/contributors/earning-credentials.mdx",
       "description": "Enroll in courses, complete assignments, and earn verifiable credentials",
       "status": "not-started",
       "uxReadiness": {
@@ -195,7 +195,7 @@
       "id": "completing-prerequisites",
       "title": "Completing Prerequisites",
       "role": "contributors",
-      "guideFile": "content/docs/guides/contributors/completing-prerequisites.mdx",
+      "guideFile": "content/docs/apps-tooling/contributors/completing-prerequisites.mdx",
       "description": "Find a project's required credentials, find the courses that award them, and complete those courses to become eligible",
       "status": "not-started",
       "uxReadiness": {
@@ -217,7 +217,7 @@
       "id": "joining-projects",
       "title": "Joining Projects",
       "role": "contributors",
-      "guideFile": "content/docs/guides/contributors/joining-projects.mdx",
+      "guideFile": "content/docs/apps-tooling/contributors/joining-projects.mdx",
       "description": "Find projects, commit to tasks, and earn rewards as a contributor",
       "status": "not-started",
       "uxReadiness": {

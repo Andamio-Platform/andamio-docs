@@ -6,7 +6,7 @@
 #   - CLI tag       ← latest git tag in andamio-cli (~/projects/01-projects/andamio-cli)
 #
 # Scope (deliberately narrow):
-#   Includes — content/docs/guides/developers/**, state-machine/**, getting-started.mdx
+#   Includes — content/docs/api/guides/**, state-machine/**, getting-started.mdx
 #   Excludes — protocol/v2/transactions/**, validators/**, tokens/**
 #              (owned by /v2-docs-audit and /transaction-audit skills)
 #              plus historical pages (whats-new.mdx, glossary.mdx, pioneers/**)
@@ -55,10 +55,10 @@ GATEWAY_BASE="${GATEWAY_TAG#v}"  # 2.3.5
 # --- Scope --------------------------------------------------------------------
 
 INCLUDE_GLOBS=(
-  "$DOCS_REPO/content/docs/guides/developers"
+  "$DOCS_REPO/content/docs/api/guides"
   "$DOCS_REPO/content/docs/protocol/v2/state-machine"
-  "$DOCS_REPO/content/docs/getting-started.mdx"
-  "$DOCS_REPO/content/docs/reference"
+  "$DOCS_REPO/content/docs/api/getting-started.mdx"
+  "$DOCS_REPO/content/docs/api/reference"
 )
 
 EXCLUDE_REGEX='/(transactions|validators|tokens|pioneers)/|/(whats-new|glossary)\.mdx$'
