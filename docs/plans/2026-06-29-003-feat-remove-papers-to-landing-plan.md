@@ -1,7 +1,7 @@
 ---
 title: "feat: Remove paper stubs from docs, redirect to the landing"
 type: feat
-status: active
+status: completed
 created: 2026-06-29
 origin: ../../../02-areas/andamio/docs/plans/2026-06-29-docs-remove-papers-to-landing-handoff.md
 target_repo: andamio-docs
