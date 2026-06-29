@@ -12,7 +12,8 @@
     "docs-manifest": "npx tsx scripts/check-contract-manifest.ts",
     "docs-treasury": "npx tsx scripts/check-treasury-reference.ts",
     "docs-coverage": "npx tsx scripts/docs-coverage-check.ts",
-    "docs-drift": ".claude/skills/audit-docs/detect-drift.sh"
+    "docs-drift": ".claude/skills/audit-docs/detect-drift.sh",
+    "docs-validators": "node scripts/generate-validators.mjs"
   },
   "dependencies": {
     "@content-collections/core": "^0.14.2",
