@@ -1,0 +1,81 @@
+---
+title: Resolve & Display a Badge
+description: The URL contract for credential badges, how a badge resolves (static-first with an on-demand render fallback), and how to display one in your app.
+---
+
+A credential badge is a self-contained SVG served at a predictable, public URL.
+Displaying one is as simple as pointing an `<img>` at it. This page is the
+integrator's contract: the URL shape, how resolution works, and the few edge
+cases worth handling.
+
+<Callout type="info" title="Live on mainnet (v1.0)">
+  Badge serving is live on Cardano **mainnet**. Any credential resolves on demand,
+  so a badge does not have to be pre-generated.
+</Callout>
+
+## The URL
+
+```
+https://credentials.andamio.io/badges/<policy_id>.<slt_hash>.svg
+```
+
+- **`policy_id`**: the course's on-chain minting policy id (56 hex chars). In
+  Andamio a course is identified by its course-NFT policy, and that policy id is
+  the badge key.
+- **`slt_hash`**: the hash of the Student Learning Target the credential attests.
+
+Both values come from the credential's on-chain anchor. If you already render a
+learner's credentials, you already have them.
+
+## How it resolves
+
+Serving is **static-first with an on-demand render fallback**, so every valid
+credential resolves whether or not its badge was pre-built:
+
+1. **Hit.** If the badge is in the pre-generated set, it's served straight from
+   disk.
+2. **Miss.** The request falls through to a render service, which reads the
+   course and module titles from the Andamio gateway, renders the SVG, and
+   caches it. The first request for a new credential renders on demand, and
+   repeats serve from cache.
+
+You don't need to know which path served you. The response is the same
+`image/svg+xml` either way.
+
+## Display it
+
+It's a normal image. The SVG is self-contained (fonts embedded), so it renders
+standalone with no call back to Andamio and no client library:
+
+```html
+<img
+  src="https://credentials.andamio.io/badges/<policy_id>.<slt_hash>.svg"
+  alt="Credential badge"
+  width="180"
+  height="180"
+/>
+```
+
+### Handle a miss gracefully
+
+If a value is wrong or a badge can't be produced, the host serves a neutral
+placeholder at `…/badges/_placeholder.svg`. Point your `onError` there so a bad
+lookup degrades to a placeholder instead of a broken image:
+
+```jsx
+<img
+  src={`https://credentials.andamio.io/badges/${policyId}.${sltHash}.svg`}
+  onError={(e) => { e.currentTarget.src = "https://credentials.andamio.io/badges/_placeholder.svg"; }}
+  alt="Credential badge"
+/>
+```
+
+## Good to know
+
+- **The image is presentation-layer, never identity.** A credential's identity
+  is its on-chain anchor, and the badge is a pointer to it. An issuer may refresh
+  badge art without invalidating any issued credential, so the image is cached
+  but not immutable. See [Anatomy of a Credential Badge](/docs/credential-badges)
+  for what's actually inside.
+- **Independent verification (signing, `did:web`, baking) is v1.1.** Today a
+  badge's proof is its Proof-Ring encoding plus the on-chain anchor.
