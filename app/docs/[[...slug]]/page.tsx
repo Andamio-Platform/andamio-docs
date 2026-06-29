@@ -9,13 +9,7 @@ import { notFound } from "next/navigation";
 import { MDXContent } from "@content-collections/mdx/react";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getMDXComponents } from "@/mdx-components";
-import TransactionDiagramClient from "@/components/react-flow/transactions/TransactionDiagramClient";
-import ProtocolFlowClient from "@/components/react-flow/protocol/ProtocolFlowClient";
 import type { TOCItemType } from "fumadocs-core/server";
-import TxYamlMetadata from "@/components/protocol-info/TxYamlMetadata";
-import TokenInfo from "@/components/protocol-info/TokenInfo";
-import ValidatorInfo from "@/components/protocol-info/ValidatorInfo";
-import ValidatorDiagram from "@/components/react-flow/validators/DiagramValidatorOverview";
 
 // Extended page data interface to include validator properties
 interface ExtendedPageData {
@@ -44,9 +38,6 @@ export default async function Page(props: {
 
   // Cast page data to our extended interface
   const pageData = page.data as ExtendedPageData;
-
-  // Detect protocol version from URL
-  const protocolVersion = params.slug?.includes("v2") ? "v2" : "v1";
 
   const docsWidth = "";
 
@@ -99,22 +90,6 @@ export default async function Page(props: {
         </div>
       ) : null}
       <DocsBody className={docsWidth}>
-        {pageData.tx_file && (
-          <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-12">
-            <div className="col-span-1 xl:col-span-4">
-              <TransactionDiagramClient
-                txFilePath={pageData.tx_file}
-                version={protocolVersion}
-              />
-            </div>
-            <div className="col-span-1 xl:col-span-1 w-full">
-              <TxYamlMetadata
-                txFilePath={pageData.tx_file}
-                version={protocolVersion}
-              />
-            </div>
-          </div>
-        )}
         <MDXContent
           code={pageData.body}
           components={getMDXComponents({
@@ -122,47 +97,6 @@ export default async function Page(props: {
             a: createRelativeLink(source, page),
           })}
         />
-        {(params.slug?.join("/").startsWith("protocol/v1/validators/") ||
-          params.slug?.join("/").startsWith("protocol/v2/validators/")) &&
-          params.slug.length >= 5 && (
-            <div className="grid grid-cols-1 xl:grid-cols-5 gap-4 mb-12">
-              <div className="col-span-1 xl:col-span-4">
-                <ValidatorDiagram
-                  system={params.slug[3]}
-                  validatorId={params.slug.length === 6 && params.slug[4] === "observers" ? params.slug[5] : params.slug[4]}
-                  version={protocolVersion}
-                />
-              </div>
-              <div className="col-span-1 xl:col-span-1 w-full">
-                <ValidatorInfo
-                  validatorSystem={params.slug[3]}
-                  validatorId={params.slug.length === 6 && params.slug[4] === "observers" ? params.slug[5] : params.slug[4]}
-                  version={protocolVersion}
-                />
-              </div>
-            </div>
-          )}
-
-        {/* Show protocol diagram only on the validators index page */}
-        {/* TODO: Embed diagrams directly in MDX files by creating a custom component */}
-        {params.slug?.join("/") === "protocol/v1/validators" && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">
-              Andamio Protocol Structure
-            </h2>
-            <ProtocolFlowClient />
-          </div>
-        )}
-
-        {(params.slug?.join("/").startsWith("protocol/v1/tokens/") ||
-          params.slug?.join("/").startsWith("protocol/v2/tokens/")) &&
-          params.slug.length >= 5 && (
-            <TokenInfo
-              tokenSystem={params.slug[3]}
-              tokenId={params.slug[4]}
-              version={protocolVersion}
-            />
-          )}
       </DocsBody>
     </DocsPage>
   );
