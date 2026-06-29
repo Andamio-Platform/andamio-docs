@@ -1,6 +1,8 @@
 {
     "title": "Andamio Issuer",
     "icon": "BadgeCheck",
+    "root": true,
+    "defaultOpen": true,
     "pages": [
         "index",
         "how-it-works",

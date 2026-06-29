@@ -2,10 +2,12 @@
     "title": "Andamio API",
     "icon": "Code",
     "root": true,
+    "defaultOpen": true,
     "pages": [
         "index",
-        "overview",
-        "quickstart"
-    ],
-    "defaultOpen": true
+        "getting-started",
+        "guides",
+        "reference",
+        "building-on-andamio"
+    ]
 }

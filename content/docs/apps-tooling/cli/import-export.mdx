@@ -1,0 +1,181 @@
+---
+title: Import & Export
+description: Edit course content locally and sync changes with the platform
+---
+
+The CLI supports a round-trip editing workflow: export a module to local markdown files, edit them with any text editor, and import the changes back.
+
+## Export a Module
+
+```bash
+andamio course export <course-id> <module-code>
+```
+
+Or use `--course` to specify by name instead of opaque ID:
+
+```bash
+andamio course export <module-code> --course "Intro to Cardano"
+```
+
+This creates a local directory with the module's content:
+
+```
+compiled/<course-slug>/<module-code>/
+├── outline.md
+├── introduction.md
+├── lesson-1.md
+├── lesson-2.md
+├── lesson-3.md
+├── assignment.md
+└── assets/
+    ├── screenshot.png
+    └── .image-manifest.json
+```
+
+### Export Options
+
+```bash
+# Custom output directory
+andamio course export <course-id> 101 --output-dir ./my-modules/101
+
+# Overwrite existing directory
+andamio course export <course-id> 101 --force
+```
+
+Images are downloaded to `assets/` and an `.image-manifest.json` file maps filenames to their CDN URLs.
+
+## Edit Locally
+
+Edit any of the exported files with your preferred editor. See the [Import Format](/docs/api/guides/cli/import-format) reference for file format details.
+
+Common edits:
+- Update lesson content in `lesson-N.md`
+- Add new images to `assets/`
+- Modify the assignment in `assignment.md`
+
+## Import Changes
+
+```bash
+andamio course import ./compiled/my-course/101 --course-id <course-id>
+```
+
+Or use `--course` for name-based resolution:
+
+```bash
+andamio course import ./compiled/my-course/101 --course "Intro to Cardano"
+```
+
+**Requires** [user authentication](/docs/api/guides/cli/authentication) (wallet login).
+
+### What Happens on Import
+
+1. `outline.md` is parsed for module title, code, and SLTs
+2. New images in `assets/` are uploaded to the CDN
+3. Previously uploaded images are preserved via `.image-manifest.json`
+4. Markdown is converted to the app's rich text format
+5. Changes are sent to the API
+
+### Dry Run
+
+Preview what would be sent without making changes:
+
+```bash
+andamio course import ./compiled/my-course/101 --course-id <id> --dry-run
+```
+
+### Import Output
+
+```
+Module:  Your On-Chain Identity (101)
+Course:  9a81fe4b...
+
+Content:
+  SLTs:          3
+  Lessons:       3
+  Assignment:    yes
+
+Changes:
+  Lessons updated:    3
+  Assignment:         updated
+
+Images:
+  Manifest:   10 preserved via CDN URLs
+  Uploaded:   2 new image(s) to CDN
+```
+
+## SLT Locking
+
+Module content follows these rules depending on status:
+
+| Module Status | SLTs | Lessons | Assignment |
+|---------------|------|---------|------------|
+| DRAFT | Create, update, delete | Create, update, delete | Create, update, delete |
+| APPROVED / ON_CHAIN | Locked (immutable) | Update only | Update only |
+
+Once a module is approved or registered on-chain, its SLTs cannot be changed through the CLI. You can still update lesson content and assignments.
+
+## Import All Modules
+
+Import every module in a course directory at once:
+
+```bash
+andamio course import-all ./compiled/my-course --course-id <course-id>
+```
+
+Or with `--course`:
+
+```bash
+andamio course import-all ./compiled/my-course --course "Intro to Cardano"
+```
+
+This scans for subdirectories containing `outline.md` and imports each one.
+
+### Options
+
+```bash
+# Dry run — preview what would be imported
+andamio course import-all ./compiled/my-course --course-id <id> --dry-run
+
+# Create modules that don't exist yet on the course
+andamio course import-all ./compiled/my-course --course-id <id> --create
+
+# Continue past failures instead of stopping on first error
+andamio course import-all ./compiled/my-course --course-id <id> --continue-on-error
+
+# Set starting sort order for new modules (with --create)
+andamio course import-all ./compiled/my-course --course-id <id> --create --sort-order-start 100
+```
+
+### Manual alternative
+
+If you need more control per module, loop manually:
+
+```bash
+for module_dir in ./compiled/my-course/*/; do
+  echo "=== Importing $(basename $module_dir) ==="
+  andamio course import "$module_dir" --course-id "$COURSE_ID"
+done
+```
+
+## Round-Trip Example
+
+```bash
+# 1. Export
+andamio course export abc123 101
+
+# 2. Edit
+vim compiled/my-course/101/lesson-1.md
+
+# 3. Add a screenshot
+cp ~/screenshots/new-feature.png compiled/my-course/101/assets/
+
+# 4. Dry run
+andamio course import compiled/my-course/101 --course-id abc123 --dry-run
+
+# 5. Import
+andamio course import compiled/my-course/101 --course-id abc123
+
+# 6. Verify
+andamio course export abc123 101 --output-dir /tmp/verify --force
+diff compiled/my-course/101/lesson-1.md /tmp/verify/lesson-1.md
+```

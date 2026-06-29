@@ -1,0 +1,117 @@
+---
+title: API Quickstart
+description: Make your first Andamio API call in 5 minutes
+---
+
+Get from zero to a successful API call in 5 minutes. No app template, no frontend — just curl.
+
+## 1. Get an API Key
+
+1. Go to [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup)
+2. Connect your wallet (you'll need an Access Token — [mint one first](/docs/api/getting-started) if needed)
+3. Select **preprod**
+4. Click **Generate API Key**
+5. Copy the key immediately
+
+## 2. Test the Connection
+
+```bash
+curl -X GET "https://preprod.api.andamio.io/health"
+```
+
+You should see:
+
+```json
+{"status":"healthy"}
+```
+
+## 3. Get Course Data
+
+List all courses on the instance:
+
+```bash
+curl -X GET "https://preprod.api.andamio.io/api/v2/instance/courses" \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+Response:
+
+```json
+{
+  "courses": [
+    {
+      "course_id": "dbd4f125b55a3231c1867f0d85d21983fa1e879fe47158e516b53857406bcac3",
+      "title": "Andamio for Contributors",
+      "modules": 4,
+      "status": "active"
+    }
+  ]
+}
+```
+
+## 4. Get Module Data
+
+Get modules for a specific course:
+
+```bash
+curl -X GET "https://preprod.api.andamio.io/api/v2/course/dbd4f125.../modules" \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+Response:
+
+```json
+{
+  "modules": [
+    {
+      "module_id": "01",
+      "title": "Getting Started",
+      "slts": [
+        {
+          "slt_id": "101",
+          "content": "I can explain what an Access Token is..."
+        }
+      ]
+    }
+  ]
+}
+```
+
+## 5. Get Task Data
+
+Get tasks (practicums) for a project:
+
+```bash
+curl -X GET "https://preprod.api.andamio.io/api/v2/project/PROJECT_ID/tasks" \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+---
+
+## What You Can Do with Just an API Key
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /instance/courses` | List all courses |
+| `GET /course/{id}/modules` | Get modules for a course |
+| `GET /course/{id}/slts` | Get SLTs for a course |
+| `GET /project/{id}/tasks` | Get tasks for a project |
+| `GET /project/{id}/details` | Get project details |
+
+These are read-only, public endpoints. No user authentication required.
+
+---
+
+## When You Need a JWT
+
+For user-specific actions — enrolling, submitting assignments, claiming credentials — you'll need to authenticate the user with a wallet signature.
+
+See [Authentication](/docs/api/guides/authentication) for the full JWT flow.
+
+---
+
+## Next Steps
+
+- **[Authentication](/docs/api/guides/authentication)** — User login with wallet signatures
+- **[Transaction Handling](/docs/api/guides/transactions)** — Build, sign, and submit transactions
+- **[API Reference](https://api.andamio.io)** — Full endpoint documentation

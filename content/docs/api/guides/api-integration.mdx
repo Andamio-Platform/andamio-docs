@@ -1,0 +1,120 @@
+---
+title: API Integration
+description: API setup and making requests to the Andamio Gateway
+---
+
+> **API Reference**: [API Docs](https://api.andamio.io) for endpoint schemas. For production, use `mainnet.api.andamio.io`.
+
+## Authentication Headers
+
+Most Andamio API requests require two authentication headers. Public endpoints (developer registration, billing plans, health checks) have reduced or no auth requirements.
+
+| Header | Purpose | How to get |
+|--------|---------|------------|
+| `X-API-Key` | Application-level (your app) | [Getting Started](/docs/api/getting-started) |
+| `Authorization: Bearer <jwt>` | User-level (wallet signature) | [Authentication](/docs/api/guides/authentication) |
+
+```typescript
+const headers = {
+  "Content-Type": "application/json",
+  "X-API-Key": APP_API_KEY,
+  "Authorization": `Bearer ${userJwt}`,
+};
+```
+
+## Making Requests
+
+Once authenticated, include both headers in all requests:
+
+```typescript
+const headers = {
+  "Content-Type": "application/json",
+  "X-API-Key": APP_API_KEY,
+  "Authorization": `Bearer ${userJwt}`,
+};
+
+// Example: List user's courses
+const res = await fetch(`${API}/course/owner/courses/list`, {
+  method: "GET",
+  headers,
+});
+const courses = await res.json();
+```
+
+## API Endpoints
+
+The Andamio Gateway provides approximately 120 endpoints across these categories:
+
+| Category | Base Path | Description | Guide |
+|----------|-----------|-------------|-------|
+| User Auth | `/api/v2/auth/login/*` | Wallet challenge/verify, User JWT | [Authentication](/docs/api/guides/authentication) |
+| Developer Auth | `/api/v2/auth/developer/*` | Registration, email verification, Developer JWT | [Developer Accounts](/docs/api/guides/developer-accounts) |
+| API Keys | `/api/v2/apikey/*` | Key request, rotation, profile, usage | [API Keys](/docs/api/guides/api-keys) |
+| Billing | `/api/v2/billing/*` | Plans, checkout, subscription management | [Billing](/docs/api/guides/billing) |
+| Verification | `/api/v2/verify/*` | Access token ownership proof | [Verification](/docs/api/guides/access-token-verification) |
+| Courses | `/api/v2/course/*` | Course CRUD, modules, enrollments, merged views | |
+| Projects | `/api/v2/project/*` | Project CRUD, tasks, contributors, merged views | |
+| Transactions | `/api/v2/tx/*` | Build, register, status, SSE stream (17 build endpoints) | [Transactions](/docs/api/guides/transactions) |
+| Users | `/api/v2/users/*` | User state, owned/enrolled/completed resources | |
+| Events | `/api/v2/events/*` | Parse what happened in a confirmed transaction | [API Concepts](/docs/api/guides/api-concepts) |
+| Token Registry | `/api/v2/token/*` | Native asset registration and listing | |
+| Dashboard | `/api/v2/user/dashboard` | Consolidated user view (courses + projects) | |
+
+For the complete endpoint reference with request/response schemas, see the [API Docs](https://api.andamio.io).
+
+For transaction building and submission, see [Transaction Handling](/docs/api/guides/transactions).
+
+## Environment URLs
+
+Start on **preprod** — it uses test ADA.
+
+| Environment | Gateway URL | App URL | Network |
+|-------------|-------------|---------|---------|
+| **Preprod** (start here) | `preprod.api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | Cardano Preprod |
+| Production | `mainnet.api.andamio.io` | [app.andamio.io](https://app.andamio.io) | Cardano Mainnet |
+
+All code examples in these docs use preprod URLs.
+
+## Ready for Mainnet?
+
+When your app is tested and ready for production:
+
+1. Generate a **mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
+2. Update your environment variables:
+   ```bash
+   NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://mainnet.api.andamio.io"
+   NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
+   ```
+3. Update the Access Token policy ID (contact team for mainnet ID)
+
+See [Environment Reference](/docs/api/reference/environments) for full configuration details.
+
+## Error Responses
+
+API errors return JSON with `error` and `message` fields:
+
+```json
+{
+  "error": "UNAUTHORIZED",
+  "message": "Invalid or expired JWT"
+}
+```
+
+Common error codes:
+
+| Code | Meaning |
+|------|---------|
+| `UNAUTHORIZED` | Missing or invalid auth headers |
+| `FORBIDDEN` | User lacks permission for this action |
+| `NOT_FOUND` | Resource doesn't exist |
+| `VALIDATION_ERROR` | Invalid request body |
+| `TX_BUILD_FAILED` | Transaction building failed |
+
+See [Error Handling](/docs/api/guides/error-handling) for recovery patterns.
+
+## Next Steps
+
+- [API Concepts](/docs/api/guides/api-concepts) — Source field, safe refetch timing, event queries
+- [Transaction Handling](/docs/api/guides/transactions) — Build, sign, and submit transactions
+- [Error Handling](/docs/api/guides/error-handling) — Recovery patterns and failure modes
+- [API Docs](https://api.andamio.io) — Full endpoint reference

@@ -1,0 +1,73 @@
+---
+title: Roles Overview
+description: The 6 canonical roles in the Andamio Protocol across courses and projects
+---
+
+Andamio uses six canonical roles organized across two systems: **Course** and **Project**. Each role has specific capabilities and responsibilities.
+
+## Course System
+
+### Course Owner
+
+Creates and manages courses on-chain. Sets up teacher access and controls the course lifecycle.
+
+**Key actions:**
+- Create a course ([create transaction](/docs/protocol/v2/transactions/instance/owner/course/create))
+- Add or remove teachers ([teachers manage](/docs/protocol/v2/transactions/course/owner/teachers/manage))
+
+### Course Teacher
+
+Manages course content and assesses student work within courses they are authorized for.
+
+**Key actions:**
+- Mint, update, or burn modules ([modules manage](/docs/protocol/v2/transactions/course/teacher/modules/manage))
+- Accept or refuse student assignments ([assignments assess](/docs/protocol/v2/transactions/course/teacher/assignments/assess))
+
+### Course Student
+
+Enrolls in courses, completes assignments, and earns verifiable credentials.
+
+**Key actions:**
+- Enroll in a course ([assignment commit](/docs/protocol/v2/transactions/course/student/assignment/commit))
+- Update assignment evidence ([assignment update](/docs/protocol/v2/transactions/course/student/assignment/update))
+- Claim completed credential ([credential claim](/docs/protocol/v2/transactions/course/student/credential/claim))
+
+## Project System
+
+### Project Owner
+
+Creates and manages projects on-chain. Controls treasury, sets requirements, and defines task structures.
+
+**Key actions:**
+- Create a project
+- Manage treasury and task requirements
+- Approve contributor work
+
+### Project Manager
+
+Oversees contributor work within projects, manages day-to-day operations.
+
+**Key actions:**
+- Review and approve contributor submissions
+- Coordinate task assignments
+
+### Project Contributor
+
+Participates in projects by committing to tasks and earning rewards upon completion.
+
+**Key actions:**
+- Enroll in a project (requires qualifying credentials)
+- Commit to and complete tasks
+- Earn rewards from project treasury
+
+## How Roles Connect
+
+All roles require an **Andamio Access Token** as the foundation of on-chain identity. Credentials earned as a Course Student can serve as prerequisites for Project Contributor enrollment, creating a learn-to-earn pathway.
+
+One person can hold multiple roles across different courses and projects simultaneously.
+
+## Related Guides
+
+- [Course Owner Guide](/docs/apps-tooling/courses) — Creating and managing courses
+- [Project Owner Guide](/docs/apps-tooling/projects) — Setting up collaborative projects
+- [Contributor Guide](/docs/apps-tooling/contributors) — Participating in courses and projects
