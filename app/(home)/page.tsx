@@ -33,7 +33,25 @@ const ENTRIES = [
     href: "/docs/issuer",
     cta: "Explore Issuer",
   },
+  {
+    n: "05",
+    title: "Credential Badges",
+    body: "Issue verifiable, on-chain credential badges that learners carry anywhere.",
+    href: "/docs/credential-badges",
+    cta: "Explore badges",
+  },
 ];
+
+/* The cards render in a single row, so the column count must track
+   ENTRIES.length — otherwise an added card wraps and the single-row border
+   rules (border-r on :not(:last-child), no border-b at sm) leave a dangling
+   divider. Literal class strings keep Tailwind's JIT happy. */
+const GRID_COLS: Record<number, string> = {
+  3: "sm:grid-cols-3",
+  4: "sm:grid-cols-4",
+  5: "sm:grid-cols-5",
+  6: "sm:grid-cols-6",
+};
 
 export default function HomePage() {
   return (
@@ -71,7 +89,9 @@ export default function HomePage() {
       </section>
 
       {/* ── Quick paths ────────────────────────────────────────── */}
-      <section className="grid gap-px sm:grid-cols-4">
+      <section
+        className={`grid gap-px ${GRID_COLS[ENTRIES.length] ?? "sm:grid-cols-4"}`}
+      >
         {ENTRIES.map((e) => (
           <Link
             key={e.n}
