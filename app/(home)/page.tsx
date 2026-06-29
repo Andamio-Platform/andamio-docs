@@ -1,107 +1,111 @@
 import Link from "next/link";
 
-/* Editorial home page — the bold front door. Mono kicker + Sora headline in
-   docs' own tokens, then a few quick, low-friction calls to action. Static /
-   CSS-only; the calm reading experience lives behind /docs and is untouched. */
+/* Documentation entry point — a single Quickstart CTA over a browse-by-section
+   index that mirrors the six-root IA spine. Editorial brand tokens (mono
+   kickers, Inter display, thin rules) are kept; the marketing chrome (oversized
+   hero, ghost numerals, eyebrow, trust footer) is dialed down so the page reads
+   as an index, not a landing page. Top-nav search covers find — no in-page box. */
 
-const ENTRIES = [
+/* The six roots. api/, apps-tooling/, and developer-community/ do not exist as
+   routes yet — they are created in the Phase 2 IA restructure (Phase C). Until
+   then each card targets the root's best current page, which stays correct once
+   the restructure's permanent redirects land. */
+const SECTIONS = [
   {
-    n: "01",
+    kicker: "Product",
+    title: "Andamio API",
+    body: "REST endpoints and guides to build on the protocol from your own stack.",
+    href: "/docs/getting-started",
+  },
+  {
+    kicker: "Product",
+    title: "Andamio Issuer",
+    body: "Issue and manage credentials with a low-code, API-backed product.",
+    href: "/docs/issuer",
+  },
+  {
+    kicker: "Product",
+    title: "Credential Badges",
+    body: "Verifiable, on-chain badges that learners carry anywhere.",
+    href: "/docs/credential-badges",
+  },
+  {
+    kicker: "Zone",
+    title: "Apps & Tooling",
+    body: "Explore the app, plus the CLI, SDK, templates, bot, and Andamioscan.",
+    href: "/docs/guides",
+  },
+  {
+    kicker: "Zone",
+    title: "Developer Community",
+    body: "Pioneers, the repositories index, and community tools.",
+    href: "/docs/pioneers",
+  },
+  {
+    kicker: "Reference",
     title: "Protocol",
     body: "Validators, transactions, and tokens — the on-chain machinery, specified.",
     href: "/docs/protocol",
-    cta: "Read the protocol",
-  },
-  {
-    n: "02",
-    title: "Guides",
-    body: "Build, publish, and verify on Andamio with step-by-step walkthroughs.",
-    href: "/docs",
-    cta: "Start building",
-  },
-  {
-    n: "03",
-    title: "API Reference",
-    body: "REST endpoints to issue, verify, and gate on credentials from your own stack.",
-    href: "https://api.andamio.io",
-    cta: "Open the API docs",
   },
 ];
 
 export default function HomePage() {
   return (
     <main className="mx-auto w-full max-w-5xl px-6 sm:px-10">
-      {/* ── Hero ───────────────────────────────────────────────── */}
-      <section className="border-b border-border py-16 sm:py-24">
-        <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.18em] text-brand">
-          <span>Andamio / Documentation</span>
-          <span aria-hidden className="h-px flex-1 bg-border" />
-        </div>
-
-        <h1 className="mt-10 max-w-3xl font-display text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-7xl">
-          Build on <span className="text-brand">Andamio</span>
+      {/* ── Hero: orient, then search ──────────────────────────── */}
+      <section className="py-14 sm:py-20">
+        <h1 className="max-w-3xl font-display text-4xl font-semibold leading-[0.95] tracking-[-0.045em] text-foreground sm:text-5xl">
+          Build on Andamio
         </h1>
-        <p className="mt-6 max-w-xl text-lg font-light leading-relaxed text-muted-foreground">
-          Issue verifiable, on-chain credentials. Pick where to start — you can
-          go deeper from anywhere.
+        <p className="mt-4 max-w-xl text-base font-light leading-relaxed text-muted-foreground">
+          Everything to issue, verify, and gate on-chain credentials. Pick a
+          section below to dive in.
         </p>
 
-        <div className="mt-8 flex flex-wrap gap-px">
-          <Link
-            href="/docs"
-            className="inline-flex items-center gap-2 bg-foreground px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-background transition-opacity hover:opacity-90"
-          >
-            Get Started
-            <span aria-hidden>&rarr;</span>
-          </Link>
-          <Link
-            href="https://api.andamio.io"
-            className="inline-flex items-center px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground ring-1 ring-inset ring-border transition-colors hover:bg-accent"
-          >
-            API Reference
-          </Link>
-        </div>
+        <Link
+          href="/docs/getting-started"
+          className="mt-8 flex w-fit items-center gap-2 bg-brand px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-brand-foreground transition-opacity hover:opacity-90"
+        >
+          Quickstart
+          <span aria-hidden>&rarr;</span>
+        </Link>
       </section>
 
-      {/* ── Quick paths ────────────────────────────────────────── */}
-      <section className="grid gap-px sm:grid-cols-3">
-        {ENTRIES.map((e) => (
-          <Link
-            key={e.n}
-            href={e.href}
-            className="group relative flex flex-col overflow-hidden border-b border-border py-10 sm:border-b-0 sm:py-14 sm:pr-8 sm:[&:not(:first-child)]:pl-8 sm:[&:not(:last-child)]:border-r"
-          >
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -top-2 right-2 font-display text-7xl font-bold tabular-nums tracking-[-0.05em] text-foreground/[0.04] sm:text-8xl"
+      {/* ── Browse by section (the six-root spine) ─────────────── */}
+      <section>
+        <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+          Browse by section
+        </div>
+        <div className="grid grid-cols-1 border-l border-t border-border sm:grid-cols-2 lg:grid-cols-3">
+          {SECTIONS.map((s) => (
+            <Link
+              key={s.title}
+              href={s.href}
+              className="group relative flex flex-col border-b border-r border-border p-6 transition-colors hover:bg-accent sm:p-7"
             >
-              {e.n}
-            </span>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-              {e.n}
-            </span>
-            <h2 className="mt-3 font-display text-2xl font-semibold tracking-tight text-foreground">
-              {e.title}
-            </h2>
-            <p className="mt-2 max-w-xs text-sm font-light leading-relaxed text-muted-foreground">
-              {e.body}
-            </p>
-            <span className="mt-5 inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-brand">
-              {e.cta}
               <span
                 aria-hidden
-                className="transition-transform group-hover:translate-x-0.5"
+                className="absolute right-5 top-6 font-mono text-sm text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
               >
                 &rarr;
               </span>
-            </span>
-          </Link>
-        ))}
+              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+                {s.kicker}
+              </span>
+              <h2 className="mt-2 font-display text-xl font-semibold tracking-tight text-foreground">
+                {s.title}
+              </h2>
+              <p className="mt-2 max-w-[26ch] text-sm font-light leading-relaxed text-muted-foreground">
+                {s.body}
+              </p>
+            </Link>
+          ))}
+        </div>
       </section>
 
-      {/* ── Footer caption ─────────────────────────────────────── */}
-      <div className="border-t border-border py-6 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-        Live on Cardano mainnet &middot; Audited by TxPipe
+      {/* ── Quiet meta line ────────────────────────────────────── */}
+      <div className="py-8 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        Andamio Documentation &#124; 2026
       </div>
     </main>
   );

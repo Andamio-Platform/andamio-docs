@@ -17,35 +17,45 @@ proves wrong or incomplete, change it here and note why.
 - Reviewing a PR that introduces or moves tool-related pages or links.
 - Onboarding a new complementary tool into the ecosystem.
 
-If you're documenting one of the **products** themselves (Andamio API, Andamio Issuer) or the
-**App** explore path or the **Protocol** reference, this skill governs only the *tool* pages that
-hang off them, not the product content itself.
+If you're documenting one of the **products** themselves (Andamio API, Andamio Issuer, Credential
+Badges), the **Apps & Tooling** or **Developer Community** zones, or the **Protocol** reference,
+this skill governs only the *tool* pages that hang off them, not the product content itself.
 
 ## Context: the spine the rules protect
 
-The site has [four jobs](./phase-2-ia-restructure.md):
+The docs sidebar roots mirror the [#28 Roadmap initiatives](./phase-2-ia-restructure.md), so the
+docs and the roadmap stay legible together. **Six roots:**
 
-1. **Front door** (`/docs`): describe the suite, fork the visitor.
-2. **Andamio API**: the developer product (self-serve).
-3. **Andamio Issuer**: the low-code, API-based product (sales-led).
-4. **Explore the App**: end-user path; `app.andamio.io` is a reference implementation on the API.
+1. **Andamio API**: the developer product (self-serve).
+2. **Andamio Issuer**: the low-code, API-based product (sales-led).
+3. **Credential Badges**: the flagship credential product.
+4. **Apps & Tooling**: the category zone — Explore the App, Andamio Bot, CLI, App Template, SDK, Andamioscan.
+5. **Developer Community**: Pioneers, Repositories, and community tools.
+6. **Protocol**: on-chain internals (advanced reference).
 
-Two **products** are sold: API and Issuer. The App and Protocol are not sold; they support the
-products. Everything in this skill exists to keep that spine legible.
+`/docs` is a neutral **front door** (no product preselected). Glossary and Light Paper are
+cross-cutting references on the front door, **not** roots.
+
+Three **products** anchor the spine (API, Issuer, Credential Badges). Apps & Tooling, Developer
+Community, and Protocol are supporting zones. Everything in this skill exists to keep that spine
+legible.
 
 ## The principle
 
-> **Products are the spine; tools are accessories that hang off a product or a job.**
+> **Products and product-zones are the spine; tools are accessories that hang off a product or a zone.**
 
-A tool never becomes a top-level peer to the products. If a reader cannot tell at a glance what
-they **buy or build on** versus what merely **helps**, the docs have failed.
+No single **tool** becomes a top-level root peer to the products. A tool hangs off the product it
+serves (in that product's Tools group) or, when it is itself one of the apps, lives inside the
+**Apps & Tooling** zone — the Andamio Bot is an app there, not a sold-product peer. If a reader
+cannot tell at a glance what they **buy or build on** versus what merely **helps**, the docs have
+failed.
 
 ## The gate: the two-line test
 
 Before any tool gets space in the docs, answer both. If you can't answer #1, it does not go in
-product docs: at most it gets a line in the Ecosystem index.
+product docs: at most it gets a line in the Developer Community index.
 
-1. **Which product or job does this make easier?** (API · Issuer · App · Protocol · cross-cutting)
+1. **Which product or zone does this make easier?** (API · Issuer · Credential Badges · Apps & Tooling · Developer Community · Protocol · cross-cutting)
 2. **What single action do we want the reader to take?** (Install · Use · Point your agent at it · Clone/fork · Add/try · Contribute)
 
 ## Two reader intents, two confusions to prevent
@@ -68,7 +78,7 @@ Fill these in for every tool. The living answers live in [`tool-registry.md`](./
 
 | Field | Options |
 |---|---|
-| **Serves** | API · Issuer · App · Protocol · cross-cutting |
+| **Serves** | API · Issuer · Credential Badges · Apps & Tooling · Developer Community · Protocol · cross-cutting |
 | **Type** | Accelerator (libs/templates) · Workflow tool (CLI) · Agent enablement · Integration/bot · Source repo |
 | **Audience** | Buyer-adopter · Builder · Contributor · End-user |
 | **Primary action** | Install · Use · Point your agent at it · Clone/fork · Add/try · Contribute |
@@ -83,12 +93,12 @@ Fill these in for every tool. The living answers live in [`tool-registry.md`](./
 - **Serves one product** → canonical page lives **inside that product's section**, in a small
   **Tools** group at the bottom of that product's sidebar. Surface it contextually in the guides
   where it's needed.
-- **Cross-cutting** (serves more than one, or the ecosystem broadly) → canonical page in the single
-  shared **Ecosystem** zone, linked from the products it touches.
-- **Raw repos with no narrative** → one "Source & repositories" reference page. Never let bare
-  GitHub/SDK links compete with product nav in the main sidebar.
+- **Is one of the apps, or cross-cutting tooling** (Bot, CLI, App Template, SDK, Andamioscan) →
+  canonical page in the **Apps & Tooling** zone, linked from the products it touches.
+- **Community-facing or a raw repo with no narrative** → the **Developer Community** zone (Pioneers,
+  Repositories index). Never let bare GitHub/SDK links compete with product nav in the main sidebar.
 - A tool may be **mentioned** anywhere it helps, but **documented** in exactly one place.
-- Tools never appear in the top-level product toggle.
+- Tools never appear as a top-level root in the product toggle.
 
 ## Labeling conventions (prevent product/tool confusion)
 
@@ -130,9 +140,10 @@ One line: what it is and which product/job it serves.
 This schema folds into the [Phase 2 restructure](./phase-2-ia-restructure.md):
 
 - Each product root gets a small **Tools** group holding only the tools that serve it.
-- One shared **Ecosystem** entry holds cross-cutting/community tools and the repositories index.
+- The **Apps & Tooling** root holds the apps and cross-cutting tooling (Bot, CLI, App Template, SDK,
+  Andamioscan); the **Developer Community** root holds the repositories index and community tools.
 - The current "External" link dump and the standalone top-level "SDK" section are absorbed into
-  this, so tools stop visually competing with products.
+  this (SDK now lives under Apps & Tooling), so tools stop visually competing with products.
 
 ## Refining this skill
 
