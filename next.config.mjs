@@ -20,6 +20,13 @@ const config = {
       // Andamio Issuer is now its own product section; the old single page moved.
       { source: '/docs/andamio-issuer', destination: '/docs/issuer', permanent: true },
 
+      // Papers live on the landing (www.andamio.io/whitepaper), not in docs. The
+      // old docs "Coming soon" stubs were removed; redirect their URLs to the
+      // canonical whitepaper pages. Destinations are absolute (cross-domain:
+      // docs.andamio.io -> andamio.io), which Next.js supports directly.
+      { source: '/docs/light-paper', destination: 'https://www.andamio.io/whitepaper', permanent: true },
+      { source: '/docs/api/building-on-andamio', destination: 'https://www.andamio.io/whitepaper/building-on-andamio', permanent: true },
+
       // guides/ dismantled across api/ and apps-tooling/ — CLI first (it lived
       // under developers/ but belongs to Apps & Tooling), then the rest.
       { source: '/docs/guides/developers/cli/:path*', destination: '/docs/apps-tooling/cli/:path*', permanent: true },
@@ -34,7 +41,10 @@ const config = {
 
       // Top-level pages moved under api/.
       { source: '/docs/getting-started', destination: '/docs/api/getting-started', permanent: true },
-      { source: '/docs/building-on-andamio', destination: '/docs/api/building-on-andamio', permanent: true },
+      // building-on-andamio is now a landing paper, not a docs page — point the
+      // legacy top-level path straight at the landing (avoids a 2-hop chain
+      // through the removed /docs/api/building-on-andamio stub).
+      { source: '/docs/building-on-andamio', destination: 'https://www.andamio.io/whitepaper/building-on-andamio', permanent: true },
       { source: '/docs/reference/:path*', destination: '/docs/api/reference/:path*', permanent: true },
 
       // Apps & Tooling.
