@@ -8,16 +8,13 @@ export default function Layout({ children }: { children: ReactNode }) {
     <DocsLayout
       tree={source.pageTree}
       {...baseOptions}
-      sidebar={{
-        tabs: [
-          { title: "Documentation", url: "/docs" },
-          {
-            title: "Protocol",
-            description: "On-chain internals · advanced",
-            url: "/docs/protocol",
-          },
-        ],
-      }}
+      // Auto-derive the root toggle from every `root: true` folder in the tree.
+      // An empty options object routes to getSidebarTabs(tree), which walks the
+      // tree and computes each tab's `urls` set — so a new product root appears
+      // in the toggle without hand-editing this array. (The type rejects `true`;
+      // `{}` is the GetSidebarTabsOptions auto-derive form.) Tree scoping itself
+      // comes from TreeContext.findLast(root) — see the governance mechanism note.
+      sidebar={{ tabs: {} }}
     >
       {children}
     </DocsLayout>

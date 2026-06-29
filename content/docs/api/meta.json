@@ -1,0 +1,11 @@
+{
+    "title": "Andamio API",
+    "icon": "Code",
+    "root": true,
+    "pages": [
+        "index",
+        "overview",
+        "quickstart"
+    ],
+    "defaultOpen": true
+}
