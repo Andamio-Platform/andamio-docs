@@ -1,10 +1,8 @@
 {
     "title": "Protocol",
     "icon": "Workflow",
-    "root": true,
     "pages": [
         "v2",
         "..."
-    ],
-    "defaultOpen": true
+    ]
 }

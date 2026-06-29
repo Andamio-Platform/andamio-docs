@@ -1,8 +1,6 @@
 {
     "title": "Apps & Tooling",
     "icon": "Boxes",
-    "root": true,
-    "defaultOpen": true,
     "pages": [
         "index",
         "--- Explore the App ---",

@@ -1,8 +1,6 @@
 {
     "title": "Developer Community",
     "icon": "Users",
-    "root": true,
-    "defaultOpen": true,
     "pages": [
         "index",
         "pioneers",
