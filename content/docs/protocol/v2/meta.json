@@ -2,8 +2,10 @@
     "title": "Protocol V2",
     "pages": [
         "index",
+        "whats-new",
         "contract-verification",
         "security-audit",
+        "cost-estimation",
         "state-machine",
         "validators",
         "transactions",

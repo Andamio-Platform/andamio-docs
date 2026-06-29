@@ -1,0 +1,361 @@
+---
+title: Managing Courses
+description: Query courses, modules, SLTs, lesson content, and manage student and teacher workflows
+---
+
+## List Courses
+
+```bash
+andamio course list
+```
+
+To see only courses where you're a teacher:
+
+```bash
+andamio teacher courses
+```
+
+## Course Details
+
+```bash
+andamio course get <course-id>
+```
+
+## List Modules
+
+```bash
+andamio course modules <course-id>
+```
+
+Or use `--course` to specify by name instead of ID:
+
+```bash
+andamio course modules --course "Intro to Cardano"
+```
+
+The `--course` flag matches by substring. If multiple courses match, all candidates are listed with their IDs.
+
+## View SLTs
+
+```bash
+andamio course slts <course-id> <module-code>
+```
+
+With `--course`:
+
+```bash
+andamio course slts <module-code> --course "Intro to Cardano"
+```
+
+This returns the Student Learning Targets for a specific module. The module must be on-chain (APPROVED or ON_CHAIN status) for this public endpoint to work.
+
+## View Lesson Content
+
+Get a single lesson by SLT index:
+
+```bash
+andamio course lesson <course-id> <module-code> <slt-index>
+```
+
+Get the module introduction:
+
+```bash
+andamio course intro <course-id> <module-code>
+```
+
+Get the module assignment:
+
+```bash
+andamio course assignment <course-id> <module-code>
+```
+
+## JSON Output
+
+All commands support `-o json` for structured output:
+
+```bash
+andamio course modules <course-id> -o json | jq '.data[].content.course_module_code'
+```
+
+## Create a Module
+
+Create a new module on an existing course, either from a compiled directory or explicit flags:
+
+```bash
+# From a compiled directory (reads title and code from outline.md)
+andamio course create-module ./compiled/my-course/101 --course-id <id>
+
+# From explicit flags
+andamio course create-module --course-id <id> --code 101 --title "My Module"
+```
+
+Requires [user authentication](/docs/apps-tooling/cli/authentication) (wallet login) and teacher access on the course.
+
+## Course Owner Commands
+
+If you own courses (created via on-chain transaction), manage them with the `course owner` subgroup. All require [user authentication](/docs/apps-tooling/cli/authentication).
+
+### List Your Courses
+
+```bash
+andamio course owner list
+```
+
+### Create a Course
+
+```bash
+andamio course owner create --course-id <id> --pending-tx-hash <hash> --title "My Course" --description "Learn things" --public
+```
+
+Required flags: `--course-id` (derived from on-chain NFT policy), `--pending-tx-hash` (hash of the pending creation transaction).
+Optional flags: `--title`, `--description`, `--image-url`, `--video-url`, `--category`, `--public`.
+
+### Update Course Metadata
+
+Only specified flags are updated — omitted fields remain unchanged:
+
+```bash
+andamio course owner update --course-id <id> --title "New Title"
+andamio course owner update --course-id <id> --description "Updated" --public=false
+```
+
+### Register an On-Chain Course
+
+After creating a course on-chain with `tx run`, register it with off-chain metadata. The on-chain transaction creates the course in the smart contract; registration links it to the API's metadata store.
+
+```bash
+andamio course owner register --course-id <id> --title "My Course"
+```
+
+### Manage Teachers
+
+Add or remove teachers from a course using `--add` and `--remove` flags:
+
+```bash
+# Add teachers
+andamio course owner teachers --course-id <id> --add alice --add bob
+
+# Remove a teacher
+andamio course owner teachers --course-id <id> --remove charlie
+
+# Add and remove in one call
+andamio course owner teachers --course-id <id> --add alice --remove charlie
+```
+
+At least one of `--add` or `--remove` must be provided.
+
+## Course Teacher Commands
+
+Teachers manage module lifecycle and review student submissions. All `course teacher` commands require [user authentication](/docs/apps-tooling/cli/authentication) and teacher access on the course.
+
+### Module Lifecycle
+
+Register, publish, delete, and update the status of course modules:
+
+```bash
+# Register a module from on-chain data (requires --slt-hash)
+andamio course teacher register-module --course-id <id> --module-code 101 --slt-hash <hash>
+
+# Publish a module
+andamio course teacher publish-module --course-id <id> --module-code 101
+
+# Delete a module
+andamio course teacher delete-module --course-id <id> --module-code 101
+
+# Update module status
+andamio course teacher update-module-status --course-id <id> --module-code 101 --status DRAFT
+```
+
+All four commands require `--course-id` and `--module-code`. The `register-module` command also requires `--slt-hash` (the on-chain module identifier). The `update-module-status` command also requires `--status` (`APPROVED` or `DRAFT`).
+
+### Review Student Submissions
+
+List pending reviews, then accept or refuse:
+
+```bash
+# List commitments awaiting review
+andamio course teacher commitments --course-id <id>
+
+# Accept a submission
+andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision accept
+
+# Refuse a submission
+andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision refuse
+```
+
+The `--decision` flag accepts `accept` or `refuse`. Required flags: `--course-id`, `--module-code`, `--participant-alias`, `--decision`.
+
+### Scripting Example
+
+List pending commitments and review each individually:
+
+```bash
+COURSE_ID="your-course-id"
+
+# List pending commitments with module code and participant
+andamio course teacher commitments --course-id "$COURSE_ID" -o json | \
+  jq -r '.data[] | "\(.content.course_module_code) \(.content.participant_alias)"'
+
+# Review a specific commitment
+andamio course teacher review --course-id "$COURSE_ID" --module-code 101 --participant-alias student1 --decision accept
+```
+
+To batch-accept (use with caution — review each submission first in production):
+
+```bash
+andamio course teacher commitments --course-id "$COURSE_ID" -o json | \
+  jq -r '.data[] | "\(.content.course_module_code) \(.content.participant_alias)"' | \
+  while read MODULE ALIAS; do
+    andamio course teacher review --course-id "$COURSE_ID" --module-code "$MODULE" --participant-alias "$ALIAS" --decision accept
+  done
+```
+
+## Course Student Commands
+
+Students enroll in modules, submit evidence, and claim credentials. All `course student` commands require [user authentication](/docs/apps-tooling/cli/authentication).
+
+### List Enrolled Courses and Credentials
+
+```bash
+# Courses you're enrolled in
+andamio course student courses
+
+# Credentials you've earned
+andamio course student credentials
+
+# All your assignment commitments
+andamio course student commitments
+```
+
+### Get a Specific Commitment
+
+```bash
+andamio course student commitment --course-id <id> --slt-hash <hash>
+
+# Optionally include module code for enriched DB data
+andamio course student commitment --course-id <id> --slt-hash <hash> --module-code 101
+```
+
+The `--slt-hash` flag is required (on-chain module identifier). The `--module-code` flag is optional.
+
+### Enroll in a Module
+
+```bash
+andamio course student create --course-id <id> --module-code 101
+```
+
+### Submit and Update Evidence
+
+```bash
+# Submit evidence for the first time
+andamio course student submit --course-id <id> --module-code 101 --evidence "https://github.com/my/pr"
+
+# For chain-only modules (no module code), use --slt-hash instead
+andamio course student submit --course-id <id> --slt-hash 77547a... --evidence "https://github.com/my/pr"
+
+# Update evidence after feedback
+andamio course student update --course-id <id> --module-code 101 --evidence "https://github.com/my/pr/v2"
+```
+
+### Claim a Credential
+
+After your submission is approved:
+
+```bash
+andamio course student claim --course-id <id> --module-code 101 --pending-tx-hash <hash>
+```
+
+The `--pending-tx-hash` is required — provide the hash of the on-chain claim transaction.
+
+### On-Chain Transactions
+
+For on-chain operations (assignment commitment, evidence update, credential claim), use `tx run` with the appropriate transaction endpoint. See [Transaction Signing](/docs/apps-tooling/cli/transaction-signing) for the full workflow.
+
+### Leave a Commitment
+
+Withdraw from a module before completion:
+
+```bash
+andamio course student leave --course-id <id> --module-code 101 --pending-tx-hash <hash>
+```
+
+The `--pending-tx-hash` is required — provide the hash of the on-chain leave transaction.
+
+### Student Workflow Example
+
+The full student workflow from enrollment to credential:
+
+```bash
+COURSE_ID="your-course-id"
+MODULE="101"
+
+# 1. Enroll
+andamio course student create --course-id "$COURSE_ID" --module-code "$MODULE"
+
+# 2. Submit evidence
+andamio course student submit --course-id "$COURSE_ID" --module-code "$MODULE" \
+  --evidence "https://github.com/myrepo/pull/1"
+
+# 3. Check status (requires slt-hash from on-chain data)
+andamio course student commitment --course-id "$COURSE_ID" --slt-hash "$SLT_HASH" -o json
+
+# 4. After approval, claim credential (requires pending-tx-hash from on-chain claim tx)
+andamio course student claim --course-id "$COURSE_ID" --module-code "$MODULE" --pending-tx-hash "$TX_HASH"
+
+# 5. Verify
+andamio course student credentials
+```
+
+## Your Dashboard
+
+See a summary of everything you're enrolled in, teaching, and managing:
+
+```bash
+andamio user me
+```
+
+## Role-Specific Views
+
+List courses where you're a teacher:
+
+```bash
+andamio teacher courses
+```
+
+List projects where you're a manager:
+
+```bash
+andamio manager projects
+```
+
+## Other Resources
+
+### Projects
+
+```bash
+andamio project list
+andamio project get <project-id>
+```
+
+### Transactions
+
+Build, sign, and submit transactions:
+
+```bash
+andamio tx build /v2/tx/global/user/access-token/mint --body '{"alias":"dev1",...}'
+andamio tx sign --tx <unsigned-cbor> --skey ./payment.skey
+andamio tx submit --tx <signed-cbor>
+andamio tx status <tx-hash>
+```
+
+See [Transaction Signing](/docs/apps-tooling/cli/transaction-signing) for the full workflow.
+
+### API Exploration
+
+Fetch the OpenAPI spec and browse available endpoints:
+
+```bash
+andamio spec fetch
+andamio spec paths
+andamio spec paths --filter course-module
+```

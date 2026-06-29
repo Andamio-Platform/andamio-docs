@@ -6,16 +6,13 @@ import Link from "next/link";
    hero, ghost numerals, eyebrow, trust footer) is dialed down so the page reads
    as an index, not a landing page. Top-nav search covers find — no in-page box. */
 
-/* The six roots. api/, apps-tooling/, and developer-community/ do not exist as
-   routes yet — they are created in the Phase 2 IA restructure (Phase C). Until
-   then each card targets the root's best current page, which stays correct once
-   the restructure's permanent redirects land. */
+/* The six roots — each card targets that root's index. */
 const SECTIONS = [
   {
     kicker: "Product",
     title: "Andamio API",
     body: "REST endpoints and guides to build on the protocol from your own stack.",
-    href: "/docs/getting-started",
+    href: "/docs/api",
   },
   {
     kicker: "Product",
@@ -33,13 +30,13 @@ const SECTIONS = [
     kicker: "Zone",
     title: "Apps & Tooling",
     body: "Explore the app, plus the CLI, SDK, templates, bot, and Andamioscan.",
-    href: "/docs/guides",
+    href: "/docs/apps-tooling",
   },
   {
     kicker: "Zone",
     title: "Developer Community",
     body: "Pioneers, the repositories index, and community tools.",
-    href: "/docs/pioneers",
+    href: "/docs/developer-community",
   },
   {
     kicker: "Reference",
@@ -63,7 +60,7 @@ export default function HomePage() {
         </p>
 
         <Link
-          href="/docs/getting-started"
+          href="/docs/api/getting-started"
           className="mt-8 flex w-fit items-center gap-2 bg-brand px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-brand-foreground transition-opacity hover:opacity-90"
         >
           Quickstart

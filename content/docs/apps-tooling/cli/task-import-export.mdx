@@ -1,0 +1,179 @@
+---
+title: Task Import & Export
+description: Edit project tasks as Markdown files and sync changes with the platform
+---
+
+The CLI supports a round-trip editing workflow for tasks: export all tasks to local Markdown files, edit them in any text editor, and import the changes back. New tasks can also be created by adding files without an `index` field.
+
+All commands require [user authentication](/docs/apps-tooling/cli/authentication) (wallet login) and manager access on the project.
+
+## Export Tasks
+
+```bash
+andamio project task export <project-id>
+```
+
+This creates a directory of Markdown files, one per task:
+
+```
+tasks/<project-slug>/
+├── 001-implement-wallet-connect.md
+├── 002-write-unit-tests.md
+└── 003-update-documentation.md
+```
+
+Each file has YAML frontmatter and a Markdown body:
+
+```markdown
+---
+title: "Implement wallet connect"
+lovelace: "5000000"
+expiration_time: "2026-06-01T00:00:00Z"
+tokens:
+  - policy_id: "722c475bebb10..."
+    asset_name: "XP"
+    quantity: "50"
+index: 1
+status: DRAFT
+project_id: "abc123..."
+project_state_policy_id: "def456..."
+---
+
+Task description in Markdown.
+
+Steps to complete:
+- Connect Cardano wallet
+- Sign authentication nonce
+- Redirect to dashboard
+```
+
+### Export to JSON
+
+```bash
+andamio project task export "$PROJECT_ID" --output json
+```
+
+Returns:
+
+```json
+{
+  "project_id": "abc123...",
+  "directory": "tasks/my-project/",
+  "tasks_exported": 3,
+  "files": ["001-implement-wallet-connect.md", "002-write-unit-tests.md", "003-update-documentation.md"]
+}
+```
+
+## Edit Locally
+
+Edit any exported file with your preferred editor. You can change:
+
+- `title` — task title (frontmatter)
+- `lovelace` — reward amount in lovelace (frontmatter)
+- `expiration_time` — deadline in ISO 8601 format (frontmatter)
+- The Markdown body — stored as task content
+
+Do not change `project_id`, `project_state_policy_id`, or `index` — these are used to match the file back to the correct task on the platform.
+
+## Import Changes
+
+```bash
+andamio project task import <project-id>
+```
+
+The import command reads all `.md` files in `tasks/<project-slug>/` and:
+
+- **Updates** existing DRAFT tasks (matched by `index` in frontmatter)
+- **Creates** new tasks for files with no `index` field
+- **Skips** tasks that are not in DRAFT state (ACTIVE, COMPLETED)
+
+### Dry Run
+
+Preview what would be sent without making changes:
+
+```bash
+andamio project task import "$PROJECT_ID" --dry-run
+```
+
+Output shows each file's action (CREATE, UPDATE, SKIPPED) without calling the API.
+
+### Import Output
+
+```
+Importing 3 task files from tasks/my-project/
+  001-implement-wallet-connect.md: UPDATE 'Implement wallet connect'
+  002-write-unit-tests.md: UPDATE 'Write unit tests'
+  003-update-documentation.md: SKIPPED (task 3 is ACTIVE, not DRAFT)
+
+Import complete: 0 created, 2 updated, 1 skipped, 0 errors
+```
+
+### Import to JSON
+
+```bash
+andamio project task import "$PROJECT_ID" --output json
+```
+
+Returns:
+
+```json
+{
+  "tasks_created": 0,
+  "tasks_updated": 2,
+  "tasks_skipped": 1,
+  "errors": []
+}
+```
+
+## Create Tasks via Import
+
+To create a new task, add a `.md` file without an `index` field. Copy `project_id` and `project_state_policy_id` from any existing exported file:
+
+```markdown
+---
+title: "New task via import"
+lovelace: "4000000"
+expiration_time: "2026-12-01T00:00:00Z"
+project_id: "<paste from existing file>"
+project_state_policy_id: "<paste from existing file>"
+---
+
+Task description here.
+```
+
+Run import — the task will be created and the summary shows `1 created`.
+
+## Round-Trip Example
+
+```bash
+# 1. Set project ID
+export PROJECT_ID=$(andamio project list --output json | jq -r '.data[0].project_id')
+
+# 2. Export
+andamio project task export "$PROJECT_ID"
+
+# 3. Edit a task
+vim tasks/my-project/001-implement-wallet-connect.md
+
+# 4. Dry run
+andamio project task import "$PROJECT_ID" --dry-run
+
+# 5. Import
+andamio project task import "$PROJECT_ID"
+
+# 6. Verify
+andamio project task get 1 --project-id "$PROJECT_ID" --output json | jq '.content.title'
+```
+
+## Frontmatter Reference
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `title` | yes | Task title |
+| `lovelace` | yes | Reward in lovelace (string or integer) |
+| `expiration_time` | yes | Deadline — ISO 8601 datetime |
+| `project_id` | yes | Project identifier |
+| `project_state_policy_id` | yes | Policy ID for the project state |
+| `tokens` | no | Native asset rewards — array of `{policy_id, asset_name, quantity}` |
+| `index` | for updates | Task index — omit to create a new task |
+| `status` | informational | Set by the platform; not used during import |

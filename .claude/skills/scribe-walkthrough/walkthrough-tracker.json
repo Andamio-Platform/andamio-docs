@@ -3,7 +3,7 @@
     {
       "id": "getting-started",
       "title": "Getting Started",
-      "filePath": "content/docs/guides/getting-started.mdx",
+      "filePath": "content/docs/apps-tooling/explore-getting-started.mdx",
       "role": "general",
       "description": "Create your on-chain identity and mint an access token",
       "status": "completed",
@@ -16,7 +16,7 @@
     {
       "id": "creating-your-first-course",
       "title": "Creating Your First Course",
-      "filePath": "content/docs/guides/courses/creating-your-first-course.mdx",
+      "filePath": "content/docs/apps-tooling/courses/creating-your-first-course.mdx",
       "role": "courses",
       "description": "Create a course and first module in Andamio Studio",
       "status": "completed",
@@ -29,7 +29,7 @@
     {
       "id": "managing-students",
       "title": "Managing Students and Grading",
-      "filePath": "content/docs/guides/courses/managing-students.mdx",
+      "filePath": "content/docs/apps-tooling/courses/managing-students.mdx",
       "role": "courses",
       "description": "Review student work, assess assignments, and issue credentials",
       "status": "awaiting-scribe",
@@ -42,7 +42,7 @@
     {
       "id": "setting-up-prerequisites",
       "title": "Setting Up Prerequisites",
-      "filePath": "content/docs/guides/projects/setting-up-prerequisites.mdx",
+      "filePath": "content/docs/apps-tooling/projects/setting-up-prerequisites.mdx",
       "role": "projects",
       "description": "Connect courses to projects — shows the Course→Project relationship, branches to course creation if needed, and walks through assigning credentials as project prerequisites",
       "status": "awaiting-scribe",
@@ -55,7 +55,7 @@
     {
       "id": "creating-your-first-project",
       "title": "Creating Your First Project",
-      "filePath": "content/docs/guides/projects/creating-your-first-project.mdx",
+      "filePath": "content/docs/apps-tooling/projects/creating-your-first-project.mdx",
       "role": "projects",
       "description": "Set up a collaborative project with credential requirements",
       "status": "awaiting-scribe",
@@ -68,7 +68,7 @@
     {
       "id": "managing-contributors",
       "title": "Managing Contributors and Tasks",
-      "filePath": "content/docs/guides/projects/managing-contributors.mdx",
+      "filePath": "content/docs/apps-tooling/projects/managing-contributors.mdx",
       "role": "projects",
       "description": "Manage project tasks, assess contributor work, and distribute rewards",
       "status": "awaiting-scribe",
@@ -81,7 +81,7 @@
     {
       "id": "earning-credentials",
       "title": "Earning Credentials",
-      "filePath": "content/docs/guides/contributors/earning-credentials.mdx",
+      "filePath": "content/docs/apps-tooling/contributors/earning-credentials.mdx",
       "role": "contributors",
       "description": "Enroll in courses, complete assignments, and earn verifiable credentials",
       "status": "awaiting-scribe",
@@ -94,7 +94,7 @@
     {
       "id": "completing-prerequisites",
       "title": "Completing Prerequisites",
-      "filePath": "content/docs/guides/contributors/completing-prerequisites.mdx",
+      "filePath": "content/docs/apps-tooling/contributors/completing-prerequisites.mdx",
       "role": "contributors",
       "description": "Find a project's required credentials, find the courses that award them, and complete those courses to become eligible",
       "status": "awaiting-scribe",
@@ -107,7 +107,7 @@
     {
       "id": "joining-projects",
       "title": "Joining Projects",
-      "filePath": "content/docs/guides/contributors/joining-projects.mdx",
+      "filePath": "content/docs/apps-tooling/contributors/joining-projects.mdx",
       "role": "contributors",
       "description": "Find projects, commit to tasks, and earn rewards as a contributor",
       "status": "awaiting-scribe",

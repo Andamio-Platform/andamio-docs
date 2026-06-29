@@ -5,20 +5,9 @@ import { source } from "@/lib/source";
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <DocsLayout
-      tree={source.pageTree}
-      {...baseOptions}
-      sidebar={{
-        tabs: [
-          { title: "Documentation", url: "/docs" },
-          {
-            title: "Protocol",
-            description: "On-chain internals · advanced",
-            url: "/docs/protocol",
-          },
-        ],
-      }}
-    >
+    // One unified sidebar: the six namespaces are ordinary (non-root) folders
+    // that render as collapsible sections in a single tree — no root toggle.
+    <DocsLayout tree={source.pageTree} {...baseOptions}>
       {children}
     </DocsLayout>
   );

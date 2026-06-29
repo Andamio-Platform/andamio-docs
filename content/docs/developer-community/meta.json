@@ -1,0 +1,9 @@
+{
+    "title": "Developer Community",
+    "icon": "Users",
+    "pages": [
+        "index",
+        "pioneers",
+        "repositories"
+    ]
+}

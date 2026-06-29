@@ -1,0 +1,101 @@
+---
+title: Preprod Wallet Setup
+description: Set up a Cardano wallet on preprod testnet and get free test ADA
+---
+
+Before you can use Andamio on the preprod testnet, you need a Cardano wallet configured for preprod and some test ADA (tADA). This guide walks you through the setup in about 5 minutes.
+
+## Step 1: Install a Wallet
+
+Install one of these browser extension wallets:
+
+- **[Lace](https://www.lace.io/)** — Modern wallet by IOG, recommended for beginners
+- **[Eternl](https://eternl.io/)** — Feature-rich wallet, popular with developers
+- **[Nami](https://namiwallet.io/)** — Lightweight and simple
+
+Click the link for your preferred wallet and follow the installation instructions for your browser.
+
+## Step 2: Create a New Wallet
+
+After installing, open the wallet extension and create a new wallet:
+
+1. Click **Create new wallet**
+2. Write down your **recovery phrase** (12-24 words) on paper — never share this
+3. Confirm your recovery phrase
+4. Set a spending password
+
+> **Keep your recovery phrase safe.** Anyone with these words can access your wallet. Store them offline, never digitally.
+
+## Step 3: Switch to Preprod Network
+
+By default, wallets connect to mainnet. Switch to preprod:
+
+### Lace
+1. Click the network name in the top bar (shows "Mainnet")
+2. Select **Preprod**
+
+### Eternl
+1. Click the gear icon (Settings)
+2. Go to **Network**
+3. Select **Preprod**
+
+### Nami
+1. Click the avatar/profile icon
+2. Click **Network**
+3. Select **Preprod**
+
+Your wallet now operates on the preprod testnet. Any ADA shown is test ADA with no real value.
+
+## Step 4: Get Your Preprod Address
+
+Copy your wallet address — you'll need it for the faucet:
+
+1. Open your wallet extension
+2. Click **Receive** or the copy icon next to your address
+3. Copy the full address (starts with `addr_test1...`)
+
+## Step 5: Get Test ADA from the Faucet
+
+The Cardano Faucet provides free test ADA for development:
+
+1. Go to the [Cardano Testnet Faucet](https://docs.cardano.org/cardano-testnets/tools/faucet/)
+2. Select **Preprod Testnet** from the environment dropdown
+3. Paste your wallet address
+4. Complete the CAPTCHA
+5. Click **Request funds**
+
+The faucet sends 10,000 tADA to your wallet. Funds arrive within 1-2 minutes.
+
+> **Faucet limits**: You can request funds once every 24 hours per address. 10,000 tADA is plenty for development and testing.
+
+## Step 6: Verify Your Balance
+
+Check that the funds arrived:
+
+1. Open your wallet extension
+2. Confirm you're on **Preprod** network
+3. Your balance should show ~10,000 ADA
+
+If you don't see funds after a few minutes, verify you're viewing the preprod network (not mainnet).
+
+## Troubleshooting
+
+### Funds not appearing
+- Confirm your wallet is set to **Preprod** network
+- Wait 2-3 minutes for the transaction to confirm
+- Check the faucet transaction on [Cardanoscan Preprod](https://preprod.cardanoscan.io/)
+
+### "Address invalid" error on faucet
+- Make sure you copied your **preprod** address (starts with `addr_test1...`)
+- Mainnet addresses start with `addr1...` and won't work on preprod
+
+### Faucet says "already requested"
+- The faucet limits requests to once per 24 hours
+- If you need more tADA, create a second wallet address
+
+## Next Steps
+
+With your preprod wallet funded, you're ready to:
+
+- **[Get Started with Andamio](/docs/api/getting-started)** — Mint your Access Token and run the app template
+- **[Explore the Protocol](/docs/protocol)** — Learn how Andamio works on-chain

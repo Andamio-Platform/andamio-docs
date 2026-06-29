@@ -104,5 +104,5 @@ When running `/scribe-walkthrough add`:
 
 The two completed walkthroughs serve as the gold standard for output quality:
 
-- **Getting Started**: `content/docs/guides/getting-started.mdx` — 6 sections, 14 images
-- **Creating Your First Course**: `content/docs/guides/courses/creating-your-first-course.mdx` — 10 sections, 22 images
+- **Getting Started**: `content/docs/apps-tooling/explore-getting-started.mdx` — 6 sections, 14 images
+- **Creating Your First Course**: `content/docs/apps-tooling/courses/creating-your-first-course.mdx` — 10 sections, 22 images

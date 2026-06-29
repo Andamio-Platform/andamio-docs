@@ -1,0 +1,160 @@
+---
+title: API Concepts
+description: Source field architecture, safe refetch timing, merged endpoints, and event queries
+---
+
+Core concepts for working with the Andamio API beyond basic request/response patterns.
+
+## The Source Field
+
+Andamio stores data in two places: **on-chain** (Cardano blockchain, via Andamioscan) and **off-chain** (database, via DB API). Many API responses include a `source` field that tells you where the data came from:
+
+| Value | Meaning | Example |
+|-------|---------|---------|
+| `merged` | Combined from both on-chain and off-chain sources | A course with DB metadata and on-chain state |
+| `chain_only` | Exists on-chain but has no off-chain record | A course created by another API instance |
+| `db_only` | Exists in the database but not yet on-chain | A draft course not yet minted |
+
+### Why This Matters
+
+The Andamio protocol is a shared commons — anyone can create courses and projects on-chain. Your API instance only knows about off-chain records it created. When the gateway merges data from both sources, it labels each record so you know its provenance.
+
+```typescript
+const courses = await fetch(`${API}/course/user/courses/list`, { headers });
+const data = await courses.json();
+
+for (const course of data) {
+  switch (course.source) {
+    case "merged":
+      // Full data available — both metadata and on-chain state
+      break;
+    case "chain_only":
+      // On-chain only — no local metadata, no module content
+      // Display what's available, link to on-chain explorer
+      break;
+    case "db_only":
+      // Draft — not yet on-chain, cannot be enrolled in
+      break;
+  }
+}
+```
+
+### Merged Endpoints
+
+The gateway provides 27 endpoints that combine DB and Andamioscan data into unified views. These include:
+
+- `POST /v2/user/dashboard` — Consolidated user dashboard (courses, projects, pending assessments)
+- `GET /v2/course/user/courses/list` — Courses with merged on-chain state
+- `POST /v2/project/user/projects/list` — Projects with merged on-chain state
+- Role-specific views for owners, teachers, students, managers, and contributors
+
+See the [API Reference](https://api.andamio.io) for the complete list.
+
+## Safe Refetch Timing
+
+<Callout type="warn">
+**Only read data after `updated`, not `confirmed`.**
+
+The `confirmed` state means the transaction is on-chain, but the off-chain database has not synced yet. Reading at `confirmed` is an intermittent bug — it works on fast networks but breaks under load.
+</Callout>
+
+The transaction state machine has five states:
+
+```text
+pending → confirmed → updated
+                   ↘ failed
+       ↘ expired
+```
+
+| State | On-chain | DB synced | Safe to read? |
+|-------|----------|-----------|---------------|
+| `pending` | No | No | No |
+| `confirmed` | Yes | No | **No** |
+| `updated` | Yes | Yes | **Yes** |
+| `failed` | Yes | No (retrying) | No — will auto-heal |
+| `expired` | No | No | Check Andamioscan first |
+
+### Why `confirmed` Is Unsafe
+
+When a teacher assesses assignments while a student's enrollment transaction is `confirmed` but not yet `updated`, the DB still shows the old state. The teacher sees stale data and may take action on incorrect information.
+
+Wait for `updated` before:
+- Displaying transaction results to users
+- Taking follow-up actions that depend on the new state
+- Reading data that the transaction modified
+
+You can safely read **unrelated** data at any time — only data affected by the in-flight transaction requires waiting for `updated`.
+
+### Monitoring State Changes
+
+Use SSE for real-time updates:
+
+```typescript
+const events = new EventSource(
+  `${API}/tx/stream/${txHash}?api_key=${API_KEY}`
+);
+
+events.addEventListener("complete", (e) => {
+  const { final_state } = JSON.parse(e.data);
+  if (final_state === "updated") {
+    // Safe to refetch and display
+  }
+});
+```
+
+Or poll with the CLI:
+
+```bash
+andamio tx status <tx-hash>
+```
+
+## Event Queries
+
+After a transaction confirms, you can parse exactly what happened using event query endpoints:
+
+```text
+GET /v2/events/{type}/{action}/{tx_hash}
+```
+
+These endpoints extract structured data from on-chain transactions:
+
+| Type | Actions | What It Returns |
+|------|---------|----------------|
+| `access-tokens` | `mint` | Minted alias, policy ID |
+| `courses` | `create` | Course ID, metadata |
+| `enrollments` | `enroll` | Student alias, course ID |
+| `modules` | `manage` | Added/removed modules |
+| `teachers` | `update` | Added/removed teachers |
+| `assignments` | `submit` | Submission evidence |
+| `assessments` | `assess` | Accept/refuse decisions |
+| `credential-claims` | `claim`, `project` | Claimed credentials |
+| `projects` | `create`, `join` | Project ID, contributor |
+| `tasks` | `manage`, `submit`, `assess` | Task details, evidence |
+| `treasury` | `fund` | Funding amount |
+| `blacklist` | `update` | Blacklist changes |
+| `managers` | `update` | Added/removed managers |
+
+These are useful for building activity feeds, audit logs, or debugging transaction contents.
+
+## Qualified Contributors
+
+For a project with prerequisite credentials, a manager can ask which aliases currently hold **every** required credential — useful for gating who may be assigned tasks:
+
+```text
+GET /v2/project/manager/contributors/get-qualified?project_id=<id>
+```
+
+The caller must be a manager of the project. The response includes a `status` field:
+
+| `status` | Meaning |
+|----------|---------|
+| `ok` | Prerequisites are configured; `aliases` is the set of fully-qualified contributors (may be empty if none qualify). |
+| `no_prerequisites_configured` | The project has no on-chain prerequisites; `aliases` is always empty. |
+
+The `no_prerequisites_configured` status lets you distinguish "no one qualifies yet" from "this project gates nothing" — they both return an empty list but mean very different things in your UI.
+
+## Next Steps
+
+- [Transaction Handling](/docs/api/guides/transactions) — The full transaction lifecycle
+- [Error Handling](/docs/api/guides/error-handling) — Failure modes and recovery
+- [API Reference](https://api.andamio.io) — Complete endpoint documentation

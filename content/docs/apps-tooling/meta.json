@@ -1,0 +1,18 @@
+{
+    "title": "Apps & Tooling",
+    "icon": "Boxes",
+    "pages": [
+        "index",
+        "--- Explore the App ---",
+        "explore-getting-started",
+        "roles",
+        "courses",
+        "projects",
+        "contributors",
+        "preprod-wallet-setup",
+        "demo",
+        "--- Tools ---",
+        "cli",
+        "sdk"
+    ]
+}

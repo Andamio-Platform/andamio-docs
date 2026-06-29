@@ -1,0 +1,88 @@
+---
+title: Hash Verification
+description: Compute and verify Blake2b-256 hashes for courses and tasks from the command line
+---
+
+The CLI can compute and verify the content-addressing hashes that Andamio uses on-chain. These are Blake2b-256 hashes matching the Plutus validator implementation — useful for diagnostics, CI/CD pipelines, and verifying data integrity.
+
+## Course Credential Hashes
+
+### Compute Hash Locally
+
+Compute a Blake2b-256 hash from SLT data without making any API calls:
+
+```bash
+# From individual SLT flags
+andamio course credential compute-hash \
+  --slt "I can explain contribution-centered learning" \
+  --slt "I can install the Andamio CLI"
+
+# From a file containing SLTs
+andamio course credential compute-hash --file slts.json
+```
+
+This outputs the hash that the Plutus validator would compute for these SLTs. No authentication required — the computation is purely local.
+
+### Verify Against API
+
+Compare locally computed hashes against API-stored values:
+
+```bash
+andamio course credential verify-hash <course-id>
+andamio course credential verify-hash <course-id> --output json
+```
+
+This fetches all modules for the course, computes their hashes locally, and reports any mismatches. Useful for diagnosing issues where on-chain hashes don't match expectations.
+
+## Task Hashes
+
+### Compute Hash Locally
+
+Compute a task hash from its content components:
+
+```bash
+# From flags
+andamio project task compute-hash \
+  --content "Implement user dashboard" \
+  --lovelace 50000000 \
+  --expiration 1720000000
+
+# With native asset rewards
+andamio project task compute-hash \
+  --content "Implement user dashboard" \
+  --lovelace 50000000 \
+  --expiration 1720000000 \
+  --token "policyid,ASSETNAME,1000"
+
+# From a file
+andamio project task compute-hash --file task.json
+```
+
+The hash is computed from the Plutus Data CBOR encoding of content, expiration, lovelace, and native assets — matching exactly what the on-chain validator computes.
+
+### Verify Against API
+
+Compare locally computed hashes against all tasks in a project:
+
+```bash
+andamio project task verify-hash <project-id>
+andamio project task verify-hash <project-id> --output json
+```
+
+Reports any hash mismatches between the API record and the locally computed value.
+
+## When to Use These Commands
+
+| Scenario | Command |
+|----------|---------|
+| Verify module content hasn't been tampered with | `course credential verify-hash` |
+| Debug a credential claim that fails validation | `course credential compute-hash` + compare |
+| Verify task rewards match on-chain data | `project task verify-hash` |
+| Pre-compute hashes in CI before publishing | `compute-hash` (no auth needed) |
+| Diagnose hash mismatches after task creation | `project task verify-hash` |
+
+## Next Steps
+
+- [Transaction Signing](/docs/apps-tooling/cli/transaction-signing) — Sign and submit transactions
+- [Managing Courses](/docs/apps-tooling/cli/managing-courses) — Course content operations
+- [Managing Tasks](/docs/apps-tooling/cli/managing-tasks) — Task lifecycle commands

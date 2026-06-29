@@ -1,0 +1,11 @@
+{
+    "title": "Andamio API",
+    "icon": "Code",
+    "pages": [
+        "index",
+        "getting-started",
+        "guides",
+        "reference",
+        "building-on-andamio"
+    ]
+}

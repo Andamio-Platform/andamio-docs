@@ -1,0 +1,97 @@
+---
+title: Live Demo
+description: One-page overview of the Andamio protocol, API, tools, and how to get involved
+---
+
+import { Code, ExternalLink, Globe, Key, Search, Terminal, Users, Workflow } from "lucide-react";
+
+Andamio is an open protocol for credential-gated collaboration. Courses issue verifiable credentials. Projects gate access with those credentials. Everything is on-chain, auditable, and composable.
+
+![Andamio Protocol Architecture — Global Primitives & Local States](/diagrams/andamio-architecture.png)
+
+![Andamio Platform Stack](/diagrams/andamio-stack.png)
+
+## 1. Audited On-Chain Validators
+
+The protocol runs on two core validator sets, both open-source and audited.
+
+<Cards>
+  <Card title="Plumbline Global State" href="https://github.com/Andamio-Platform/plumbline-global-state" icon={<Key />}>
+    Core state machine validators for courses, projects, and governance
+  </Card>
+  <Card title="Access Token" href="https://github.com/Andamio-Platform/access-token" icon={<Key />}>
+    On-chain identity and credential minting
+  </Card>
+  <Card title="Security Audit" href="/docs/protocol/v2/security-audit" icon={<ExternalLink />}>
+    Independent audit report
+  </Card>
+</Cards>
+
+## 2. API
+
+A REST API that abstracts Cardano complexity. Non-Cardano developers can build credential-gated apps without touching UTxOs or Plutus.
+
+<Cards>
+  <Card title="API Quickstart" href="/docs/api/guides/api-quickstart" icon={<Code />}>
+    Make your first API call in 5 minutes
+  </Card>
+  <Card title="API Reference" href="https://api.andamio.io" icon={<ExternalLink />}>
+    Full endpoint documentation
+  </Card>
+</Cards>
+
+## 3. Andamioscan
+
+A protocol explorer that shows what's happening on-chain — courses, credentials, projects, and transactions. Built on [Dolos](https://github.com/txpipe/dolos) for fast chain indexing.
+
+<Cards>
+  <Card title="Andamioscan" href="https://andamioscan.io" icon={<Search />}>
+    Explore the protocol on-chain
+  </Card>
+</Cards>
+
+## 4. Build with Andamio
+
+Use the live app, build your own with the template, or script workflows with the CLI.
+
+<Cards>
+  <Card title="Live App" href="https://app.andamio.io" icon={<Globe />}>
+    Try Andamio — mint a token, take a course, earn a credential
+  </Card>
+  <Card title="App Template" href="https://github.com/Andamio-Platform/andamio-app-template" icon={<Code />}>
+    Clone and run locally in 15 minutes
+  </Card>
+  <Card title="Andamio CLI" href="https://github.com/Andamio-Platform/andamio-cli" icon={<Terminal />}>
+    Manage courses, projects, and tasks from the command line
+  </Card>
+  <Card title="Developer Guides" href="/docs/api/guides" icon={<Code />}>
+    Authentication, transactions, error handling, and more
+  </Card>
+</Cards>
+
+### What can you build?
+
+- **Onboarding platforms** — structured learning paths with verifiable credentials
+- **Treasury governance** — credential-gated access to shared funds
+- **Coordination infrastructure** — for guilds, collectives, and DAOs
+- **Agent workflows** — CLI composability means AI agents can build on the protocol too
+
+## 5. Get Involved
+
+<Cards>
+  <Card title="Andamio Pioneers" href="/docs/developer-community/pioneers" icon={<Users />}>
+    Join the builder community exploring Andamio
+  </Card>
+  <Card title="Discord" href="https://discord.gg/wfGrgJJheS" icon={<Users />}>
+    Chat with the team and other builders
+  </Card>
+  <Card title="andamio.space" href="https://www.andamio.space/" icon={<Globe />}>
+    See what people are building with Andamio
+  </Card>
+  <Card title="andamio.io" href="https://andamio.io" icon={<Globe />}>
+    Learn more about the project
+  </Card>
+  <Card title="GitHub" href="https://github.com/Andamio-Platform" icon={<Code />}>
+    All source code — validators, API, SDK, CLI, apps
+  </Card>
+</Cards>

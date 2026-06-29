@@ -1,0 +1,9 @@
+{
+  "title": "Reference",
+  "icon": "Book",
+  "pages": [
+    "index",
+    "environments"
+  ],
+  "defaultOpen": false
+}

@@ -1,0 +1,23 @@
+{
+  "title": "Developer Guides",
+  "icon": "Code",
+  "pages": [
+    "index",
+    "api-quickstart",
+    "first-app",
+    "--- Authentication & Accounts ---",
+    "api-integration",
+    "authentication",
+    "developer-accounts",
+    "api-keys",
+    "--- Core APIs ---",
+    "api-concepts",
+    "transactions",
+    "sponsored-transactions",
+    "error-handling",
+    "access-token-verification",
+    "--- Billing ---",
+    "billing"
+  ],
+  "defaultOpen": false
+}

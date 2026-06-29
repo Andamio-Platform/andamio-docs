@@ -161,5 +161,5 @@ Recommended conversion order — prerequisites are the core Andamio concept and 
 
 Study these completed walkthroughs for tone, structure, and formatting:
 
-- `content/docs/guides/getting-started.mdx` — 6 sections from ~18 raw steps
-- `content/docs/guides/courses/creating-your-first-course.mdx` — 10 sections from ~32 raw steps
+- `content/docs/apps-tooling/explore-getting-started.mdx` — 6 sections from ~18 raw steps
+- `content/docs/apps-tooling/courses/creating-your-first-course.mdx` — 10 sections from ~32 raw steps

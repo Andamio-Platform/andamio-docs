@@ -1,0 +1,84 @@
+---
+title: Team & Contributors
+description: Add and remove project managers, and track contributor activity
+---
+
+Every project has a **team** (owner and managers who administer it) and **contributors** (community members who commit to tasks and submit work). This guide covers managing both from the admin side.
+
+### Permissions
+
+Only the project owner can add or remove managers. Everything else is shared.
+
+| Action | Owner | Manager |
+|--------|:-----:|:-------:|
+| Create, edit, delete draft tasks | Yes | Yes |
+| Publish/remove tasks (treasury) | Yes | Yes |
+| Review submissions (accept/refuse/deny) | Yes | Yes |
+| View reports and export | Yes | Yes |
+| Add/remove managers | **Yes** | No |
+| Edit project settings | Yes | Yes |
+
+## Team Overview
+
+The **Managers** tab shows the current team at the top of the page: the owner (permanent, shown as a badge), the list of managers, and the total contributor count with a **View Contributors** link.
+
+![The Managers tab showing the Team section with Owner and Managers listed with alias badges, Contributors count with a "View Contributors" link, and the Project Team management section with current owner and manager aliases displayed as badges.](/guides/projects/team-and-contributors/01-team-overview.png)
+
+## Adding a Manager
+
+Owner only. The alias is validated against the blockchain before the transaction is submitted.
+
+### 1. Enter the alias
+
+Type the manager's on-chain alias in the **Add a Manager** field.
+
+![The Managers tab with "Wendy" typed into the Add a Manager input field. The alias is being entered and will be validated against the blockchain.](/guides/projects/team-and-contributors/02-add-manager-2.png)
+
+### 2. Review pending changes
+
+The alias appears in an **Adding** section below the current managers. A **Pending Changes** summary shows the transaction cost.
+
+![The Project Team section showing the current owner and manager badges, an "Adding" section with "Wendy" queued for addition, and the Pending Changes summary showing the transaction cost.](/guides/projects/team-and-contributors/02-add-manager-3.png)
+
+<Callout type="info">
+You can queue multiple additions (and removals) before submitting to batch them into a single transaction.
+</Callout>
+
+### 3. Submit
+
+Click **Save Team Changes** to execute the on-chain transaction. After confirmation, the new manager can connect their wallet and access all manager-level features.
+
+![The confirmation state after the manager addition transaction has been submitted. The new manager now has access to all manager-level features.](/guides/projects/team-and-contributors/02-add-manager-4.png)
+
+## Removing a Manager
+
+Owner only. Click the **x** on a manager's badge to queue them for removal, review the pending changes, and click **Save Team Changes**.
+
+![The Project Team section showing a manager badge with a x button for removal. Click the x to mark a manager for removal, then submit the transaction.](/guides/projects/team-and-contributors/03-remove-manager-2.png)
+
+After confirmation, the removed manager loses access to all manager-level features.
+
+If you enter an alias that isn't registered on-chain, the system won't accept it. The person needs to create an Andamio account and register their alias first.
+
+## Viewing Contributors
+
+The **Contributors** page is a read-only view of all registered contributors and their activity. Access it from the Managers tab by clicking **View Contributors**.
+
+![The Contributors page showing a stats row with Total Contributors and Tasks Completed, followed by the Contributors table with columns for rank, Contributor alias, Committed count, Completed count, and Pending count.](/guides/projects/team-and-contributors/05-contributors-table-2.png)
+
+The table shows each contributor's alias, total commitments, completed (accepted) submissions, and pending (awaiting review) submissions — ranked by activity.
+
+This view helps you spot:
+- **Most active contributors** — highest completed count
+- **Work waiting on you** — contributors with pending submissions need review (see [Assessment Workflow](/docs/apps-tooling/projects/assessment-workflow))
+- **Follow-through rates** — compare committed vs. completed
+- For financial details per contributor, use the [Reports tab](/docs/apps-tooling/projects/reports)
+
+## What's Next
+
+- [Assessment Workflow](/docs/apps-tooling/projects/assessment-workflow) — review the submissions your contributors are sending
+- [Reports](/docs/apps-tooling/projects/reports) — financial breakdown per contributor
+
+## Related
+
+- [Manage Managers Transaction](/docs/protocol/v2/transactions/project/owner/managers/manage) — on-chain reference for adding and removing managers

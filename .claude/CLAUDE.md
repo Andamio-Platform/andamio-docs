@@ -67,7 +67,7 @@ This is a Next.js documentation site built with Fumadocs, using content collecti
 - Transaction documentation in `content/docs/protocol/v2/transactions/`
 - Validator documentation in `content/docs/protocol/v2/validators/`
 - Token documentation in `content/docs/protocol/v2/tokens/`
-- The Andamio papers (placeholders, drafts in progress): `content/docs/light-paper.mdx`, `content/docs/andamio-issuer.mdx`, `content/docs/building-on-andamio.mdx`
+- The Andamio papers (placeholders, drafts in progress): `content/docs/light-paper.mdx`, `content/docs/andamio-issuer.mdx`, `content/docs/api/building-on-andamio.mdx`
 
 ### Special Features
 - Mermaid diagram support via `components/mdx/mermaid.tsx`
@@ -165,7 +165,7 @@ When processing a new live coding transcript, follow this process:
 
 ### 1. Create Session Summary
 
-Create `content/docs/pioneers/live-coding/archive/sessions/session-XXX.mdx` using this template:
+Create `content/docs/developer-community/pioneers/live-coding/archive/sessions/session-XXX.mdx` using this template:
 
 ```mdx
 ---
@@ -209,13 +209,13 @@ Weekly sessions on Wednesdays at **14:00 UTC** and **20:00 UTC**. Additional spo
 
 ### 2. Store Raw Transcript
 
-Place raw transcript at `content/docs/pioneers/live-coding/archive/transcripts/YYYYMMDDHHMM-transcript.md`
+Place raw transcript at `content/docs/developer-community/pioneers/live-coding/archive/transcripts/YYYYMMDDHHMM-transcript.md`
 
 Filename format: `YYYYMMDDHHMM` = year, month, day, 24hr time (UTC)
 
 ### 3. Update Archive Index
 
-Add row to the session summaries table in `content/docs/pioneers/live-coding/archive/index.mdx`:
+Add row to the session summaries table in `content/docs/developer-community/pioneers/live-coding/archive/index.mdx`:
 
 ```markdown
 | X | YYYY-MM-DD | [Title](./sessions/session-XXX) | Brief summary |
@@ -223,7 +223,7 @@ Add row to the session summaries table in `content/docs/pioneers/live-coding/arc
 
 ### 4. Update Sessions meta.json
 
-Add new session to `content/docs/pioneers/live-coding/archive/sessions/meta.json`:
+Add new session to `content/docs/developer-community/pioneers/live-coding/archive/sessions/meta.json`:
 
 ```json
 {

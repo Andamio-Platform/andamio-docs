@@ -23,8 +23,8 @@ this skill governs only the *tool* pages that hang off them, not the product con
 
 ## Context: the spine the rules protect
 
-The docs sidebar roots mirror the [#28 Roadmap initiatives](./phase-2-ia-restructure.md), so the
-docs and the roadmap stay legible together. **Six roots:**
+The docs sidebar sections mirror the [#28 Roadmap initiatives](./phase-2-ia-restructure.md), so the
+docs and the roadmap stay legible together. **Six sections:**
 
 1. **Andamio API**: the developer product (self-serve).
 2. **Andamio Issuer**: the low-code, API-based product (sales-led).
@@ -44,7 +44,7 @@ legible.
 
 > **Products and product-zones are the spine; tools are accessories that hang off a product or a zone.**
 
-No single **tool** becomes a top-level root peer to the products. A tool hangs off the product it
+No single **tool** becomes a top-level peer to the products. A tool hangs off the product it
 serves (in that product's Tools group) or, when it is itself one of the apps, lives inside the
 **Apps & Tooling** zone — the Andamio Bot is an app there, not a sold-product peer. If a reader
 cannot tell at a glance what they **buy or build on** versus what merely **helps**, the docs have
@@ -98,7 +98,7 @@ Fill these in for every tool. The living answers live in [`tool-registry.md`](./
 - **Community-facing or a raw repo with no narrative** → the **Developer Community** zone (Pioneers,
   Repositories index). Never let bare GitHub/SDK links compete with product nav in the main sidebar.
 - A tool may be **mentioned** anywhere it helps, but **documented** in exactly one place.
-- Tools never appear as a top-level root in the product toggle.
+- Tools never appear as a top-level namespace section; they hang off a product or zone.
 
 ## Labeling conventions (prevent product/tool confusion)
 
@@ -139,7 +139,7 @@ One line: what it is and which product/job it serves.
 
 This schema folds into the [Phase 2 restructure](./phase-2-ia-restructure.md):
 
-- Each product root gets a small **Tools** group holding only the tools that serve it.
+- Each product section gets a small **Tools** group holding only the tools that serve it.
 - The **Apps & Tooling** root holds the apps and cross-cutting tooling (Bot, CLI, App Template, SDK,
   Andamioscan); the **Developer Community** root holds the repositories index and community tools.
 - The current "External" link dump and the standalone top-level "SDK" section are absorbed into
