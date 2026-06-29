@@ -1,89 +1,108 @@
 # Phase 2: IA Restructure (plan)
 
-A confirm-first plan to make the [four jobs](./SKILL.md#context-the-spine-the-rules-protect)
-**structural**, so each product owns a scoped sidebar, and to place tools per the
+A confirm-first plan to make the [six roots](./SKILL.md#context-the-spine-the-rules-protect)
+**structural**, so each product/zone owns a scoped sidebar, and to place tools per the
 [governance rules](./SKILL.md). This is a one-time migration plan, not a durable rule; it lives
 here because it is the first major application of the governance.
 
-> **Status:** proposed, not started. Do not execute without sign-off. Phase 1 (front door +
-> Issuer scaffold) shipped in PR #30.
+> **Status:** roadmap-aligned six-root spine signed off (orch Phase-2 IA session, 2026-06-29).
+> Execution tracked in `andamio-docs` (`docs/plans/2026-06-29-001-feat-docs-phase2-six-root-ia-plan.md`).
+> Phase 1 (front door + Issuer scaffold) shipped in PR #30.
 
 ## Goal
 
-- Each product is a real sidebar **root** that scopes the tree (when you're in Andamio API you see
-  only API; in Issuer only Issuer).
+- Each product/zone is a real sidebar **root** that scopes the tree (when you're in Andamio API you
+  see only API; in Apps & Tooling only Apps & Tooling).
 - `/docs` is a neutral **front door**, no product preselected. (Per decision: API is *not* the default.)
 - Tools and support repos are placed by the governance schema, not scattered.
 
-## Why this is needed (the root-toggle finding)
+## The roots (mirror the #28 Roadmap initiatives)
 
-From PR #30: the manual `sidebar.tabs` array in `app/docs/layout.tsx` only swaps the dropdown
-**label**; it does not filter the sidebar tree, because manual tab options carry no `urls` set and
-`RootToggle` is just a selector. The **Protocol** tab has this same limitation today. Real scoping
-requires:
-
-1. Each product is a folder with `root: true` in its `meta.json` (so it appears in the page tree as a root).
-2. Tabs are **auto-derived** (`getSidebarTabs` walks the tree for `root` folders and computes each
-   tab's `urls` set), instead of a hand-written array.
-3. The layout renders the active root's subtree.
-
-## Target structure
+The docs roots use exactly the #28 Roadmap initiative names so the docs and roadmap stay legible
+together:
 
 ```
-/docs                         Front door (no product preselected)
-├─ api/         (root)        Andamio API: developer product
-│   ├─ quickstart, guides (auth, transactions, sponsorship, billing, …), reference/environments
-│   ├─ building-on-andamio    (the developer/protocol paper, conceptual intro)
-│   └─ Tools/                 CLI · Build with your agent (andamio-dev) · App Template · SDK
-├─ issuer/      (root)        Andamio Issuer: low-code product   (exists)
-│   ├─ overview, how-it-works, quickstart, integrate
-│   └─ Tools/                 (issuer-specific accelerators, as they appear)
-├─ app/         (root)        Explore the App: end-user path
-│   └─ roles, take a course, earn credentials, …   (today's guides/)
-├─ protocol/    (root)        Protocol: advanced reference   (exists)
-└─ ecosystem/   (root)        Ecosystem: Andamioscan · Repositories · Pioneers · community/cross-cutting tools
+/docs                          Front door (neutral — no product preselected)
+├─ api/               (root)   Andamio API — developer product
+├─ issuer/            (root)   Andamio Issuer — low-code product
+├─ credential-badges/ (root)   Credential Badges — flagship (already top-level; keep)
+├─ apps-tooling/      (root)   Apps & Tooling — Explore the App · Andamio Bot · CLI · App Template · SDK · Andamioscan
+├─ developer-community/ (root) Developer Community — Pioneers · Repositories · community tools
+└─ protocol/          (root)   Protocol — internals  ⚠️ contents NOT triaged here (see out of scope)
+   cross-cutting (NOT a root): Glossary · Light Paper → front door / Reference zone
 ```
 
-## Content moves (today → target)
+**Resolved placement decisions** (do not re-open):
+
+- **Andamio Bot → Apps & Tooling** (it's one of the apps on the roadmap, not an "add to your server" tool).
+- **Explore the App → Apps & Tooling** (folds in; *not* its own co-equal root).
+- **Developer Community is its own root** (Pioneers + Repositories + community tools).
+- **Glossary + Light Paper → cross-cutting Reference zone** on the front door, not roots. (Papers stay
+  woven per the locked papers decision: the landing page is the artifact home; docs gets only woven content.)
+
+## How scoping actually works (the mechanism, verified)
+
+Verified against `fumadocs-ui` / `fumadocs-core` **15.4.1**:
+
+- The sidebar tree is scoped **automatically** by Fumadocs' `TreeContext` (`contexts/tree.js`): it
+  runs `searchPath(tree, pathname)` then `findLast(folder.root === true)` and renders only that
+  folder's children. **A folder with `root: true` already gets a scoped subtree today** — `protocol/`
+  does. The tree filtering is *not* the tabs' job.
+- `RootToggle` and a tab's `urls` set only drive the **dropdown selector and active-highlight** —
+  they do not filter the tree.
+- The fix is therefore to switch `app/docs/layout.tsx` from a hand-written `sidebar.tabs` array to
+  **`sidebar={{ tabs: true }}`** (auto-derive). `DocsLayout` calls `getSidebarTabs(tree)` internally,
+  walking the tree for `root: true` folders and computing each tab's `urls` set. This makes the
+  dropdown list all roots and highlight the active one robustly.
+
+> Note: this corrects the earlier "manual tabs carry no `urls` set, so the tree isn't filtered"
+> framing. The tree filtering was never the tabs' job — it comes from `TreeContext`. Don't hunt for
+> a `urls`-based tree filter; it does not exist.
+
+## Content moves (today → target root)
+
+`(soft)` = reasonable call, revisit if it reads wrong in situ.
 
 | Today | Target |
 |---|---|
-| `getting-started`, `guides/developers/*`, `sdk`, `guides/developers/api-quickstart`, `reference/environments` | `api/` |
-| `building-on-andamio` | `api/` (conceptual intro) |
-| `guides/` (roles, courses, projects, contributors) | `app/` |
-| `demo` | `app/` |
-| `repositories`, `pioneers`, Andamioscan | `ecosystem/` |
-| `light-paper`, `glossary` | **open decision** (front door / Ecosystem / top-level) |
-| `protocol/v2/whats-new`, `cost-estimation`, `security-audit` | API or Protocol (**open decision**) |
-| `reference` (page) | fold into `api/` reference or Ecosystem |
+| `getting-started`, `guides/developers/*` (excl. `cli/`), `guides/developers/api-quickstart`, `reference/` | `api/` |
+| `building-on-andamio` | `api/` — conceptual intro (soft) |
+| `guides/courses`, `guides/projects`, `guides/contributors`, `demo` | `apps-tooling/` (Explore the App path) |
+| `guides/developers/cli/`, `sdk/` | `apps-tooling/` (tools) |
+| Andamioscan · App Template · Andamio Bot (pages where they exist) | `apps-tooling/` |
+| `repositories`, `pioneers` | `developer-community/` |
+| `issuer`, `credential-badges` | stay — add `root: true` |
+| `protocol` | stay — already `root: true`, **contents untouched** |
+| `light-paper`, `glossary` | stay top-level; surfaced in front-door Reference zone (no move) |
 
-Tools placement (per [registry](./tool-registry.md)): CLI, andamio-dev, App Template, SDK →
-**API → Tools**. Andamioscan, Repositories → **Ecosystem**. SDK stops being a top-level section.
-The "External" link group is absorbed (canonical pages where they exist, Ecosystem index otherwise).
+Tools placement (per [registry](./tool-registry.md)): CLI, App Template, SDK, Andamioscan, Andamio Bot
+→ **Apps & Tooling**. Pioneers, Repositories → **Developer Community**. SDK stops being a top-level
+section. The "External" link group is absorbed (canonical pages where they exist, zone index otherwise).
 
 ## Sequencing
 
-- **2a: Mechanism spike (do first, small):** convert one product (e.g. create `api/` root or use the
-  existing `issuer/` + `protocol/`) and prove the auto-derived toggle actually scopes the sidebar, and
-  that landing on `/docs` shows the front door with no product preselected. De-risks everything below.
-- **2b: Create product roots + move content** with redirects (see below).
-- **2c: Apply governance:** add per-product Tools groups + the Ecosystem zone; absorb External/SDK.
-- **2d: Front door + polish:** finalize the neutral landing and the open decisions.
+- **2a: Mechanism spike (do first, small):** switch to auto-derived tabs and stand up a minimal `api/`
+  root **alongside** the existing `protocol/` root; prove both scope and that `/docs` shows the neutral
+  front door. De-risks everything below. **Hard gate — if it does not scope, stop and report.**
+- **2b: Create the six roots + move content** with redirects (see below).
+- **2c: Apply governance:** add per-product Tools groups + the Apps & Tooling / Developer Community
+  zones; absorb External/SDK.
+- **2d: Front door + polish:** finalize the neutral landing and the Reference zone (Glossary, Light Paper).
 
 ## Redirects (URL churn)
 
-Moving content under product roots changes many URLs. Every moved page needs a `permanent: true`
-redirect in `next.config.mjs`. High-traffic / linked ones to cover first:
+Moving content under roots changes many URLs. Every moved page needs a `permanent: true` redirect in
+`next.config.mjs` — generate the full list from a pre/post route diff during 2b. Examples:
 
 - `/docs/getting-started` → `/docs/api/getting-started`
 - `/docs/guides/developers/*` → `/docs/api/guides/*`
-- `/docs/guides/developers/api-quickstart` → `/docs/api/quickstart`
-- `/docs/sdk` → `/docs/api/tools/sdk`
-- `/docs/guides/*` (platform) → `/docs/app/*`
-- `/docs/repositories` → `/docs/ecosystem/repositories`
-- `/docs/reference/environments` → `/docs/api/reference/environments`
+- `/docs/sdk` → `/docs/apps-tooling/sdk`
+- `/docs/guides/*` (platform) → `/docs/apps-tooling/*`
+- `/docs/repositories` → `/docs/developer-community/repositories`
+- `/docs/pioneers/*` → `/docs/developer-community/pioneers/*`
 
-(Generate the full list from a pre/post route diff during 2b.)
+(The existing `/docs/repositories/*` redirects already in `next.config.mjs` now need to chain to the
+new `developer-community/` location — reconcile, don't duplicate.)
 
 ## Risks & mitigations
 
@@ -91,13 +110,15 @@ redirect in `next.config.mjs`. High-traffic / linked ones to cover first:
 - **Internal links** → grep-and-fix all in-repo links after moves; the build will not catch a stale
   `/docs/...` link (content-collections silently 404s).
 - **Tooling that hardcodes paths** → `npm run docs-coverage` / `docs-drift` and the audit skills
-  reference `content/docs/...` paths; update them.
+  reference `content/docs/...` paths; update them. CLAUDE.md's Pioneers archival paths move too.
 - **Search index** → rebuilds from content; verify search after the move.
 
-## Open decisions (need James)
+## Out of scope (separate workstreams — do NOT do here)
 
-1. **Default landing**: confirmed neutral front door (no product preselected). ✅ (already decided)
-2. **Explore the App**: full product root, or a lighter section under the front door? (Job 4 is "less important but present.")
-3. **Andamio Bot**: which job does it serve? Blocks its placement (see [registry](./tool-registry.md)).
-4. **The papers & glossary**: where do `light-paper`, `building-on-andamio`, and `glossary` live? (Light Paper reads like front-door/about; Building on Andamio is the API conceptual intro; Glossary is cross-cutting.)
-5. **Understand cluster**: `whats-new`, `cost-estimation`, `security-audit` → API, Protocol, or split?
+- **Protocol deep triage** — the contents of `protocol/v2/*` (state-machine, transactions, validators,
+  tokens) and the **Understand cluster** placement (`whats-new`, `cost-estimation`, `security-audit`).
+  This restructure stands up the `protocol/` root but does **not** triage its contents.
+  (`security-audit` / contract-verification is integrator-facing → likely also surfaces under API, but
+  that's decided in the triage, not here.)
+- **De-genericize the 45 token/validator stubs** — mostly under `protocol/v2/`, overlaps with the
+  triage above.
