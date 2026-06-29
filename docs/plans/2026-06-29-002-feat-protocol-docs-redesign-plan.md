@@ -1,6 +1,6 @@
 ---
 title: "feat: Protocol docs redesign — intro · source-backed validators · transaction-sequence steppers"
-status: active
+status: completed
 type: feat
 date: 2026-06-29
 origin: ../../../02-areas/andamio/docs/plans/2026-06-29-protocol-docs-redesign-handoff.md
