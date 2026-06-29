@@ -41,3 +41,14 @@ export interface Sequence {
   intro: string;
   steps: Step[];
 }
+
+/**
+ * The single shared link every sequence step points at for the generic
+ * build → sign → submit → register → confirm → update lifecycle (Surface 1).
+ * Defined once here so the anchor has a single source of truth — if the
+ * lifecycle heading slug or page path moves, only this constant changes.
+ */
+export const LIFECYCLE_LINK = {
+  href: "/docs/protocol/v2#the-transaction-lifecycle",
+  label: "Transaction lifecycle",
+} as const;

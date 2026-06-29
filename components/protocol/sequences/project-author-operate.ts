@@ -10,12 +10,7 @@
  * Each step links once to the Surface 1 lifecycle; it is not re-described here.
  */
 
-import type { Sequence } from "./types";
-
-const LIFECYCLE_LINK = {
-  href: "/docs/protocol/v2#the-transaction-lifecycle",
-  label: "Transaction lifecycle",
-};
+import { LIFECYCLE_LINK, type Sequence } from "@/components/protocol/sequences/types";
 
 export const projectAuthorOperate: Sequence = {
   id: "project-author-operate",

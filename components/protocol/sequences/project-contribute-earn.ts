@@ -12,12 +12,7 @@
  * lifecycle; it is not re-described here.
  */
 
-import type { Sequence } from "./types";
-
-const LIFECYCLE_LINK = {
-  href: "/docs/protocol/v2#the-transaction-lifecycle",
-  label: "Transaction lifecycle",
-};
+import { LIFECYCLE_LINK, type Sequence } from "@/components/protocol/sequences/types";
 
 export const projectContributeEarn: Sequence = {
   id: "project-contribute-earn",

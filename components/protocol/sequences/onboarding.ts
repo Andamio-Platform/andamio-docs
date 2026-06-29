@@ -7,12 +7,7 @@
  * lifecycle is NOT repeated here — each step links once to Surface 1.
  */
 
-import type { Sequence } from "./types";
-
-const LIFECYCLE_LINK = {
-  href: "/docs/protocol/v2#the-transaction-lifecycle",
-  label: "Transaction lifecycle",
-};
+import { LIFECYCLE_LINK, type Sequence } from "@/components/protocol/sequences/types";
 
 export const onboarding: Sequence = {
   id: "onboarding",

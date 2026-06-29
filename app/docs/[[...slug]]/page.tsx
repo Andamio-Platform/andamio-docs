@@ -18,9 +18,6 @@ interface ExtendedPageData {
   description?: string;
   icon?: string;
   full?: boolean;
-  tx_file?: string;
-  validator_system?: string;
-  validator_id?: string | string[];
   tags?: string[];
   "access-level"?: string;
   _meta: Record<string, unknown>;

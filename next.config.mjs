@@ -88,8 +88,25 @@ const config = {
       // Validator stub tree (deep only — the bare path is the new Validators page)
       { source: '/docs/protocol/v2/validators/:path+', destination: '/docs/protocol/v2/validators', permanent: true },
 
-      // State-machine tree → the protocol intro (which now carries the shared
-      // transaction lifecycle).
+      // State-machine tree → the sequence stepper that re-composed each page's
+      // content (specific first), with anything unmapped + the bare path falling
+      // through to the protocol intro (which now carries the shared lifecycle).
+      { source: '/docs/protocol/v2/state-machine/general/mint-access-token', destination: '/docs/protocol/v2/sequences/onboarding', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/course/owner-course-create', destination: '/docs/protocol/v2/sequences/course-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/course/teacher-modules-manage', destination: '/docs/protocol/v2/sequences/course-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/course/owner-teachers-manage', destination: '/docs/protocol/v2/sequences/course-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/course/student-assignment-commit', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/course/student-assignment-update', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/course/teacher-assignments-assess', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/course/student-credential-claim', destination: '/docs/protocol/v2/sequences/course-learn-earn', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/owner-project-create', destination: '/docs/protocol/v2/sequences/project-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/owner-managers-manage', destination: '/docs/protocol/v2/sequences/project-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/manager-tasks-manage', destination: '/docs/protocol/v2/sequences/project-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/user-treasury-add-funds', destination: '/docs/protocol/v2/sequences/project-author-operate', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/contributor-task-commit', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/contributor-task-action', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/manager-tasks-assess', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
+      { source: '/docs/protocol/v2/state-machine/project/contributor-credential-claim', destination: '/docs/protocol/v2/sequences/project-contribute-earn', permanent: true },
       { source: '/docs/protocol/v2/state-machine/:path+', destination: '/docs/protocol/v2', permanent: true },
       { source: '/docs/protocol/v2/state-machine', destination: '/docs/protocol/v2', permanent: true },
     ];
