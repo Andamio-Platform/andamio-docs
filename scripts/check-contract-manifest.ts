@@ -2,7 +2,7 @@
 /**
  * Guard: the Contract Verification manifest must not drift from the deployment.
  *
- * content/docs/protocol/v2/contract-verification.mdx hardcodes the mainnet V2
+ * content/docs/contract-verification.mdx hardcodes the mainnet V2
  * script hashes (minting policy IDs) and spend-script addresses so integrators
  * can verify deployed contracts against published values. Those same values
  * live in public/yaml/deployments/mainnet-v2/params.yaml, which is the
@@ -30,7 +30,7 @@ import path from "path";
 import yaml from "js-yaml";
 
 const PARAMS_PATH = path.join("public", "yaml", "deployments", "mainnet-v2", "params.yaml");
-const DOC_PATH = path.join("content", "docs", "protocol", "v2", "contract-verification.mdx");
+const DOC_PATH = path.join("content", "docs", "contract-verification.mdx");
 
 const HASH_RE = /`([0-9a-f]{56})`/g; // blake2b-224 script hash / policy ID
 const ADDR_RE = /`(addr1[0-9a-z]+)`/g; // bech32 script address
