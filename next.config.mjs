@@ -47,6 +47,25 @@ const config = {
       { source: '/docs/building-on-andamio', destination: 'https://www.andamio.io/whitepaper/building-on-andamio', permanent: true },
       { source: '/docs/reference/:path*', destination: '/docs/api/reference/:path*', permanent: true },
 
+      // API section IA: the "Developer Guides" wrapper folder was dissolved.
+      // Intro pages moved loose under /api/; the two heavy clusters became
+      // nested folders (accounts/, core/). Specific exact matches first, then
+      // the bare index, then a catch-all for anything unmapped.
+      { source: '/docs/api/guides/api-quickstart', destination: '/docs/api/api-quickstart', permanent: true },
+      { source: '/docs/api/guides/first-app', destination: '/docs/api/first-app', permanent: true },
+      { source: '/docs/api/guides/billing', destination: '/docs/api/billing', permanent: true },
+      { source: '/docs/api/guides/api-integration', destination: '/docs/api/accounts/api-integration', permanent: true },
+      { source: '/docs/api/guides/authentication', destination: '/docs/api/accounts/authentication', permanent: true },
+      { source: '/docs/api/guides/developer-accounts', destination: '/docs/api/accounts/developer-accounts', permanent: true },
+      { source: '/docs/api/guides/api-keys', destination: '/docs/api/accounts/api-keys', permanent: true },
+      { source: '/docs/api/guides/api-concepts', destination: '/docs/api/core/api-concepts', permanent: true },
+      { source: '/docs/api/guides/transactions', destination: '/docs/api/core/transactions', permanent: true },
+      { source: '/docs/api/guides/sponsored-transactions', destination: '/docs/api/core/sponsored-transactions', permanent: true },
+      { source: '/docs/api/guides/error-handling', destination: '/docs/api/core/error-handling', permanent: true },
+      { source: '/docs/api/guides/access-token-verification', destination: '/docs/api/core/access-token-verification', permanent: true },
+      { source: '/docs/api/guides', destination: '/docs/api', permanent: true },
+      { source: '/docs/api/guides/:path*', destination: '/docs/api', permanent: true },
+
       // Apps & Tooling.
       { source: '/docs/demo', destination: '/docs/apps-tooling/demo', permanent: true },
       { source: '/docs/sdk/:path*', destination: '/docs/apps-tooling/sdk/:path*', permanent: true },

@@ -1,0 +1,11 @@
+{
+  "title": "Authentication & Accounts",
+  "icon": "KeyRound",
+  "pages": [
+    "api-integration",
+    "authentication",
+    "developer-accounts",
+    "api-keys"
+  ],
+  "defaultOpen": false
+}

@@ -12,7 +12,7 @@ Most Andamio API requests require two authentication headers. Public endpoints (
 | Header | Purpose | How to get |
 |--------|---------|------------|
 | `X-API-Key` | Application-level (your app) | [Getting Started](/docs/api/getting-started) |
-| `Authorization: Bearer <jwt>` | User-level (wallet signature) | [Authentication](/docs/api/guides/authentication) |
+| `Authorization: Bearer <jwt>` | User-level (wallet signature) | [Authentication](/docs/api/accounts/authentication) |
 
 ```typescript
 const headers = {
@@ -47,22 +47,22 @@ The Andamio Gateway provides approximately 120 endpoints across these categories
 
 | Category | Base Path | Description | Guide |
 |----------|-----------|-------------|-------|
-| User Auth | `/api/v2/auth/login/*` | Wallet challenge/verify, User JWT | [Authentication](/docs/api/guides/authentication) |
-| Developer Auth | `/api/v2/auth/developer/*` | Registration, email verification, Developer JWT | [Developer Accounts](/docs/api/guides/developer-accounts) |
-| API Keys | `/api/v2/apikey/*` | Key request, rotation, profile, usage | [API Keys](/docs/api/guides/api-keys) |
-| Billing | `/api/v2/billing/*` | Plans, checkout, subscription management | [Billing](/docs/api/guides/billing) |
-| Verification | `/api/v2/verify/*` | Access token ownership proof | [Verification](/docs/api/guides/access-token-verification) |
+| User Auth | `/api/v2/auth/login/*` | Wallet challenge/verify, User JWT | [Authentication](/docs/api/accounts/authentication) |
+| Developer Auth | `/api/v2/auth/developer/*` | Registration, email verification, Developer JWT | [Developer Accounts](/docs/api/accounts/developer-accounts) |
+| API Keys | `/api/v2/apikey/*` | Key request, rotation, profile, usage | [API Keys](/docs/api/accounts/api-keys) |
+| Billing | `/api/v2/billing/*` | Plans, checkout, subscription management | [Billing](/docs/api/billing) |
+| Verification | `/api/v2/verify/*` | Access token ownership proof | [Verification](/docs/api/core/access-token-verification) |
 | Courses | `/api/v2/course/*` | Course CRUD, modules, enrollments, merged views | |
 | Projects | `/api/v2/project/*` | Project CRUD, tasks, contributors, merged views | |
-| Transactions | `/api/v2/tx/*` | Build, register, status, SSE stream (17 build endpoints) | [Transactions](/docs/api/guides/transactions) |
+| Transactions | `/api/v2/tx/*` | Build, register, status, SSE stream (17 build endpoints) | [Transactions](/docs/api/core/transactions) |
 | Users | `/api/v2/users/*` | User state, owned/enrolled/completed resources | |
-| Events | `/api/v2/events/*` | Parse what happened in a confirmed transaction | [API Concepts](/docs/api/guides/api-concepts) |
+| Events | `/api/v2/events/*` | Parse what happened in a confirmed transaction | [API Concepts](/docs/api/core/api-concepts) |
 | Token Registry | `/api/v2/token/*` | Native asset registration and listing | |
 | Dashboard | `/api/v2/user/dashboard` | Consolidated user view (courses + projects) | |
 
 For the complete endpoint reference with request/response schemas, see the [API Docs](https://api.andamio.io).
 
-For transaction building and submission, see [Transaction Handling](/docs/api/guides/transactions).
+For transaction building and submission, see [Transaction Handling](/docs/api/core/transactions).
 
 ## Environment URLs
 
@@ -110,11 +110,11 @@ Common error codes:
 | `VALIDATION_ERROR` | Invalid request body |
 | `TX_BUILD_FAILED` | Transaction building failed |
 
-See [Error Handling](/docs/api/guides/error-handling) for recovery patterns.
+See [Error Handling](/docs/api/core/error-handling) for recovery patterns.
 
 ## Next Steps
 
-- [API Concepts](/docs/api/guides/api-concepts) — Source field, safe refetch timing, event queries
-- [Transaction Handling](/docs/api/guides/transactions) — Build, sign, and submit transactions
-- [Error Handling](/docs/api/guides/error-handling) — Recovery patterns and failure modes
+- [API Concepts](/docs/api/core/api-concepts) — Source field, safe refetch timing, event queries
+- [Transaction Handling](/docs/api/core/transactions) — Build, sign, and submit transactions
+- [Error Handling](/docs/api/core/error-handling) — Recovery patterns and failure modes
 - [API Docs](https://api.andamio.io) — Full endpoint reference

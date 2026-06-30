@@ -8,7 +8,7 @@ Enterprise transaction sponsorship lets your organization pay the blockchain cos
 Sponsorship is opt-in and tied to an **enterprise API key**. When a sponsored route is called with an enterprise key that has remaining quota, the Andamio gateway covers the sponsor side of the transaction automatically. No request body changes are required to opt in — the gateway decides based on the key and the route.
 
 <Callout type="info">
-Sponsorship is an enterprise feature. Contact the Andamio team to provision sponsorship quota for your API key. Pioneer, Starter, and Growth tiers build self-funded transactions as described in [Transaction Handling](/docs/api/guides/transactions).
+Sponsorship is an enterprise feature. Contact the Andamio team to provision sponsorship quota for your API key. Pioneer, Starter, and Growth tiers build self-funded transactions as described in [Transaction Handling](/docs/api/core/transactions).
 </Callout>
 
 ## Sponsored Routes
@@ -99,7 +99,7 @@ const { tx_hash } = await fetch(`${API}/tx/sponsored/submit`, {
 }).then(r => r.json());
 ```
 
-`POST /api/v2/tx/sponsored/submit` takes `{ "tx": "<holder-signed-cbor-hex>" }` and returns `{ "tx_hash": "<tx-hash>" }`. From there, register and monitor exactly as in [Transaction Handling](/docs/api/guides/transactions) — the lifecycle after submission is identical.
+`POST /api/v2/tx/sponsored/submit` takes `{ "tx": "<holder-signed-cbor-hex>" }` and returns `{ "tx_hash": "<tx-hash>" }`. From there, register and monitor exactly as in [Transaction Handling](/docs/api/core/transactions) — the lifecycle after submission is identical.
 
 <Callout type="warn">
 A sponsored build is reserved against quota when it is built. It must be submitted before it expires, or the build is lost and must be rebuilt (and re-counted against quota).
@@ -122,7 +122,7 @@ Treat `402` as the signal to surface an "out of sponsored capacity" state in you
 
 ## Next Steps
 
-- [Transaction Handling](/docs/api/guides/transactions) — The self-funded lifecycle and post-submit monitoring
-- [API Keys](/docs/api/guides/api-keys) — Enterprise key provisioning
-- [Billing & Pricing](/docs/api/guides/billing) — Tiers and quotas
-- [Error Handling](/docs/api/guides/error-handling) — Recovery patterns
+- [Transaction Handling](/docs/api/core/transactions) — The self-funded lifecycle and post-submit monitoring
+- [API Keys](/docs/api/accounts/api-keys) — Enterprise key provisioning
+- [Billing & Pricing](/docs/api/billing) — Tiers and quotas
+- [Error Handling](/docs/api/core/error-handling) — Recovery patterns
