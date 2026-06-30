@@ -13,15 +13,12 @@
  * sequence (onboarding, course-*, project-*). Pair with `full: true` frontmatter
  * for true full-width.
  *
- * The middle "stage" column does NOT clone the badge image + hotspots (those are
- * image-specific). It is a net-new minimal **step-track**: a vertical/horizontal
- * line of numbered nodes showing sequence position, current step highlighted.
- * It is decorative (aria-hidden) — the rail + panel carry all real semantics.
- *
  * Per-step grammar: Actor → Transaction → on-chain effect (validatorAction +
  * tokenDelta) → resulting state, plus an optional build endpoint and link.
  *
- * Desktop (lg+): rail | step-track | detail panel, in a bounded-height canvas.
+ * Desktop (lg+): rail | detail panel, in a bounded-height canvas. The numbered
+ * rail carries sequence position on its own, so there is no separate step-track
+ * column (it only repeated the rail).
  * Mobile: degrades to a scrollable stack so all steps stay reachable.
  *
  * Accessibility: the rail is an ARIA tablist (roving tabindex, arrow/Home/End
@@ -100,56 +97,6 @@ function StepDetail({ step }: { step: Step }) {
   );
 }
 
-/**
- * StepTrack — net-new, minimal sequence-position visualization for the middle
- * column. Decorative only (aria-hidden): the rail carries the real semantics.
- * Renders a vertical line of numbered nodes; the active step is highlighted.
- */
-function StepTrack({ steps, selected }: { steps: Step[]; selected: number }) {
-  return (
-    <div
-      aria-hidden
-      className="flex min-h-0 flex-col items-center justify-center"
-    >
-      <ol className="relative flex flex-col gap-6">
-        {/* connecting line */}
-        <span
-          className="absolute left-[15px] top-3 bottom-3 w-px bg-fd-border"
-          aria-hidden
-        />
-        {steps.map((step, i) => {
-          const isActive = i === selected;
-          const isDone = i < selected;
-          return (
-            <li key={step.id} className="relative flex items-center gap-3">
-              <span
-                className={`relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold transition-colors motion-reduce:transition-none ${
-                  isActive
-                    ? "bg-fd-accent-foreground text-fd-accent ring-2 ring-fd-accent-foreground"
-                    : isDone
-                      ? "bg-fd-muted text-fd-foreground"
-                      : "bg-fd-card text-fd-muted-foreground ring-1 ring-fd-border"
-                }`}
-              >
-                {step.n}
-              </span>
-              <span
-                className={`text-xs ${
-                  isActive
-                    ? "font-semibold text-fd-foreground"
-                    : "text-fd-muted-foreground"
-                }`}
-              >
-                {step.transaction}
-              </span>
-            </li>
-          );
-        })}
-      </ol>
-    </div>
-  );
-}
-
 export interface TransactionStepperProps {
   steps: Step[];
   title?: string;
@@ -194,7 +141,7 @@ export default function TransactionStepper({ steps, title, intro }: TransactionS
       )}
 
       {/* ---------- Desktop: bounded, non-scrolling canvas ---------- */}
-      <div className="hidden lg:grid lg:h-[min(78vh,760px)] lg:grid-cols-[16rem_minmax(0,0.9fr)_minmax(0,1.2fr)] lg:gap-5">
+      <div className="hidden lg:grid lg:h-[min(78vh,760px)] lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-6">
         {/* Rail */}
         <div
           role="tablist"
@@ -241,9 +188,6 @@ export default function TransactionStepper({ steps, title, intro }: TransactionS
             );
           })}
         </div>
-
-        {/* Step-track stage (decorative) */}
-        <StepTrack steps={steps} selected={selected} />
 
         {/* Detail panel */}
         <div
