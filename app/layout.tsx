@@ -21,6 +21,20 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
 });
 
+// Curated section toggles for the ⌘K search dialog. Each `value` is a root slug
+// emitted as the index `tag` in app/api/search/route.ts. Kept to the five
+// sections people actually scope to — the other roots (developer-community,
+// contract-verification, security-audit, glossary) stay fully searchable with
+// no tag selected, just off the toggle bar to keep it uncluttered. No default
+// tag (search-everything by default); allowClear lets a chosen scope be reset.
+const searchTags = [
+  { name: 'API', value: 'api' },
+  { name: 'Issuer', value: 'issuer' },
+  { name: 'Apps & Tooling', value: 'apps-tooling' },
+  { name: 'Protocol', value: 'protocol' },
+  { name: 'Credential Badges', value: 'credential-badges' },
+];
+
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html
@@ -29,7 +43,11 @@ export default function Layout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <body className="flex flex-col min-h-screen">
-        <RootProvider>{children}</RootProvider>
+        <RootProvider
+          search={{ options: { tags: searchTags, allowClear: true } }}
+        >
+          {children}
+        </RootProvider>
       </body>
     </html>
   );
