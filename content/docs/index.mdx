@@ -27,6 +27,16 @@ There are two ways to build with Andamio, plus a live app to see it in action.
 
 The **app** at [app.andamio.io](https://app.andamio.io) is a reference implementation on the API, open to anyone who wants to explore.
 
+## Two keys, two paths
+
+Andamio API and Andamio Issuer are two products with two different API keys, and the key you hold decides which one you build against.
+
+**Andamio API** uses a developer key. You build directly on the protocol under `/api/v2`: read, mint, and gate credentials in your own app. Your users sign in and act on their own behalf, and you fund the transactions you submit.
+
+**Andamio Issuer** uses an enterprise key. You issue credentials under `/issuer/v1`, and Andamio sponsors every transaction, covering the on-chain fees. Your application is the only credential the API needs, so there are no end-user wallets or tokens to manage.
+
+The two keys aren't interchangeable. A developer key calling an Issuer route, or an enterprise key calling a developer route, is rejected (HTTP 403). So follow the section that matches your key: the [API](/docs/api/getting-started) docs for a developer key, the [Issuer](/docs/issuer) docs for an enterprise key.
+
 ## What makes an Andamio credential different
 
 **Persistent.** Immutable and stored on public infrastructure no single company owns. A credential outlives whoever issued it.
