@@ -1,0 +1,12 @@
+{
+  "title": "Core APIs",
+  "icon": "Boxes",
+  "pages": [
+    "api-concepts",
+    "transactions",
+    "sponsored-transactions",
+    "error-handling",
+    "access-token-verification"
+  ],
+  "defaultOpen": false
+}

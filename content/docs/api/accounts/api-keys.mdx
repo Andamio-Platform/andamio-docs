@@ -9,7 +9,7 @@ Authenticated requests to the Andamio API require an API key in the `X-API-Key` 
 
 Before requesting an API key:
 
-1. [Register a developer account](/docs/api/guides/developer-accounts)
+1. [Register a developer account](/docs/api/accounts/developer-accounts)
 2. Verify your email address (required for key creation)
 
 ## Request a Key
@@ -24,7 +24,7 @@ curl -X POST https://preprod.api.andamio.io/api/v2/apikey/developer/key/request 
 
 The response includes the key value. Store it securely — it won't be shown again.
 
-The number of keys you can create depends on your [billing tier](/docs/api/guides/billing).
+The number of keys you can create depends on your [billing tier](/docs/api/billing).
 
 ## Rotate a Key
 
@@ -86,6 +86,6 @@ andamio apikey usage
 
 ## Next Steps
 
-- [Billing](/docs/api/guides/billing) — Pricing tiers, rate limits, and quotas
-- [API Integration](/docs/api/guides/api-integration) — Using your key in requests
-- [Developer Accounts](/docs/api/guides/developer-accounts) — Registration and email verification
+- [Billing](/docs/api/billing) — Pricing tiers, rate limits, and quotas
+- [API Integration](/docs/api/accounts/api-integration) — Using your key in requests
+- [Developer Accounts](/docs/api/accounts/developer-accounts) — Registration and email verification
