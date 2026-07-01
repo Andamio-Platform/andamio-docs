@@ -1,6 +1,6 @@
 ---
 title: API Concepts
-description: Source field architecture, safe refetch timing, merged endpoints, and event queries
+description: Source field architecture, safe refetch timing, and merged endpoints
 ---
 
 Core concepts for working with the Andamio API beyond basic request/response patterns.
@@ -41,14 +41,14 @@ for (const course of data) {
 
 ### Merged Endpoints
 
-The gateway provides 27 endpoints that combine DB and Andamioscan data into unified views. These include:
+The gateway provides a set of endpoints that combine DB and Andamioscan data into unified views. For example:
 
 - `POST /v2/user/dashboard` — Consolidated user dashboard (courses, projects, pending assessments)
 - `GET /v2/course/user/courses/list` — Courses with merged on-chain state
-- `POST /v2/project/user/projects/list` — Projects with merged on-chain state
+- `GET /v2/project/user/projects/list` — Projects with merged on-chain state
 - Role-specific views for owners, teachers, students, managers, and contributors
 
-See the [API Reference](https://api.andamio.io) for the complete list.
+See the [API Reference](https://api.andamio.io/reference) for the complete, always-current list.
 
 ## Safe Refetch Timing
 
@@ -107,34 +107,6 @@ Or poll with the CLI:
 ```bash
 andamio tx status <tx-hash>
 ```
-
-## Event Queries
-
-After a transaction confirms, you can parse exactly what happened using event query endpoints:
-
-```text
-GET /v2/events/{type}/{action}/{tx_hash}
-```
-
-These endpoints extract structured data from on-chain transactions:
-
-| Type | Actions | What It Returns |
-|------|---------|----------------|
-| `access-tokens` | `mint` | Minted alias, policy ID |
-| `courses` | `create` | Course ID, metadata |
-| `enrollments` | `enroll` | Student alias, course ID |
-| `modules` | `manage` | Added/removed modules |
-| `teachers` | `update` | Added/removed teachers |
-| `assignments` | `submit` | Submission evidence |
-| `assessments` | `assess` | Accept/refuse decisions |
-| `credential-claims` | `claim`, `project` | Claimed credentials |
-| `projects` | `create`, `join` | Project ID, contributor |
-| `tasks` | `manage`, `submit`, `assess` | Task details, evidence |
-| `treasury` | `fund` | Funding amount |
-| `blacklist` | `update` | Blacklist changes |
-| `managers` | `update` | Added/removed managers |
-
-These are useful for building activity feeds, audit logs, or debugging transaction contents.
 
 ## Qualified Contributors
 

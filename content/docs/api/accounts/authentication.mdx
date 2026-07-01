@@ -3,14 +3,13 @@ title: Authentication
 description: User login, JWT creation, and session management in Andamio applications
 ---
 
-Andamio uses [four credential types](/docs/api/accounts/developer-accounts#credential-types). This page covers **User JWT** — wallet-based authentication for end users.
+Andamio uses [three credential types](/docs/api/accounts/developer-accounts#credential-types). This page covers **User JWT** — wallet-based authentication for end users.
 
 | Credential | Purpose | Guide |
 |-----------|---------|-------|
 | **API Key** | Application identity — required on most requests | [API Keys](/docs/api/accounts/api-keys) |
 | **User JWT** | User identity — wallet-signed, authorizes actions | This page |
 | **Developer JWT** | Account management — email/password login | [Developer Accounts](/docs/api/accounts/developer-accounts) |
-| **Attestation JWT** | Offline identity proof for third parties | [Access Token Verification](/docs/api/core/access-token-verification) |
 
 ## Wallet Login
 
@@ -281,7 +280,7 @@ async function login(walletName: string): Promise<AuthResult> {
 
 ## Next Steps
 
-- [Developer Accounts](/docs/api/accounts/developer-accounts) — Developer registration, email verification, Attestation JWT
+- [Developer Accounts](/docs/api/accounts/developer-accounts) — Developer registration, email verification, and Developer JWT
 - [API Keys](/docs/api/accounts/api-keys) — Request, rotate, and manage API keys
 - [API Integration](/docs/api/accounts/api-integration) — Making authenticated requests
 - [Transaction Handling](/docs/api/core/transactions) — Build and submit transactions

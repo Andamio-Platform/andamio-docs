@@ -36,34 +36,36 @@ Copy the key immediately — it won't be shown again.
 
 ## 3. Make your first API call
 
-With just the API key you can read public data — no app template, no frontend, just curl.
+With just the API key you can read public data — no app template, no frontend, just curl. These read endpoints authenticate with the `X-API-Key` header alone.
 
-Test the connection:
-
-```bash
-curl -X GET "https://preprod.api.andamio.io/health"
-# {"status":"healthy"}
-```
-
-List all courses on the instance:
+List courses (this doubles as your connection test):
 
 ```bash
-curl -X GET "https://preprod.api.andamio.io/api/v2/instance/courses" \
+curl -X GET "https://preprod.api.andamio.io/api/v2/course/user/courses/list" \
   -H "X-API-Key: YOUR_API_KEY"
 ```
 
+Responses wrap results in `data` with a `meta` block, and each item carries a `source` field marking whether it came from on-chain, off-chain, or both (see [API Concepts](/docs/api/core/api-concepts#the-source-field)):
+
 ```json
 {
-  "courses": [
-    { "course_id": "dbd4f125...406bcac3", "title": "Andamio for Contributors", "modules": 4, "status": "active" }
-  ]
+  "data": [
+    {
+      "course_id": "dbd4f125...406bcac3",
+      "course_address": "addr1...",
+      "owner": "some-alias",
+      "teachers": ["some-alias"],
+      "source": "merged"
+    }
+  ],
+  "meta": {}
 }
 ```
 
 Get the modules for a course:
 
 ```bash
-curl -X GET "https://preprod.api.andamio.io/api/v2/course/<course_id>/modules" \
+curl -X GET "https://preprod.api.andamio.io/api/v2/course/user/modules/<course_id>" \
   -H "X-API-Key: YOUR_API_KEY"
 ```
 
@@ -71,13 +73,14 @@ curl -X GET "https://preprod.api.andamio.io/api/v2/course/<course_id>/modules" \
 
 | Endpoint | Description |
 |----------|-------------|
-| `GET /instance/courses` | List all courses |
-| `GET /course/{id}/modules` | Get modules for a course |
-| `GET /course/{id}/slts` | Get SLTs for a course |
-| `GET /project/{id}/tasks` | Get tasks for a project |
-| `GET /project/{id}/details` | Get project details |
+| `GET /course/user/courses/list` | List courses with merged on-chain state |
+| `GET /course/user/modules/{course_id}` | Get a course's modules |
+| `GET /course/user/slts/{course_id}/{course_module_code}` | Get a module's SLTs |
+| `GET /project/user/projects/list` | List projects |
+| `GET /project/user/project/{project_id}` | Get project details |
+| `POST /project/user/tasks/list` | List a project's tasks |
 
-These are read-only, public endpoints. For user-specific actions — enrolling, submitting assignments, claiming credentials — you authenticate the user with a wallet signature. See [Authentication](/docs/api/accounts/authentication) for the full JWT flow.
+The full, always-current endpoint list lives in the [API Reference](https://api.andamio.io/reference). These are read endpoints. For user-specific actions — enrolling, submitting assignments, claiming credentials — you authenticate the user with a wallet signature. See [Authentication](/docs/api/accounts/authentication) for the full JWT flow.
 
 ## Set up the app template
 

@@ -3,7 +3,7 @@ title: Developer Accounts
 description: Register a developer account, verify your email, and manage credentials for API access
 ---
 
-Andamio uses four credential types. Understanding which you need is the first step to building on the platform.
+Andamio uses three credential types. Understanding which you need is the first step to building on the platform.
 
 ## Credential Types
 
@@ -12,9 +12,8 @@ Andamio uses four credential types. Understanding which you need is the first st
 | **API Key** | Application identity — "who's asking" | Register a developer account, then request a key | Most API requests (`X-API-Key` header) |
 | **User JWT** | Action authority — "who's acting" | User signs a wallet challenge ([Authentication](/docs/api/accounts/authentication)) | Requests that act on behalf of a user (`Authorization: Bearer` header) |
 | **Developer JWT** | Account management | Developer email/password login (see below) | API key creation, rotation, billing |
-| **Attestation JWT** | Offline proof — "prove it to a third party" | Returned by the [access token verification](/docs/api/core/access-token-verification) flow | Verify Andamio identity without API access |
 
-API Key is required for most requests. User JWT is required for write operations on behalf of a user. Developer JWT is for managing your developer account. Attestation JWT is for third-party identity verification.
+API Key is required for most requests. User JWT is required for write operations on behalf of a user. Developer JWT is for managing your developer account.
 
 ## Developer Registration
 
@@ -101,12 +100,6 @@ curl -X POST https://preprod.api.andamio.io/api/v2/auth/developer/register/compl
   -d '{"signature": "...", "key": "..."}'
 ```
 
-## Attestation JWT
-
-The Attestation JWT is a short-lived (approximately 10 minutes) RS256-signed token that proves a user owns an Andamio Access Token. It can be verified offline without calling the API — useful for third-party integrations that need to confirm Andamio identity.
-
-Attestation JWTs are returned by the [Access Token Verification](/docs/api/core/access-token-verification) flow.
-
 ## Developer Auth Endpoints
 
 | Method | Endpoint | Auth Required | Description |
@@ -123,4 +116,3 @@ Attestation JWTs are returned by the [Access Token Verification](/docs/api/core/
 
 - [API Keys](/docs/api/accounts/api-keys) — Request, rotate, and manage API keys
 - [Authentication](/docs/api/accounts/authentication) — Wallet-based user login for end users
-- [Access Token Verification](/docs/api/core/access-token-verification) — Verify identity for third parties
