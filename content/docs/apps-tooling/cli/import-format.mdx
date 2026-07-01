@@ -5,6 +5,8 @@ description: Reference for markdown file formats used in module imports
 
 Reference for the markdown file formats used by `andamio course import` and `andamio course export`.
 
+**You don't have to write these files by hand.** [Coach](https://github.com/Andamio-Platform/coach), Andamio's course-authoring tool (an Agent Skill, also on npm as `@andamio/coach`), compiles a finished module into this exact structure with its `/compile` skill, ready to hand to `andamio course import`. This page documents the format Coach produces, and that the CLI expects, for when you need to inspect or edit it directly.
+
 ## Directory Structure
 
 ```
@@ -21,6 +23,13 @@ module-folder/
 ```
 
 ## outline.md (Required)
+
+**Used in the CLI:** `course import` parses it to read the module code and SLTs, and `compute-hash` reads it to derive the on-chain credential hash.
+
+```bash
+andamio course import ./compiled/my-course/101 --course-id <course-id>
+andamio course credential compute-hash --file ./compiled/my-course/101/outline.md
+```
 
 Defines the module metadata and Student Learning Targets. Each SLT becomes a lesson slot.
 
@@ -48,6 +57,14 @@ code: intro-cardano
 
 ## lesson-N.md (Optional)
 
+**Used in the CLI:** `course export` writes one `lesson-N.md` per SLT; you edit locally, then `course import` sends the content back.
+
+```bash
+andamio course export <course-id> 101        # writes lesson-1.md, lesson-2.md, ...
+vim compiled/my-course/101/lesson-1.md
+andamio course import ./compiled/my-course/101 --course-id <course-id>
+```
+
 Content for each lesson, where N corresponds to the SLT index (1-indexed). File `lesson-1.md` maps to the first SLT, `lesson-2.md` to the second, etc.
 
 ```markdown
@@ -70,6 +87,12 @@ A blockchain is a distributed ledger...
 
 ## introduction.md (Optional)
 
+**Used in the CLI:** picked up automatically by `course import` if present in the module folder. Its content stays editable at any module status, even after SLTs are locked.
+
+```bash
+andamio course import ./compiled/my-course/101 --course-id <course-id>
+```
+
 Module introduction shown before lessons. Great for context, prerequisites, or learning objectives.
 
 ```markdown
@@ -89,6 +112,12 @@ of building on the Cardano blockchain.
 - Rest of content becomes the introduction body
 
 ## assignment.md (Optional)
+
+**Used in the CLI:** picked up automatically by `course import` if present. Like the introduction, assignment content remains editable at any module status.
+
+```bash
+andamio course import ./compiled/my-course/101 --course-id <course-id>
+```
 
 Module assignment content. This is the task students complete to demonstrate mastery.
 
@@ -113,6 +142,13 @@ document the process.
 - Additional sections like `## Notes` are allowed
 
 ## Images
+
+**Used in the CLI:** on `course import`, new images in `assets/` are uploaded to the CDN; on `course export`, images are downloaded to `assets/` and an `.image-manifest.json` is written mapping filenames to their CDN URLs.
+
+```bash
+andamio course import ./compiled/my-course/101 --course-id <course-id>   # uploads new images in assets/
+andamio course export <course-id> 101                                    # downloads images + writes .image-manifest.json
+```
 
 Place images in an `assets/` subdirectory and reference them with relative paths.
 

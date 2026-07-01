@@ -1,0 +1,78 @@
+---
+title: Andamio Coach
+description: Coach helps you write course lesson content with an AI agent and shapes it to Andamio's course model, ready to publish through the CLI.
+icon: GraduationCap
+---
+
+Coach is a public [Agent Skills](https://agentskills.io) package for authoring courses with an AI agent. Its job is simple to state: **it helps you write lesson content and matches it to Andamio's model**, so what you author with an agent publishes cleanly onto the platform through the [Andamio CLI](/docs/apps-tooling/cli).
+
+## Full documentation
+
+Coach is open source, and the [coach repo](https://github.com/Andamio-Platform/coach) is the source of truth for the complete skill set and workflow. It is also published on npm as `@andamio/coach`. The rest of this page is a quick orientation.
+
+## From lesson content to Andamio
+
+You write the lessons with an agent; Coach structures them the way Andamio expects, at every step:
+
+- **Learning targets.** Coach drafts and assesses Student Learning Targets, the "I can..." statements that define each module's outcome. One SLT per module.
+- **Lessons.** It classifies each SLT into a lesson type, helps you gather the context that type needs (screenshots, code examples), and writes the lesson alongside you.
+- **Compile.** The `/compile` skill packages finished modules into Andamio's [import format](/docs/apps-tooling/cli/import-format): `outline.md`, numbered lesson files, and optional `introduction.md` / `assignment.md`.
+- **Publish.** Hand the compiled module to `andamio course import`, and it lands on the platform, ready to register and publish on-chain.
+
+That is the "matches it to Andamio's APIs" part: Coach produces exactly the structure the CLI and the platform consume, so there is no manual translation between authoring and publishing.
+
+## Three ways to start
+
+Run the `start` skill and pick a path. Three entry points, one destination.
+
+| Path | Use when |
+|------|----------|
+| **Beginner** | You want to design a learning experience about something new. Conversation-first. |
+| **Apprentice** | You know some of the content and are ready to build a course. Collaborative drafting. |
+| **Teacher** | You have learning targets ready and are an expert on the subject. Fast-track setup. |
+
+## Install
+
+Coach follows the open [Agent Skills](https://agentskills.io) standard, so it works with any compatible agent (Claude Code, Cursor, GitHub Copilot / VS Code, Gemini CLI, OpenAI Codex, Goose, Roo Code, and more). Point your agent at the `skills/` directory.
+
+```bash
+# Claude Code (plugin)
+/plugin marketplace add Andamio-Platform/andamio-marketplace
+/plugin install coach@andamio
+
+# npm
+npm install -D @andamio/coach
+
+# Any other agent (clone, then point it at skills/)
+git clone https://github.com/Andamio-Platform/coach.git
+```
+
+## The compounding loop
+
+Coach is built so each course you develop makes the next one faster. The `course-workflow` skill orchestrates the loop and tracks which phase you are in.
+
+| Skill | What it does |
+|-------|--------------|
+| `draft-slts` | Generate learning targets from topic, audience, and goals |
+| `assess-slts` | Evaluate SLT quality across five dimensions, suggest rewrites |
+| `classify-lesson-types` | Interview to assign each SLT a lesson type |
+| `self-assess-readiness` | Rate the agent's coaching confidence per SLT |
+| `gather-screenshots` / `gather-code-examples` | Build context checklists for Product Demo and Developer Documentation lessons |
+| `compile` | Package modules into Andamio's import format |
+| `compound` | Extract patterns into `knowledge/` so future runs start smarter |
+
+## Lesson types
+
+Every SLT is authored as one of five lesson types, each with its own inputs:
+
+1. **Product Demo**: SLT plus screenshots, a visual walkthrough.
+2. **Developer Documentation**: SLT plus code and a docs link, a technical lesson.
+3. **How To Guide**: SLT plus optional materials, a step-by-step procedure.
+4. **Organization Onboarding**: SLT plus org context, setup guidance.
+5. **Exploration**: SLT plus framing questions, for big ideas and worldview.
+
+## Key concepts
+
+- **Student Learning Targets (SLTs)**: measurable "I can..." outcomes, one per module. Coach helps you draft, assess, and refine them.
+- **Fist to Five**: a 0 to 5 confidence rating (adapted from Marzano) the agent emits per SLT across four dimensions, conceptual explanation, code demonstration, learner assessment, and knowledge currency.
+- **The skill is the student**: Coach flips the classroom question. Instead of "can this student do these things?", it asks "given the context, can these agents do these things?"

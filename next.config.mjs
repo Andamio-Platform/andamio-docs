@@ -70,6 +70,20 @@ const config = {
       { source: '/docs/demo', destination: '/docs/apps-tooling/demo', permanent: true },
       { source: '/docs/sdk/:path*', destination: '/docs/apps-tooling/sdk/:path*', permanent: true },
 
+      // CLI docs thinned to canonical-in-repo: the andamio-cli GitHub repo is the
+      // source of truth (README + lifecycle docs). The section now carries only the
+      // landing (About + command tables + Quick Start + canonical callout) and the
+      // Import Format reference. The eight guide-mirroring sub-pages were removed;
+      // their URLs 301 to the CLI landing, which routes readers out to the repo.
+      { source: '/docs/apps-tooling/cli/installation', destination: '/docs/apps-tooling/cli', permanent: true },
+      { source: '/docs/apps-tooling/cli/authentication', destination: '/docs/apps-tooling/cli', permanent: true },
+      { source: '/docs/apps-tooling/cli/managing-courses', destination: '/docs/apps-tooling/cli', permanent: true },
+      { source: '/docs/apps-tooling/cli/import-export', destination: '/docs/apps-tooling/cli', permanent: true },
+      { source: '/docs/apps-tooling/cli/managing-tasks', destination: '/docs/apps-tooling/cli', permanent: true },
+      { source: '/docs/apps-tooling/cli/task-import-export', destination: '/docs/apps-tooling/cli', permanent: true },
+      { source: '/docs/apps-tooling/cli/transaction-signing', destination: '/docs/apps-tooling/cli', permanent: true },
+      { source: '/docs/apps-tooling/cli/hash-verification', destination: '/docs/apps-tooling/cli', permanent: true },
+
       // Developer Community. The repositories wildcard also absorbs the old
       // flattened per-repo subpages (on-chain/apis/templates/docs), so those
       // legacy redirects collapse into this one rule pointing at the new home.
