@@ -3,7 +3,7 @@ title: "Andamio Protocol"
 description: "The four-layer on-chain model behind Andamio credentials — and the transaction lifecycle every Andamio app shares."
 ---
 
-Andamio is a set of deployed Cardano smart contracts that issue and verify credentials. You don't have to build on the protocol directly — the [API](/docs/api) and the [SDK](/docs/apps-tooling/sdk) handle transaction building, signing flows, and state sync for you. This section explains *what the protocol does underneath* so you can reason about what your app is anchoring on-chain.
+Andamio is a set of deployed Cardano smart contracts that issue and verify credentials. You don't have to build on the protocol directly — the [API](/docs/api) handles transaction building, signing flows, and state sync for you. This section explains *what the protocol does underneath* so you can reason about what your app is anchoring on-chain.
 
 Three pages cover it:
 
@@ -82,7 +82,7 @@ Every Andamio transaction — minting an Access Token, committing to an assignme
 **`confirmed` is not the finish line.** The gateway reaches `confirmed` when the transaction is found on-chain, but the database hasn't synced yet. Wait for `updated` before you refetch data — only then is the off-chain state fresh.
 </Callout>
 
-You build the UX; Andamio handles the credential. For the request/response details and code, see the [API](/docs/api) and [SDK](/docs/apps-tooling/sdk) docs.
+You build the UX; Andamio handles the credential. For the request/response details and code, see the [API](/docs/api) docs.
 
 ## Where to go next
 

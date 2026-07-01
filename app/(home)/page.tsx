@@ -59,13 +59,22 @@ export default function HomePage() {
           section below to dive in.
         </p>
 
-        <Link
-          href="/docs/api/getting-started"
-          className="mt-8 flex w-fit items-center gap-2 bg-brand px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-brand-foreground transition-opacity hover:opacity-90"
-        >
-          Quickstart
-          <span aria-hidden>&rarr;</span>
-        </Link>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <Link
+            href="/docs/api/getting-started"
+            className="flex w-fit items-center gap-2 bg-brand px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-brand-foreground transition-opacity hover:opacity-90"
+          >
+            Quickstart
+            <span aria-hidden>&rarr;</span>
+          </Link>
+          <Link
+            href="/docs"
+            className="flex w-fit items-center gap-2 border border-border px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-brand hover:text-brand"
+          >
+            Open Docs
+            <span aria-hidden>&rarr;</span>
+          </Link>
+        </div>
       </section>
 
       {/* ── Browse by section (the six-root spine) ─────────────── */}
@@ -73,26 +82,25 @@ export default function HomePage() {
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
           Browse by section
         </div>
-        <div className="grid grid-cols-1 border-l border-t border-border sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-12 border-t border-border sm:grid-cols-2">
           {SECTIONS.map((s) => (
             <Link
               key={s.title}
               href={s.href}
-              className="group relative flex flex-col border-b border-r border-border p-6 transition-colors hover:bg-accent sm:p-7"
+              className="group border-b border-border py-3.5 transition-colors"
             >
-              <span
-                aria-hidden
-                className="absolute right-5 top-6 font-mono text-sm text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-foreground"
-              >
-                &rarr;
-              </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-                {s.kicker}
-              </span>
-              <h2 className="mt-2 font-display text-xl font-semibold tracking-tight text-foreground">
-                {s.title}
-              </h2>
-              <p className="mt-2 max-w-[26ch] text-sm font-light leading-relaxed text-muted-foreground">
+              <div className="flex items-center justify-between gap-3">
+                <span className="font-display text-base font-medium tracking-tight text-foreground transition-colors group-hover:text-brand">
+                  {s.title}
+                </span>
+                <span
+                  aria-hidden
+                  className="font-mono text-sm text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-brand"
+                >
+                  &rarr;
+                </span>
+              </div>
+              <p className="mt-0.5 text-sm font-light leading-snug text-muted-foreground">
                 {s.body}
               </p>
             </Link>

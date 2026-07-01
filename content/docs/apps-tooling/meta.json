@@ -3,19 +3,12 @@
     "icon": "Boxes",
     "pages": [
         "index",
-        "--- Explore the App ---",
-        "explore-getting-started",
-        "roles",
-        "courses",
-        "projects",
-        "contributors",
-        "preprod-wallet-setup",
-        "demo",
-        "--- Tools ---",
+        "andamio-app",
         "cli",
+        "core",
+        "andamio-bot",
+        "--- Agent-Ready Tooling ---",
         "andamio-dev",
-        "coach",
-        "sdk",
-        "andamio-bot"
+        "coach"
     ]
 }
