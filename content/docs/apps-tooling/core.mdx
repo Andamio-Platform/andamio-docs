@@ -1,0 +1,27 @@
+---
+title: Core
+description: "@andamio/core: hashing utilities and protocol constants for building on Andamio, with zero React dependencies."
+icon: Package
+---
+
+`@andamio/core` is the open npm package for working with the Andamio protocol from any JavaScript or TypeScript environment. It has zero React dependencies, so it runs in a browser, on a server, or in a script.
+
+**Install:** `npm install @andamio/core`
+
+## Full documentation
+
+`@andamio/core` is open source, and the [andamio-core repo](https://github.com/Andamio-Platform/andamio-core) is the source of truth for the full API. The rest of this page is a quick orientation.
+
+## What's in it
+
+- **Hashing utilities** — reproduce the on-chain hashes Andamio uses: `computeSltHash` (Student Learning Targets), `computeTaskHash` (project tasks), and `computeCommitmentHash` (assignment evidence).
+- **Protocol constants** — policy IDs and explorer-URL helpers: `POLICY_IDS`, `getTxExplorerUrl`, `getAddressExplorerUrl`.
+
+Reach for it whenever you need to compute an Andamio hash or reference protocol constants without pulling in a framework.
+
+## Verifying Andamio
+
+The hashes `@andamio/core` computes are the *content* side of Andamio's verifiability: an SLT, task, or commitment hashes to a value that is anchored on-chain, so anyone can recompute it and confirm it matches. The *contract* side, the deployed validators and each project's treasury, is documented under Trust & Verification:
+
+- [Contract Verification](/docs/contract-verification) — recompute the script hash of any deployed validator, and [verify a project treasury](/docs/contract-verification#project-treasuries) yourself. No source release, and no trust in Andamio required.
+- [Security Audit](/docs/security-audit) — the independent TxPipe audit of the Protocol V2 contracts.

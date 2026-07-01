@@ -1,20 +1,18 @@
 ---
-title: Set Up Local Dev
-description: Set up local Andamio development in 15 minutes
+title: Quickstart
+description: From zero to your first Andamio API call in 5 minutes, then the local app template when you're ready to build.
 ---
 
-<GuideHeader time="~15 minutes" steps={6} level="beginner" />
+<GuideHeader time="~5 minutes" level="beginner" />
 
-Set up your local development environment and run the Andamio app template.
+Get from zero to a working Andamio API call, then set up the local app template when you're ready to build a frontend.
 
 <Callout title="Prerequisites">
-- **Node.js 20+** and **npm 10+**
-- **Cardano wallet on preprod with test ADA** — [Setup guide](/docs/apps-tooling/preprod-wallet-setup)
+- **Cardano wallet on preprod with test ADA** — [Setup guide](/docs/apps-tooling/andamio-app/preprod-wallet-setup)
+- For the app template (optional): **Node.js 20+** and **npm 10+**
 </Callout>
 
-<Steps>
-<Step>
-### Mint Your Access Token
+## 1. Mint your Access Token
 
 Your Access Token is your on-chain identity for Andamio.
 
@@ -24,23 +22,68 @@ Your Access Token is your on-chain identity for Andamio.
 4. Enter an alias (permanent)
 5. Click **Mint Access Token** and sign
 6. Wait ~20 seconds for confirmation
-</Step>
 
-<Step>
-### Generate an API Key
+## 2. Generate an API Key
 
 1. Go to [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup)
-2. Connect your wallet
-3. Sign in to the Gateway
-4. Select **preprod**
-5. Click **Generate API Key**
-6. Name it (e.g., "local-dev")
+2. Connect your wallet and sign in to the Gateway
+3. Select **preprod**
+4. Click **Generate API Key** and name it (e.g., "local-dev")
 
 <Callout type="warn" title="Save your key">
 Copy the key immediately — it won't be shown again.
 </Callout>
-</Step>
 
+## 3. Make your first API call
+
+With just the API key you can read public data — no app template, no frontend, just curl.
+
+Test the connection:
+
+```bash
+curl -X GET "https://preprod.api.andamio.io/health"
+# {"status":"healthy"}
+```
+
+List all courses on the instance:
+
+```bash
+curl -X GET "https://preprod.api.andamio.io/api/v2/instance/courses" \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+```json
+{
+  "courses": [
+    { "course_id": "dbd4f125...406bcac3", "title": "Andamio for Contributors", "modules": 4, "status": "active" }
+  ]
+}
+```
+
+Get the modules for a course:
+
+```bash
+curl -X GET "https://preprod.api.andamio.io/api/v2/course/<course_id>/modules" \
+  -H "X-API-Key: YOUR_API_KEY"
+```
+
+### What you can do with just an API key
+
+| Endpoint | Description |
+|----------|-------------|
+| `GET /instance/courses` | List all courses |
+| `GET /course/{id}/modules` | Get modules for a course |
+| `GET /course/{id}/slts` | Get SLTs for a course |
+| `GET /project/{id}/tasks` | Get tasks for a project |
+| `GET /project/{id}/details` | Get project details |
+
+These are read-only, public endpoints. For user-specific actions — enrolling, submitting assignments, claiming credentials — you authenticate the user with a wallet signature. See [Authentication](/docs/api/accounts/authentication) for the full JWT flow.
+
+## Set up the app template
+
+Ready to build a frontend? The app template wires up Web3 login and sponsored transactions for you.
+
+<Steps>
 <Step>
 ### Clone and Install
 
@@ -69,21 +112,13 @@ NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="29aa6a65f5c890cfa428d59b15dec6293bf4ff0a9430
 </Step>
 
 <Step>
-### Start Development Server
+### Start the Dev Server
 
 ```bash
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000).
-</Step>
-
-<Step>
-### Verify Setup
-
-1. Click **Enter**
-2. Connect your wallet
-3. You should see your dashboard with your alias
+Open [localhost:3000](http://localhost:3000), click **Enter**, connect your wallet, and you should see your dashboard with your alias.
 
 <Callout type="success">Setup complete.</Callout>
 </Step>
@@ -104,7 +139,7 @@ These docs use **preprod** (Cardano testnet) for safe development. When your app
 
 **"Access Token not found"** — Check your wallet is set to preprod network.
 
-**"Invalid API key"** — Verify `.env` has no trailing whitespace and uses double quotes.
+**"Invalid API key"** — Verify there's no trailing whitespace and the key is quoted.
 
 **"Failed to fetch"** — Test the gateway: `curl https://preprod.api.andamio.io/health`
 
@@ -115,14 +150,14 @@ These docs use **preprod** (Cardano testnet) for safe development. When your app
 ## Next Steps
 
 <Cards>
-  <Card title="Your First Transaction" href="/docs/api/first-app">
+  <Card title="Your First Andamio App" href="/docs/api/first-app">
     Build something real — create a course and enroll a student
   </Card>
-  <Card title="API Integration" href="/docs/api/accounts/api-integration">
-    Understand the build → sign → submit flow
+  <Card title="Authentication" href="/docs/api/accounts/authentication">
+    User login with wallet signatures and the JWT flow
   </Card>
-  <Card title="Environment Reference" href="/docs/api/reference/environments">
-    All environment configurations for dev, staging, and production
+  <Card title="API Integration" href="/docs/api/accounts/api-integration">
+    Environment URLs, auth headers, and the endpoint taxonomy
   </Card>
   <Card title="API Reference" href="https://api.andamio.io">
     Full endpoint documentation

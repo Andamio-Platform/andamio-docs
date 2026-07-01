@@ -31,13 +31,29 @@ const config = {
       // under developers/ but belongs to Apps & Tooling), then the rest.
       { source: '/docs/guides/developers/cli/:path*', destination: '/docs/apps-tooling/cli/:path*', permanent: true },
       { source: '/docs/guides/developers/:path*', destination: '/docs/api/guides/:path*', permanent: true },
-      { source: '/docs/guides/courses/:path*', destination: '/docs/apps-tooling/courses/:path*', permanent: true },
-      { source: '/docs/guides/projects/:path*', destination: '/docs/apps-tooling/projects/:path*', permanent: true },
-      { source: '/docs/guides/contributors/:path*', destination: '/docs/apps-tooling/contributors/:path*', permanent: true },
-      { source: '/docs/guides/getting-started', destination: '/docs/apps-tooling/explore-getting-started', permanent: true },
-      { source: '/docs/guides/roles', destination: '/docs/apps-tooling/roles', permanent: true },
-      { source: '/docs/guides/preprod-wallet-setup', destination: '/docs/apps-tooling/preprod-wallet-setup', permanent: true },
+      // The operational guides (courses/projects/contributors) moved into the app
+      // itself (in-app teaching); legacy guide URLs land on the Andamio App entry.
+      { source: '/docs/guides/courses/:path*', destination: '/docs/apps-tooling/andamio-app', permanent: true },
+      { source: '/docs/guides/projects/:path*', destination: '/docs/apps-tooling/andamio-app', permanent: true },
+      { source: '/docs/guides/contributors/:path*', destination: '/docs/apps-tooling/andamio-app', permanent: true },
+      { source: '/docs/guides/getting-started', destination: '/docs/apps-tooling/andamio-app/explore-getting-started', permanent: true },
+      { source: '/docs/guides/roles', destination: '/docs/apps-tooling/andamio-app/roles', permanent: true },
+      { source: '/docs/guides/preprod-wallet-setup', destination: '/docs/apps-tooling/andamio-app/preprod-wallet-setup', permanent: true },
       { source: '/docs/guides', destination: '/docs/apps-tooling', permanent: true },
+
+      // Apps & Tooling flattened to a catalog (2026-07-01). The Andamio app's
+      // orientation pages moved under /andamio-app/, and the operational guides
+      // (courses/projects/contributors) moved into the app as in-app teaching —
+      // their old URLs land on the Andamio App entry.
+      { source: '/docs/apps-tooling/explore-getting-started', destination: '/docs/apps-tooling/andamio-app/explore-getting-started', permanent: true },
+      { source: '/docs/apps-tooling/roles', destination: '/docs/apps-tooling/andamio-app/roles', permanent: true },
+      { source: '/docs/apps-tooling/demo', destination: '/docs/apps-tooling/andamio-app/demo', permanent: true },
+      { source: '/docs/apps-tooling/preprod-wallet-setup', destination: '/docs/apps-tooling/andamio-app/preprod-wallet-setup', permanent: true },
+      { source: '/docs/apps-tooling/courses/:path*', destination: '/docs/apps-tooling/andamio-app', permanent: true },
+      { source: '/docs/apps-tooling/courses', destination: '/docs/apps-tooling/andamio-app', permanent: true },
+      { source: '/docs/apps-tooling/projects/:path*', destination: '/docs/apps-tooling/andamio-app', permanent: true },
+      { source: '/docs/apps-tooling/projects', destination: '/docs/apps-tooling/andamio-app', permanent: true },
+      { source: '/docs/apps-tooling/contributors', destination: '/docs/apps-tooling/andamio-app', permanent: true },
 
       // Top-level pages moved under api/.
       { source: '/docs/getting-started', destination: '/docs/api/getting-started', permanent: true },
@@ -51,7 +67,9 @@ const config = {
       // Intro pages moved loose under /api/; the two heavy clusters became
       // nested folders (accounts/, core/). Specific exact matches first, then
       // the bare index, then a catch-all for anything unmapped.
-      { source: '/docs/api/guides/api-quickstart', destination: '/docs/api/api-quickstart', permanent: true },
+      // API Quickstart merged into the Quickstart (getting-started) page.
+      { source: '/docs/api/api-quickstart', destination: '/docs/api/getting-started', permanent: true },
+      { source: '/docs/api/guides/api-quickstart', destination: '/docs/api/getting-started', permanent: true },
       { source: '/docs/api/guides/first-app', destination: '/docs/api/first-app', permanent: true },
       { source: '/docs/api/guides/billing', destination: '/docs/api/billing', permanent: true },
       { source: '/docs/api/guides/api-integration', destination: '/docs/api/accounts/api-integration', permanent: true },
@@ -67,8 +85,12 @@ const config = {
       { source: '/docs/api/guides/:path*', destination: '/docs/api', permanent: true },
 
       // Apps & Tooling.
-      { source: '/docs/demo', destination: '/docs/apps-tooling/demo', permanent: true },
-      { source: '/docs/sdk/:path*', destination: '/docs/apps-tooling/sdk/:path*', permanent: true },
+      { source: '/docs/demo', destination: '/docs/apps-tooling/andamio-app/demo', permanent: true },
+      // The old SDK section (phantom @andamio/transactions) was removed; the real
+      // open package is @andamio/core, now the "Core" entry.
+      { source: '/docs/sdk/:path*', destination: '/docs/apps-tooling/core', permanent: true },
+      { source: '/docs/apps-tooling/sdk/:path*', destination: '/docs/apps-tooling/core', permanent: true },
+      { source: '/docs/apps-tooling/sdk', destination: '/docs/apps-tooling/core', permanent: true },
 
       // CLI docs thinned to canonical-in-repo: the andamio-cli GitHub repo is the
       // source of truth (README + lifecycle docs). The section now carries only the

@@ -1,0 +1,12 @@
+{
+  "title": "App",
+  "icon": "AppWindow",
+  "pages": [
+    "index",
+    "explore-getting-started",
+    "roles",
+    "demo",
+    "preprod-wallet-setup"
+  ],
+  "defaultOpen": false
+}
