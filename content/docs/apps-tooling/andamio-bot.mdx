@@ -1,0 +1,49 @@
+---
+title: Andamio Bot
+description: A self-hosted Discord bot (v1.0) that reads members' Andamio credentials and gates Discord roles on them. Fork the template and stand up your own instance.
+icon: ShieldCheck
+---
+
+Andamio Bot is a Discord bot that brings Andamio on-chain credentials into a Discord community. A member proves they control an Andamio alias with `/login`, sees their earned credentials with `/credentials`, and is automatically granted Discord roles based on what they hold.
+
+At **v1.0**, the bot is self-hosted: there is no managed service to sign up for. You install it by forking the repo (a GitHub template) and standing up your own instance against your Discord server and an Andamio deployment.
+
+It does what a plain wallet-verification bot cannot: it reads each member's credentials from the authenticated Andamio API and gates Discord roles on them, **with no wallet handling by adopters.** The bot never touches a wallet, seed phrase, or private key. You need no wallet, no ADA, no Cardano knowledge, and no Andamio CLI or account to deploy.
+
+## Full documentation
+
+Andamio Bot is open source (Apache 2.0), and the [andamio-bot repo](https://github.com/Andamio-Platform/andamio-bot) is the source of truth. It ships with task-oriented guides:
+
+- [Quickstart](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/QUICKSTART.md) — deploy with a list of values you were given (no Andamio account needed).
+- [Builder guide](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/BUILDER-GUIDE.md) — wire up your own gating, using the [Andamio CLI](/docs/apps-tooling/cli) to find your `course_id` and `slt_hash`.
+- [Concepts](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/CONCEPTS.md) — the few terms involved and where each config value comes from.
+- [Deploy anywhere](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/DEPLOY.md) and [troubleshooting](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/TROUBLESHOOTING.md).
+
+The rest of this page is a quick orientation.
+
+## What it does
+
+Members interact with the bot through slash commands:
+
+| Command | What it does |
+|---------|--------------|
+| `/login` · `/logout` | Link or unlink a Discord account to an Andamio alias, via the hosted Andamio login. |
+| `/credentials` | Show the member the Andamio credentials they have earned. |
+| `/available` | List the credentials this server gates channels on, each marked held or not. |
+| `/check` | Re-read credentials live, update roles, and report where the member stands. |
+| `/progress` | The member's Andamio progress across courses and per-module status. |
+| `/preview` | Preview a course's modules and a lesson or assignment as an embed. |
+| `/faq` | A get-started guide plus server-specific Q&A, with autocomplete. |
+
+Moderators with **Manage Roles** (or a configured `MOD_ROLE_ID`) also get a deny-list (`/deny`, `/allow`, `/denials`) to withhold a gated role from a specific member even when they hold the credential.
+
+## How it works
+
+- `/login` reuses the Andamio app's hosted login to prove a Discord member controls an alias, then stores the `discord_id`-to-alias link plus the member's login token. No wallet logic lives in the bot.
+- Reads run on the authenticated Andamio API (`POST /api/v2/user/dashboard`): an operator key authenticates the bot, and the member's bearer token selects whose dashboard to read.
+- `config/role-mappings.json` maps earned credentials to Discord roles. The bot grants and revokes **only** the roles it manages, never a moderator, booster, or other role.
+- Roles re-evaluate on `/login`, on `/check`, when a member rejoins, and on a periodic sweep. The datastore is file-based SQLite (zero-ops).
+
+## Deploy your own
+
+The repo is a GitHub template: use "Use this template" to start your own, or fork it. Follow the [Quickstart](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/QUICKSTART.md) to deploy with values you were given, or the [Builder guide](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/BUILDER-GUIDE.md) to define what your server gates on. Deploy guidance for any host is in [DEPLOY.md](https://github.com/Andamio-Platform/andamio-bot/blob/main/docs/DEPLOY.md).
