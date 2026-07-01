@@ -422,28 +422,21 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted-foreground);
-  padding: 0 0.875rem 0.65rem;
+  padding: 1rem;
   border: none;
 }
 .prose td {
-  /* Row breathing room: the density pass over-tightened these to 0.45rem,
-     leaving rows cramped against the hairline dividers. 0.75rem gives a
-     comfortable ~46px row at the 15px body size without losing the
-     borderless, scannable Stripe rhythm. */
-  padding: 0.75rem 0.875rem;
+  /* Cell padding matches the code-block inset (1rem) so tables read with the
+     same breathing room as fenced code, not cramped against the hairline
+     dividers. Outer cells stay flush to the text column (override below). */
+  padding: 1rem;
   border: none;
   border-top: 1px solid var(--border);
   vertical-align: top;
 }
-/* Outer cells flush to the text column edges */
-.prose th:first-child,
-.prose td:first-child {
-  padding-left: 0;
-}
-.prose th:last-child,
-.prose td:last-child {
-  padding-right: 0;
-}
+/* Every cell — including the outer columns and the header — gets the full
+   1rem inset, so tables read with the same all-sides breathing room as a
+   fenced code block (no flush-left first column, no top-hugging header). */
 
 /* Breadcrumb active crumb — quiet gray, not loud orange (Stripe pattern).
    Targets the breadcrumb span specifically (truncate + primary + medium). */

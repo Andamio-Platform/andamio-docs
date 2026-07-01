@@ -69,6 +69,9 @@ const config = {
       // the bare index, then a catch-all for anything unmapped.
       // API Quickstart merged into the Quickstart (getting-started) page.
       { source: '/docs/api/api-quickstart', destination: '/docs/api/getting-started', permanent: true },
+      // Access Token Verification pulled from public docs (endpoints filtered
+      // out of the public OpenAPI reference).
+      { source: '/docs/api/core/access-token-verification', destination: '/docs/api', permanent: true },
       { source: '/docs/api/guides/api-quickstart', destination: '/docs/api/getting-started', permanent: true },
       { source: '/docs/api/guides/first-app', destination: '/docs/api/first-app', permanent: true },
       { source: '/docs/api/guides/billing', destination: '/docs/api/billing', permanent: true },
