@@ -14,6 +14,7 @@
         "--- Tools ---",
         "cli",
         "andamio-dev",
+        "coach",
         "sdk"
     ]
 }

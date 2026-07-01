@@ -4,12 +4,24 @@ description: The agent-native way to build on Andamio. Install the CLI, add the 
 icon: Bot
 ---
 
-`andamio-dev` is a public [Agent Skills](https://agent-skills.cc) package, originally built as a Claude Code plugin, that pairs with the [Andamio CLI](/docs/apps-tooling/cli) so an AI coding agent can operate Andamio alongside you. It serves two purposes:
+`andamio-dev` is a public [Agent Skills](https://agent-skills.cc) package that pairs with the [Andamio CLI](/docs/apps-tooling/cli) so an AI coding agent can operate Andamio alongside you. It serves two purposes:
 
 - **Operational skills** for day-to-day development: API exploration, exact CLI commands, cost estimation, course and project operations, and troubleshooting.
 - **The "Build on Andamio" course**, a seven-module curriculum delivered by agent, with hands-on exercises and assignment assessment.
 
 Use one or both. The ops skills work standalone and stay useful long after the course.
+
+## Prerequisites
+
+- A terminal with an AI coding agent (Claude Code, Cursor, or similar)
+- The [Andamio CLI](/docs/apps-tooling/cli)
+- Free test ADA from the Cardano preprod faucet
+
+New to Cardano? Start with `/orientation` or `/learn`; both walk you through CLI install and faucet funding. Everything runs on the preprod testnet, so no real money is needed.
+
+## Full documentation
+
+`andamio-dev` is open source, and the [andamio-dev repo](https://github.com/Andamio-Platform/andamio-dev) is the source of truth for the complete skill set, course content, and reference material. The rest of this page is a quick orientation.
 
 ## The agent-native workflow
 
@@ -20,12 +32,6 @@ The CLI is built to be driven by an agent, not just typed by hand. The pattern J
 3. Point your agent at both, then describe what you want in plain language.
 
 With the commands and the guidance in its context, the agent can explore the Gateway API, look up the exact CLI command for any operation, estimate ADA costs, run full course and project lifecycles, and diagnose failures. You describe the outcome; the agent runs the transaction state machine.
-
-<Callout type="info" title="Canonical source: the andamio-dev repo">
-  `andamio-dev` is open source and the repo is the source of truth for the full
-  skill set, course content, and reference material:
-  [github.com/Andamio-Platform/andamio-dev](https://github.com/Andamio-Platform/andamio-dev).
-</Callout>
 
 ## Install
 
@@ -98,11 +104,3 @@ Run `/learn` to start. An agent delivers each lesson, guides you through exercis
 | 700 | Build Something Real | Ship a working Andamio integration |
 
 The same curriculum is available as a live browser course at [app.andamio.io](https://app.andamio.io/course/c3b219c31be6c82a587ece8f6e45df2c8bcc3c39ad133ba7014d7376), with on-chain progress and credential NFTs. You can mix the two: read a lesson in the app, then run `/learn` locally to do the exercise with an agent.
-
-## Prerequisites
-
-- A terminal with an AI coding agent (Claude Code, Cursor, or similar)
-- The [Andamio CLI](/docs/apps-tooling/cli)
-- Free test ADA from the Cardano preprod faucet
-
-New to Cardano? Start with `/orientation` or `/learn`; both walk you through CLI install and faucet funding. Everything runs on the preprod testnet, so no real money is needed.
