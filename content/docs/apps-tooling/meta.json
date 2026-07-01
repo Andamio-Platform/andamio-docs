@@ -13,6 +13,7 @@
         "demo",
         "--- Tools ---",
         "cli",
+        "andamio-dev",
         "sdk"
     ]
 }
