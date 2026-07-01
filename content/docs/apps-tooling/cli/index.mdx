@@ -6,6 +6,16 @@ icon: Terminal
 
 The Andamio CLI is a command-line tool for managing course content and project tasks. Export modules for local editing, create on-chain task bounties linked to GitHub issues, import changes, and manage authentication — all without leaving your terminal.
 
+<Callout type="info" title="Canonical source: the andamio-cli repo">
+  The Andamio CLI is open source. This page is a quick orientation — the full
+  command reference, workflows, and lifecycle guides live in the repo and are
+  the source of truth: [github.com/Andamio-Platform/andamio-cli](https://github.com/Andamio-Platform/andamio-cli).
+  See the repo [README](https://github.com/Andamio-Platform/andamio-cli/blob/main/README.md)
+  and the lifecycle guides ([transactions](https://github.com/Andamio-Platform/andamio-cli/blob/main/docs/TX-LIFECYCLE.md),
+  [courses](https://github.com/Andamio-Platform/andamio-cli/blob/main/docs/COURSE-LIFECYCLE.md),
+  [projects](https://github.com/Andamio-Platform/andamio-cli/blob/main/docs/PROJECT-LIFECYCLE.md)).
+</Callout>
+
 ## What You Can Do
 
 ### Browse and Query
@@ -100,20 +110,13 @@ vim compiled/my-course/101/lesson-1.md
 andamio course import compiled/my-course/101 --course-id <course-id>
 ```
 
-## Guides
+## Full Documentation
 
-| Guide | Description |
-|-------|-------------|
-| [Installation](/docs/apps-tooling/cli/installation) | Install the CLI and verify setup |
-| [Authentication](/docs/apps-tooling/cli/authentication) | API keys, wallet login, JWT management |
-| [Managing Courses](/docs/apps-tooling/cli/managing-courses) | Query courses, teacher module management, student enrollment and credentials |
-| [Import & Export](/docs/apps-tooling/cli/import-export) | Round-trip course editing workflow |
-| [Import Format](/docs/apps-tooling/cli/import-format) | File format reference for `outline.md`, `lesson-N.md`, etc. |
-| [Managing Tasks](/docs/apps-tooling/cli/managing-tasks) | Task bounties, contributor workflows, manager reviews |
-| [Task Import & Export](/docs/apps-tooling/cli/task-import-export) | Edit tasks as Markdown files and sync changes |
-| [Transaction Signing](/docs/apps-tooling/cli/transaction-signing) | Sign and submit Cardano transactions with a local `.skey` file |
-| [Hash Verification](/docs/apps-tooling/cli/hash-verification) | Compute and verify Blake2b-256 content hashes |
+The comprehensive command reference and step-by-step workflows are maintained in the open-source repo, which is the source of truth:
 
-## Source
+- [README](https://github.com/Andamio-Platform/andamio-cli/blob/main/README.md) — installation, authentication, every command, networks, output formats, configuration
+- [Transaction Lifecycle](https://github.com/Andamio-Platform/andamio-cli/blob/main/docs/TX-LIFECYCLE.md) — the build → sign → submit → register → poll pipeline and recovery
+- [Course Lifecycle](https://github.com/Andamio-Platform/andamio-cli/blob/main/docs/COURSE-LIFECYCLE.md) — create and manage courses end to end
+- [Project Lifecycle](https://github.com/Andamio-Platform/andamio-cli/blob/main/docs/PROJECT-LIFECYCLE.md) — create and manage projects and task bounties
 
-The CLI is open source: [github.com/Andamio-Platform/andamio-cli](https://github.com/Andamio-Platform/andamio-cli)
+One reference stays here in the docs: the [Import Format](/docs/apps-tooling/cli/import-format) for the `outline.md` / `lesson-N.md` files used by `course import` and `course export`.

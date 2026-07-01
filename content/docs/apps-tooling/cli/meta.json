@@ -3,15 +3,7 @@
   "icon": "Terminal",
   "pages": [
     "index",
-    "installation",
-    "authentication",
-    "managing-courses",
-    "import-export",
-    "import-format",
-    "managing-tasks",
-    "task-import-export",
-    "transaction-signing",
-    "hash-verification"
+    "import-format"
   ],
   "defaultOpen": false
 }
