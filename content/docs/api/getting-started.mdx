@@ -8,27 +8,35 @@ description: From zero to your first Andamio API call in 5 minutes, then the loc
 Get from zero to a working Andamio API call, then set up the local app template when you're ready to build a frontend.
 
 <Callout title="Prerequisites">
-- **Cardano wallet on preprod with test ADA** — [Setup guide](/docs/apps-tooling/andamio-app/preprod-wallet-setup)
+- **Cardano wallet on mainnet with a small amount of ADA** — developer registration happens on the mainnet app
+- **Cardano wallet on preprod with test ADA** for development — [Setup guide](/docs/apps-tooling/andamio-app/preprod-wallet-setup)
 - For the app template (optional): **Node.js 20+** and **npm 10+**
 </Callout>
 
 ## 1. Mint your Access Token
 
-Your Access Token is your on-chain identity for Andamio.
+Your Access Token is your on-chain identity for Andamio. Developer registration lives on the **mainnet** app, so you need a mainnet Access Token — a preprod-only token can't register a developer account.
 
-1. Go to [preprod.app.andamio.io](https://preprod.app.andamio.io)
+1. Go to [app.andamio.io](https://app.andamio.io)
 2. Click **Enter** → **Connect Wallet**
-3. Connect your wallet (preprod network)
+3. Connect your wallet (mainnet network)
 4. Enter an alias (permanent)
 5. Click **Mint Access Token** and sign
 6. Wait ~20 seconds for confirmation
 
-## 2. Generate an API Key
+## 2. Register and generate an API Key
 
-1. Go to [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup)
+API keys for **every environment** — preprod included — are managed on the mainnet app. (`/api-setup` on the preprod app redirects to the dashboard by design.)
+
+1. Go to [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
 2. Connect your wallet and sign in to the Gateway
-3. Select **preprod**
-4. Click **Generate API Key** and name it (e.g., "local-dev")
+3. Register as a developer
+4. Select the network for your key — **preprod** for development
+5. Click **Generate API Key** and name it (e.g., "local-dev")
+
+<Callout type="warn" title="Preprod keys are in limited access">
+Self-serve **preprod** key generation is currently limited to internal testers (the request fails with a 403). Ask in the [Andamio Discord](https://discord.gg/wfGrgJJheS) and the team will provision a preprod key for you while self-serve access rolls out. Mainnet keys are available to all registered developers.
+</Callout>
 
 <Callout type="warn" title="Save your key">
 Copy the key immediately — it won't be shown again.
@@ -123,6 +131,8 @@ npm run dev
 
 Open [localhost:3000](http://localhost:3000), click **Enter**, connect your wallet, and you should see your dashboard with your alias.
 
+To sign in to your local app you'll need a **preprod** Access Token — mint one at [preprod.app.andamio.io](https://preprod.app.andamio.io) (same flow as step 1, with test ADA).
+
 <Callout type="success">Setup complete.</Callout>
 </Step>
 </Steps>
@@ -133,12 +143,14 @@ Open [localhost:3000](http://localhost:3000), click **Enter**, connect your wall
 
 These docs use **preprod** (Cardano testnet) for safe development. When your app is ready for production:
 
-1. Generate a mainnet API key at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
+1. Generate a mainnet API key at [app.andamio.io/api-setup](https://app.andamio.io/api-setup) — the same portal that manages your preprod keys
 2. Update `.env` with mainnet settings — see [Environment Reference](/docs/api/reference/environments)
 
 ---
 
 ## Troubleshooting
+
+**"/api-setup redirects me to /dashboard"** — You're on the preprod app. API keys are managed on the mainnet app: [app.andamio.io/api-setup](https://app.andamio.io/api-setup).
 
 **"Access Token not found"** — Check your wallet is set to preprod network.
 

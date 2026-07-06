@@ -9,9 +9,13 @@ Start on **preprod** for development. Move to **production** when your app is te
 
 | Environment | Gateway URL | App URL | Generate API Key |
 |-------------|-------------|---------|------------------|
-| **Preprod** (start here) | `preprod.api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | [preprod.app.andamio.io/api-setup](https://preprod.app.andamio.io/api-setup) |
+| **Preprod** (start here) | `preprod.api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | [app.andamio.io/api-setup](https://app.andamio.io/api-setup) (see note) |
 | Production | `mainnet.api.andamio.io` | [app.andamio.io](https://app.andamio.io) | [app.andamio.io/api-setup](https://app.andamio.io/api-setup) |
 | Development | `dev.api.andamio.io` | [dev.app.andamio.io](https://dev.app.andamio.io) | Internal — contact team |
+
+<Callout type="warn" title="All API keys are managed on the mainnet app">
+API keys for every environment — preprod included — are generated at [app.andamio.io/api-setup](https://app.andamio.io/api-setup) using the network selector. `/api-setup` on the preprod app redirects to the dashboard by design. Registration requires a **mainnet** Access Token, and self-serve preprod key generation is currently limited to internal testers — ask in the [Andamio Discord](https://discord.gg/wfGrgJJheS) for a preprod key while access rolls out.
+</Callout>
 
 ## Access Token Policy IDs
 
@@ -46,10 +50,9 @@ NEXT_PUBLIC_ACCESS_TOKEN_POLICY_ID="<contact-team-for-mainnet-policy-id>"
 
 When your app is tested and ready:
 
-1. **Generate a mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup)
-2. **Mint a mainnet Access Token** at [app.andamio.io](https://app.andamio.io) (requires real ADA)
-3. **Update environment variables** with production values above
-4. **Contact the Andamio team** for the mainnet Access Token policy ID
+1. **Generate a mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup) — you already have a mainnet Access Token from developer registration
+2. **Update environment variables** with production values above
+3. **Contact the Andamio team** for the mainnet Access Token policy ID
 
 ## App Template Scripts
 
