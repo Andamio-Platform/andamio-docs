@@ -83,11 +83,13 @@ export const LAYERS: Layer[] = [
     tagline: "What travels with the file",
     what:
       "Because the badge is a self-contained SVG, the identifying data travels with the image. " +
-      "Today that is the Proof-Ring encoding of the (policy_id, slt_hash) pair — readable back " +
-      "out of the file itself, wherever it ends up.",
+      "Today the file carries two things: the Proof-Ring encoding of the (policy_id, slt_hash) " +
+      "pair, and — baked inside it — the credential's signed Open Badge, both readable straight " +
+      "out of the file wherever it ends up.",
     why:
-      "The file can be stored anywhere and the identifiers it carries can be recomputed by " +
-      "anyone — no Andamio lookup required to know which course and target it refers to.",
+      "The file can be stored anywhere: the identifiers it carries can be recomputed by anyone " +
+      "with no Andamio lookup, and the embedded signed credential lets the image verify itself " +
+      "offline against a DI-capable OB 3.0 verifier.",
     claims: [
       {
         text:
@@ -97,11 +99,12 @@ export const LAYERS: Layer[] = [
       },
       {
         text:
-          "Open Badges “baking” — embedding the signed verifiable credential inside the " +
-          "SVG/PNG (e.g. <openbadges:credential verify=\"<JWS>\">) so the image self-verifies " +
-          "offline. The spec is finalized; today's badges carry the Proof-Ring encoding, not an " +
-          "embedded signed credential.",
-        label: "coming",
+          "Open Badges “baking” is live — every badge embeds its signed Verifiable Credential in " +
+          "a CDATA <openbadges:credential> block (OB 3.0 §5.3.2.1) so the image self-verifies " +
+          "offline. The proof is a W3C Data Integrity proof (eddsa-rdfc-2022), not VC-JWT, so it " +
+          "carries no verify= attribute. Today's badges carry both the Proof-Ring encoding and " +
+          "this embedded signed credential.",
+        label: "live",
       },
     ],
     hotspot: { x: 77, y: 25 },
@@ -113,15 +116,18 @@ export const LAYERS: Layer[] = [
     tagline: "The portable, standards-based view",
     what:
       "Andamio expresses each credential in the Open Badges 3.0 / W3C Verifiable Credentials 2.0 " +
-      "JSON-LD form — a standards-based shape any compliant verifier can read. The Andamio-specific " +
-      "terms (onChainAnchor, onChainAttestation, accessToken, requires, prereqAttestation) are " +
-      "defined in a hosted, versioned JSON-LD context, and a hosted issuer Profile identifies " +
-      "Andamio as the issuer.",
+      "JSON-LD form — a standards-based shape that DI-capable OB 3.0 verifiers can read. The " +
+      "Andamio-specific terms (AttestationHost, OnChainCredentialAnchor, onChainAnchor, " +
+      "onChainAttestation, courseOwner, claimTxHash, policyId, accessToken, requires, " +
+      "prereqAttestation) are defined in a hosted, versioned JSON-LD context, and a hosted issuer " +
+      "Profile — typed [\"Profile\",\"AttestationHost\"] — identifies Andamio as the attestation host.",
     why:
-      "The OB3 / W3C VC form is a portable view of the on-chain anchor, so a verifier that has " +
-      "never heard of Cardano can still read and trust the credential — that's what makes an " +
-      "Andamio credential integrate with any app that speaks Open Badges. The DID layer gives the " +
-      "credential a cryptographic issuer identity so a verifier can check who signed it.",
+      "The OB3 / W3C VC form is a portable view of the on-chain anchor, so a DI-capable verifier " +
+      "that has never heard of Cardano can still read and trust the credential — that's what lets " +
+      "an Andamio credential integrate with apps that speak Open Badges Data Integrity (e.g. " +
+      "spruce, 1EdTech). JWS-only verifiers can't read Data Integrity proofs — that's OB 3.0 " +
+      "reality, not an Andamio gap. The DID layer gives the credential a cryptographic issuer " +
+      "identity so a verifier can check who signed it.",
     claims: [
       {
         text: "/context/v0.jsonld serves Andamio's OB 3.0 extension terms (versioned, immutable).",
@@ -133,15 +139,22 @@ export const LAYERS: Layer[] = [
       },
       {
         text:
-          "did:web:credentials.andamio.io is the production issuer identity — its " +
-          "/.well-known/did.json is not yet published; today credentials use a throwaway did:key " +
-          "and reference the hosted Profile URL informationally.",
-        label: "coming",
+          "did:web:credentials.andamio.io is the production issuer identity, and its " +
+          "/.well-known/did.json is published (type Multikey, key #key-2026-07). Credentials are " +
+          "signed under the did:web key — no throwaway did:key.",
+        label: "live",
       },
       {
         text:
-          "The signing service that emits and lets you verify a credential — KMS-backed signing " +
-          "plus a human-facing verification page.",
+          "KMS-backed signing is live: credentials sign per holder on demand, and the service is " +
+          "anchor-gated — it refuses to sign anything the chain doesn't attest (zero KMS " +
+          "operations on a failed anchor read).",
+        label: "live",
+      },
+      {
+        text:
+          "A hosted, human-facing verification page. Today verification is done by DI-capable " +
+          "OB 3.0 verifiers (e.g. spruce, 1EdTech) and by the self-verifying baked badge.",
         label: "coming",
       },
     ],
