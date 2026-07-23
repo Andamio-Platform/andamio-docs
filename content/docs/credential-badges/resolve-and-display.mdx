@@ -8,7 +8,7 @@ Displaying one is as simple as pointing an `<img>` at it. This page is the
 integrator's contract: the URL shape, how resolution works, and the few edge
 cases worth handling.
 
-<Callout type="info" title="Live on mainnet (v1.0)">
+<Callout type="info" title="Live on mainnet (v1.1)">
   Badge serving is live on Cardano **mainnet**. Any credential resolves on demand,
   so a badge does not have to be pre-generated.
 </Callout>
@@ -77,5 +77,8 @@ lookup degrades to a placeholder instead of a broken image:
   badge art without invalidating any issued credential, so the image is cached
   but not immutable. See [Anatomy of a Credential Badge](/docs/credential-badges)
   for what's actually inside.
-- **Independent verification (signing, `did:web`, baking) is v1.1.** Today a
-  badge's proof is its Proof-Ring encoding plus the on-chain anchor.
+- **Independent verification is live in v1.1.** Each badge bakes a signed
+  credential (`eddsa-rdfc-2022`, `did:web`), verifiable by DI-capable OB 3.0
+  verifiers (e.g. spruce, 1EdTech) with no call to Andamio. The Proof-Ring
+  encoding and on-chain anchor remain, now alongside the embedded signed
+  credential — see [Anatomy of a Credential Badge](/docs/credential-badges).
