@@ -3,6 +3,7 @@
     "icon": "Award",
     "pages": [
         "index",
+        "how-it-works",
         "resolve-and-display"
     ]
 }

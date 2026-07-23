@@ -1,0 +1,149 @@
+---
+title: How Credential Badges Work
+description: A five-minute, end-to-end read on what an Andamio Credential Badge is — the image, the Proof-Ring encoding, the Open Badges 3.0 form, and the on-chain anchor that makes it a credential and not a picture — plus how one resolves and where the portability work is going.
+---
+
+A **credential badge** is the visible face of an on-chain Andamio credential: a
+self-contained image that shows a learner's achievement as something a person can
+look at, hold, and post anywhere. It is free and open source, and that is the
+point. Anyone can look at a real badge, understand what an Andamio credential is,
+and start building with it.
+
+The important thing to internalize first: **the art *is* the proof.** A badge is
+not a decorative stand-in for a record kept somewhere else — its geometry encodes
+the credential's on-chain identity and round-trips back to the chain. This page
+takes one apart, layer by layer, then shows how it resolves and where it's going.
+
+<Callout type="info" title="Live on Cardano mainnet">
+  Credential badges are live in production. Any credential resolves on demand at
+  `https://credentials.andamio.io/badges/<policy_id>.<slt_hash>.svg` — a badge does
+  not have to be pre-generated. Off-platform verification is live too: credentials
+  are signed with a managed production key against the resolvable issuer identity
+  `did:web:credentials.andamio.io`, and on 2026-07-23 the first signed badge passed
+  1EdTech's Open Badges 3.0 validator **13 of 13 checks, zero warnings**. Every claim
+  below is labelled **live**, **in dev**, or **coming** so you always know where you
+  stand.
+</Callout>
+
+## The four layers
+
+A badge is four things stacked on top of each other. Only the top one is a picture.
+
+### 1. The image — presentation *(live)*
+
+Each badge is a self-contained SVG. Fonts are embedded, so it renders standalone
+in any browser or `<img>` tag with **no call back to Andamio and no client
+library**. The imagery is deliberately presentation-layer: an issuer can refresh a
+badge's art without invalidating a single issued credential, because the image is
+a *pointer* to the credential, never the credential's identity. (See layer 4.)
+
+The SVGs are **build output, not hand-authored files** — each one is rendered
+deterministically from on-chain data by an open-source generator. Change the
+generator or the source data and regenerate; never hand-edit a badge.
+
+### 2. The Proof-Ring encoding — the "art is proof" layer *(live)*
+
+The two rings around the badge are not decoration. They encode the credential's
+on-chain identity directly into the geometry:
+
+- the **outer ring** encodes the course's on-chain minting-policy id, and
+- the **inner ring** encodes the Student Learning Target (SLT) credential hash.
+
+Because the encoding is deterministic, a badge **round-trips back to the chain**: a
+decoder reads the rings off the image and confirms they match the credential's
+real on-chain hashes. The image checks itself — no server, no trust in Andamio
+required for this step. Most "verified" badges pair a picture with a *separate*
+record it points at, whether a hosted database or an on-chain token whose image is
+only attached metadata. Here the geometry itself is the proof, decodable straight
+back to the chain.
+
+### 3. The Open Badges 3.0 form — the portable standard *(live)*
+
+Underneath the image, a badge is expressed as an **Open Badges 3.0 / W3C
+Verifiable Credential 2.0** JSON-LD object — the interoperability standard the
+credentialing world already reads. The OB 3.0 `achievement.image` field points at
+the badge SVG; Andamio's own extension terms (`courseOwner`, and the
+`OnChainCredentialAnchor` evidence fields `network`, `policyId`, `asset`, and
+`claimTxHash`) carry the Cardano-native facts that plain OB 3.0 has no vocabulary
+for. The extension context is published at `/context/v1.jsonld` and the hosted
+issuer identity at `/issuer`. Published context versions are immutable: adding
+vocabulary mints the next version URL, and every earlier version keeps serving
+forever, so a credential signed long ago still canonicalizes exactly as it did on
+signing day.
+
+The **format** and the **cryptographic signature** are both delivered. A signed
+badge carries a W3C Data Integrity proof (`eddsa-rdfc-2022`), produced by a managed
+production key and checkable against `did:web:credentials.andamio.io` by any
+Data-Integrity-capable OB 3.0 / VC verifier, with no call to Andamio. On 2026-07-23,
+1EdTech's member validator independently confirmed the first signed badge: 13 of 13
+checks passed, zero warnings.
+
+### 4. The on-chain anchor — where identity actually lives *(live)*
+
+The credential's real identity is not in the image or the JSON — it is anchored in
+the learner's **Access Token global state on Cardano mainnet**. An Andamio
+credential is an attestation written into that on-chain state by a multi-party
+process (the course owner, an assessor, the chain itself, and Andamio's signer).
+Everything above — the image, the rings, the OB 3.0 object — is a portable *view*
+of that anchor, so that a non-Cardano audience can read a fact that lives on
+Cardano. Burn or transfer the on-chain credential and the anchor changes; the
+picture was only ever a pointer to it.
+
+## How a badge resolves
+
+Serving is **static-first with an on-demand render fallback**, so every valid
+credential resolves whether or not its badge was pre-built *(live)*:
+
+1. **Hit** — if the badge is in the pre-generated set, nginx serves it from disk.
+2. **Miss** — the request falls through to a render service, which reads the course
+   and module **titles** from the Andamio gateway (titles are the only thing
+   fetched), renders the SVG, and caches it. First request renders; repeats serve
+   from cache.
+
+You never need to know which path served you — the response is the same
+`image/svg+xml`. The badge *geometry* is reproducible entirely offline, because the
+proof is the on-chain-anchored ring encoding, not anything the render service adds.
+For the integrator's URL contract and embed snippet, see
+[Resolve & Display a Badge](/docs/credential-badges/resolve-and-display).
+
+## The one idea to keep
+
+**The image is presentation-layer; the on-chain anchor is identity.** Get that
+right and the rest follows: art can be restyled without breaking credentials,
+badges embed anywhere as plain images, and "verification" means checking the rings
+and the signature back against the chain and Andamio's published issuer key — not
+trusting a hosted database.
+
+## The portability rollout — what's live, what's left
+
+The v1.1 portability work makes a badge **independently verifiable off-platform**,
+so anyone can trust it without trusting Andamio and without touching Cardano
+tooling. Most of it is now live:
+
+- **Ed25519 signing** with a managed key, and a **signed OB 3.0 Verifiable
+  Credential baked into the badge** — self-verifying, no call to our server. *(live)*
+- **`did:web:credentials.andamio.io`** as a resolvable issuer identity, so a
+  standard verifier can fetch the signing key and check the signature. *(live)*
+- A **status list** for suspension/revocation signalling. *(live)*
+- A **third-party embed component** and a **standalone wallet-connect viewer**, so a
+  holder's badges can be shown and verified anywhere, no Andamio account required.
+  *(coming)*
+
+<Callout type="warn" title="Scope of 'independently verifiable'">
+  Signed badges are verifiable by **Data-Integrity-capable OB 3.0 / VC verifiers**
+  (e.g. SpruceID's `ssi`, 1EdTech's validator), not by *every* tool that calls itself
+  an OB 3.0 verifier — many read only JWS-style credentials and will not read
+  Andamio's Data Integrity JSON-LD credential. That is Open Badges reality, not an
+  Andamio gap. For any badge not yet carrying a baked signature, the proof story
+  remains Proof-Ring plus on-chain anchor.
+</Callout>
+
+## Go deeper
+
+- [Anatomy of a Credential Badge](/docs/credential-badges) — the same four layers as
+  an interactive explorer.
+- [Resolve & Display a Badge](/docs/credential-badges/resolve-and-display) — the
+  integrator's URL contract and embed.
+- [`credential-badges` on GitHub](https://github.com/Andamio-Platform/credential-badges)
+  — the open-source generator, the served static host, and the roadmap. Run
+  `make verify` to decode a real badge and watch it round-trip to its on-chain hashes.
