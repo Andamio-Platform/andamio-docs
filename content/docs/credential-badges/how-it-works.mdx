@@ -14,13 +14,15 @@ not a decorative stand-in for a record kept somewhere else — its geometry enco
 the credential's on-chain identity and round-trips back to the chain. This page
 takes one apart, layer by layer, then shows how it resolves and where it's going.
 
-<Callout type="info" title="Live on Cardano mainnet (v1.0)">
+<Callout type="info" title="Live on Cardano mainnet">
   Credential badges are live in production. Any credential resolves on demand at
   `https://credentials.andamio.io/badges/<policy_id>.<slt_hash>.svg` — a badge does
-  not have to be pre-generated. What is **not** yet live is off-platform independent
-  verification (signing, `did:web`); that's the v1.1 work described at the end, and
-  every claim below is labelled **live**, **in dev**, or **coming** so you always know
-  where you stand.
+  not have to be pre-generated. Off-platform verification is live too: credentials
+  are signed with a managed production key against the resolvable issuer identity
+  `did:web:credentials.andamio.io`, and on 2026-07-23 the first signed badge passed
+  1EdTech's Open Badges 3.0 validator **13 of 13 checks, zero warnings**. Every claim
+  below is labelled **live**, **in dev**, or **coming** so you always know where you
+  stand.
 </Callout>
 
 ## The four layers
@@ -55,20 +57,26 @@ record it points at, whether a hosted database or an on-chain token whose image 
 only attached metadata. Here the geometry itself is the proof, decodable straight
 back to the chain.
 
-### 3. The Open Badges 3.0 form — the portable standard *(live: format · in dev: signature)*
+### 3. The Open Badges 3.0 form — the portable standard *(live)*
 
 Underneath the image, a badge is expressed as an **Open Badges 3.0 / W3C
 Verifiable Credential 2.0** JSON-LD object — the interoperability standard the
 credentialing world already reads. The OB 3.0 `achievement.image` field points at
-the badge SVG; Andamio's own extension terms (`onChainAnchor`, `onChainAttestation`,
-`accessToken`, `requires`, `prereqAttestation`) carry the Cardano-native facts that
-plain OB 3.0 has no vocabulary for. The extension context is published at
-`/context/v0.jsonld` and the hosted issuer identity at `/issuer`.
+the badge SVG; Andamio's own extension terms (`courseOwner`, and the
+`OnChainCredentialAnchor` evidence fields `network`, `policyId`, `asset`, and
+`claimTxHash`) carry the Cardano-native facts that plain OB 3.0 has no vocabulary
+for. The extension context is published at `/context/v1.jsonld` and the hosted
+issuer identity at `/issuer`. Published context versions are immutable: adding
+vocabulary mints the next version URL, and every earlier version keeps serving
+forever, so a credential signed long ago still canonicalizes exactly as it did on
+signing day.
 
-The **format** is delivered and has passed the 1EdTech Open Badges validator. The
-**cryptographic signature** that lets an outside verifier trust the object without
-calling Andamio is the v1.1 work below — today the object is correct OB 3.0 but not
-yet independently signed.
+The **format** and the **cryptographic signature** are both delivered. A signed
+badge carries a W3C Data Integrity proof (`eddsa-rdfc-2022`), produced by a managed
+production key and checkable against `did:web:credentials.andamio.io` by any
+Data-Integrity-capable OB 3.0 / VC verifier, with no call to Andamio. On 2026-07-23,
+1EdTech's member validator independently confirmed the first signed badge: 13 of 13
+checks passed, zero warnings.
 
 ### 4. The on-chain anchor — where identity actually lives *(live)*
 
@@ -103,30 +111,31 @@ For the integrator's URL contract and embed snippet, see
 **The image is presentation-layer; the on-chain anchor is identity.** Get that
 right and the rest follows: art can be restyled without breaking credentials,
 badges embed anywhere as plain images, and "verification" means checking the rings
-(and soon the signature) back against the chain — not trusting a hosted database.
+and the signature back against the chain and Andamio's published issuer key — not
+trusting a hosted database.
 
-## Where it's going — v1.1 portability *(in dev / coming)*
+## The portability rollout — what's live, what's left
 
-Today a badge's proof is its **Proof-Ring encoding plus the on-chain anchor** —
-Cardano-native, and strongest for a Cardano-aware audience. v1.1 makes a badge
-**independently verifiable off-platform**, so anyone can trust it without trusting
-Andamio and without touching Cardano tooling:
+The v1.1 portability work makes a badge **independently verifiable off-platform**,
+so anyone can trust it without trusting Andamio and without touching Cardano
+tooling. Most of it is now live:
 
 - **Ed25519 signing** with a managed key, and a **signed OB 3.0 Verifiable
-  Credential baked into the badge** — self-verifying, no call to our server.
+  Credential baked into the badge** — self-verifying, no call to our server. *(live)*
 - **`did:web:credentials.andamio.io`** as a resolvable issuer identity, so a
-  standard verifier can fetch the signing key and check the signature.
-- A **status list** for suspension/revocation signalling.
+  standard verifier can fetch the signing key and check the signature. *(live)*
+- A **status list** for suspension/revocation signalling. *(live)*
 - A **third-party embed component** and a **standalone wallet-connect viewer**, so a
   holder's badges can be shown and verified anywhere, no Andamio account required.
+  *(coming)*
 
-<Callout type="warn" title="Honest scope of 'independently verifiable'">
-  v1.1 is in active development, built one verifiable slice at a time. When it
-  lands, the accurate claim is that badges are verifiable by **Data-Integrity-capable
-  OB 3.0 / VC verifiers** (e.g. spruce, 1EdTech), not by *every* tool that calls
-  itself an OB 3.0 verifier — many read only JWS-style credentials and will not read
-  Andamio's Data Integrity JSON-LD credential. Until v1.1 ships, the honest proof
-  story remains Proof-Ring + on-chain anchor.
+<Callout type="warn" title="Scope of 'independently verifiable'">
+  Signed badges are verifiable by **Data-Integrity-capable OB 3.0 / VC verifiers**
+  (e.g. SpruceID's `ssi`, 1EdTech's validator), not by *every* tool that calls itself
+  an OB 3.0 verifier — many read only JWS-style credentials and will not read
+  Andamio's Data Integrity JSON-LD credential. That is Open Badges reality, not an
+  Andamio gap. For any badge not yet carrying a baked signature, the proof story
+  remains Proof-Ring plus on-chain anchor.
 </Callout>
 
 ## Go deeper

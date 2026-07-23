@@ -130,7 +130,10 @@ export const LAYERS: Layer[] = [
       "identity so a verifier can check who signed it.",
     claims: [
       {
-        text: "/context/v0.jsonld serves Andamio's OB 3.0 extension terms (versioned, immutable).",
+        text:
+          "/context/v1.jsonld serves Andamio's OB 3.0 extension terms. Published context " +
+          "versions are immutable: new vocabulary mints the next version URL, and every prior " +
+          "version (v0) keeps serving forever so already-signed credentials still verify.",
         label: "live",
       },
       {
@@ -154,7 +157,9 @@ export const LAYERS: Layer[] = [
       {
         text:
           "A hosted, human-facing verification page. Today verification is done by DI-capable " +
-          "OB 3.0 verifiers (e.g. spruce, 1EdTech) and by the self-verifying baked badge.",
+          "OB 3.0 verifiers (e.g. spruce, 1EdTech) and by the self-verifying baked badge — " +
+          "1EdTech's validator independently confirmed a signed badge 13/13, zero warnings " +
+          "(2026-07-23).",
         label: "coming",
       },
     ],
