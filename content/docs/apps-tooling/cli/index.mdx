@@ -45,15 +45,14 @@ The Andamio CLI is open source, and the [andamio-cli repo](https://github.com/An
 | Create a new module | `andamio course create-module --course-id <id> --code 101 --title "My Module"` |
 | Register a module from chain | `andamio course teacher register-module --course-id <id> --module-code 101 --slt-hash <hash>` |
 | Publish a module | `andamio course teacher publish-module --course-id <id> --module-code 101` |
-| Review a student submission | `andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision accept` |
+| Review a submission in one step | `andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision accept` |
 | List pending reviews | `andamio course teacher commitments --course-id <id>` |
-| List submissions awaiting review | `andamio teacher assignments list --course <id>` |
-| Read one submission | `andamio teacher assignments get <course-id> <module-code> <student-alias>` |
+| Read one submission in full | `andamio teacher assignments get <course-id> <module-code> <student-alias>` |
 | Build an assessment without signing it | `andamio teacher assessment build --course-id <id> --alias <you> --decision <student>=accept` |
 
-`teacher assignments` returns each submission as Markdown in `content.evidence_text`, alongside the raw Tiptap document in `content.evidence` — read the first for the prose, the second to verify a hash.
+Two paths lead to the same decision. `course teacher review` accepts or refuses one submission in a single step — reach for it when you are reviewing by hand. `teacher assessment build` stops at the unsigned transaction so a person can see the decisions before approving them, which is what you want when a script or an agent proposed them. Pass `--decision` once per learner, or `--decisions-file <path>` for a cohort; signing and submitting stay separate steps (see [Transactions](#transactions)), and `andamio tx run` still does the whole lifecycle in one go.
 
-`teacher assessment build` stops at the unsigned transaction so a person can review the decisions before approving them. Signing and submitting stay separate steps (see [Transactions](#transactions)); `andamio tx run` still does the whole lifecycle in one go.
+`andamio teacher assignments list --course <id>` returns each pending submission as Markdown in `content.evidence_text`, alongside the raw Tiptap document in `content.evidence` — read the first for the prose, the second to verify an on-chain commitment hash.
 
 ### Project Owner and Manager
 
