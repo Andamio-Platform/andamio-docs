@@ -47,16 +47,13 @@ The Andamio CLI is open source, and the [andamio-cli repo](https://github.com/An
 | Publish a module | `andamio course teacher publish-module --course-id <id> --module-code 101` |
 | Review a student submission | `andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision accept` |
 | List pending reviews | `andamio course teacher commitments --course-id <id>` |
+| List submissions awaiting review | `andamio teacher assignments list --course <id>` |
+| Read one submission | `andamio teacher assignments get <course-id> <module-code> <student-alias>` |
+| Build an assessment without signing it | `andamio teacher assessment build --course-id <id> --alias <you> --decision <student>=accept` |
 
-### Course Student
+`teacher assignments` returns each submission as Markdown in `content.evidence_text`, alongside the raw Tiptap document in `content.evidence` — read the first for the prose, the second to verify a hash.
 
-| Task | Command |
-|------|---------|
-| List enrolled courses | `andamio course student courses` |
-| Enroll in a module | `andamio course student create --course-id <id> --module-code 101` |
-| Submit assignment evidence | `andamio course student submit --course-id <id> --module-code 101 --evidence "https://..."` |
-| List your credentials | `andamio course student credentials` |
-| Claim a credential | `andamio course student claim --course-id <id> --module-code 101 --pending-tx-hash <hash>` |
+`teacher assessment build` stops at the unsigned transaction so a person can review the decisions before approving them. Signing and submitting stay separate steps (see [Transactions](#transactions)); `andamio tx run` still does the whole lifecycle in one go.
 
 ### Project Owner and Manager
 
@@ -69,16 +66,13 @@ The Andamio CLI is open source, and the [andamio-cli repo](https://github.com/An
 | Link a task to a GitHub issue | `andamio project task create <project-id> --title "..." --github-issue org/repo#42 --lovelace 5000000 --expiration 2026-06-01` |
 | Export tasks to Markdown | `andamio project task export <project-id>` |
 | List pending assessments | `andamio project manager commitments --project-id <id>` |
-
-### Project Contributor
-
-| Task | Command |
-|------|---------|
-| List projects you contribute to | `andamio project contributor list` |
-| Commit to a task | `andamio project contributor commit --project-id <id> --task-index 3` |
-| Submit evidence | `andamio project contributor update --project-id <id> --task-index 3 --evidence "https://..."` |
-| List your commitments | `andamio project contributor commitments` |
 | Verify task hashes | `andamio project task verify-hash <project-id>` |
+
+### Learners and Contributors
+
+CLI 1.0 scoped the tool to the **Owner, Teacher and Manager** roles — the people who author work and assess it. Enrolling in a module, submitting assignment evidence, committing to a task, and claiming a credential are not CLI commands.
+
+That work happens in the [Andamio app](https://app.andamio.io), which signs and submits it in one flow. If you are following a pre-1.0 tutorial and run `andamio course student ...` or `andamio project contributor ...`, the CLI will tell you the same thing and exit with code 4.
 
 ### Transactions
 
@@ -105,6 +99,19 @@ andamio course export <course-id> 101
 vim compiled/my-course/101/lesson-1.md
 andamio course import compiled/my-course/101 --course-id <course-id>
 ```
+
+## Scripting
+
+`--output json` is the stable surface. Data goes to stdout, progress and errors go to stderr, and no command reads stdin or prompts — everything works without a TTY. Discover ids first, then use them:
+
+```bash
+COURSE_ID=$(andamio course list --output json | jq -r '.data[0].course_id')
+andamio course modules "$COURSE_ID" --output json | jq -r '.data[].course_module_code'
+```
+
+Every failure carries an exit code and, under `--output json`, a matching `kind` field — both come from the same classification, so they never disagree. An empty result is **not** an error: a list command that finds nothing emits an empty collection and exits 0, which is what keeps "nothing to review" apart from "not permitted" and "service unreachable."
+
+Run `andamio help exit-codes` for the full table, or read the [Scripting section of the README](https://github.com/Andamio-Platform/andamio-cli/blob/main/README.md#scripting).
 
 ## Full Documentation
 
