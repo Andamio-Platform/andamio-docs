@@ -21,7 +21,7 @@ Resolves [#12](https://github.com/andamio-platform/andamio-docs/issues/12). The 
 
 ### 1. Copy PDF to public assets
 
-Source: `~/projects/01-projects/andamio-pioneers-cohort-001/andamio-v2-audit.pdf`
+Source: `$REPOS/andamio-pioneers-cohort-001/andamio-v2-audit.pdf`
 Destination: `public/documents/andamio-v2-audit.pdf`
 
 This establishes `public/documents/` as the pattern for serving PDF documents (no precedent exists in this repo).

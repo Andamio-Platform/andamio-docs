@@ -2,8 +2,8 @@
 # detect-drift.sh — surface stale version pins in andamio-docs public developer surface.
 #
 # Sources of truth:
-#   - GATEWAY_TAG   ← devkit VERSIONS  (~/projects/01-projects/andamio-dev-kit-internal/VERSIONS)
-#   - CLI tag       ← latest git tag in andamio-cli (~/projects/01-projects/andamio-cli)
+#   - GATEWAY_TAG   ← devkit VERSIONS  ($REPOS/andamio-dev-kit-internal/VERSIONS)
+#   - CLI tag       ← latest git tag in andamio-cli ($REPOS/andamio-cli)
 #
 # Scope (deliberately narrow):
 #   Includes — content/docs/api/guides/**, state-machine/**, getting-started.mdx
