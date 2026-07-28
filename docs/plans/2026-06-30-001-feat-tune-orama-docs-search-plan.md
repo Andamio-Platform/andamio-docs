@@ -4,7 +4,7 @@ status: completed
 date: 2026-06-30
 type: feat
 depth: standard
-origin: ../../../02-areas/andamio/docs/plans/2026-06-30-andamio-docs-handoff-orama-search-tuning.md
+origin: design-decided handoff, authored in a private planning vault (not team-accessible)
 target_repo: andamio-docs
 ---
 
@@ -219,7 +219,7 @@ The `tag` emitted by `buildIndex` (U1) is what the dialog's tag bar (U2) filters
 
 ## Sources & Research
 
-- **Origin handoff:** `02-areas/andamio/docs/plans/2026-06-30-andamio-docs-handoff-orama-search-tuning.md` (James's decision + the what/why/gotchas this plan executes).
+- **Origin handoff:** a design-decided handoff authored outside this repo (James's decision + the what/why/gotchas this plan executes).
 - **Installed types (verified, load-bearing — corrected the origin's nesting guess):**
   - `node_modules/fumadocs-core/dist/search/server.d.ts` — `createFromSource` `Options<Page>`, `AdvancedOptions.search`, `AdvancedIndex` fields (`tag`, `structuredData`, `keywords`).
   - `node_modules/@orama/orama/dist/browser/types.d.ts` — `SearchParams.tolerance` / `.threshold` (default `0`).

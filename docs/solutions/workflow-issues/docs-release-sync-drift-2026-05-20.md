@@ -71,7 +71,7 @@ The docs PR is a tick-through of the checklist. Trade-off: requires release auth
 A script that compares authoritative version sources against version strings in `content/docs/**/*.mdx`. Authoritative sources:
 
 - `devkit/VERSIONS` — `GATEWAY_TAG` (only this for public-docs purposes; ignore `DB_API_TAG`, `ATLAS_TAG`, `INDEXER_TAG`, `SIDECAR_TAG` — those are internal services excluded from public docs).
-- `git -C ~/projects/01-projects/andamio-cli describe --tags --abbrev=0` — current CLI tag.
+- `git -C $REPOS/andamio-cli describe --tags --abbrev=0` — current CLI tag.
 
 Sketch (run from `andamio-docs`):
 
@@ -173,4 +173,4 @@ content/docs/protocol/v2/state-machine/index.mdx:261: v2.1.1-rc12               
 - `.claude/skills/transaction-audit/SKILL.md` — domain-specific instance of release-cycle drift (Atlas swagger → V2 transaction YAML); should cross-link as the V2-transactions-only instance of this practice.
 - `.claude/skills/v2-docs-audit/SKILL.md` — coverage tracking for V2 transaction MDX; same family, narrower scope.
 - `.claude/skills/guide-pipeline/SKILL.md` "Cross-Repo Sync" section — proves the cross-repo tracker pattern; scope is onboarding guides + UX readiness.
-- `~/projects/01-projects/andamio-dev-kit-internal/docs/releases/v2.3/RELEASE_REPORT.md` — the source-of-truth artifact a release-cycle hook would consume.
+- `$REPOS/andamio-dev-kit-internal/docs/releases/v2.3/RELEASE_REPORT.md` — the source-of-truth artifact a release-cycle hook would consume.

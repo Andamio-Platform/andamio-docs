@@ -2,7 +2,7 @@
 type: plan
 status: completed
 created: 2026-06-29
-origin: ../../../02-areas/andamio/docs/plans/2026-06-29-docs-trust-verification-zone-handoff.md
+origin: design-decided handoff, authored in a private planning vault (not team-accessible)
 target_repo: andamio-docs
 branch: feat/trust-verification-zone
 ---
@@ -130,7 +130,7 @@ Both are exact-match sources; confirmed no existing rule matches these paths, so
 
 ## Sources & Research
 
-- Origin handoff: `../../../02-areas/andamio/docs/plans/2026-06-29-docs-trust-verification-zone-handoff.md`
+- Origin handoff: a design-decided handoff authored outside this repo
 - Verified directly on branch `feat/trust-verification-zone` (off `main` @ `cc2c547`): root `meta.json` layout, `protocol/v2/meta.json`, file existence, the 6 stale links (grep), and the absence of any `protocol/v2/:path*` wildcard in `next.config.mjs`.
 - IA context: memory `project_docs_ia_six_root_roadmap_aligned` (six product roots + horizontal Reference/Trust zones).
 - MDX gotchas (from project CLAUDE.md): content-collections silently drops files with invalid frontmatter — verify generated output after moves; never `replace_all` across frontmatter delimiters.

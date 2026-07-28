@@ -60,7 +60,7 @@ This skill parses decoded Cardano transaction CBORs from the Atlas API and creat
 After completing the YAML documentation, verify and update the monorepo transaction definition:
 
 1. **Locate the definition file:**
-   - Path: `~/projects/01-projects/andamio-platform/andamio-platform-monorepo/packages/andamio-transactions/src/definitions/v2/{system}/{role}/{tx-name}.ts`
+   - Path: `$REPOS/andamio-platform-monorepo/packages/andamio-transactions/src/definitions/v2/{system}/{role}/{tx-name}.ts`
    - If the file doesn't exist, create it following existing patterns
 
 2. **Verify alignment between YAML and TypeScript:**
@@ -201,7 +201,7 @@ See `.claude/skills/analyze-transaction/example-tx.md` for a complete worked exa
 
 **Outputs (all required):**
 1. YAML file at `public/yaml/transactions/v2/{system}/{role}/{tx-name}.yaml`
-2. TypeScript definition at `~/projects/01-projects/andamio-platform/andamio-platform-monorepo/packages/andamio-transactions/src/definitions/v2/{system}/{role}/{tx-name}.ts`
+2. TypeScript definition at `$REPOS/andamio-platform-monorepo/packages/andamio-transactions/src/definitions/v2/{system}/{role}/{tx-name}.ts`
 3. Registry updates (if new validators/policies discovered)
 </example>
 
@@ -216,7 +216,7 @@ See `.claude/skills/analyze-transaction/example-tx.md` for a complete worked exa
 6. **Ask questions when uncertain** - Better to clarify than guess incorrectly
 7. **File path alignment**:
    - YAML: `public/yaml/transactions/v2/{system}/{role}/{tx-name}.yaml`
-   - TS: `~/projects/01-projects/andamio-platform/andamio-platform-monorepo/packages/andamio-transactions/src/definitions/v2/{system}/{role}/{tx-name}.ts`
+   - TS: `$REPOS/andamio-platform-monorepo/packages/andamio-transactions/src/definitions/v2/{system}/{role}/{tx-name}.ts`
    - MDX: `content/docs/protocol/v2/transactions/{system}/{role}/{tx-name}.mdx`
 
 ## Existing Transactions (as templates)

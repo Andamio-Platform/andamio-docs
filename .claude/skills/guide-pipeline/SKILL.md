@@ -207,7 +207,7 @@ Create a GitHub issue in the app repo for a problem found during guide writing.
 
 ## Cross-Repo Sync
 
-The `guide-tracker.json` in this directory is the shared source of truth. The `ux-readiness` skill in the app repo (`~/projects/01-projects/andamio-platform/andamio-app-v2`) reads and writes to this file via absolute filesystem path.
+The `guide-tracker.json` in this directory is the shared source of truth. The `ux-readiness` skill in the app repo (`$REPOS/andamio-app-v2`) reads and writes to this file via absolute filesystem path.
 
 - Changes from the app repo appear as unstaged modifications here — commit them during your next docs session
 - Issue states are always verified live via `gh issue view`

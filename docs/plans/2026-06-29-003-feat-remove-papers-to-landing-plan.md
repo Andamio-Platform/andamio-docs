@@ -3,7 +3,7 @@ title: "feat: Remove paper stubs from docs, redirect to the landing"
 type: feat
 status: completed
 created: 2026-06-29
-origin: ../../../02-areas/andamio/docs/plans/2026-06-29-docs-remove-papers-to-landing-handoff.md
+origin: design-decided handoff, authored in a private planning vault (not team-accessible)
 target_repo: andamio-docs
 ---
 
@@ -287,7 +287,7 @@ landing URL; glossary page still resolves at `/docs/glossary`.
 
 ## Sources & Research
 
-- Origin handoff: `../../../02-areas/andamio/docs/plans/2026-06-29-docs-remove-papers-to-landing-handoff.md`
+- Origin handoff: a design-decided handoff authored outside this repo
 - Stub pages confirmed empty (`> **Coming soon.**`): `content/docs/light-paper.mdx`,
   `content/docs/api/building-on-andamio.mdx`.
 - Existing redirects + the building-on-andamio chain: `next.config.mjs:18-112` (chain at line 37).
