@@ -3,13 +3,13 @@ title: "feat: Protocol docs redesign — intro · source-backed validators · tr
 status: completed
 type: feat
 date: 2026-06-29
-origin: ../../../02-areas/andamio/docs/plans/2026-06-29-protocol-docs-redesign-handoff.md
+origin: design-decided handoff, authored in a private planning vault (not team-accessible)
 plan_depth: deep
 ---
 
 # feat: Protocol docs redesign — intro · source-backed validators · transaction-sequence steppers
 
-> **Origin:** `orch/docs/plans/2026-06-29-protocol-docs-redesign-handoff.md` (a self-contained, design-decided handoff). Design is settled; this is execution. **Target repo:** `andamio-docs`. All paths below are repo-relative to `andamio-docs/`.
+> **Origin:** a self-contained, design-decided handoff authored outside this repo. Design is settled; this is execution. **Target repo:** `andamio-docs`. All paths below are repo-relative to `andamio-docs/`.
 > **Validator source of truth:** `andamio-aiken-contracts` `plutus.json` @ `351b267` (on-chain code is immutable/deployed — current).
 
 ---
@@ -407,7 +407,7 @@ andamio-docs/
 
 ## Sources & Research
 
-- **Origin handoff:** `orch/docs/plans/2026-06-29-protocol-docs-redesign-handoff.md` (design-decided; this plan is its execution).
+- **Origin handoff:** a design-decided handoff authored outside this repo (design-decided; this plan is its execution).
 - **Blueprint (verified):** `andamio-aiken-contracts/plutus.json` @ `351b267` — extraction confirmed 12 validators and action lists matching the handoff table exactly (`validators[].title` → name; `redeemer.schema.$ref` → `definitions[].anyOf[].title` → actions).
 - **Reuse target:** `components/credential-badges/BadgeAnatomyExplorer.tsx` + `components/credential-badges/anatomy-layers.ts` (rail/stage/panel + ARIA + data/render split); registered via `mdx-components.tsx`; full-width pairing in `app/docs/[[...slug]]/page.tsx`.
 - **Generation precedents:** `scripts/generate-v2-tx-docs.mjs` (source-data → MDX), `scripts/check-contract-manifest.ts` (prebuild drift guard). *(`scripts/docs-coverage-check.ts` is **not** a usable precedent — it targets a non-existent `protocol/v1` tree and a missing `validator-registry-v1.yaml`, and is not in the `prebuild` chain; it already errors and is unrelated to this work.)*
