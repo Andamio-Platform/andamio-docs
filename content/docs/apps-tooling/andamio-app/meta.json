@@ -6,7 +6,8 @@
     "explore-getting-started",
     "roles",
     "demo",
-    "preprod-wallet-setup"
+    "preprod-wallet-setup",
+    "transaction-state-machine"
   ],
   "defaultOpen": false
 }

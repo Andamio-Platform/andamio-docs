@@ -4,8 +4,7 @@
         "index",
         "validators",
         "sequences",
-        "transaction-state-machine",
-        "cost-estimation",
+"cost-estimation",
         "whats-new"
     ],
     "defaultOpen": false

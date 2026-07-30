@@ -122,6 +122,9 @@ Protocol fees charged for certain operations, creating sustainable revenue for A
 ### SDK (Software Development Kit)
 Pre-built libraries (JavaScript, Python, Go, Rust) for simple Andamio integration. Target: days, not months.
 
+### Gateway Registration
+The act of notifying the Andamio gateway that a transaction has been submitted to the Cardano network. After `wallet.submitTx()` returns a `txHash`, the app POSTs it to `/api/v2/tx/register` along with the transaction type and any metadata. Before this POST, the gateway has no record of the transaction. After it, the gateway creates a tracking entry, adds the transaction to its confirmation queue, and opens an SSE stream so the frontend can receive state updates in real time.
+
 ### Server-Sent Events (SSE)
 A web technology where the server keeps an HTTP connection open and pushes updates to the browser in real time — one direction only (server to browser). Used by the Andamio gateway to stream transaction state changes (`pending → confirmed → updated`) to the app as they happen, without the browser needing to repeatedly ask for updates. If the SSE connection fails, the app falls back to polling.
 
