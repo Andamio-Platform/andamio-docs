@@ -1,0 +1,201 @@
+---
+title: "Transaction State Machine"
+description: "How the Andamio frontend tracks a transaction from button click to on-chain confirmation — state diagrams, architecture, and audit findings."
+---
+
+Every transaction in the Andamio app passes through two separate state machines that hand off to each other at the moment a transaction is submitted to the blockchain. This page documents both machines, how they connect, and the fallback systems that protect against network failures.
+
+## The two machines
+
+### Machine 1 — Frontend hook
+
+Driven by `useTransaction()` in `src/hooks/tx/use-transaction.ts`. This machine runs inside the browser from the moment the user clicks a transaction button until the transaction hash is received from the wallet.
+
+<Mermaid chart={`
+stateDiagram-v2
+    [*] --> idle
+
+    idle --> fetching : execute()
+    fetching --> signing : unsigned CBOR received from gateway
+    signing --> submitting : wallet signed
+    submitting --> success : txHash received
+
+    fetching --> error : API error / invalid params
+    signing --> error : user declined / wallet error
+    submitting --> error : submission failed
+
+    success --> idle : reset()
+    error --> idle : reset()
+`} />
+
+**States:**
+- `idle` — no transaction in progress
+- `fetching` — validating params and POSTing to the gateway for an unsigned transaction CBOR
+- `signing` — waiting for the user to sign with their wallet
+- `submitting` — submitting the signed transaction to the blockchain
+- `success` — txHash received; the frontend machine is done
+- `error` — something failed; the user can retry via `reset()`
+
+### Machine 2 — Gateway watcher
+
+Driven by `txWatcherStore` in `src/stores/tx-watcher-store.ts`. This machine starts the moment `wallet.submitTx()` succeeds and the transaction is registered with the gateway. It runs at [module level](/docs/glossary#module-level-state) (outside React) so it survives page navigation.
+
+<Mermaid chart={`
+stateDiagram-v2
+    [*] --> pending : registered with gateway
+
+    pending --> confirmed : on-chain confirmation
+    confirmed --> updated : DB sync complete
+    confirmed --> stalled : 30s timeout exceeded
+
+    pending --> failed : max retries exceeded
+    pending --> expired : Cardano TTL exceeded
+
+    updated --> [*]
+    stalled --> [*]
+    failed --> [*]
+    expired --> [*]
+`} />
+
+**States:**
+- `pending` — transaction submitted, gateway is monitoring the chain
+- `confirmed` — transaction is on-chain; gateway is writing DB updates
+- `updated` — DB sync complete; terminal success state
+- `stalled` — confirmed on-chain but DB sync timed out after 30s (treated as terminal)
+- `failed` — transaction failed after max gateway retries
+- `expired` — transaction exceeded Cardano TTL
+
+> **Important:** `confirmed` is not a terminal state. The gateway must also complete its DB updates before reaching `updated`. Components and UI should wait for `updated`, not `confirmed`.
+
+## How the two machines connect
+
+The handoff happens inside `useTransaction()` after `wallet.submitTx()` returns a `txHash`:
+
+1. Frontend machine enters `success`
+2. `registerTransaction()` POSTs the `txHash` to the gateway
+3. Gateway machine starts at `pending`
+4. An SSE stream opens — the gateway pushes state changes to the browser in real time
+
+From this point, the frontend machine is done. The gateway machine runs independently until it reaches a terminal state (`updated`, `failed`, `expired`, or `stalled`).
+
+## Two transaction flows
+
+Not all transactions behave the same after submission. There are two distinct flows based on whether the transaction requires a DB update:
+
+**Flow A — Pure on-chain transactions** (`requiresDBUpdate: false`, `requiresOnChainConfirmation: true`)
+
+Applies to: `GLOBAL_GENERAL_ACCESS_TOKEN_MINT`, `GLOBAL_USER_ACCESS_TOKEN_CLAIM`
+
+The gateway tracks on-chain confirmation but has no DB writes to perform. The `updated` state is reached almost immediately after `confirmed`.
+
+**Flow B — DB-backed transactions** (`requiresDBUpdate: true`)
+
+Applies to all other 16 transaction types.
+
+The gateway must confirm on-chain AND complete DB updates before reaching `updated`. This is the full lifecycle with the 30s confirmed-state timeout guard.
+
+## SSE and polling fallback
+
+The gateway watcher prefers [SSE (Server-Sent Events)](/docs/glossary#server-sent-events-sse) for real-time updates. If SSE fails or goes silent, it falls back to polling, and if polling exhausts its budget, it tries a direct indexer lookup.
+
+<Mermaid chart={`
+stateDiagram-v2
+    [*] --> sse : startWatching()
+
+    sse --> terminal : complete event received
+    sse --> polling : SSE failed or idle for 20s
+    polling --> terminal : terminal state received
+    polling --> indexer_fallback : 404 budget exhausted
+    indexer_fallback --> terminal : resolved or unresolved
+
+    terminal --> [*]
+`} />
+
+- **SSE** — primary path; gateway streams `state`, `state_change`, and `complete` events
+- **Polling** — fallback at 6s intervals when SSE fails
+- **Indexer fallback** — last resort; queries a commitment endpoint directly to determine success or failure
+
+## Recovery on page load
+
+If gateway registration fails (network error, adblocker, proxy issue), the transaction hash is saved to `localStorage` via `pendingTxRegistrations`. On the next page load, `runPendingTxRecovery()` retries registration for each saved entry. Recovery requires a valid JWT, so it only runs after the user is authenticated.
+
+## Moments of Commitment
+
+Five transaction types trigger a celebration UI on success in addition to the standard toast notification:
+
+- `GLOBAL_GENERAL_ACCESS_TOKEN_MINT`
+- `INSTANCE_COURSE_CREATE`
+- `INSTANCE_PROJECT_CREATE`
+- `COURSE_STUDENT_CREDENTIAL_CLAIM`
+- `PROJECT_CONTRIBUTOR_CREDENTIAL_CLAIM`
+
+These are called "Moments of Commitment" in the codebase (`tx-watcher-store.ts`).
+
+## Transaction type catalog
+
+All 18 supported transaction types, organized by role:
+
+| Transaction type | Role | DB update? | On-chain tracking? |
+|---|---|---|---|
+| `GLOBAL_GENERAL_ACCESS_TOKEN_MINT` | Any user | No | Yes |
+| `GLOBAL_USER_ACCESS_TOKEN_CLAIM` | Any user (V1 migration) | No | Yes |
+| `INSTANCE_COURSE_CREATE` | Instance owner | Yes | No |
+| `INSTANCE_PROJECT_CREATE` | Instance owner | Yes | No |
+| `COURSE_OWNER_TEACHERS_MANAGE` | Course owner | Yes | No |
+| `COURSE_TEACHER_MODULES_MANAGE` | Teacher | Yes | No |
+| `COURSE_TEACHER_ASSIGNMENTS_ASSESS` | Teacher | Yes | No |
+| `COURSE_STUDENT_ASSIGNMENT_COMMIT` | Student | Yes | No |
+| `COURSE_STUDENT_ASSIGNMENT_UPDATE` | Student | Yes | No |
+| `COURSE_STUDENT_CREDENTIAL_CLAIM` | Student | Yes | No |
+| `PROJECT_OWNER_MANAGERS_MANAGE` | Project owner | Yes | No |
+| `PROJECT_OWNER_BLACKLIST_MANAGE` | Project owner | Yes | No |
+| `PROJECT_MANAGER_TASKS_MANAGE` | Manager | Yes | No |
+| `PROJECT_MANAGER_TASKS_ASSESS` | Manager | Yes | No |
+| `PROJECT_CONTRIBUTOR_TASK_COMMIT` | Contributor | Yes | No |
+| `PROJECT_CONTRIBUTOR_TASK_ACTION` | Contributor | Yes | No |
+| `PROJECT_CONTRIBUTOR_CREDENTIAL_CLAIM` | Contributor | Yes | No |
+| `PROJECT_USER_TREASURY_ADD_FUNDS` | Any project user | Yes | No |
+
+## Audit findings
+
+The following issues were identified during a code audit of `andamio-app-template` on 2026-07-28. None are bugs that break current functionality — all are code quality issues worth addressing.
+
+### Medium
+
+**`walletDataSchema` is optional when it likely should not be**
+- File: `src/config/transaction-schemas.ts`
+- The `walletDataSchema` field is marked `.optional()` on every transaction schema that uses it. This means missing wallet data passes client-side validation silently and is only caught by the gateway, producing a less useful error.
+- Recommendation: Remove `.optional()` and require wallet data explicitly for all transactions that need it.
+
+### Low
+
+**`"confirming"` state in `types/transaction.ts` is never emitted**
+- File: `src/types/transaction.ts` vs `src/hooks/tx/use-transaction.ts`
+- `TransactionState` in the types file defines `"confirming"` as a valid state. The hook defines its own `SimpleTransactionState` which omits it and never calls `setState("confirming")`. The `TransactionButton` and `TransactionStatus` UI components import `TransactionState` and have UI text and loading logic for `"confirming"` that will never be reached.
+- Context: This appears to be intentional — the gateway watcher now owns the confirming state — but the original type was never cleaned up.
+- Recommendation: Either remove `"confirming"` from `TransactionState` and the UI components, or add a comment explaining it is reserved for future use.
+
+**Two separate state type definitions**
+- Files: `src/types/transaction.ts` and `src/hooks/tx/use-transaction.ts`
+- `TransactionState` (7 states) and `SimpleTransactionState` (6 states) coexist with a comment saying they are "compatible". There is no enforced relationship between them.
+- Recommendation: Consolidate into one canonical type.
+
+**`outcome` field accepts any string**
+- File: `src/config/transaction-schemas.ts`
+- Both `COURSE_TEACHER_ASSIGNMENTS_ASSESS` and `PROJECT_MANAGER_TASKS_ASSESS` use `z.string()` for the `outcome` field. A comment notes valid values are `"accept"`, `"refuse"`, `"deny"` but this is not enforced.
+- Recommendation: Change to `z.enum(["accept", "refuse", "deny"])`.
+
+**`partialSign` config field is ignored**
+- File: `src/hooks/tx/use-transaction.ts` (line 261)
+- `TransactionConfig` in `types/transaction.ts` exposes a `partialSign` field, but the hook always calls `wallet.signTxReturnFullTx(unsignedCbor, true)` — hardcoded to `true`. The field is dead API surface.
+- Recommendation: Remove the field from `TransactionConfig` or honor it in the hook.
+
+**No exhaustiveness checking on state switches**
+- Files: `src/components/tx/transaction-button.tsx`, `src/components/tx/transaction-status.tsx`
+- Because `TransactionState` is a string union rather than an enum, TypeScript cannot warn when a `switch` or `if/else` misses a state. An `assertNever` exhaustiveness check would catch this at compile time.
+- Recommendation: Add an `assertNever` helper and use it at every switch site that branches on `TransactionState`.
+
+**Unknown transaction types fall through silently**
+- File: `src/hooks/tx/use-tx-watcher.ts` (`getGatewayTxType`)
+- If a `txType` is not found in `TX_TYPE_MAP`, the function logs a warning and lowercases the string as a guess. No hard failure is thrown.
+- Recommendation: Throw an error or return a typed `never` for unknown types to surface mapping gaps at development time.

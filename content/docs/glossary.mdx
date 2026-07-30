@@ -122,6 +122,12 @@ Protocol fees charged for certain operations, creating sustainable revenue for A
 ### SDK (Software Development Kit)
 Pre-built libraries (JavaScript, Python, Go, Rust) for simple Andamio integration. Target: days, not months.
 
+### Server-Sent Events (SSE)
+A web technology where the server keeps an HTTP connection open and pushes updates to the browser in real time — one direction only (server to browser). Used by the Andamio gateway to stream transaction state changes (`pending → confirmed → updated`) to the app as they happen, without the browser needing to repeatedly ask for updates. If the SSE connection fails, the app falls back to polling.
+
+### Module-level State
+State that lives outside any React component — created once when a JavaScript file is first imported and kept alive for the entire browser session, regardless of page navigation. The Andamio transaction watcher store uses module-level state so that SSE connections and polling continue running in the background even when a user navigates away from the page where they submitted a transaction.
+
 ### Content Addressing
 Technical pattern using blake2b-256 hashes as unique identifiers for protocol entities (SLT hashes, task hashes, evidence hashes). Ensures content integrity and enables verifiable references between on-chain and off-chain data.
 
@@ -133,6 +139,7 @@ Technical pattern using blake2b-256 hashes as unique identifiers for protocol en
 - **DAO**: Decentralized Autonomous Organization
 - **RBAC**: Role-Based Access Control
 - **SDK**: Software Development Kit
+- **SSE**: Server-Sent Events
 - **SLT**: Student Learning Target
 - **SSOI**: Self-Sovereign On-chain Identity
 - **TVL**: Total Value Locked
