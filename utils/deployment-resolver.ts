@@ -1,4 +1,5 @@
 import { loadYamlFile } from "./yaml";
+import { assertSafeSegment } from "./safe-path";
 import { Registry } from "@/types";
 
 export interface DeploymentParams {
@@ -77,8 +78,18 @@ class DeploymentResolver {
    * Load deployment parameters for a specific deployment and version
    */
   async loadDeployment(deployment: string, version: string): Promise<DeploymentParams | null> {
+    // Callers pass request-derived values straight through, so validate here
+    // as well as at the route — this is a shared entry point.
+    try {
+      assertSafeSegment(deployment, "deployment");
+      assertSafeSegment(version, "version");
+    } catch {
+      console.error("Rejected unsafe deployment/version identifier");
+      return null;
+    }
+
     const cacheKey = `${deployment}-${version}`;
-    
+
     if (this.deploymentCache.has(cacheKey)) {
       return this.deploymentCache.get(cacheKey)!;
     }

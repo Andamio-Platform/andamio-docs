@@ -4,19 +4,37 @@ import { loadYamlFile } from "@/utils/yaml";
 import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
 import { TransactionYaml, ResolvedTransactionResponse } from "@/types";
 import { deploymentResolver } from "@/utils/deployment-resolver";
+import {
+  assertSafeRelativePath,
+  assertSafeSegment,
+  isUnsafePathError,
+} from "@/utils/safe-path";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const txFile = searchParams.get("file");
-  const deployment = searchParams.get("deployment") || "preprod";
-  const version = searchParams.get("version") || "v1";
+  const rawTxFile = searchParams.get("file");
+  const rawDeployment = searchParams.get("deployment") || "preprod";
+  const rawVersion = searchParams.get("version") || "v1";
 
-  if (!txFile) {
+  if (!rawTxFile) {
     return NextResponse.json(
       { error: "No file parameter provided" },
       { status: 400 }
     );
+  }
+
+  // All three reach the filesystem below — reject traversal before they do.
+  let txFile: string, deployment: string, version: string;
+  try {
+    txFile = assertSafeRelativePath(rawTxFile, "file parameter");
+    deployment = assertSafeSegment(rawDeployment, "deployment parameter");
+    version = assertSafeSegment(rawVersion, "version parameter");
+  } catch (error) {
+    if (isUnsafePathError(error)) {
+      return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+    }
+    throw error;
   }
 
   try {

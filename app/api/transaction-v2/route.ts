@@ -3,6 +3,7 @@
 import { loadYamlFile } from "@/utils/yaml";
 import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
 import { NextRequest, NextResponse } from "next/server";
+import { assertSafeRelativePath, isUnsafePathError } from "@/utils/safe-path";
 import { TransactionYamlV2, transformV2ToDiagramData, V2DiagramData } from "@/types/v2";
 
 /**
@@ -32,14 +33,25 @@ interface V2TransactionResponse {
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const txFile = searchParams.get("file");
+  const rawTxFile = searchParams.get("file");
   const format = searchParams.get("format") || "v2";
 
-  if (!txFile) {
+  if (!rawTxFile) {
     return NextResponse.json(
       { error: "No file parameter provided" },
       { status: 400 }
     );
+  }
+
+  // Interpolated into a filesystem path below.
+  let txFile: string;
+  try {
+    txFile = assertSafeRelativePath(rawTxFile, "file parameter");
+  } catch (error) {
+    if (isUnsafePathError(error)) {
+      return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+    }
+    throw error;
   }
 
   try {

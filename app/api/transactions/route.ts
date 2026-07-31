@@ -3,19 +3,32 @@
 import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
 import { NextRequest, NextResponse } from "next/server";
 import { readdirSync, statSync } from "fs";
-import { join } from "path";
+import path, { join } from "path";
+import {
+  assertSafeSegment,
+  isUnsafePathError,
+  UnsafePathError,
+} from "@/utils/safe-path";
 
 function getAllTransactions(baseDir: string, prefix: string = ""): string[] {
   const transactions: string[] = [];
-  const fullPath = join(process.cwd(), "public", "yaml", "transactions", prefix);
-  
+  // Backstop: prefix is built from caller input, so confirm containment
+  // before listing. The root is derived locally and the check sits directly
+  // above the readdirSync — CodeQL only accepts this shape as a sanitizer.
+  const publicRoot = path.resolve(process.cwd(), "public");
+  const fullPath = path.resolve(publicRoot, join("yaml", "transactions", prefix));
+
+  if (!fullPath.startsWith(publicRoot + path.sep)) {
+    throw new UnsafePathError("Resolved path escapes the public directory");
+  }
+
   try {
     const items = readdirSync(fullPath);
-    
+
     for (const item of items) {
-      const itemPath = join(fullPath, item);
+      const itemPath = path.resolve(fullPath, item);
       const relativePath = prefix ? `${prefix}/${item}` : item;
-      
+
       if (statSync(itemPath).isDirectory()) {
         // Recursively get transactions from subdirectories
         transactions.push(...getAllTransactions(baseDir, relativePath));
@@ -34,8 +47,20 @@ function getAllTransactions(baseDir: string, prefix: string = ""): string[] {
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const role = searchParams.get("role");
-    const version = searchParams.get("version") || "v1";
+    const rawRole = searchParams.get("role");
+    const rawVersion = searchParams.get("version") || "v1";
+
+    // Both are interpolated into a filesystem path below.
+    let role: string | null, version: string;
+    try {
+      role = rawRole ? assertSafeSegment(rawRole, "role parameter") : null;
+      version = assertSafeSegment(rawVersion, "version parameter");
+    } catch (error) {
+      if (isUnsafePathError(error)) {
+        return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+      }
+      throw error;
+    }
 
     let transactions: string[];
 
