@@ -7,18 +7,18 @@ import path, { join } from "path";
 import {
   assertSafeSegment,
   isUnsafePathError,
-  PUBLIC_ROOT,
   UnsafePathError,
 } from "@/utils/safe-path";
 
 function getAllTransactions(baseDir: string, prefix: string = ""): string[] {
   const transactions: string[] = [];
   // Backstop: prefix is built from caller input, so confirm containment
-  // before listing. Inlined rather than calling resolveInPublic() so static
-  // analysis sees the guard next to the readdirSync it protects — across a
-  // function boundary CodeQL does not treat it as a sanitizer.
-  const fullPath = path.resolve(PUBLIC_ROOT, join("yaml", "transactions", prefix));
-  if (fullPath !== PUBLIC_ROOT && !fullPath.startsWith(PUBLIC_ROOT + path.sep)) {
+  // before listing. The root is derived locally and the check sits directly
+  // above the readdirSync — CodeQL only accepts this shape as a sanitizer.
+  const publicRoot = path.resolve(process.cwd(), "public");
+  const fullPath = path.resolve(publicRoot, join("yaml", "transactions", prefix));
+
+  if (!fullPath.startsWith(publicRoot + path.sep)) {
     throw new UnsafePathError("Resolved path escapes the public directory");
   }
 
