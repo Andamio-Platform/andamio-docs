@@ -3,26 +3,32 @@
 import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
 import { NextRequest, NextResponse } from "next/server";
 import { readdirSync, statSync } from "fs";
-import { join } from "path";
+import path, { join } from "path";
 import {
   assertSafeSegment,
   isUnsafePathError,
-  resolveInPublic,
+  PUBLIC_ROOT,
+  UnsafePathError,
 } from "@/utils/safe-path";
 
 function getAllTransactions(baseDir: string, prefix: string = ""): string[] {
   const transactions: string[] = [];
   // Backstop: prefix is built from caller input, so confirm containment
-  // before listing. Throws rather than reading outside public/.
-  const fullPath = resolveInPublic(join("yaml", "transactions", prefix));
+  // before listing. Inlined rather than calling resolveInPublic() so static
+  // analysis sees the guard next to the readdirSync it protects — across a
+  // function boundary CodeQL does not treat it as a sanitizer.
+  const fullPath = path.resolve(PUBLIC_ROOT, join("yaml", "transactions", prefix));
+  if (fullPath !== PUBLIC_ROOT && !fullPath.startsWith(PUBLIC_ROOT + path.sep)) {
+    throw new UnsafePathError("Resolved path escapes the public directory");
+  }
 
   try {
     const items = readdirSync(fullPath);
-    
+
     for (const item of items) {
-      const itemPath = join(fullPath, item);
+      const itemPath = path.resolve(fullPath, item);
       const relativePath = prefix ? `${prefix}/${item}` : item;
-      
+
       if (statSync(itemPath).isDirectory()) {
         // Recursively get transactions from subdirectories
         transactions.push(...getAllTransactions(baseDir, relativePath));
