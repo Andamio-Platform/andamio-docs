@@ -5,15 +5,31 @@ import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
 import { NextRequest, NextResponse } from "next/server";
 import { readdirSync } from "fs";
 import { join } from "path";
+import {
+  assertSafeSegment,
+  isUnsafePathError,
+  resolveInPublic,
+} from "@/utils/safe-path";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ deployment: string }> }
 ) {
   try {
-    const { deployment } = await params;
-    const deploymentDir = join(process.cwd(), "public", "yaml", "deployments", deployment);
-    
+    const rawParams = await params;
+
+    let deployment: string;
+    try {
+      deployment = assertSafeSegment(rawParams.deployment, "deployment");
+    } catch (error) {
+      if (isUnsafePathError(error)) {
+        return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+      }
+      throw error;
+    }
+
+    const deploymentDir = resolveInPublic(join("yaml", "deployments", deployment));
+
     // Check if deployment directory exists
     try {
       readdirSync(deploymentDir);

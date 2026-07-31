@@ -4,11 +4,18 @@ import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
 import { NextRequest, NextResponse } from "next/server";
 import { readdirSync, statSync } from "fs";
 import { join } from "path";
+import {
+  assertSafeSegment,
+  isUnsafePathError,
+  resolveInPublic,
+} from "@/utils/safe-path";
 
 function getAllTransactions(baseDir: string, prefix: string = ""): string[] {
   const transactions: string[] = [];
-  const fullPath = join(process.cwd(), "public", "yaml", "transactions", prefix);
-  
+  // Backstop: prefix is built from caller input, so confirm containment
+  // before listing. Throws rather than reading outside public/.
+  const fullPath = resolveInPublic(join("yaml", "transactions", prefix));
+
   try {
     const items = readdirSync(fullPath);
     
@@ -34,8 +41,20 @@ function getAllTransactions(baseDir: string, prefix: string = ""): string[] {
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
-    const role = searchParams.get("role");
-    const version = searchParams.get("version") || "v1";
+    const rawRole = searchParams.get("role");
+    const rawVersion = searchParams.get("version") || "v1";
+
+    // Both are interpolated into a filesystem path below.
+    let role: string | null, version: string;
+    try {
+      role = rawRole ? assertSafeSegment(rawRole, "role parameter") : null;
+      version = assertSafeSegment(rawVersion, "version parameter");
+    } catch (error) {
+      if (isUnsafePathError(error)) {
+        return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+      }
+      throw error;
+    }
 
     let transactions: string[];
 

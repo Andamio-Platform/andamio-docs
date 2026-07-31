@@ -12,6 +12,7 @@ import {
 } from "@/types";
 import { addCorsHeaders } from "@/utils/cors";
 import { loadYamlFile } from "@/utils/yaml";
+import { assertSafeSegment, isUnsafePathError } from "@/utils/safe-path";
 import { NextRequest, NextResponse } from "next/server";
 
 // Helper function to convert token name to human-readable label
@@ -226,10 +227,24 @@ export async function GET(
   { params }: { params: Promise<{ role: string; transaction: string }> }
 ) {
   const searchParams = request.nextUrl.searchParams;
-  const deployment = searchParams.get("deployment") || "preprod";
-  const version = searchParams.get("version") || "v1";
+  const rawDeployment = searchParams.get("deployment") || "preprod";
+  const rawVersion = searchParams.get("version") || "v1";
+  const rawParams = await params;
 
-  const { role, transaction } = await params;
+  // Every one of these is interpolated into a path read from disk.
+  let role: string, transaction: string, deployment: string, version: string;
+  try {
+    role = assertSafeSegment(rawParams.role, "role");
+    transaction = assertSafeSegment(rawParams.transaction, "transaction");
+    deployment = assertSafeSegment(rawDeployment, "deployment parameter");
+    version = assertSafeSegment(rawVersion, "version parameter");
+  } catch (error) {
+    if (isUnsafePathError(error)) {
+      return NextResponse.json({ error: (error as Error).message }, { status: 400 });
+    }
+    throw error;
+  }
+
   const txFile = `${role}/${transaction}.yaml`;
 
   try {
