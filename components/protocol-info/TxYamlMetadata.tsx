@@ -22,7 +22,7 @@ interface ExtendedMetadata {
 
 export default function TxYamlMetadata({
   txFilePath,
-  version = "v1",
+  version = "v2",
 }: TxYamlMetadataProps) {
   const [txData, setTxData] = useState<TransactionYaml | null>(null);
   const [loading, setLoading] = useState(true);

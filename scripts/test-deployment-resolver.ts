@@ -3,7 +3,7 @@ import { deploymentResolver } from "../utils/deployment-resolver";
 import { loadYamlFile } from "../utils/yaml";
 
 async function testResolver() {
-  console.log("Testing deployment resolver with mainnet-v1 data...\n");
+  console.log("Testing deployment resolver with mainnet-v2 data...\n");
 
   // Load a sample transaction
   const txData = await loadYamlFile(
@@ -14,7 +14,7 @@ async function testResolver() {
   const resolved = await deploymentResolver.resolveTransaction(
     txData,
     "mainnet",
-    "v1"
+    "v2"
   );
 
   console.log("=== Resolved Addresses ===");

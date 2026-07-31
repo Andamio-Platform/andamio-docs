@@ -48,7 +48,7 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const rawRole = searchParams.get("role");
-    const rawVersion = searchParams.get("version") || "v1";
+    const rawVersion = searchParams.get("version") || "v2";
 
     // Both are interpolated into a filesystem path below.
     let role: string | null, version: string;

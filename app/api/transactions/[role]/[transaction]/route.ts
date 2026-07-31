@@ -15,7 +15,7 @@ export async function GET(
     const rawParams = await params;
     const searchParams = request.nextUrl.searchParams;
     const rawDeployment = searchParams.get("deployment") || "preprod";
-    const rawVersion = searchParams.get("version") || "v1";
+    const rawVersion = searchParams.get("version") || "v2";
 
     // Dynamic segments are caller-controlled too — validate alongside the
     // query params before any of them reach the filesystem.

@@ -41,7 +41,7 @@ const nodeTypes: NodeTypes = {
 
 export default function TxDiagram({
   txData,
-  version = "v1",
+  version = "v2",
 }: {
   txData: TransactionYaml;
   version?: string;
@@ -53,7 +53,7 @@ export default function TxDiagram({
 function DiagramTransactionFlow({
   txData,
   registryData,
-  version = "v1",
+  version = "v2",
 }: DiagramTransactionFlowProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);

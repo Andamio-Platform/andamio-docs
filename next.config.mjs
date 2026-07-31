@@ -115,6 +115,15 @@ const config = {
       { source: '/docs/pioneers/:path*', destination: '/docs/developer-community/pioneers/:path*', permanent: true },
       { source: '/docs/repositories/:path*', destination: '/docs/developer-community/repositories', permanent: true },
 
+      // Protocol V1 retired. The V1 MDX tree was removed some time ago, but no
+      // redirect ever replaced it, so every /docs/protocol/v1/** URL 404'd —
+      // including the "Tx Documentation" link the v1 dashboard still serves
+      // (issue #14). V1 has no per-page equivalent in V2, so the whole tree
+      // collapses onto the protocol intro rather than guessing at mappings.
+      // Deep paths first, then the bare path.
+      { source: '/docs/protocol/v1/:path*', destination: '/docs/protocol/v2', permanent: true },
+      { source: '/docs/protocol/v1', destination: '/docs/protocol/v2', permanent: true },
+
       // Protocol docs redesign — the transactions/, validators/(deep), tokens/,
       // and state-machine/ trees were retired in favour of three surfaces:
       // the intro (/docs/protocol/v2), the single Validators page, and the

@@ -5,7 +5,7 @@ async function debugInstanceToken() {
   console.log("Debugging instance.instance-admin-token resolution...\n");
   
   // Test the resolveToken method directly
-  const deploymentParams = await deploymentResolver.loadDeployment("mainnet", "v1");
+  const deploymentParams = await deploymentResolver.loadDeployment("mainnet", "v2");
   
   if (deploymentParams) {
     console.log("=== Instance System Tokens ===");

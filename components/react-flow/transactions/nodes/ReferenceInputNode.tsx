@@ -26,7 +26,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
 
   const hasDetails = data.datum || data.script;
 
-  const addressInfo = resolveAddressDisplay(data.address, data.registryData, data.version || "v1");
+  const addressInfo = resolveAddressDisplay(data.address, data.registryData, data.version || "v2");
 
 
   return (
@@ -57,7 +57,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
           <span className="font-semibold">Value:</span>
           {Array.isArray(data.value)
             ? data.value.map((val, idx) => {
-                const tokenInfo = createTokenLink(val, data.registryData, data.version || "v1");
+                const tokenInfo = createTokenLink(val, data.registryData, data.version || "v2");
                 return (
                   <pre className="pt-1" key={idx}>
                     {tokenInfo.hasToken ? (
@@ -77,7 +77,7 @@ function ReferenceInputNode({ data }: { data: ReferenceInputNodeData }) {
                 );
               })
             : (() => {
-                const tokenInfo = createTokenLink(data.value as string, data.registryData, data.version || "v1");
+                const tokenInfo = createTokenLink(data.value as string, data.registryData, data.version || "v2");
                 return (
                   <pre className="pt-1">
                     {tokenInfo.hasToken ? (

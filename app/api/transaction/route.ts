@@ -13,9 +13,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
+<<<<<<< HEAD
   const rawTxFile = searchParams.get("file");
   const rawDeployment = searchParams.get("deployment") || "preprod";
   const rawVersion = searchParams.get("version") || "v1";
+=======
+  const txFile = searchParams.get("file");
+  const deployment = searchParams.get("deployment") || "preprod";
+  const version = searchParams.get("version") || "v2";
+>>>>>>> f496350 (chore: remove protocol V1 from the docs site)
 
   if (!rawTxFile) {
     return NextResponse.json(

@@ -16,7 +16,7 @@ export interface TokenInfo {
  * @param version - Protocol version (v1 or v2)
  * @returns TokenInfo object with linking and display information
  */
-export const createTokenLink = (tokenStr: string, registryData?: Registry | null, version: string = "v1"): TokenInfo => {
+export const createTokenLink = (tokenStr: string, registryData?: Registry | null, version: string = "v2"): TokenInfo => {
   // Match pattern: "amount system.token-name"
   const tokenMatch = tokenStr.match(/^\d+\s+([^.]+)\.([^\s]+)$/);
   
