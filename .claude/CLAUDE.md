@@ -32,7 +32,6 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 - `npm run dev` - Start development server with Turbo (http://localhost:3000)
 - `npm run build` - Build the application for production
 - `npm run start` - Start production server
-- `npm run docs-coverage` - Check documentation coverage across protocol components
 - `npm run docs-drift` - Detect stale version pins in developer guides vs devkit/CLI source-of-truth tags (see `.claude/skills/audit-docs/`)
 
 ## External API Documentation

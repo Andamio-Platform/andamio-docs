@@ -12,7 +12,6 @@
     "docs-manifest": "npx tsx scripts/check-contract-manifest.ts",
     "docs-treasury": "npx tsx scripts/check-treasury-reference.ts",
     "docs-orphans": "npx tsx scripts/check-orphan-routes.ts",
-    "docs-coverage": "npx tsx scripts/docs-coverage-check.ts",
     "docs-drift": ".claude/skills/audit-docs/detect-drift.sh",
     "docs-validators": "node scripts/generate-validators.mjs",
     "docs-validators:check": "npx tsx scripts/check-validators-manifest.ts"
