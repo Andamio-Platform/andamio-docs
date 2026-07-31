@@ -157,14 +157,14 @@ async function checkDocumentationCoverage(): Promise<void> {
     process.cwd(),
     "public",
     "yaml",
-    "validator-registry-v1.yaml"
+    "validator-registry-v2.yaml"
   );
   const transactionMdxDir = path.join(
     process.cwd(),
     "content",
     "docs",
     "protocol",
-    "v1",
+    "v2",
     "transactions"
   );
   const validatorMdxDir = path.join(
@@ -172,7 +172,7 @@ async function checkDocumentationCoverage(): Promise<void> {
     "content",
     "docs",
     "protocol",
-    "v1",
+    "v2",
     "validators"
   );
   const transactionYamlDir = path.join(

@@ -54,7 +54,7 @@ async function getAssetIdFromRegistry(
 ): Promise<string | null> {
   try {
     const registry = (await loadYamlFile(
-      "yaml/validator-registry-v1.yaml"
+      "yaml/validator-registry-v2.yaml"
     )) as Registry;
 
     const assetId =
@@ -141,7 +141,7 @@ async function resolveAddress(
 
       // Load the registry to get the address placeholder
       const registry = (await loadYamlFile(
-        "yaml/validator-registry-v1.yaml"
+        "yaml/validator-registry-v2.yaml"
       )) as Registry;
 
       // Find the validator in the registry
@@ -228,7 +228,7 @@ export async function GET(
 ) {
   const searchParams = request.nextUrl.searchParams;
   const rawDeployment = searchParams.get("deployment") || "preprod";
-  const rawVersion = searchParams.get("version") || "v1";
+  const rawVersion = searchParams.get("version") || "v2";
   const rawParams = await params;
 
   // Every one of these is interpolated into a path read from disk.

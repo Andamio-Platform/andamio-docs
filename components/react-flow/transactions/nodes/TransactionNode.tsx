@@ -120,8 +120,8 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                               const validatorName = parts[1];
                               const isObserver = validatorName.includes("obs");
                               return isObserver
-                                ? `/docs/protocol/${data.version || "v1"}/validators/${parts[0]}/observers/${validatorName}`
-                                : `/docs/protocol/${data.version || "v1"}/validators/${parts[0]}/${validatorName}`;
+                                ? `/docs/protocol/${data.version || "v2"}/validators/${parts[0]}/observers/${validatorName}`
+                                : `/docs/protocol/${data.version || "v2"}/validators/${parts[0]}/${validatorName}`;
                             })()
                           : null;
 
@@ -144,7 +144,7 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                           <div>
                             <span className="font-semibold">Tokens:</span>
                             {mint.tokens.map((token, i) => {
-                              const tokenInfo = createTokenLink(token, data.registryData, data.version || "v1");
+                              const tokenInfo = createTokenLink(token, data.registryData, data.version || "v2");
                               
                               if (tokenInfo.hasToken) {
                                 return (
@@ -240,7 +240,7 @@ const TransactionNode = ({ data }: { data: TransactionNodeData }) => {
                             ? (() => {
                                 const parts = withdrawal.observer.split(".");
                                 const observerName = parts[1];
-                                return `/docs/protocol/${data.version || "v1"}/validators/${parts[0]}/observers/${observerName}`;
+                                return `/docs/protocol/${data.version || "v2"}/validators/${parts[0]}/observers/${observerName}`;
                               })()
                             : null;
 

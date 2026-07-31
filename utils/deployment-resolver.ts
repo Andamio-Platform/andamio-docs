@@ -48,7 +48,7 @@ class DeploymentResolver {
     if (this.registry) return;
     
     try {
-      this.registry = await loadYamlFile("yaml/validator-registry-v1.yaml") as Registry;
+      this.registry = await loadYamlFile("yaml/validator-registry-v2.yaml") as Registry;
       
       // Build token name map (system.token-name -> friendly name)
       for (const [systemName, system] of Object.entries(this.registry.systems)) {

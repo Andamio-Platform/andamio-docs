@@ -6,7 +6,7 @@ import { TransactionYaml } from "@/types";
 
 export default function TransactionDiagramWrapper({
   txFilePath,
-  version = "v1",
+  version = "v2",
 }: {
   txFilePath: string;
   version?: string;

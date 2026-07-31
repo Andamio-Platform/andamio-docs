@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const rawTxFile = searchParams.get("file");
   const rawDeployment = searchParams.get("deployment") || "preprod";
-  const rawVersion = searchParams.get("version") || "v1";
+  const rawVersion = searchParams.get("version") || "v2";
 
   if (!rawTxFile) {
     return NextResponse.json(

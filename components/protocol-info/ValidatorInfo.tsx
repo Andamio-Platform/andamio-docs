@@ -47,7 +47,7 @@ interface DeploymentParams {
 export default function ValidatorInfo({
   validatorSystem,
   validatorId,
-  version = "v1",
+  version = "v2",
 }: ValidatorInfoProps) {
   const [validatorData, setValidatorData] = useState<ValidatorData | null>(
     null

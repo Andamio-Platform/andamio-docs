@@ -29,7 +29,7 @@ interface Registry {
   };
 }
 
-export default function TokenInfo({ tokenSystem, tokenId, version = "v1" }: TokenInfoProps) {
+export default function TokenInfo({ tokenSystem, tokenId, version = "v2" }: TokenInfoProps) {
   const [tokenData, setTokenData] = useState<TokenData | null>(null);
   const [mainnetParams, setMainnetParams] = useState<DeploymentParams | null>(
     null

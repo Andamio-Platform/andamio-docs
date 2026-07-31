@@ -36,7 +36,7 @@ const nodeTypes = {
 export default function ValidatorDiagram({
   system,
   validatorId,
-  version = "v1",
+  version = "v2",
 }: DiagramValidatorOverviewProps) {
   return <DiagramValidatorOverview system={system} validatorId={validatorId} version={version} />;
 }
@@ -45,7 +45,7 @@ export default function ValidatorDiagram({
 function DiagramValidatorOverview({
   system,
   validatorId,
-  version = "v1",
+  version = "v2",
 }: DiagramValidatorOverviewProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);

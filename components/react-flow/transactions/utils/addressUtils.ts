@@ -9,7 +9,7 @@ export interface AddressInfo {
 export function resolveAddressDisplay(
   address: string,
   registryData?: Registry | null,
-  version: string = "v1"
+  version: string = "v2"
 ): AddressInfo {
   // Handle dot notation addresses (e.g., "global-state.global-state")
   if (address.includes(".") && registryData) {
