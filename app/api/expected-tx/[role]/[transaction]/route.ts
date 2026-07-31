@@ -227,9 +227,8 @@ export async function GET(
   { params }: { params: Promise<{ role: string; transaction: string }> }
 ) {
   const searchParams = request.nextUrl.searchParams;
-<<<<<<< HEAD
   const rawDeployment = searchParams.get("deployment") || "preprod";
-  const rawVersion = searchParams.get("version") || "v1";
+  const rawVersion = searchParams.get("version") || "v2";
   const rawParams = await params;
 
   // Every one of these is interpolated into a path read from disk.
@@ -245,10 +244,6 @@ export async function GET(
     }
     throw error;
   }
-=======
-  const deployment = searchParams.get("deployment") || "preprod";
-  const version = searchParams.get("version") || "v2";
->>>>>>> f496350 (chore: remove protocol V1 from the docs site)
 
   const txFile = `${role}/${transaction}.yaml`;
 
