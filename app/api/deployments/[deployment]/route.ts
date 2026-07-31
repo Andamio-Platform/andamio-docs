@@ -4,11 +4,11 @@ import { loadYamlFile } from "@/utils/yaml";
 import { addCorsHeaders, createOptionsResponse } from "@/utils/cors";
 import { NextRequest, NextResponse } from "next/server";
 import { readdirSync } from "fs";
-import { join } from "path";
+import path, { join } from "path";
 import {
   assertSafeSegment,
   isUnsafePathError,
-  resolveInPublic,
+  UnsafePathError,
 } from "@/utils/safe-path";
 
 export async function GET(
@@ -28,7 +28,14 @@ export async function GET(
       throw error;
     }
 
-    const deploymentDir = resolveInPublic(join("yaml", "deployments", deployment));
+    // Root derived locally and the check kept adjacent to the readdirSync
+    // below — the only shape CodeQL accepts as a js/path-injection sanitizer.
+    const publicRoot = path.resolve(process.cwd(), "public");
+    const deploymentDir = path.resolve(publicRoot, join("yaml", "deployments", deployment));
+
+    if (!deploymentDir.startsWith(publicRoot + path.sep)) {
+      throw new UnsafePathError("Resolved path escapes the public directory");
+    }
 
     // Check if deployment directory exists
     try {

@@ -86,7 +86,12 @@ export async function GET(request: NextRequest) {
 
     // Build response
     const responseData: V2TransactionResponse = {
-      id: txData.id || `${system}.${role || ""}.${transaction}`.replace("..", "."),
+      // Build from the present parts rather than joining-then-patching. The
+      // old form was `${system}.${role || ""}.${transaction}`.replace("..", "."),
+      // which produced the same output but read as a failed path sanitizer to
+      // CodeQL (js/incomplete-sanitization). This is a display id — it never
+      // touches the filesystem.
+      id: txData.id || [system, role, transaction].filter(Boolean).join("."),
       system,
       role,
       transaction,

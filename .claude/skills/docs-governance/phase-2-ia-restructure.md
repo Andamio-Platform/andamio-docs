@@ -110,8 +110,10 @@ new `developer-community/` location — reconcile, don't duplicate.)
 - **External links / SEO** → permanent redirects for every moved URL; diff routes before/after.
 - **Internal links** → grep-and-fix all in-repo links after moves; the build will not catch a stale
   `/docs/...` link (content-collections silently 404s).
-- **Tooling that hardcodes paths** → `npm run docs-coverage` / `docs-drift` and the audit skills
-  reference `content/docs/...` paths; update them. CLAUDE.md's Pioneers archival paths move too.
+- **Tooling that hardcodes paths** → `docs-drift` and the audit skills reference `content/docs/...`
+  paths; update them. CLAUDE.md's Pioneers archival paths move too. (`docs-coverage` was the other
+  case here — it was never updated, broke against the retired transactions/validators MDX trees, and
+  was removed in 2026-07.)
 - **Search index** → rebuilds from content; verify search after the move.
 
 ## Out of scope (separate workstreams — do NOT do here)
