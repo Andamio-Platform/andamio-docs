@@ -1,0 +1,146 @@
+---
+title: "Transaction State Machine"
+description: "How the Andamio app template tracks a transaction from button click to on-chain confirmation — fallback systems, recovery, and the full transaction type catalog."
+---
+
+The app template uses a two-layer state machine for every transaction. The frontend hook (`useTransaction()`) handles signing and submission; the gateway watcher (`txWatcherStore`) handles on-chain confirmation and DB sync. For the state transitions and the `confirmed` vs `updated` distinction, see:
+
+- [Transaction lifecycle — README](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work)
+- [Safe refetch timing — API Concepts](/docs/api/core/api-concepts#safe-refetch-timing)
+
+This page covers what is specific to the app template implementation: the connection between the two machines, the fallback transport layer, page-load recovery, and the full transaction type catalog.
+
+## The two machines
+
+### Machine 1 — Frontend hook
+
+Driven by `useTransaction()` in `src/hooks/tx/use-transaction.ts`.
+
+<Mermaid chart={`
+stateDiagram-v2
+    [*] --> idle
+
+    idle --> fetching : execute()
+    fetching --> signing : unsigned CBOR received from gateway
+    signing --> submitting : wallet signed
+    submitting --> success : txHash received + gateway registration complete
+
+    fetching --> error : API error / invalid params
+    signing --> error : user declined / wallet error
+    submitting --> error : submission failed
+
+    success --> idle : reset()
+    error --> idle : reset()
+`} />
+
+### Machine 2 — Gateway state machine
+
+Five states, owned entirely by the gateway (`andamio-api`). `txWatcherStore` observes this machine via SSE — it does not run it.
+
+<Mermaid chart={`
+stateDiagram-v2
+    [*] --> pending : registered with gateway
+
+    pending --> confirmed : on-chain confirmation
+    confirmed --> updated : DB sync complete
+
+    pending --> failed : max retries exceeded
+    pending --> expired : Cardano TTL exceeded
+
+    updated --> [*]
+    failed --> [*]
+    expired --> [*]
+`} />
+
+`txWatcherStore` adds one local inference on top: if `confirmed` arrives but `updated` does not follow within 30s, the store treats the TX as stalled and calls `handleTerminal()`. This is a client-side derived condition — not a gateway state.
+
+For state descriptions and the `confirmed` vs `updated` distinction see [Monitoring State Changes — API Concepts](/docs/api/core/api-concepts#monitoring-state-changes) and the [app template README](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work).
+
+## How the two machines connect
+
+The handoff happens inside `useTransaction()` after `wallet.submitTx()` returns a `txHash`:
+
+1. `registerTransaction()` POSTs the `txHash` to the gateway ([gateway registration](/docs/glossary#gateway-registration))
+2. Gateway machine starts at `pending`
+3. An [SSE](/docs/glossary#server-sent-events-sse) stream opens — the gateway pushes state changes to the browser in real time
+4. Frontend machine enters `success`
+
+From this point, the frontend machine is done. The gateway watcher runs at [module level](/docs/glossary#module-level-state) (outside React) so it survives page navigation and continues until it reaches a terminal state.
+
+## SSE and polling fallback
+
+The gateway watcher prefers [SSE (Server-Sent Events)](/docs/glossary#server-sent-events-sse) for real-time updates. If SSE fails or goes silent, it falls back to polling, and if polling exhausts its budget, it tries a direct indexer lookup.
+
+<Mermaid chart={`
+stateDiagram-v2
+    [*] --> sse : startWatching()
+
+    sse --> terminal : complete event received
+    sse --> polling : SSE failed or idle for 20s
+    polling --> terminal : terminal state received
+    polling --> indexer_fallback : 404 budget exhausted
+    indexer_fallback --> terminal : resolved or unresolved
+
+    terminal --> [*]
+`} />
+
+- **SSE** — primary path; gateway streams `state`, `state_change`, and `complete` events
+- **Polling** — fallback at 6s intervals when SSE fails
+- **Indexer fallback** — last resort; queries a commitment endpoint directly to determine success or failure
+
+## Two transaction flows
+
+Not all transactions behave the same after submission. There are two distinct flows based on whether the transaction requires a DB update:
+
+**Flow A — Pure on-chain transactions** (`requiresDBUpdate: false`, `requiresOnChainConfirmation: true`)
+
+Applies to: `GLOBAL_GENERAL_ACCESS_TOKEN_MINT`, `GLOBAL_USER_ACCESS_TOKEN_CLAIM`
+
+The gateway tracks on-chain confirmation but has no DB writes to perform. The `updated` state is reached almost immediately after `confirmed`.
+
+**Flow B — DB-backed transactions** (`requiresDBUpdate: true`)
+
+Applies to all other 16 transaction types.
+
+The gateway must confirm on-chain AND complete DB updates before reaching `updated`. This is the full lifecycle with the 30s confirmed-state timeout guard.
+
+## Recovery on page load
+
+If gateway registration fails (network error, adblocker, proxy issue), the transaction hash is saved to `localStorage` via `pendingTxRegistrations`. On the next page load, `runPendingTxRecovery()` retries registration for each saved entry. Recovery requires a valid JWT, so it only runs after the user is authenticated.
+
+## Moments of Commitment
+
+Five transaction types trigger a celebration UI on success in addition to the standard toast notification:
+
+- `GLOBAL_GENERAL_ACCESS_TOKEN_MINT`
+- `INSTANCE_COURSE_CREATE`
+- `INSTANCE_PROJECT_CREATE`
+- `COURSE_STUDENT_CREDENTIAL_CLAIM`
+- `PROJECT_CONTRIBUTOR_CREDENTIAL_CLAIM`
+
+These are called "Moments of Commitment" in the codebase (`tx-watcher-store.ts`).
+
+## Transaction type catalog
+
+All 18 types are tracked on-chain by the gateway. The meaningful distinction is whether a DB update follows confirmation.
+
+| Transaction type | Role | DB update after confirmation? |
+|---|---|---|
+| `GLOBAL_GENERAL_ACCESS_TOKEN_MINT` | Any user | No |
+| `GLOBAL_USER_ACCESS_TOKEN_CLAIM` | Any user (V1 migration) | No |
+| `INSTANCE_COURSE_CREATE` | Instance owner | Yes |
+| `INSTANCE_PROJECT_CREATE` | Instance owner | Yes |
+| `COURSE_OWNER_TEACHERS_MANAGE` | Course owner | Yes |
+| `COURSE_TEACHER_MODULES_MANAGE` | Teacher | Yes |
+| `COURSE_TEACHER_ASSIGNMENTS_ASSESS` | Teacher | Yes |
+| `COURSE_STUDENT_ASSIGNMENT_COMMIT` | Student | Yes |
+| `COURSE_STUDENT_ASSIGNMENT_UPDATE` | Student | Yes |
+| `COURSE_STUDENT_CREDENTIAL_CLAIM` | Student | Yes |
+| `PROJECT_OWNER_MANAGERS_MANAGE` | Project owner | Yes |
+| `PROJECT_OWNER_BLACKLIST_MANAGE` | Project owner | Yes |
+| `PROJECT_MANAGER_TASKS_MANAGE` | Manager | Yes |
+| `PROJECT_MANAGER_TASKS_ASSESS` | Manager | Yes |
+| `PROJECT_CONTRIBUTOR_TASK_COMMIT` | Contributor | Yes |
+| `PROJECT_CONTRIBUTOR_TASK_ACTION` | Contributor | Yes |
+| `PROJECT_CONTRIBUTOR_CREDENTIAL_CLAIM` | Contributor | Yes |
+| `PROJECT_USER_TREASURY_ADD_FUNDS` | Any project user | Yes |

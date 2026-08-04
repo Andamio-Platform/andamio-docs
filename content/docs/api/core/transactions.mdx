@@ -14,7 +14,7 @@ Every transaction follows the same lifecycle: build → sign → submit → regi
 
 Your app requests a transaction, the user signs, Andamio submits and confirms on-chain, then syncs to the database.
 
-> **Deep dive**: For state transitions, error handling patterns, and architecture details, see [Transaction State Machine](/docs/protocol/v2#the-transaction-lifecycle).
+> **Deep dive**: For state transitions, error handling patterns, and architecture details, see [Transaction Lifecycle](/docs/protocol/v2#the-transaction-lifecycle). Building on the app template? See also [Transaction State Machine — app template implementation](/docs/apps-tooling/andamio-app/transaction-state-machine).
 
 ## The Steps
 
@@ -105,6 +105,7 @@ These hooks abstract the manual fetch/sign/submit code shown above. See the [How
 
 - [Sponsored Transactions](/docs/api/core/sponsored-transactions) — Let your organization pay blockchain fees on behalf of users (enterprise)
 - [Error Handling](/docs/api/core/error-handling) — Recovery patterns for failed transactions
-- [Transaction State Machine](/docs/protocol/v2#the-transaction-lifecycle) — Deep dive into state transitions
+- [Transaction Lifecycle](/docs/protocol/v2#the-transaction-lifecycle) — Protocol-level state transitions
+- [Transaction State Machine](/docs/apps-tooling/andamio-app/transaction-state-machine) — App template implementation details
 - [API Docs](https://api.andamio.io) — Full endpoint documentation
 - [App Template](https://github.com/Andamio-Platform/andamio-app-template) — Production-ready starter with hooks
