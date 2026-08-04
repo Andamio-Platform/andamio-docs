@@ -5,8 +5,8 @@ description: "How the Andamio app template tracks a transaction from button clic
 
 The app template uses a two-layer state machine for every transaction. The frontend hook (`useTransaction()`) handles signing and submission; the gateway watcher (`txWatcherStore`) handles on-chain confirmation and DB sync. For the state transitions and the `confirmed` vs `updated` distinction, see:
 
-- [Transaction lifecycle — README](https://github.com/Andamio-Platform/andamio-app-template#transaction-lifecycle)
-- [Transaction states — API Concepts](/docs/api/core/api-concepts#transaction-states)
+- [Transaction lifecycle — README](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work)
+- [Safe refetch timing — API Concepts](/docs/api/core/api-concepts#safe-refetch-timing)
 
 This page covers what is specific to the app template implementation: the connection between the two machines, the fallback transport layer, page-load recovery, and the full transaction type catalog.
 
@@ -54,7 +54,7 @@ stateDiagram-v2
 
 `txWatcherStore` adds one local inference on top: if `confirmed` arrives but `updated` does not follow within 30s, the store treats the TX as stalled and calls `handleTerminal()`. This is a client-side derived condition — not a gateway state.
 
-For state descriptions and the `confirmed` vs `updated` distinction see [Transaction states — API Concepts](/docs/api/core/api-concepts#transaction-states) and the [app template README](https://github.com/Andamio-Platform/andamio-app-template#transaction-lifecycle).
+For state descriptions and the `confirmed` vs `updated` distinction see [Monitoring State Changes — API Concepts](/docs/api/core/api-concepts#monitoring-state-changes) and the [app template README](https://github.com/Andamio-Platform/andamio-app-template#how-transactions-work).
 
 ## How the two machines connect
 
@@ -121,8 +121,6 @@ Five transaction types trigger a celebration UI on success in addition to the st
 These are called "Moments of Commitment" in the codebase (`tx-watcher-store.ts`).
 
 ## Transaction type catalog
-
-All 18 supported transaction types, organized by role:
 
 All 18 types are tracked on-chain by the gateway. The meaningful distinction is whether a DB update follows confirmation.
 
