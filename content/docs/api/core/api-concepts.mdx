@@ -1,9 +1,77 @@
 ---
 title: API Concepts
-description: Source field architecture, safe refetch timing, and merged endpoints
+description: Response envelope, pagination, source field architecture, and safe refetch timing
 ---
 
 Core concepts for working with the Andamio API beyond basic request/response patterns.
+
+## Response Envelope
+
+Every successful Andamio API response wraps its payload in a standard envelope:
+
+```json
+{
+  "data": { ... },
+  "meta": {
+    "warning": "optional warning message",
+    "pagination": { ... }
+  }
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `data` | Yes | The response payload — shape varies by endpoint |
+| `meta` | No | Optional metadata object |
+| `meta.warning` | No | Non-fatal warning the caller should be aware of |
+| `meta.pagination` | No | Present on paginated list endpoints |
+
+### Pagination
+
+List endpoints use one of two pagination formats depending on whether the list is a snapshot or an append-only feed.
+
+**Snapshot lists** (courses, projects, commitments — data that can change between pages):
+
+```json
+{
+  "data": [ ... ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "page_size": 20,
+      "total": 100
+    }
+  }
+}
+```
+
+**Cursor-based feeds** (append-only data like audit logs):
+
+```json
+{
+  "data": [ ... ],
+  "meta": {
+    "pagination": {
+      "next_cursor": 12345,
+      "has_more": true
+    }
+  }
+}
+```
+
+Cursor tokens are opaque — do not parse or construct them client-side. Pass the value of `next_cursor` directly as the `cursor` query parameter on the next request.
+
+### Warnings
+
+`meta.warning` is a non-fatal signal that the response succeeded but data may be partial. It appears on merged endpoints when one of the two backend systems is unavailable:
+
+| Warning | Meaning |
+|---------|---------|
+| `"DB API unavailable, showing on-chain data only"` | Database is down — response contains on-chain data only, no off-chain metadata |
+| `"Andamioscan unavailable, on-chain state not available"` | Blockchain indexer is down — response contains DB data only, no on-chain state |
+| `"DB API partially unavailable, some content may be missing"` | Database partially degraded — some records may be missing from the response |
+
+When `meta.warning` is present, treat the response as degraded — display what you have but avoid taking actions that depend on the completeness of the data.
 
 ## The Source Field
 
@@ -21,7 +89,7 @@ The Andamio protocol is a shared commons — anyone can create courses and proje
 
 ```typescript
 const courses = await fetch(`${API}/course/user/courses/list`, { headers });
-const data = await courses.json();
+const { data } = await courses.json();
 
 for (const course of data) {
   switch (course.source) {
