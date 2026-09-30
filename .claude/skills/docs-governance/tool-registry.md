@@ -13,7 +13,7 @@ Status legend: **Official · Stable** · **Official · Preview** · **Community*
 | **Andamio CLI** (`andamio-cli`) | Apps & Tooling | Workflow tool | Builder | Install & use | Apps & Tooling → CLI | API transactions guide, Protocol | Official · Stable |
 | **andamio-dev** | API | Agent enablement | Builder (via agent) | Point your agent at it | API → Tools → Build with your agent | API quickstart, CLI page | Official · Stable |
 | **App Template** (`andamio-app-template`) | Apps & Tooling | Accelerator / example | Builder | Clone & deploy | Apps & Tooling → Templates | "Create your own app" | Official · Stable |
-| **SDK** (`sdk.andamio.io`) | Apps & Tooling | Accelerator (libs) | Builder | Install | Apps & Tooling → SDK | API guides | Official · Stable |
+| **SDK** (`sdk.andamio.io`) | Apps & Tooling | Accelerator (libs) | Builder | — | — | — | **Retired 2026-09-30.** Deployment removed, and `@andamiojs/sdk` is being deprecated. Point builders at the API and the CLI |
 | **Andamioscan** | Apps & Tooling | Integration / explorer | Builder · End-user | Open / use | Apps & Tooling → Andamioscan | Protocol, Apps & Tooling | Official · Stable |
 | **Andamio Bot** | Apps & Tooling | Integration / bot | Builder · End-user | Add / try | Apps & Tooling → Bot | Apps & Tooling | TBD (confirm Official vs Community) |
 | **Repositories index** | Developer Community | Source repo | Builder · Contributor | Clone / contribute | Developer Community → Repositories | Protocol, Apps & Tooling | Official · Stable |
