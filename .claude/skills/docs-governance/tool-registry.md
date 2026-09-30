@@ -13,7 +13,7 @@ Status legend: **Official · Stable** · **Official · Preview** · **Community*
 | **Andamio CLI** (`andamio-cli`) | Apps & Tooling | Workflow tool | Builder | Install & use | Apps & Tooling → CLI | API transactions guide, Protocol | Official · Stable |
 | **andamio-dev** | API | Agent enablement | Builder (via agent) | Point your agent at it | API → Tools → Build with your agent | API quickstart, CLI page | Official · Stable |
 | **App Template** (`andamio-app-template`) | Apps & Tooling | Accelerator / example | Builder | Clone & deploy | Apps & Tooling → Templates | "Create your own app" | Official · Stable |
-| **SDK** (`sdk.andamio.io`) | Apps & Tooling | Accelerator (libs) | Builder | Install | Apps & Tooling → SDK | API guides | Official · Stable |
+| **Core** (`@andamio/core`) | Apps & Tooling | Accelerator (libs) | Builder | Install | Apps & Tooling → Core | API guides | Official · Stable |
 | **Andamioscan** | Apps & Tooling | Integration / explorer | Builder · End-user | Open / use | Apps & Tooling → Andamioscan | Protocol, Apps & Tooling | Official · Stable |
 | **Andamio Bot** | Apps & Tooling | Integration / bot | Builder · End-user | Add / try | Apps & Tooling → Bot | Apps & Tooling | TBD (confirm Official vs Community) |
 | **Repositories index** | Developer Community | Source repo | Builder · Contributor | Clone / contribute | Developer Community → Repositories | Protocol, Apps & Tooling | Official · Stable |
@@ -43,9 +43,11 @@ unlocks. Not a product; an adoption accelerator.
 The fastest way to stand up an app on the API, using the same UX as `app.andamio.io` pointed at your
 own courses/projects. Document as the recommended starting point in "Create your own credentialing app."
 
-### SDK
-Currently a top-level sidebar section. Per the placement rules it moves under **Apps & Tooling → SDK**
-so it stops reading as a peer to the products. Tracked in the Phase 2 plan.
+### Core
+The open npm package `@andamio/core` (hashing utilities and protocol constants, zero React deps).
+Replaces the old top-level SDK section, which documented a phantom `@andamio/transactions` package;
+`/docs/sdk/*` and `/docs/apps-tooling/sdk/*` redirect to **Apps & Tooling → Core**. Document the
+*use*; defer the full API to the `andamio-core` repo.
 
 ### Andamioscan
 On-chain explorer for Andamio state. Useful from both Protocol and app contexts; lives in the
