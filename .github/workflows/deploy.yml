@@ -1,0 +1,59 @@
+# Build and deploy to Cloud Run on every push to main (Andamio-Platform/andamio-ops#578).
+# Infrastructure (service, registry, WIF pool, domain mappings) lives in
+# andamio-ops terraform/services/web-sites; this workflow only ships images.
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PROJECT_ID: andamio-v2-mainnet
+  REGION: europe-west4
+  SERVICE: andamio-docs
+  IMAGE: europe-west4-docker.pkg.dev/andamio-v2-mainnet/andamio-docs/site
+  WIF_PROVIDER: projects/600170089097/locations/global/workloadIdentityPools/andamio-docs-pool/providers/github-actions
+  DEPLOY_SA: andamio-docs-cicd@andamio-v2-mainnet.iam.gserviceaccount.com
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WIF_PROVIDER }}
+          service_account: ${{ env.DEPLOY_SA }}
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build and push the image
+        run: |
+          gcloud auth configure-docker "${REGION}-docker.pkg.dev" --quiet
+          docker build -t "${IMAGE}:${GITHUB_SHA}" .
+          docker push "${IMAGE}:${GITHUB_SHA}"
+
+      - name: Deploy
+        run: |
+          gcloud run deploy "${SERVICE}" \
+            --image="${IMAGE}:${GITHUB_SHA}" \
+            --region="${REGION}" \
+            --project="${PROJECT_ID}" \
+            --quiet
+
+      - name: Smoke test the new revision
+        run: |
+          URL=$(gcloud run services describe "${SERVICE}" --region="${REGION}" --project="${PROJECT_ID}" --format='value(status.url)')
+          code=$(curl -s -o /dev/null -w '%{http_code}' "${URL}/")
+          echo "${URL}/ -> ${code}"
+          test "${code}" = "200"
