@@ -3,6 +3,9 @@ import { withContentCollections } from '@content-collections/next';
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  // Cloud Run: a self-contained server (`node server.js`) in the image
+  // (Andamio-Platform/andamio-ops#578).
+  output: 'standalone',
   images: {
     remotePatterns: [
       {
