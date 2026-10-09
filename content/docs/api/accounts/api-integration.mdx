@@ -27,12 +27,6 @@ const headers = {
 Once authenticated, include both headers in all requests:
 
 ```typescript
-const headers = {
-  "Content-Type": "application/json",
-  "X-API-Key": APP_API_KEY,
-  "Authorization": `Bearer ${userJwt}`,
-};
-
 // Example: List user's courses
 const res = await fetch(`${API}/course/owner/courses/list`, {
   method: "GET",
@@ -89,26 +83,80 @@ See [Environment Reference](/docs/api/reference/environments) for full configura
 
 ## Error Responses
 
-API errors return JSON with `error` and `message` fields:
+The Andamio API uses two error shapes depending on the endpoint. Both are in active use.
+
+### Legacy shape
+
+Used by auth, transaction, billing, and most existing endpoints:
 
 ```json
 {
-  "error": "UNAUTHORIZED",
-  "message": "Invalid or expired JWT"
+  "status_code": 401,
+  "message": "Unauthorized: Invalid or missing credentials.",
+  "details": "optional debug info"
 }
 ```
 
-Common error codes:
+| Field | Required | Description |
+|-------|----------|-------------|
+| `status_code` | Yes | HTTP status code repeated in the body |
+| `message` | Yes | Human-readable error message |
+| `details` | No | Optional debug information |
 
-| Code | Meaning |
-|------|---------|
-| `UNAUTHORIZED` | Missing or invalid auth headers |
-| `FORBIDDEN` | User lacks permission for this action |
-| `NOT_FOUND` | Resource doesn't exist |
-| `VALIDATION_ERROR` | Invalid request body |
-| `TX_BUILD_FAILED` | Transaction building failed |
+### Error envelope shape
+
+Used by merged data endpoints (`/v2/course/*/merged`, `/v2/project/*/merged`, module, lesson, SLT endpoints):
+
+```json
+{
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Assignment not found",
+    "details": "optional debug info"
+  }
+}
+```
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `error.code` | Yes | Semantic error code string |
+| `error.message` | Yes | Human-readable error message |
+| `error.details` | No | Optional debug information |
+
+### HTTP status to error code mapping
+
+| HTTP | Semantic code |
+|------|--------------|
+| 400 | `BAD_REQUEST` |
+| 401 | `UNAUTHORIZED` |
+| 403 | `FORBIDDEN` |
+| 404 | `NOT_FOUND` |
+| 409 | `CONFLICT` |
+| 422 | `UNPROCESSABLE_ENTITY` |
+| 429 | `TOO_MANY_REQUESTS` |
+| 500 | `INTERNAL_SERVER_ERROR` |
+| 502 | `BAD_GATEWAY` |
+| 503 | `SERVICE_UNAVAILABLE` |
 
 See [Error Handling](/docs/api/core/error-handling) for recovery patterns.
+
+## Rate Limit Headers
+
+Every API response includes rate limit information in the response headers:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Maximum requests allowed in the current window |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `X-RateLimit-Reset` | Unix timestamp when the window resets |
+
+When you exceed your limit, the API returns `429 Too Many Requests`. Use `X-RateLimit-Reset` to schedule your retry. Rate limits are determined by your billing tier — see [Billing](/docs/api/billing) for the limits per plan.
+
+## Issuer Route Auth
+
+Some endpoints under `/api/v2/auth/issuer/*` operate with stricter auth requirements than standard v2 routes. These routes reject requests that supply **both** `X-API-Key` and `Authorization` — sending both returns `400 Bad Request`. Supply only the credential the endpoint requires.
+
+For all other `/api/v2/*` routes, both headers are accepted together (the standard pattern above).
 
 ## Next Steps
 

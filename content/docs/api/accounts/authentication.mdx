@@ -278,6 +278,100 @@ async function login(walletName: string): Promise<AuthResult> {
 | `JWT_EXPIRED` | Token expired | Re-authenticate |
 | `FORBIDDEN` | User lacks role for action | Check user's roles |
 
+## Access Token Verification (Third-Party)
+
+If you are building a service that needs to confirm a user holds an Andamio Access Token — without relying on the Andamio gateway to gate access — use the two-step verification flow. It produces a signed **attestation JWT** you can verify offline.
+
+### When to use this
+
+Use this flow when your backend needs cryptographic proof that a user's wallet holds an Access Token with a specific alias. The attestation JWT lets you verify that proof offline using the public key, without a second round-trip to the gateway.
+
+### 1. Start a verification session
+
+```bash
+curl -X POST https://preprod.api.andamio.io/api/v2/verify/session \
+  -H "X-API-Key: $API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"alias": "alice"}'
+```
+
+Response:
+
+```json
+{
+  "session_id": "550e8400-e29b-41d4-a716-446655440000",
+  "nonce": "Sign this message to verify Andamio Access Token ownership: a1b2c3d4...",
+  "expires_at": "2026-03-10T12:05:00Z"
+}
+```
+
+The session expires in **5 minutes**. Have the user sign the `nonce` with their CIP-30 wallet immediately.
+
+### 2. Complete verification
+
+```typescript
+// User signs the nonce
+const { signature, key } = await wallet.signData(address, nonce);
+
+// Submit to complete verification
+const res = await fetch(`${API}/verify/complete`, {
+  method: "POST",
+  headers: { "X-API-Key": APP_API_KEY, "Content-Type": "application/json" },
+  body: JSON.stringify({
+    session_id: sessionId,
+    signature: { signature, key },
+  }),
+});
+
+const { verified, alias, wallet_address, attestation_jwt } = await res.json();
+```
+
+The gateway checks two things before issuing the attestation:
+1. The CIP-30 signature is valid for the nonce
+2. The signing wallet actually holds the on-chain Access Token for the alias (checked against the blockchain — a valid signature alone is not enough)
+
+Both must pass. If either fails, `verified` is `false` and no `attestation_jwt` is returned.
+
+### 3. Verify the attestation offline
+
+The attestation JWT is signed with RS256. Fetch the public key once and cache it:
+
+```typescript
+const API_BASE = "https://preprod.api.andamio.io"; // note: no /api/v2
+const jwks = await fetch(`${API_BASE}/.well-known/jwks.json`).then(r => r.json());
+// jwks.keys[0] contains: { kty: "RSA", use: "sig", alg: "RS256", kid: "andamio-api-attestation-key", n, e }
+```
+
+Verify the JWT with any standard RS256 library:
+
+```typescript
+import { jwtVerify, importJWK } from "jose";
+
+const key = await importJWK(jwks.keys[0], "RS256");
+const { payload } = await jwtVerify(attestationJwt, key, {
+  issuer: "andamio-api",
+  audience: "access-token-verification",
+});
+
+// payload.sub  = alias ("alice")
+// payload.wallet_address = bech32 wallet address
+// payload.exp  = expiry (10 minutes from issuance)
+```
+
+The attestation JWT expires in **10 minutes** — it is a short-lived proof, not a session token.
+
+### Verification failure codes
+
+| Error code | Meaning |
+|------------|---------|
+| `alias_not_found` | No Access Token exists for this alias |
+| `session_not_found` | Session ID not found or belongs to a different API key |
+| `session_expired` | Session was not completed within 5 minutes |
+| `session_already_used` | Session has already been consumed |
+| `invalid_signature` | CIP-30 signature did not verify against the nonce |
+| `wallet_not_holder` | Signature is valid but the wallet does not hold the Access Token on-chain |
+| `service_unavailable` | A backend service (chain indexer) is temporarily unavailable |
+
 ## Next Steps
 
 - [Developer Accounts](/docs/api/accounts/developer-accounts) — Developer registration, email verification, and Developer JWT
