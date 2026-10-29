@@ -139,5 +139,3 @@ export function ValidatorsReference() {
     </div>
   );
 }
-
-export default ValidatorsReference;

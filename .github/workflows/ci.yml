@@ -1,0 +1,90 @@
+# Checks every PR (and main after merge) so a broken typecheck, lint or doc
+# check fails here, not as a failed deploy. Build runs the `prebuild` doc
+# checks (headings, contract manifest, treasury reference, validators
+# manifest, orphan routes).
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # Matches the runtime major in the Dockerfile (node:20-alpine).
+  NODE_VERSION: 20
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+
+  # Fails on any high or critical runtime advisory that isn't in
+  # .github/audit-allowlist.json, and on allowlist entries npm no longer
+  # reports. Rule: when this job fails, the same PR either fixes the finding
+  # or adds it to the allowlist with its GHSA id, package path and reason.
+  audit:
+    name: Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+      # npm audit exits non-zero whenever anything is reported; the gate
+      # script decides what blocks.
+      - run: npm audit --omit=dev --json > audit.json || true
+      - run: node .github/scripts/audit-gate.mjs < audit.json
+
+  # Unused files, exports and dependencies. Config and the reasons for any
+  # ignore live in knip.json and in @public tags on the export.
+  knip:
+    name: Knip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run knip
