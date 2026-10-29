@@ -41,5 +41,6 @@ export function Mermaid({ chart }: { chart: string }) {
     void renderChart();
   }, [chart, id, resolvedTheme]);
 
+  // eslint-disable-next-line react/no-danger -- SVG from mermaid.render() on chart source in our own MDX, not user input
   return <div ref={containerRef} dangerouslySetInnerHTML={{ __html: svg }} />;
 }

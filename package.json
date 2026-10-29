@@ -7,6 +7,8 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
+    "lint": "next lint",
+    "typecheck": "next typegen && tsc --noEmit",
     "docs-headings": "npx tsx scripts/check-doc-headings.ts",
     "docs-headings:fix": "npx tsx scripts/check-doc-headings.ts --fix",
     "docs-manifest": "npx tsx scripts/check-contract-manifest.ts",
