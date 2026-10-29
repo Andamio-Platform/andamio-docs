@@ -2,6 +2,8 @@
 
 This document explains how the interactive API documentation system works and what's needed to enable full functionality.
 
+> **Historical.** The proxy (`app/api/proxy/route.ts`) and the generation scripts named below are no longer in this repo. The live API reference is https://preprod.api.andamio.io/reference.
+
 ## Overview
 
 The docs site pulls the Andamio API Gateway's OpenAPI schema and generates interactive documentation pages where users can:
@@ -27,7 +29,7 @@ User Browser → Docs Site (/api/proxy) → API Gateway
 2. **API Proxy** (`/app/api/proxy/route.ts`)
    - Forwards user requests to API Gateway
    - Handles authentication (Bearer token + API key)
-   - Configured to allow `andamio-api-preprod-308006323670.us-central1.run.app`
+   - Configured to allow `preprod.api.andamio.io`
 
 3. **Generated Documentation** (`/content/docs/api/*`)
    - 75 MDX files organized by API category
@@ -61,7 +63,7 @@ The fix involved ensuring the OpenAPI schema includes the `servers` field:
 {
   "servers": [
     {
-      "url": "https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1",
+      "url": "https://preprod.api.andamio.io/api",
       "description": "Andamio API Gateway (Preprod)"
     }
   ]
@@ -87,7 +89,7 @@ When the API Gateway schema changes:
 
 ```bash
 # 1. Pull latest schema
-curl -s https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json -o data/andamio-api-gateway.json
+curl -s https://preprod.api.andamio.io/openapi/swagger.public.json -o data/andamio-api-gateway.json
 
 # 2. Generate documentation
 npm run generate-all-api-docs
@@ -127,5 +129,5 @@ The scripts automatically:
 ## Questions?
 
 - Technical setup details: See `CLAUDE.md`
-- API Gateway source: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/doc.json
-- Live Swagger UI: https://andamio-api-preprod-308006323670.us-central1.run.app/api/v1/docs/index.html
+- API Gateway source: https://preprod.api.andamio.io/openapi/swagger.public.json
+- Live API reference: https://preprod.api.andamio.io/reference

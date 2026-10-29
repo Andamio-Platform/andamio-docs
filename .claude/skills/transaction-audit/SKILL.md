@@ -4,9 +4,9 @@ description: Orchestrate V2 transaction documentation by tracking all endpoints 
 ---
 
 <introduction>
-This skill is the **project manager** for V2 transaction documentation. It tracks all transaction endpoints from the Atlas API swagger and coordinates analysis work.
+This skill is the **project manager** for V2 transaction documentation. It tracks all transaction endpoints from the public API gateway swagger and coordinates analysis work.
 
-**Source of Truth**: https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json
+**Source of Truth**: https://preprod.api.andamio.io/openapi/swagger.public.json (public, no API key needed; this is the spec behind https://preprod.api.andamio.io/reference). Paths in the spec are relative to its `basePath` of `/api`, so `/v2/tx/...` is served at `https://preprod.api.andamio.io/api/v2/tx/...` and needs an `X-API-Key` header.
 
 **Worker Skill**: Use `/analyze-transaction` to process individual transactions.
 
@@ -19,7 +19,7 @@ This skill is the **project manager** for V2 transaction documentation. It track
 ## When Invoked
 
 1. **Sync with Swagger** (if requested or stale)
-   - Fetch latest swagger.json from Atlas API
+   - Fetch the latest swagger from the source of truth: `curl -s https://preprod.api.andamio.io/openapi/swagger.public.json`
    - Compare endpoints to tracker
    - Add any new endpoints, flag any removed ones
 
@@ -74,7 +74,7 @@ not-analyzed → analyzed → verified
 {
   "version": "1.0.0",
   "lastUpdated": "YYYY-MM-DD",
-  "swaggerSource": "https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json",
+  "swaggerSource": "https://preprod.api.andamio.io/openapi/swagger.public.json",
   "totalTransactions": 17,
   "summary": {
     "analyzed": N,
@@ -157,7 +157,7 @@ Some transactions must be analyzed in order:
 ═══════════════════════════════════════════════════════════════
 
 Last Updated: YYYY-MM-DD
-Swagger Source: https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json
+Swagger Source: https://preprod.api.andamio.io/openapi/swagger.public.json
 
 SUMMARY
 ───────────────────────────────────────────────────────────────

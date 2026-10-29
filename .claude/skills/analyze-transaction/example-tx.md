@@ -2,7 +2,7 @@
 
 ## About Andamio API
 
-The Andamio API provides REST endpoints for building valid Cardano transactions. All transactions are documented at https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json
+The Andamio API provides REST endpoints for building valid Cardano transactions. All transactions are documented in the public gateway swagger at https://preprod.api.andamio.io/openapi/swagger.public.json (browsable at https://preprod.api.andamio.io/reference). Transaction endpoints need an `X-API-Key` header.
 
 Each endpoint accepts a necessary set of parameters in the request body, and returns unsigned transaction CBOR. 
 
@@ -13,7 +13,8 @@ This CBOR can be decoded into JSON.
 ### This request:
 ```bash
 curl -X 'POST' \
-  'https://atlas-api-preprod-507341199760.us-central1.run.app/v2/tx/global/general/access-token/mint' \
+  'https://preprod.api.andamio.io/api/v2/tx/global/user/access-token/mint' \
+  -H "X-API-Key: $ANDAMIO_API_KEY" \
   -H 'accept: application/json;charset=utf-8' \
   -H 'Content-Type: application/json;charset=utf-8' \
   -d '{
