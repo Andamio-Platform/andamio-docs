@@ -1,0 +1,19 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "content-collections.ts",
+    "content/docs/**/*.mdx",
+    ".github/scripts/*.mjs"
+  ],
+  "project": [
+    "**/*.{ts,tsx,js,mjs,mdx,css}",
+    "!.claude/**"
+  ],
+  "compilers": {
+    "mdx": true
+  },
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  }
+}
