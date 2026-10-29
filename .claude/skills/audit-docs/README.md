@@ -19,10 +19,10 @@ Deliberately narrow — only the developer-facing surface this repo owns:
 
 | Included | Excluded |
 |---|---|
-| `content/docs/api/guides/**` | `content/docs/protocol/v2/transactions/**` (owned by `/v2-docs-audit`, `/transaction-audit`) |
-| `content/docs/protocol/v2/state-machine/**` | `content/docs/protocol/v2/validators/**` |
-| `content/docs/api/getting-started.mdx` | `content/docs/protocol/v2/tokens/**` |
-| `content/docs/api/reference/**` | `content/docs/developer-community/pioneers/**` |
+| `content/docs/(developer)/api/guides/**` | `content/docs/(protocol)/protocol/v2/transactions/**` (owned by `/v2-docs-audit`, `/transaction-audit`) |
+| `content/docs/(protocol)/protocol/v2/state-machine/**` | `content/docs/(protocol)/protocol/v2/validators/**` |
+| `content/docs/(developer)/api/getting-started.mdx` | `content/docs/(protocol)/protocol/v2/tokens/**` |
+| `content/docs/(developer)/api/reference/**` | `content/docs/developer-community/pioneers/**` |
 | | `whats-new.mdx`, `glossary.mdx` |
 
 Internal services (`db-api`, `atlas`, `andamioscan`, `sidecar`) are intentionally

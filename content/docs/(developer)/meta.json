@@ -1,0 +1,13 @@
+{
+    "title": "Andamio API",
+    "icon": "Braces",
+    "description": "Build apps where people earn and use credentials",
+    "root": true,
+    "pages": [
+        "api",
+        "apps-tooling",
+        "credential-badges",
+        "--- Reference ---",
+        "[API reference](https://api.andamio.io)"
+    ]
+}

@@ -1,6 +1,8 @@
 {
-    "title": "Issuer",
+    "title": "Andamio Issuer",
     "icon": "BadgeCheck",
+    "description": "Issue credentials from programs you already run",
+    "root": true,
     "pages": [
         "index",
         "before-you-start",
@@ -8,6 +10,7 @@
         "actions",
         "quickstart",
         "integrate",
-        "support"
+        "support",
+        "[Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html)"
     ]
 }

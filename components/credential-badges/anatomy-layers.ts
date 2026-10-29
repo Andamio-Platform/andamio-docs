@@ -3,7 +3,7 @@
  * Explorer (<BadgeAnatomyExplorer>).
  *
  * Seeded VERBATIM from the verified claims in
- * content/docs/credential-badges/index.mdx. This is a presentation re-shaping of
+ * content/docs/(developer)/credential-badges/index.mdx. This is a presentation re-shaping of
  * already-verified content — do NOT add facts here. Every claim keeps the true
  * live / coming / in-dev label it carries on the prose page; an interactive view
  * must never drop, blur, or upgrade a label.

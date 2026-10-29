@@ -10,13 +10,17 @@ Status legend: **Official · Stable** · **Official · Preview** · **Community*
 
 | Tool | Serves | Type | Audience | Primary action | Canonical home | Surfaced in | Status |
 |---|---|---|---|---|---|---|---|
-| **Andamio CLI** (`andamio-cli`) | Apps & Tooling | Workflow tool | Builder | Install & use | Apps & Tooling → CLI | API transactions guide, Protocol | Official · Stable |
-| **andamio-dev** | API | Agent enablement | Builder (via agent) | Point your agent at it | API → Tools → Build with your agent | API quickstart, CLI page | Official · Stable |
-| **App Template** (`andamio-app-template`) | Apps & Tooling | Accelerator / example | Builder | Clone & deploy | Apps & Tooling → Templates | "Create your own app" | Official · Stable |
+| **Andamio CLI** (`andamio-cli`) | Apps & Tooling | Workflow tool | Builder | Install & use | Andamio API → Apps & Tooling → CLI | API transactions guide, Protocol | Official · Stable |
+| **andamio-dev** | API | Agent enablement | Builder (via agent) | Point your agent at it | Andamio API → Apps & Tooling → andamio-dev | API quickstart, CLI page | Official · Stable |
+| **App Template** (`andamio-app-template`) | Apps & Tooling | Accelerator / example | Builder | Clone & deploy | Andamio API → Apps & Tooling → Templates | "Create your own app" | Official · Stable |
 | **SDK** (`sdk.andamio.io`) | Apps & Tooling | Accelerator (libs) | Builder | — | — | — | **Retired 2026-09-30.** Deployment removed, and `@andamiojs/sdk` is being deprecated. Point builders at the API and the CLI |
-| **Andamioscan** | Apps & Tooling | Integration / explorer | Builder · End-user | Open / use | Apps & Tooling → Andamioscan | Protocol, Apps & Tooling | Official · Stable |
-| **Andamio Bot** | Apps & Tooling | Integration / bot | Builder · End-user | Add / try | Apps & Tooling → Bot | Apps & Tooling | TBD (confirm Official vs Community) |
-| **Repositories index** | Developer Community | Source repo | Builder · Contributor | Clone / contribute | Developer Community → Repositories | Protocol, Apps & Tooling | Official · Stable |
+| **Andamioscan** | Apps & Tooling | Integration / explorer | Builder · End-user | Open / use | Andamio API → Apps & Tooling → Andamioscan | Protocol, Apps & Tooling | Official · Stable |
+| **Andamio Bot** | Apps & Tooling | Integration / bot | Builder · End-user | Add / try | Andamio API → Apps & Tooling → Bot | Apps & Tooling | TBD (confirm Official vs Community) |
+| **Repositories index** | Developer Community | Source repo | Builder · Contributor | Clone / contribute | Developer Community (shared) → Repositories | Protocol, Apps & Tooling | Official · Stable |
+
+The **Apps & Tooling** zone sits inside the **Andamio API** root (andamio-docs#112), so every tool
+placed there is a developer tool. None of these tools serve Andamio Issuer readers; do not link them
+from Issuer pages.
 
 Andamio Bot is one of the **apps** on the #28 Roadmap, so it lives inside the Apps & Tooling zone —
 not a sold-product peer (see [SKILL.md principle](./SKILL.md#the-principle)). Confirm its status
@@ -24,7 +28,7 @@ not a sold-product peer (see [SKILL.md principle](./SKILL.md#the-principle)). Co
 
 **Developer Community zone** also holds **Pioneers** (the cohort program) alongside the Repositories
 index. Pioneers is a program, not a tool, so it has no registry row — but its docs live under the
-`developer-community/` root.
+`developer-community/` section, a shared section outside the three roots.
 
 ## Notes per tool
 
