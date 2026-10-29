@@ -1,53 +1,123 @@
 ---
 title: Before you start
-description: The decisions and setup to have ready before you issue a credential
+description: What to have ready before your first credential. Governance takes the most planning.
 ---
 
-Most of what you need ready are decisions, not setup. The credential text takes longest, because it can never change once it is on chain.
+Getting ready takes three kinds of work. Administration sets up your account. Governance decides what your credentials mean and who grants them. Development builds those decisions into your systems.
 
-## A plan and someone to order it
+Governance takes the most planning. A credential can never change once it is on chain, so its wording has to be final and approved before you create it. Start there.
 
-Order a plan in the [Issuer app](https://issuer.andamio.io). Know your cohort size first. A plan has three allocations:
+## Administration
 
-| Allocation | What uses one |
+**The question:** how will you get access to Andamio Issuer?
+
+<Steps>
+<Step>
+
+### Order a plan
+
+Order a plan at [issuer.andamio.io](https://issuer.andamio.io). Know your cohort size first, because a plan sets three limits:
+
+| Limit | One is used by |
 |---|---|
-| **Users** | Each account you create for a person with `POST /accounts/create` |
+| **Users** | Each account you create for a person |
 | **Credentials** | Each learner whose evidence a teacher accepts |
-| **Courses** | Each course you create with `POST /courses/create` |
+| **Courses** | Each course you create |
 
-A Credentials unit is drawn when the accept transaction is submitted, and it is refunded if that transaction does not land. A batch that accepts ten learners needs ten units, or the whole batch is refused with `402 QUOTA_EXHAUSTED`. Read what is left with `GET /quota`.
+</Step>
+<Step>
 
-## A developer
+### Register your site's address
 
-Andamio Issuer is an API. It has no learner or reviewer app, so a developer builds the screens your people use: where a learner submits evidence, where a teacher accepts it, and where a learner claims the credential.
+Social login lets people sign without installing a wallet, but it only works on a site address Andamio has approved. Register yours (for example `app.yourcompany.com`) at [issuer.andamio.io](https://issuer.andamio.io).
 
-## Which programs become courses
+Do this early. An Andamio operator approves each address by hand, and your API key is issued after that.
 
-Every credential belongs to a course. Decide which of your programs become courses, and which credentials each course issues.
+</Step>
+</Steps>
 
-## The final statements for each credential
+## Governance
 
-A credential is an ordered list of statements, and the credential is the hash of that list. A changed word or a new order makes a different credential, and nothing can be edited on mainnet. Get each list written, approved and put in order before you define it. [How it works](/docs/issuer/how-it-works) has the rules for a statement.
+**The question:** what will your credentials mean, and who will grant them?
 
-## What learners submit as evidence, and where you keep it
+<Steps>
+<Step>
 
-Only a short text of up to 140 characters goes on chain with each submission. A hash of the evidence is recommended, and a public URL is fine where the evidence is already public. That text is public and permanent. Never put personal data in it.
+### Define each credential
 
-The evidence itself stays with you. Decide where you store it, how long you keep it and how you delete it when someone asks.
+A credential certifies what someone can do. You define it as an ordered list of statements, such as "I can run a safety inspection". A person earns it when a teacher accepts their evidence for it.
 
-## A course owner and teachers
+The ordered list of statements defines the credential within its course. Changing a word or the order makes a different credential, and nothing can be edited on mainnet. Write each list, get it approved and put it in order before you create the credential. [How it works](/docs/issuer/how-it-works) has the rules for a statement.
 
-Name a course owner from your own staff, and the teachers who will accept evidence. Each one needs an alias held in a wallet, through a social login or a browser wallet. Aliases are public and permanent, so choose them with that in mind.
+</Step>
+<Step>
 
-## Your site's address for social login
+### Group your credentials into courses
 
-Social login lets people sign without installing a wallet. It works only on a site address Andamio has allowlisted. Register the address (for example `app.yourcompany.com`) in the [Issuer app](https://issuer.andamio.io). An Andamio operator still allowlists it by hand, and your key is issued after that, so register it early.
+Every credential belongs to a course, and a course can hold many credentials. Everything in a course shares one owner and one set of teachers, and one credential can require another only inside the same course.
 
-## A privacy notice
+So group credentials that the same people approve, or that build on each other. A course can match a class, a training track or a certification, but it does not have to.
 
-Show a privacy notice before anyone connects a wallet. It names who controls the data.
+</Step>
+<Step>
+
+### Decide what learners submit as evidence
+
+Decide what counts as evidence for each credential. Then decide where you store it, how long you keep it and how you delete it when someone asks. The evidence itself never goes on chain.
+
+</Step>
+<Step>
+
+### Name a course owner and teachers
+
+Pick a course owner from your own staff, and the teachers who will accept evidence. Each needs an alias, and aliases are public and permanent, so choose them with care.
+
+</Step>
+<Step>
+
+### Write a privacy notice
+
+Write a privacy notice that names who controls the data. People see it before they connect a wallet.
+
+</Step>
+</Steps>
+
+## Development
+
+**The question:** how will your systems carry out those decisions?
+
+<Steps>
+<Step>
+
+### Build the three screens
+
+Andamio Issuer is an API with no app for learners or reviewers, so you build the screens your people use. A learner submits evidence on one, a teacher accepts it on another, and a learner claims the credential on the third. [API integration](/docs/issuer/integrate) has the API calls behind each one.
+
+</Step>
+<Step>
+
+### Connect wallets
+
+Each person signs through social login or a browser wallet. Social login only works on the address you registered in Administration. Show the privacy notice before anyone connects.
+
+</Step>
+<Step>
+
+### Store evidence and submit its fingerprint
+
+Keep the evidence where governance decided. With each submission, send a short text of up to 140 characters that goes on chain: a hash of the evidence, or a public URL if the evidence is already public. That text is public and permanent, so never put personal data in it.
+
+</Step>
+<Step>
+
+### Watch your credit balance
+
+If a batch of acceptances needs more credentials than your plan has left, the whole batch is refused with `402 QUOTA_EXHAUSTED`. Check what is left with `GET /quota`, and [Roles and actions](/docs/issuer/actions) has the details.
+
+</Step>
+</Steps>
 
 ## Next
 
-- [Actions](/docs/issuer/actions) lists each action, who signs it and how a write completes.
-- [Quickstart](/docs/issuer/quickstart) takes a key to a first claimed credential on preprod.
+- [Roles and actions](/docs/issuer/actions) covers the access token, the roles and the credential loop.
+- [API integration](/docs/issuer/integrate) takes your developer from a key to issued credentials.

@@ -35,11 +35,6 @@ const SHARED: Section[] = [
     body: "Key terms and concepts.",
     href: "/docs/glossary",
   },
-  {
-    title: "Developer Community",
-    body: "Pioneers, the repositories index, and community tools.",
-    href: "/docs/developer-community",
-  },
 ];
 
 function SectionGrid({ label, sections }: { label: string; sections: Section[] }) {

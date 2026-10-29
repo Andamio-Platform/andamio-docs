@@ -8,6 +8,9 @@
         "apps-tooling",
         "credential-badges",
         "--- Reference ---",
-        "[API reference](https://api.andamio.io)"
+        "[API reference](https://api.andamio.io)",
+        "---",
+        "[Home](/docs)",
+        "[Glossary](/docs/glossary)"
     ]
 }

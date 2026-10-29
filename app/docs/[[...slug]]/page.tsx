@@ -64,6 +64,9 @@ export default async function Page(props: {
       // so the content can span the whole content area. Gated on `full`, so
       // only pages that opt in are affected; every other page is unchanged.
       article={pageData.full ? { className: "max-w-none" } : undefined}
+      // The /docs home routes by intent; a "next page" link there would only
+      // repeat its first card.
+      footer={{ enabled: (params.slug?.length ?? 0) > 0 }}
     >
       <DocsTitle>{pageData.title}</DocsTitle>
       <DocsDescription>{pageData.description}</DocsDescription>
