@@ -1,5 +1,3 @@
-import path from "path";
-
 /**
  * Path containment helpers for the public API routes.
  *
@@ -13,13 +11,14 @@ import path from "path";
  * The defence is two layers, both of which must hold:
  *   1. validate each caller-supplied segment (assertSafeSegment / …Path)
  *   2. resolve the final path and assert it is still inside public/ before
- *      touching the filesystem (resolveInPublic)
+ *      touching the filesystem
  *
  * Layer 2 is the backstop: even if a new route forgets to validate, the
- * resolved path is checked against the public root.
+ * resolved path is checked against the public root. That check is written
+ * inline next to each read (a locally resolved public root, then a
+ * startsWith check right before the read; see utils/yaml.ts), not as a helper
+ * here, because CodeQL's js/path-injection rule only recognises that shape.
  */
-
-export const PUBLIC_ROOT = path.resolve(process.cwd(), "public");
 
 export class UnsafePathError extends Error {
   constructor(message: string) {
@@ -61,18 +60,6 @@ export function assertSafeRelativePath(value: string, label: string): string {
     assertSafeSegment(segment, label);
   }
   return segments.join("/");
-}
-
-/**
- * Resolve a path relative to public/ and assert it did not escape. This is the
- * backstop layer — call it immediately before any filesystem access.
- */
-export function resolveInPublic(relativePath: string): string {
-  const resolved = path.resolve(PUBLIC_ROOT, relativePath);
-  if (resolved !== PUBLIC_ROOT && !resolved.startsWith(PUBLIC_ROOT + path.sep)) {
-    throw new UnsafePathError("Resolved path escapes the public directory");
-  }
-  return resolved;
 }
 
 /** True when the error came from these helpers, so routes can answer 400. */

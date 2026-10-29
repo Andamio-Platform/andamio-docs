@@ -74,3 +74,17 @@ jobs:
       # script decides what blocks.
       - run: npm audit --omit=dev --json > audit.json || true
       - run: node .github/scripts/audit-gate.mjs < audit.json
+
+  # Unused files, exports and dependencies. Config and the reasons for any
+  # ignore live in knip.json and in @public tags on the export.
+  knip:
+    name: Knip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npm run knip
