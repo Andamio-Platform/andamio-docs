@@ -2,11 +2,12 @@
 /**
  * Guard: every docs page must be reachable from the sidebar navigation.
  *
- * The docs use a six-root IA — a single collapsible Fumadocs sidebar whose root
- * `content/docs/meta.json` lists each top-level tab folder (`api`, `issuer`,
- * `apps-tooling`, `credential-badges`, `developer-community`, `protocol`, plus
- * `glossary`/`light-paper` and the trust/verification pages) in its `pages[]`.
- * Each tab folder then carries its own `meta.json` nav tree.
+ * The docs have three sidebar roots (Andamio Issuer, Andamio API, Protocol)
+ * plus shared pages. The root `content/docs/meta.json` lists the shared pages
+ * (`index`, `glossary`, `developer-community`) and the three root folders:
+ * `issuer`, and the group folders `(developer)` and `(protocol)`. A group
+ * folder's name is dropped from URLs, so `(developer)/api/index.mdx` serves
+ * `/docs/api`. Each root folder carries `root: true` and its own `meta.json`.
  *
  * A page can silently fall out of nav: an `.mdx` lands on disk but nobody adds
  * it to the relevant `meta.json` `pages[]`, so it is reachable only by a direct
@@ -15,12 +16,18 @@
  *
  * Algorithm (ported from the orch reference `find-orphan-routes.py`):
  *   Traverse the meta.json tree from the root, honoring explicit `pages[]`
- *   entries, the `...` rest operator, nested folder refs, deep path refs, a
- *   folder's own `index.mdx` group-landing, and any folder marked `root: true`
- *   (a separate sidebar tab). Collect every reachable `.mdx`. A folder with no
- *   `meta.json` is fully shown by Fumadocs, so everything under it is reachable.
- *   Diff the reachable set against every `.mdx` under `content/docs`; the
- *   remainder is orphaned.
+ *   entries, the `...` rest operator, nested folder refs (including `(group)`
+ *   folders), deep path refs, and a folder's own `index.mdx` group-landing.
+ *   A `root: true` folder is reachable only when its parent `meta.json` lists
+ *   it: Fumadocs builds tree nodes only for listed entries, so an unlisted
+ *   root has no tab and no sidebar. Collect every reachable `.mdx`. A folder
+ *   with no `meta.json` is fully shown by Fumadocs, so everything under it is
+ *   reachable. Diff the reachable set against every `.mdx` under
+ *   `content/docs`; the remainder is orphaned.
+ *
+ * It also fails when two files map to the same URL. Group folders make that
+ * easy (an `index.mdx` directly in `(developer)/` would serve `/docs` and
+ * silently shadow the home page), and Fumadocs reports no error for it.
  *
  * Usage:
  *   npx tsx scripts/check-orphan-routes.ts     # report + exit 1 on any orphan
@@ -35,7 +42,6 @@ const CONTENT_ROOT = path.join("content", "docs");
 
 interface Meta {
   pages?: unknown;
-  root?: unknown;
 }
 
 function loadMeta(dir: string): Meta | null {
@@ -112,15 +118,6 @@ function reachFolder(dirpath: string): void {
   }
 }
 
-/** Recursively collect every directory under `root` (inclusive). */
-function allDirs(root: string): string[] {
-  const out = [root];
-  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
-    if (entry.isDirectory()) out.push(...allDirs(path.join(root, entry.name)));
-  }
-  return out;
-}
-
 /** Recursively collect every .mdx file under `root`. */
 function allMdx(root: string): string[] {
   const out: string[] = [];
@@ -136,21 +133,35 @@ function allMdx(root: string): string[] {
 function route(p: string): string {
   let rel = path.relative(realpath(CONTENT_ROOT), p).slice(0, -4); // strip .mdx
   if (rel.endsWith(`${path.sep}index`)) rel = rel.slice(0, -6);
-  rel = rel.split(path.sep).join("/");
+  // Group folders like `(developer)` do not appear in URLs.
+  rel = rel
+    .split(path.sep)
+    .filter((seg) => !/^\(.+\)$/.test(seg))
+    .join("/");
+  if (rel === "") rel = "index";
   return rel !== "index" ? `/docs/${rel}` : "/docs";
 }
 
 // Main root traversal.
 reachFolder(CONTENT_ROOT);
 
-// Folders marked `root: true` are separate sidebar tabs — reachable via the tab
-// switcher even when not listed in the main root's pages[].
-for (const d of allDirs(CONTENT_ROOT)) {
-  const meta = loadMeta(d);
-  if (meta && meta.root === true) reachFolder(d);
-}
-
 const everyMdx = new Set(allMdx(CONTENT_ROOT).map((p) => realpath(p)));
+
+const byRoute = new Map<string, string[]>();
+for (const p of everyMdx) {
+  const r = route(p);
+  byRoute.set(r, [...(byRoute.get(r) ?? []), p]);
+}
+const collisions = [...byRoute].filter(([, files]) => files.length > 1);
+if (collisions.length > 0) {
+  console.error(`\n✗ ${collisions.length} URL collision(s): files that serve the same route.\n`);
+  for (const [r, files] of collisions) {
+    console.error(`  ${r}`);
+    for (const f of files) console.error(`    ${path.relative(process.cwd(), f)}`);
+  }
+  console.error("");
+  process.exit(1);
+}
 const orphans = [...everyMdx]
   .filter((p) => !reached.has(p))
   .map((p) => route(p))
@@ -163,8 +174,9 @@ if (orphans.length > 0) {
   );
   console.error(
     "  Each page below exists as an .mdx file but is not referenced by its\n" +
-      "  folder's meta.json pages[] (nor reachable via `...`, a group index,\n" +
-      "  or a `root: true` tab). It is reachable only by direct URL or search.\n" +
+      "  folder's meta.json pages[] (nor reachable via `...` or a group index).\n" +
+      "  A `root: true` folder must itself be listed in its parent meta.json.\n" +
+      "  It is reachable only by direct URL or search.\n" +
       "  Add it to the relevant content/docs/**/meta.json pages[] to fix.\n"
   );
   for (const r of orphans) console.error(`  ${r}`);

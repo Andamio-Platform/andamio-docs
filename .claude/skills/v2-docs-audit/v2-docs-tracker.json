@@ -1,7 +1,7 @@
 {
   "version": "1.4.0",
   "lastUpdated": "2026-01-09",
-  "docsPath": "content/docs/protocol/v2/transactions",
+  "docsPath": "content/docs/(protocol)/protocol/v2/transactions",
   "summary": {
     "documented": 13,
     "missing": 3,

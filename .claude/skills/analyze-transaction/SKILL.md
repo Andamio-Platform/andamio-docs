@@ -217,7 +217,7 @@ See `.claude/skills/analyze-transaction/example-tx.md` for a complete worked exa
 7. **File path alignment**:
    - YAML: `public/yaml/transactions/v2/{system}/{role}/{tx-name}.yaml`
    - TS: `$REPOS/andamio-platform-monorepo/packages/andamio-transactions/src/definitions/v2/{system}/{role}/{tx-name}.ts`
-   - MDX: `content/docs/protocol/v2/transactions/{system}/{role}/{tx-name}.mdx`
+   - MDX: `content/docs/(protocol)/protocol/v2/transactions/{system}/{role}/{tx-name}.mdx`
 
 ## Existing Transactions (as templates)
 

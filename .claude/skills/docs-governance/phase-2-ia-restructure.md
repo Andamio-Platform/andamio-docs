@@ -5,8 +5,38 @@ A confirm-first plan to make the [six roots](./SKILL.md#context-the-spine-the-ru
 [governance rules](./SKILL.md). This is a one-time migration plan, not a durable rule; it lives
 here because it is the first major application of the governance.
 
-> **Status:** roadmap-aligned six-root spine signed off (orch Phase-2 IA session, 2026-06-29).
-> Phase 1 (front door + Issuer scaffold) shipped in PR #30.
+> **Status:** shipped as a six-section single sidebar (signed off 2026-06-29; Phase 1 shipped in
+> andamio-docs#30). **Superseded in 2026-10 by three sidebar roots** (andamio-docs#112). See
+> [Three roots (current model)](#three-roots-current-model). The rest of this file is the record of
+> the June migration.
+
+## Three roots (current model)
+
+Since 2026-10 the sidebar has three `root: true` folders, switched with the stock Fumadocs root
+switcher (a dropdown at the top of the sidebar):
+
+```
+content/docs/
+  index.mdx, glossary.mdx, developer-community/      shared, outside every root
+  issuer/                     Andamio Issuer (root: true)
+  (developer)/                Andamio API (root: true): api/, apps-tooling/, credential-badges/
+  (protocol)/                 Protocol (root: true): protocol/, contract-verification, security-audit
+```
+
+- **URLs did not change.** `(developer)` and `(protocol)` are Fumadocs group folders, whose names
+  are dropped from slugs, so no redirects were added. Never put an `index.mdx` directly in a group
+  folder: it would serve `/docs` and shadow the home page.
+- **Every root must be listed** in `content/docs/meta.json`, or it silently drops out of the tree.
+  `npm run docs-orphans` fails on an unlisted root and on two files that serve one URL.
+- **Shared pages** (Home, Glossary, Developer community) are reached from inside a root through
+  the `links` prop on `DocsLayout` in `app/docs/layout.tsx`. On a shared page the sidebar shows the
+  full tree with the three roots collapsed, and no switcher.
+
+**Why the root switcher is acceptable now.** The June spike rejected the dropdown because the six
+sections were namespaces of one product, and a reader moved between them constantly. The three roots
+are distinct products bought by different customers with different keys (a key for one gets a 403 on
+the other). A reader rarely switches, so a dropdown they seldom touch costs little, and a scoped
+sidebar stops Issuer readers from meeting API instructions that do not apply to them.
 
 ## Goal
 
@@ -25,7 +55,7 @@ together. They are ordinary collapsible folders in one sidebar (not `root` folde
 /docs                            Front door (neutral — no product preselected)
 ─ Products
   ├─ api/                        Andamio API — developer product
-  └─ issuer/                     Andamio Issuer — low-code product
+  └─ issuer/                     Andamio Issuer — credential product for organizations
 ─ Explore & build
   ├─ apps-tooling/               Apps & Tooling — Explore the App · Andamio Bot · CLI · App Template · SDK · Andamioscan
   ├─ credential-badges/          Credential Badges — flagship
@@ -44,19 +74,19 @@ together. They are ordinary collapsible folders in one sidebar (not `root` folde
 - **Glossary + Light Paper → cross-cutting Reference zone** on the front door, not roots. (Papers stay
   woven per the locked papers decision: the landing page is the artifact home; docs gets only woven content.)
 
-## How the sidebar works (single tree, no toggle)
+## How the sidebar worked (single tree, no toggle; June 2026)
 
 The namespaces are **ordinary folders** (no `root: true`) listed in the front-door
 `content/docs/meta.json`. Fumadocs renders them as collapsible sections in one sidebar; the folder
 containing the current page auto-expands, the rest stay collapsed. `app/docs/layout.tsx` uses the
 default `DocsLayout` with no `sidebar.tabs` — so there is no root-toggle dropdown.
 
-> **Mechanism note (why not the root toggle).** Fumadocs also supports a `root: true` model where each
+> **Mechanism note (why not the root toggle, June 2026; superseded, see Three roots above).** Fumadocs also supports a `root: true` model where each
 > root folder gets its own *scoped* sidebar and you switch between them with a `RootToggle` dropdown
 > (scoping comes from `TreeContext.findLast(folder.root)`; auto-derived tabs via `getSidebarTabs`).
 > A spike proved that worked, but the dropdown-to-switch-namespace UX was rejected in favor of one
-> unified, collapsible sidebar. Keep the namespaces as plain folders; do **not** add `root: true`
-> back unless the navigation model is deliberately revisited.
+> unified, collapsible sidebar. The navigation model was deliberately revisited in 2026-10
+> (andamio-docs#112), and `root: true` is back for the three product roots.
 
 ## Content moves (today → target section)
 

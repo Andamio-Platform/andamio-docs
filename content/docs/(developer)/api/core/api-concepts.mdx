@@ -63,13 +63,25 @@ Cursor tokens are opaque — do not parse or construct them client-side. Pass th
 
 ### Warnings
 
-`meta.warning` is a non-fatal signal that the response succeeded but data may be partial. It appears on merged endpoints when one of the two backend systems is unavailable:
+`meta.warning` is a non-fatal signal that the response succeeded but data may be partial. It appears on merged endpoints when the API cannot read part of the data, either the off-chain content or the on-chain state. Each text names the data that is missing:
 
 | Warning | Meaning |
 |---------|---------|
-| `"DB API unavailable, showing on-chain data only"` | Database is down — response contains on-chain data only, no off-chain metadata |
-| `"Andamioscan unavailable, on-chain state not available"` | Blockchain indexer is down — response contains DB data only, no on-chain state |
-| `"DB API partially unavailable, some content may be missing"` | Database partially degraded — some records may be missing from the response |
+| `"Off-chain content not available"` | No off-chain content in the response |
+| `"Off-chain content not available, showing on-chain data only"` | The response holds on-chain data only |
+| `"Off-chain content not available, showing pending on-chain items only"` | The response holds pending on-chain items only |
+| `"Some off-chain content not available"` | Some records are missing their off-chain content |
+| `"Some off-chain commitment content not available"` | Some commitments are missing their off-chain content |
+| `"On-chain state not available"` | No on-chain state in the response |
+| `"On-chain state not available, showing off-chain content only"` | The response holds off-chain content only |
+| `"On-chain state not available, showing off-chain history only"` | The response holds off-chain history only |
+| `"On-chain status not available"` | Records are listed without their on-chain status |
+| `"Some on-chain data unavailable"` | Some records are missing their on-chain data |
+| `"On-chain learner status not available"` | The learner's on-chain status is missing |
+| `"Evidence not available, showing on-chain data only"` | Evidence is missing, and the response holds on-chain data only |
+| `"Commitment status not available for some assignments"` | Some assignment commitments are listed without a `commitment_status` |
+
+One response can carry more than one of these texts in a single `meta.warning`, joined by `"; "`. Split the field on `"; "` before you match, and do not exact-match the whole field.
 
 When `meta.warning` is present, treat the response as degraded — display what you have but avoid taking actions that depend on the completeness of the data.
 

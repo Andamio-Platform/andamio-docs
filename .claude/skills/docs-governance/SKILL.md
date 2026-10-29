@@ -17,28 +17,41 @@ proves wrong or incomplete, change it here and note why.
 - Reviewing a PR that introduces or moves tool-related pages or links.
 - Onboarding a new complementary tool into the ecosystem.
 
-If you're documenting one of the **products** themselves (Andamio API, Andamio Issuer, Credential
-Badges), the **Apps & Tooling** or **Developer Community** zones, or the **Protocol** reference,
-this skill governs only the *tool* pages that hang off them, not the product content itself.
+If you're documenting one of the **products** themselves (Andamio Issuer, Andamio API), the
+**Apps & Tooling** or **Developer Community** zones, or the **Protocol** reference, this skill
+governs only the *tool* pages that hang off them, not the product content itself.
 
-## Context: the spine the rules protect
+## Context: the structure the rules protect
 
-The docs sidebar sections mirror the [#28 Roadmap initiatives](./phase-2-ia-restructure.md), so the
-docs and the roadmap stay legible together. **Six sections:**
+The docs sidebar has **three roots**. Each is a Fumadocs `root: true` folder with its own scoped
+sidebar, and readers switch between them with the stock root switcher at the top of the sidebar.
 
-1. **Andamio API**: the developer product (self-serve).
-2. **Andamio Issuer**: the low-code, API-based product (sales-led).
-3. **Credential Badges**: the flagship credential product.
-4. **Apps & Tooling**: the category zone — Explore the App, Andamio Bot, CLI, App Template, SDK, Andamioscan.
-5. **Developer Community**: Pioneers, Repositories, and community tools.
-6. **Protocol**: on-chain internals (advanced reference).
+1. **Andamio Issuer** (`content/docs/issuer/`): the product for organizations that issue
+   credentials from programs they already run (sales-led, enterprise key). A buyer needs a
+   developer to integrate it.
+2. **Andamio API** (`content/docs/(developer)/`): the developer product (self-serve, developer
+   key). It holds `api/`, the **Apps & Tooling** zone (Explore the App, Andamio Bot, CLI, App
+   Template, Andamioscan, agent tooling) and the developer-facing **Credential Badges** pages.
+3. **Protocol** (`content/docs/(protocol)/`): on-chain internals, contract verification and the
+   security audit.
 
-`/docs` is a neutral **front door** (no product preselected). Glossary and Light Paper are
-cross-cutting references on the front door, **not** roots.
+Shared pages sit outside every root and are reachable from all of them through persistent sidebar
+links: `/docs` (a neutral front door, no product preselected), the Glossary, and **Developer
+Community** (Pioneers, Repositories, community tools).
 
-Three **products** anchor the spine (API, Issuer, Credential Badges). Apps & Tooling, Developer
-Community, and Protocol are supporting zones. Everything in this skill exists to keep that spine
-legible.
+Two rules keep this structure intact. Never put an `index.mdx` directly in a group folder such as
+`(developer)/` or `(protocol)/`: group folders are dropped from URLs, so that page would serve `/docs`
+and shadow the home page. And list every root folder in `content/docs/meta.json`: an unlisted root
+silently disappears from the sidebar. `npm run docs-orphans` fails on both.
+
+Two **products** anchor the structure (Issuer, API). They are bought by different customers with
+different keys, and a key for one gets a 403 on the other, so each product's reader should see only
+that product's pages. Apps & Tooling, Credential Badges, Developer Community and Protocol are
+supporting zones. Everything in this skill exists to keep that structure legible.
+
+*Rationale (2026-10, andamio-docs#112):* replaces the June 2026 single unified sidebar with six
+sections. The six sections were namespaces of one product. Issuer and API are now separate
+products, and mixing them sent Issuer readers to API instructions that do not apply.
 
 ## The principle
 
@@ -55,7 +68,7 @@ failed.
 Before any tool gets space in the docs, answer both. If you can't answer #1, it does not go in
 product docs: at most it gets a line in the Developer Community index.
 
-1. **Which product or zone does this make easier?** (API · Issuer · Credential Badges · Apps & Tooling · Developer Community · Protocol · cross-cutting)
+1. **Which product or zone does this make easier?** (Issuer · API · Apps & Tooling · Credential Badges · Developer Community · Protocol · cross-cutting)
 2. **What single action do we want the reader to take?** (Install · Use · Point your agent at it · Clone/fork · Add/try · Contribute)
 
 ## Two reader intents, two confusions to prevent
@@ -78,7 +91,7 @@ Fill these in for every tool. The living answers live in [`tool-registry.md`](./
 
 | Field | Options |
 |---|---|
-| **Serves** | API · Issuer · Credential Badges · Apps & Tooling · Developer Community · Protocol · cross-cutting |
+| **Serves** | Issuer · API · Apps & Tooling · Credential Badges · Developer Community · Protocol · cross-cutting |
 | **Type** | Accelerator (libs/templates) · Workflow tool (CLI) · Agent enablement · Integration/bot · Source repo |
 | **Audience** | Buyer-adopter · Builder · Contributor · End-user |
 | **Primary action** | Install · Use · Point your agent at it · Clone/fork · Add/try · Contribute |
@@ -93,12 +106,13 @@ Fill these in for every tool. The living answers live in [`tool-registry.md`](./
 - **Serves one product** → canonical page lives **inside that product's section**, in a small
   **Tools** group at the bottom of that product's sidebar. Surface it contextually in the guides
   where it's needed.
-- **Is one of the apps, or cross-cutting tooling** (Bot, CLI, App Template, SDK, Andamioscan) →
-  canonical page in the **Apps & Tooling** zone, linked from the products it touches.
+- **Is one of the apps, or cross-cutting developer tooling** (Bot, CLI, App Template, Andamioscan) →
+  canonical page in the **Apps & Tooling** zone inside the Andamio API root, linked from the pages
+  it touches. Do not link Issuer pages into it: Issuer readers do not use developer tooling.
 - **Community-facing or a raw repo with no narrative** → the **Developer Community** zone (Pioneers,
   Repositories index). Never let bare GitHub/SDK links compete with product nav in the main sidebar.
 - A tool may be **mentioned** anywhere it helps, but **documented** in exactly one place.
-- Tools never appear as a top-level namespace section; they hang off a product or zone.
+- Tools never appear as a sidebar root or a top-level section; they hang off a product or zone.
 
 ## Labeling conventions (prevent product/tool confusion)
 
@@ -137,13 +151,13 @@ One line: what it is and which product/job it serves.
 
 ## How this maps to the IA
 
-This schema folds into the [Phase 2 restructure](./phase-2-ia-restructure.md):
-
-- Each product section gets a small **Tools** group holding only the tools that serve it.
-- The **Apps & Tooling** root holds the apps and cross-cutting tooling (Bot, CLI, App Template, SDK,
-  Andamioscan); the **Developer Community** root holds the repositories index and community tools.
-- The current "External" link dump and the standalone top-level "SDK" section are absorbed into
-  this (SDK now lives under Apps & Tooling), so tools stop visually competing with products.
+- Each product root can hold a small **Tools** group with only the tools that serve it.
+- The **Apps & Tooling** zone (inside the Andamio API root) holds the apps and cross-cutting developer
+  tooling; the shared **Developer Community** section holds the repositories index and community tools.
+- External links that belong to one product sit at the bottom of that root (the Issuer API reference
+  in Andamio Issuer, the API reference in Andamio API). Site-wide links (Andamio App, andamio.io,
+  GitHub) are icon links in the sidebar footer, set in `app/docs/layout.tsx`.
+- See [`phase-2-ia-restructure.md`](./phase-2-ia-restructure.md) for the history of the structure.
 
 ## Refining this skill
 
