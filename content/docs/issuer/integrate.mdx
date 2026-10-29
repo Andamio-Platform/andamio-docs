@@ -3,31 +3,39 @@ title: Integrate via API
 description: How Andamio Issuer plugs into the systems you already run
 ---
 
-<Callout type="info">
-  Preview. The Issuer API surface is taking shape: the write plane is live on preprod and the read-plane endpoint list is locked, with response payloads still in progress. Endpoint details and schemas will be published here as they settle.
-</Callout>
+Andamio Issuer is one REST API that you call from the systems you already run. Andamio builds each transaction, the person taking the action signs it with a social login or a browser wallet, and Andamio adds its sponsorship when you submit. Nobody holds ADA.
 
-Andamio Issuer exposes a single, versioned API surface that you call from the systems you already run. It builds and submits the on-chain transactions for you, so your integration is ordinary REST: you make a request, Andamio handles the chain.
+The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has every route with its full request and response schema.
 
 ## The shape
 
-**One namespace: `/issuer/v1/`.** Two kinds of endpoint:
+**One namespace, `/issuer/v1`.** Mainnet is at `https://api.andamio.io/issuer/v1` and preprod at `https://preprod.api.andamio.io/issuer/v1`. Your key decides the network.
 
-- **Write (`POST`)** builds a sponsored transaction that Andamio signs, sponsors, and submits on the caller's behalf. No wallets, no ADA, no signing on your side.
-- **Read (`GET`)** returns on-chain data, scoped server-side to the caller.
+**Authentication.** Send your enterprise key in the `X-API-Key` header. It is the only credential the routes take, with no end-user token. A developer key gets `403`.
 
-**Authentication.** The tenant is your organization, identified by an `X-API-Key`. The caller is the authenticated person within it, acting in one of four roles: User, Admin, Teacher, or Learner.
+**Writes (`POST`).** Paths name the transaction being built, such as `/courses/create` or `/courses/{course_id}/credentials/claim`. The response shape tells you what to do next:
 
-## What you can do
+- `POST /accounts/create` returns a `tx_hash`. Andamio has already built, sponsored and submitted it, and nobody signs.
+- Every other write returns an `unsigned_tx`. The wallet that holds the acting alias (the `alias` in the request body) signs it, and you send it to `POST /submit`. Andamio adds its sponsorship and submits it.
 
-The write plane covers the full credential lifecycle: create user accounts, create courses, manage teachers, define and remove credentials, submit and approve evidence, and claim earned credentials.
+There is no transaction-status route. Poll a read until the result shows. [Actions](/docs/issuer/actions) lists each write, who signs it and which read to poll.
 
-The read plane covers the data you build on: course catalogs and structure, teachers and learners, and per-person views of the credentials someone holds, their submissions, and the reviews awaiting them.
+**Reads (`GET`).** Courses, credentials, teachers, learners, and per-account views of credentials, submissions, reviews and activity. Results are always limited to the courses your key holds. Snapshot lists page with `page` and `limit`. Activity feeds page with an opaque `cursor`. `limit` defaults to 25, with a maximum of 100.
+
+## Errors
+
+Errors return an `error` object with a `code` and a `message`. The `code` is stable, so match on it rather than on the message.
+
+| Code | Meaning |
+|---|---|
+| `402 QUOTA_EXHAUSTED` | Your plan has no allocation left for this action |
+| `402 ACCOUNT_DISABLED` | Your enterprise account is disabled |
+| `403 COURSE_NOT_AUTHORIZED` | Your key does not hold this course |
+
+An error on a limit can name internal fields, such as `modules_to_add`, instead of the reference's `credentials_to_add`.
 
 ## How it relates to the Andamio API
 
-Issuer is a higher-level surface built on the [Andamio API](/docs/api/getting-started). The API gives developers the full protocol; Issuer narrows it to the credentialing job and removes the blockchain entirely. If you want lower-level control or are building something beyond credential issuance, build on the API directly.
+Issuer is a higher-level surface built on the [Andamio API](/docs/api/getting-started). The API gives developers the full protocol, and they fund their own transactions. Issuer narrows it to the credentialing job and sponsors every transaction. If you want lower-level control or are building something beyond credential issuance, build on the API directly.
 
-<Callout type="info">
-  Want early access or have integration questions? Reach out via [Andamio Pioneers](https://discord.gg/wfGrgJJheS).
-</Callout>
+Questions about an integration go to [Support](/docs/issuer/support).
