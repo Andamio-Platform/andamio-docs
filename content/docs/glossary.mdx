@@ -3,23 +3,40 @@ title: Glossary
 description: A reference guide for key terms, concepts, and acronyms used throughout Andamio documentation.
 ---
 
-## Core Components
+Andamio is a system for issuing credentials and granting role-based access to holders of those credentials. Every credential lives on Cardano. The docs, and this glossary, sort Andamio into **products** and the **tools** for building on them.
 
-Andamio is infrastructure for verifiable work and portable credentials on Cardano. It consists of four interconnected components: the Protocol (on-chain smart contracts), the SDK (developer tools), the API (serving coherent data), and the App (reference implementation). Together, these enable anyone to create learning experiences, coordinate projects, and build trust networks—all anchored in self-sovereign on-chain identity and local solutions.
+## Products
 
-### Andamio Protocol
-On-chain smart contracts on Cardano that enable decentralized identity (SSOI), credential management, and global coordination of local work. Defines how Access Tokens, Global State, and Local States interact for skills verification and contribution tracking. Version 2 is permissionless and open for integration.
-
-### Andamio SDK
-Pre-built libraries and developer tools (JavaScript, Python, Go, Rust) for simple Andamio integration. Abstracts blockchain complexity, enabling developers to build on Andamio in days rather than months. Handles transaction building, signing, and protocol interactions.
+### Andamio Issuer
+For an organization that wants to issue credentials from a program it already runs. A developer integrates it with an enterprise key, under `/issuer/v1`. Andamio sponsors every transaction, so the people in the program never hold ADA or pay a fee. See [Andamio Issuer](/docs/issuer).
 
 ### Andamio API
-Backend service serving coherent data from the Andamio Protocol. Provides query endpoints for SSoIs, Local State instances, credentials, and trust relationships. Enables applications to read protocol state without direct blockchain queries.
+For a developer building an app where people earn and use credentials. The API lives under `/api/v2` and takes a developer key. It serves courses, projects, commitments and credentials, and it builds the transactions that change them. See [Andamio API](/docs/api).
 
-### Andamio App
-Open-source Next.js reference application demonstrating full protocol integration using the SDK and API. Provides interfaces for managing SSoIs, participating in Courses, contributing to Projects, and viewing trust relationships. Organizations can build custom applications following this implementation pattern.
+### Protocol
+For a developer building directly on the contracts. The Protocol is the set of smart contracts on Cardano that every other product is built on. It defines how Access Tokens, Global State and Local States work together. Version 2 is permissionless, open for integration and [independently audited](/docs/security-audit) by TxPipe. See [Protocol](/docs/protocol).
 
-## Core Concepts
+## Tools
+
+### App
+Andamio's own hosted app, where people create an identity, take courses, run projects and earn credentials. It is built entirely on the Andamio API. Developers who want a starting point for their own app can use the open-source [andamio-app-template](https://github.com/Andamio-Platform/andamio-app-template). See [App](/docs/apps-tooling/andamio-app).
+
+### CLI
+Manages courses, modules and content from the terminal, and runs transactions through the Andamio API. See [CLI](/docs/apps-tooling/cli).
+
+### Core
+`@andamio/core`, Andamio's one published library: an open-source TypeScript package with hashing utilities and protocol constants, and no React dependencies. See [Core](/docs/apps-tooling/core).
+
+### Discord Bot
+A self-hosted Discord bot that reads members' Andamio credentials and grants Discord roles based on them. See [Discord Bot](/docs/apps-tooling/andamio-bot).
+
+### Dev
+Agent Skills that pair with the CLI so an AI coding agent can operate Andamio with you. See [Dev](/docs/apps-tooling/andamio-dev).
+
+### Coach
+Agent Skills for writing course lesson content with an AI agent and shaping it to Andamio's course model, ready to publish through the CLI. See [Coach](/docs/apps-tooling/coach).
+
+## Protocol Concepts
 
 ### Access Token (Andamio Access Token)
 Primary authentication mechanism using CIP68 standard. Each user has a token pair: 222 token (in wallet as proof of ownership) and 100 token (at Global State Validator containing SSOI data). Enables portable identity, credentials, and reputation across applications via a unique alias.
@@ -29,6 +46,9 @@ Decentralized identity framework enabling portable, self-controlled records of p
 
 ### Credentials
 Cryptographically verified attestations of skills, achievements, or qualifications issued through the protocol and attached to a user's SSOI. On-chain verifiable, portable across platforms, and irrevocable once earned. Organizations can recognize other organizations' credentials as prerequisites, enabling permissionless trust networks.
+
+### Credential Badge
+An image of a credential, served at `credentials.andamio.io` and read straight from the chain. It carries the credential in the Open Badges form, so anyone can show or check it. See [Credential Badges](/docs/credential-badges).
 
 ### Local State
 Implementations of specific work scopes (courses, projects, future types) containing granular data and business logic. Each System (Course, Project) can have multiple Instances owned by Access Token Holders. Owners manage requirements and approvals; data represents work scope. Local states report to Global State as policy ID + hash pairs. Enables custom validator types while maintaining protocol interoperability through standardized SSOI format.
@@ -42,8 +62,11 @@ Protocol-level registry and index for all local states. Holds all users' 100 tok
 ### Validators
 Smart contracts enforcing protocol rules. Includes Global State Validators (protocol-wide) and Local State Validators (instance-specific).
 
-### Contributors
-Access Token Holders participating in Local States. Called "students" in Courses, "contributors" in Projects. Earn Credentials from Courses (used as prerequisites for Projects). In Projects, commit to tasks defined by Project Owners and earn rewards upon completion.
+### Roles
+A course or project has two kinds of role: the Owner, and the Teacher (in a course) or the Manager (in a project). An Owner grants the Teacher or Manager role. Learners and contributors are not roles.
+
+### Learners and Contributors
+Access Token holders who have committed to work. A learner has committed to an assignment in a course. A contributor has committed to a task in a project. Nobody grants this, and no transaction establishes it beyond the commitment itself. Credentials earned in a course can be prerequisites for a project. A contributor earns the task's reward when a Project Manager accepts the work.
 
 ## Course System
 
@@ -54,7 +77,7 @@ Instance-specific role for Access Token Holders in Course Local States. Initial 
 An Access Token Holder assigned to assess student work within a specific Course Local State instance. Reviews and accepts or denies student assignment submissions.
 
 ### Student
-Contributor participating in a Course Local State. Earns Credentials by completing course requirements, used as prerequisites for Project access. Protocol treats Students and Contributors identically—both are Access Token Holders.
+A learner in a course: anyone who has committed to one of its assignments. Not a role. Earns a credential when a Course Teacher accepts their work, and that credential can be a prerequisite for a project.
 
 ### Course Module
 A structured learning unit within a Course containing Student Learning Targets (SLTs), lessons, an assignment, and an introduction. Each module defines a scope of learning with its own content and assessments.
@@ -74,13 +97,13 @@ Assessment activity within a Course Module. Students submit evidence of completi
 Local State type with multiple on-chain validators (treasury, escrow). Coordinates work, manages funds, and tracks contributions through multi-validator architecture.
 
 ### Project Owner
-Instance-specific role for Access Token Holders in Project Local States. Initial Project Owner is assigned at instance creation and can add additional Project Owners or Project Managers. Manage treasury, approve commitments, and define task requirements within their specific instance. Can also participate as Contributors.
+Instance-specific role for Access Token Holders in Project Local States. The Project Owner is assigned at instance creation. Adds and removes Project Managers and manages the contributor blacklist. Can also commit to tasks as a contributor.
 
 ### Project Manager
-An Access Token Holder assigned to manage day-to-day operations within a specific Project Local State instance. Reviews contributor task submissions and manages contributor workflow.
+An Access Token Holder assigned to run a specific Project Local State instance. Authors the project's tasks and assesses contributors' task submissions.
 
 ### Task
-A discrete unit of work within a Project, content-addressed by its blake2b-256 hash. Contributors commit to tasks, submit evidence of completion, and Project Managers assess the work. Tasks have associated rewards from the Project Treasury.
+A discrete unit of work within a Project, content-addressed by its blake2b-256 hash. Project Managers author tasks. Contributors commit to tasks and submit evidence of completion, and Project Managers assess the work. Tasks have associated rewards from the Project Treasury.
 
 ### Project Treasury
 On-chain validator holding project funds and tracking approved work. Locks funds into escrow validators when contributors commit to tasks, enabling transparent management and automated disbursements.
@@ -107,20 +130,11 @@ Transaction to mint a credential NFT after meeting all requirements in a Course 
 
 ## Technical Architecture
 
-### Protocol V2
-Second major version of Andamio Protocol smart contracts, [independently audited](/docs/security-audit) by TxPipe. Improvements in scalability, security, and features.
-
-### Transaction API (Tx API)
-RESTful API enabling protocol interaction without deep blockchain knowledge. Handles transaction building, signing, and submission.
-
 ### Transaction Sponsorship (Tx Sponsorship)
 Feature allowing organizations to pay blockchain transaction fees on behalf of users, removing Web3 adoption barriers. Available to enterprise API keys — see [Sponsored Transactions](/docs/api/core/sponsored-transactions).
 
 ### Service Fees
 Protocol fees charged for certain operations, creating sustainable revenue for Andamio Inc.
-
-### SDK (Software Development Kit)
-Pre-built libraries (JavaScript, Python, Go, Rust) for simple Andamio integration. Target: days, not months.
 
 ### Gateway Registration
 The act of notifying the Andamio gateway that a transaction has been submitted to the Cardano network. After `wallet.submitTx()` returns a `txHash`, the app POSTs it to `/api/v2/tx/register` along with the transaction type and any metadata. Before this POST, the gateway has no record of the transaction. After it, the gateway creates a tracking entry, adds the transaction to its confirmation queue, and opens an SSE stream so the frontend can receive state updates in real time.
@@ -141,7 +155,6 @@ Technical pattern using blake2b-256 hashes as unique identifiers for protocol en
 - **CF**: Cardano Foundation
 - **DAO**: Decentralized Autonomous Organization
 - **RBAC**: Role-Based Access Control
-- **SDK**: Software Development Kit
 - **SSE**: Server-Sent Events
 - **SLT**: Student Learning Target
 - **SSOI**: Self-Sovereign On-chain Identity
