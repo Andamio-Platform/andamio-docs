@@ -1,50 +1,80 @@
 import Link from "next/link";
 
-/* Documentation entry point — a single Quickstart CTA over a browse-by-section
-   index that mirrors the six-root IA spine. Editorial brand tokens (mono
-   kickers, Inter display, thin rules) are kept; the marketing chrome (oversized
-   hero, ghost numerals, eyebrow, trust footer) is dialed down so the page reads
-   as an index, not a landing page. Top-nav search covers find — no in-page box. */
+/* Documentation entry point: a single Quickstart CTA over an index of the
+   three docs roots (Andamio Issuer, Andamio API, Protocol) and the shared
+   pages. Editorial brand tokens (mono kickers, Inter display, thin rules) are
+   kept; the marketing chrome (oversized hero, ghost numerals, eyebrow, trust
+   footer) is dialed down so the page reads as an index, not a landing page.
+   Top-nav search covers find, so there is no in-page box. */
 
-/* The six roots — each card targets that root's index. */
-const SECTIONS = [
+type Section = { title: string; body: string; href: string };
+
+/* The three sidebar roots. Each card opens that root's landing page. */
+const ROOTS: Section[] = [
   {
-    kicker: "Product",
-    title: "Andamio API",
-    body: "REST endpoints and guides to build on the protocol from your own stack.",
-    href: "/docs/api",
-  },
-  {
-    kicker: "Product",
     title: "Andamio Issuer",
-    body: "Issue and manage credentials with a low-code, API-backed product.",
+    body: "Issue credentials from a program you already run. Enterprise key, and Andamio sponsors the transactions.",
     href: "/docs/issuer",
   },
   {
-    kicker: "Product",
-    title: "Credential Badges",
-    body: "Verifiable, on-chain badges that learners carry anywhere.",
-    href: "/docs/credential-badges",
+    title: "Andamio API",
+    body: "Build an app where people earn and use credentials. Developer key, plus Apps & Tooling and Credential Badges.",
+    href: "/docs/api",
   },
   {
-    kicker: "Zone",
-    title: "Apps & Tooling",
-    body: "Explore the app, plus the CLI, SDK, templates, bot, and Andamioscan.",
-    href: "/docs/apps-tooling",
+    title: "Protocol",
+    body: "Build directly on the contracts. Validators, transactions, tokens, contract verification and the security audit.",
+    href: "/docs/protocol",
+  },
+];
+
+/* Pages shared by every root. */
+const SHARED: Section[] = [
+  {
+    title: "Glossary",
+    body: "Key terms and concepts.",
+    href: "/docs/glossary",
   },
   {
-    kicker: "Zone",
     title: "Developer Community",
     body: "Pioneers, the repositories index, and community tools.",
     href: "/docs/developer-community",
   },
-  {
-    kicker: "Reference",
-    title: "Protocol",
-    body: "Validators, transactions, and tokens — the on-chain machinery, specified.",
-    href: "/docs/protocol",
-  },
 ];
+
+function SectionGrid({ label, sections }: { label: string; sections: Section[] }) {
+  return (
+    <section className="mb-10">
+      <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+        {label}
+      </div>
+      <div className="grid grid-cols-1 gap-x-12 border-t border-border sm:grid-cols-2">
+        {sections.map((s) => (
+          <Link
+            key={s.title}
+            href={s.href}
+            className="group border-b border-border py-3.5 transition-colors"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-display text-base font-medium tracking-tight text-foreground transition-colors group-hover:text-brand">
+                {s.title}
+              </span>
+              <span
+                aria-hidden
+                className="font-mono text-sm text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-brand"
+              >
+                &rarr;
+              </span>
+            </div>
+            <p className="mt-0.5 text-sm font-light leading-snug text-muted-foreground">
+              {s.body}
+            </p>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -55,8 +85,8 @@ export default function HomePage() {
           Build on Andamio
         </h1>
         <p className="mt-4 max-w-xl text-base font-light leading-relaxed text-muted-foreground">
-          Everything to issue, verify, and gate on-chain credentials. Pick a
-          section below to dive in.
+          Everything to issue, verify, and gate on-chain credentials. Pick the
+          product you use below.
         </p>
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -77,36 +107,9 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Browse by section (the six-root spine) ─────────────── */}
-      <section>
-        <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
-          Browse by section
-        </div>
-        <div className="grid grid-cols-1 gap-x-12 border-t border-border sm:grid-cols-2">
-          {SECTIONS.map((s) => (
-            <Link
-              key={s.title}
-              href={s.href}
-              className="group border-b border-border py-3.5 transition-colors"
-            >
-              <div className="flex items-center justify-between gap-3">
-                <span className="font-display text-base font-medium tracking-tight text-foreground transition-colors group-hover:text-brand">
-                  {s.title}
-                </span>
-                <span
-                  aria-hidden
-                  className="font-mono text-sm text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-brand"
-                >
-                  &rarr;
-                </span>
-              </div>
-              <p className="mt-0.5 text-sm font-light leading-snug text-muted-foreground">
-                {s.body}
-              </p>
-            </Link>
-          ))}
-        </div>
-      </section>
+      {/* ── Browse: the three roots, then the shared pages ────── */}
+      <SectionGrid label="Choose your product" sections={ROOTS} />
+      <SectionGrid label="Shared" sections={SHARED} />
 
       {/* ── Quiet meta line ────────────────────────────────────── */}
       <div className="py-8 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">

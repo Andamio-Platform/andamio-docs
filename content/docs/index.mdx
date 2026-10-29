@@ -3,39 +3,39 @@ title: Home
 icon: House
 ---
 
-Andamio is a credentialing solution: a way for groups of people to issue, earn, and verify proof of real work. Credentials live on public infrastructure, the Cardano blockchain, which keeps them permanent and independently verifiable, and lets them outlast the apps that issue them.
+Andamio is a way for groups of people to issue, earn and verify proof of real work. Each credential lives on the Cardano blockchain, public infrastructure that no single company owns. That keeps it permanent and independently verifiable, and lets it outlast the app that issued it.
 
-There are two ways to build with Andamio, plus a live app to see it in action.
+## Where to start
 
-<Cards>
-  <Card title="API" href="/docs/api/getting-started">
-    The developer product. Read, mint, and gate credentials in your own app or system.
-  </Card>
-  <Card title="Issuer" href="/docs/issuer">
-    Low-code credentialing for organizations. Add verifiable credentials to programs you already run, with no wallets or tokens to manage.
-  </Card>
-  <Card title="Explore the app" href="https://app.andamio.io">
-    Take a course, complete work, and earn a credential. Built entirely on the Andamio API.
-  </Card>
-</Cards>
+Start from what you want to do.
 
-## Two products, one protocol
+| You want to… | Start with |
+|---|---|
+| Issue credentials from a program you already run | [Andamio Issuer](/docs/issuer). Routes under `/issuer/v1`, an enterprise key, and Andamio sponsors the transactions. |
+| Build an app where people earn and use credentials | [Andamio API](/docs/api). Routes under `/api/v2`, a developer key, and you design who pays and signs. |
+| Build directly on the contracts | [Protocol](/docs/protocol). The validators, transactions and tokens on Cardano. |
+| See or hold a credential | [app.andamio.io](https://app.andamio.io) to earn one, and [credentials.andamio.io](https://credentials.andamio.io/badges/ae192632aabe00ed2042eaef596bc15f3887fa32e75e8f9b8fa516df.e9b5343186f83ed804a9fd87293a7378e3b237743b76d56da73b111d855631db.svg) to view one as a badge. |
 
-**Andamio API** wraps the on-chain protocol into endpoints you build on. Most developers work at this level; you can also transact against the smart contracts directly. See [Building on Andamio](https://www.andamio.io/whitepaper/building-on-andamio).
+<Mermaid chart={`
+flowchart BT
+    C["Cardano contracts<br/>the Andamio protocol"]
+    A["Andamio API<br/>/api/v2 · developer key"]
+    I["Andamio Issuer<br/>/issuer/v1 · enterprise key"]
+    B["Credential Badges<br/>show credentials as images"]
+    C --> A
+    A --> I
+    C -. read from the chain .-> B
+`} />
 
-**Andamio Issuer** is built on the API and abstracts the chain away entirely. It adds a verifiable credential layer to the systems an organization already runs, with no wallets or tokens for anyone to learn.
+Andamio Issuer is built on the Andamio API, and the API is built on the contracts. Credential Badges reads credentials straight from the chain.
 
-The **app** at [app.andamio.io](https://app.andamio.io) is a reference implementation on the API, open to anyone who wants to explore.
+## Two products, two keys
 
-## Two keys, two paths
+Andamio Issuer and Andamio API are separate products with separate API keys. A developer key calling an Issuer route, or an enterprise key calling a developer route, is rejected with HTTP 403. Follow the docs for the key you hold.
 
-Andamio API and Andamio Issuer are two products with two different API keys, and the key you hold decides which one you build against.
+**Andamio Issuer** adds verifiable credentials to the systems an organization already runs. A developer integrates it. The people in your program sign their own side of each transaction through a social login or a browser wallet. They never hold ADA or pay a fee, because Andamio sponsors every transaction.
 
-**Andamio API** uses a developer key. You build directly on the protocol under `/api/v2`: read, mint, and gate credentials in your own app. Your users sign in and act on their own behalf, and you fund the transactions you submit.
-
-**Andamio Issuer** uses an enterprise key. You issue credentials under `/issuer/v1`, and Andamio sponsors every transaction, covering the on-chain fees. Your application is the only credential the API needs, so there are no end-user wallets or tokens to manage.
-
-The two keys aren't interchangeable. A developer key calling an Issuer route, or an enterprise key calling a developer route, is rejected (HTTP 403). So follow the section that matches your key: the [API](/docs/api/getting-started) docs for a developer key, the [Issuer](/docs/issuer) docs for an enterprise key.
+**Andamio API** gives you the whole protocol under `/api/v2`. Your users sign in and act on their own behalf, and you decide who funds each transaction. The app at [app.andamio.io](https://app.andamio.io) is built entirely on it.
 
 ## What makes an Andamio credential different
 
