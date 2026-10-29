@@ -3,7 +3,7 @@ title: API Integration
 description: API setup and making requests to the Andamio Gateway
 ---
 
-> **API Reference**: [API Docs](https://api.andamio.io) for endpoint schemas. For production, use `mainnet.api.andamio.io`.
+> **API Reference**: [API Docs](https://api.andamio.io) for endpoint schemas.
 
 ## Authentication Headers
 
@@ -63,7 +63,7 @@ Start on **preprod** — it uses test ADA.
 | Environment | Gateway URL | App URL | Network |
 |-------------|-------------|---------|---------|
 | **Preprod** (start here) | `preprod.api.andamio.io` | [preprod.app.andamio.io](https://preprod.app.andamio.io) | Cardano Preprod |
-| Production | `mainnet.api.andamio.io` | [app.andamio.io](https://app.andamio.io) | Cardano Mainnet |
+| Production | `api.andamio.io` | [app.andamio.io](https://app.andamio.io) | Cardano Mainnet |
 
 All code examples in these docs use preprod URLs.
 
@@ -74,7 +74,7 @@ When your app is tested and ready for production:
 1. Generate a **mainnet API key** at [app.andamio.io/api-setup](https://app.andamio.io/api-setup) — the same portal that manages your preprod keys
 2. Update your environment variables:
    ```bash
-   NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://mainnet.api.andamio.io"
+   NEXT_PUBLIC_ANDAMIO_GATEWAY_URL="https://api.andamio.io"
    NEXT_PUBLIC_CARDANO_NETWORK="mainnet"
    ```
 3. Update the Access Token policy ID (contact team for mainnet ID)
