@@ -15,7 +15,7 @@ import {
  * retiring the separate tokens/ tree loses nothing.
  *
  * Mirrors the data/render split of <BadgeAnatomyExplorer> + anatomy-layers.ts.
- * Imported directly by content/docs/protocol/v2/validators.mdx (real MDX ESM
+ * Imported directly by content/docs/(protocol)/protocol/v2/validators.mdx (real MDX ESM
  * import — no mdx-components registration required).
  */
 

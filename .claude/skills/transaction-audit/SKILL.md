@@ -124,7 +124,7 @@ File paths MUST match the API endpoint structure:
 ### Base Paths:
 - YAML: `public/yaml/transactions/v2/`
 - TS: `packages/andamio-transactions/src/definitions/v2/`
-- MDX: `content/docs/protocol/v2/transactions/`
+- MDX: `content/docs/(protocol)/protocol/v2/transactions/`
 </file-paths>
 
 <dependencies>

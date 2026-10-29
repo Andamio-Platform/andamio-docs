@@ -7,6 +7,6 @@
 # "as of vX" call-outs that should not auto-update).
 #
 # Example:
-#   content/docs/protocol/v2/whats-new.mdx:v2.0.0
+#   content/docs/(protocol)/protocol/v2/whats-new.mdx:v2.0.0
 #
 # (whats-new.mdx is already excluded by EXCLUDE_REGEX, shown only as a template.)

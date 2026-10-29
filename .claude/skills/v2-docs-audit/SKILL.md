@@ -4,9 +4,9 @@ description: Orchestrate V2 transaction MDX documentation coverage and quality t
 ---
 
 <introduction>
-This skill is the **documentation manager** for V2 transaction MDX files in `content/docs/protocol/v2/transactions/`. It tracks documentation coverage, identifies gaps, and coordinates review work.
+This skill is the **documentation manager** for V2 transaction MDX files in `content/docs/(protocol)/protocol/v2/transactions/`. It tracks documentation coverage, identifies gaps, and coordinates review work.
 
-**Documentation Location**: `content/docs/protocol/v2/transactions/`
+**Documentation Location**: `content/docs/(protocol)/protocol/v2/transactions/`
 
 **Worker Skill**: Use `/v2-docs-review` to review individual transaction documentation.
 
@@ -23,7 +23,7 @@ This skill is the **documentation manager** for V2 transaction MDX files in `con
 ## When Invoked
 
 1. **Scan Documentation Directory**
-   - List all MDX files in `content/docs/protocol/v2/transactions/`
+   - List all MDX files in `content/docs/(protocol)/protocol/v2/transactions/`
    - Compare against expected transactions from `v2-transaction-tracker.json`
    - Identify missing, outdated, or misaligned documentation
 
@@ -97,7 +97,7 @@ MDX paths MUST match the API endpoint structure:
 | global.general.access-token.mint | general/mint-access-token.mdx | global/general/access-token/mint.mdx |
 
 ### Base Path
-- MDX: `content/docs/protocol/v2/transactions/`
+- MDX: `content/docs/(protocol)/protocol/v2/transactions/`
 </path-alignment>
 
 <coverage-checklist>
@@ -133,7 +133,7 @@ Each transaction MDX should include:
 {
   "version": "1.0.0",
   "lastUpdated": "YYYY-MM-DD",
-  "docsPath": "content/docs/protocol/v2/transactions",
+  "docsPath": "content/docs/(protocol)/protocol/v2/transactions",
   "summary": {
     "documented": N,
     "missing": N,
@@ -170,7 +170,7 @@ Each transaction MDX should include:
 ═══════════════════════════════════════════════════════════════
 
 Last Updated: YYYY-MM-DD
-Docs Path: content/docs/protocol/v2/transactions/
+Docs Path: content/docs/(protocol)/protocol/v2/transactions/
 
 SUMMARY
 ───────────────────────────────────────────────────────────────

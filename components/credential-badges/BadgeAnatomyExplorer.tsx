@@ -4,7 +4,7 @@
  * BadgeAnatomyExplorer — a full-width, non-scrolling interactive view of the
  * four layers of an Andamio Credential Badge.
  *
- * Used ONLY on content/docs/credential-badges/index.mdx (paired with `full: true`
+ * Used ONLY on content/docs/(developer)/credential-badges/index.mdx (paired with `full: true`
  * frontmatter for full-width). Reader clicks a layer in the rail — or its hotspot
  * on the badge — and the badge highlight + detail panel update in place, no page
  * scroll. Content (and every live / coming / in-dev label) comes verbatim from

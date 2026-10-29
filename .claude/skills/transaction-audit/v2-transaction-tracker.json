@@ -45,7 +45,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/global/general/access-token/mint.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/global/general/access-token-mint.ts",
-        "mdx": "content/docs/protocol/v2/transactions/global/general/access-token/mint.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/global/general/access-token/mint.mdx"
       },
       "notes": "Entry point for all protocol participation. 5 ADA fee to treasury."
     },
@@ -61,7 +61,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/instance/owner/course/create.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/instance/course-create.ts",
-        "mdx": "content/docs/protocol/v2/transactions/instance/owner/course/create.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/instance/owner/course/create.mdx"
       },
       "notes": "Creates LocalStateNFT, LocalStateToken, and governance token. courseId = LocalStateNFT policy ID. Fee formula: 100 ADA base + 10 ADA per teacher."
     },
@@ -77,7 +77,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/instance/owner/project/create.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/instance/project-create.ts",
-        "mdx": "content/docs/protocol/v2/transactions/instance/owner/project/create.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/instance/owner/project/create.mdx"
       },
       "notes": "Complex: 6 mints, 2 observers, stake registration. Creates LocalStateNFT (projectId = policy ID), LocalStateToken, governance, treasury-script, project-state, treasury. Reuses governance-validator/policy from courses. course_prereqs validates required module completion. Fee formula: 100 ADA base + 10 ADA per manager."
     },
@@ -93,7 +93,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/course/owner/teachers/manage.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/owner/teachers-manage.ts",
-        "mdx": "content/docs/protocol/v2/transactions/course/owner/teachers/manage.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/course/owner/teachers/manage.mdx"
       },
       "notes": "Spend and recreate pattern. Two script inputs spent (LocalStateNFT, governance). No minting. 10 ADA fee to instance-treasury."
     },
@@ -109,7 +109,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/course/teacher/modules/manage.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/teacher/modules-manage.ts",
-        "mdx": "content/docs/protocol/v2/transactions/course/teacher/modules/manage.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/course/teacher/modules/manage.mdx"
       },
       "notes": "Token name = 32-byte hash of SLT list. Module datum: {courseId, allowed_course_state_ids, prereq_slt_hashes}. No protocol fee. Authorization via governance UTxO reference input."
     },
@@ -125,7 +125,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/course/teacher/assignments/assess.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/teacher/assignments-assess.ts",
-        "mdx": "content/docs/protocol/v2/transactions/course/teacher/assignments/assess.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/course/teacher/assignments/assess.mdx"
       },
       "legacyFiles": {
         "yaml": "public/yaml/transactions/v2/course/teacher/assignments-assess.yaml",
@@ -161,7 +161,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/course/student/assignment/update.yaml",
         "ts": null,
-        "mdx": "content/docs/protocol/v2/transactions/course/student/assignment/update.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/course/student/assignment/update.mdx"
       },
       "legacyFiles": {
         "yaml": "public/yaml/transactions/v2/course/student/assignment-update.yaml",
@@ -181,7 +181,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/course/student/credential/claim.yaml",
         "ts": "packages/andamio-transactions/src/definitions/v2/course/student/credential-claim.ts",
-        "mdx": "content/docs/protocol/v2/transactions/course/student/credential/claim.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/course/student/credential/claim.mdx"
       },
       "legacyFiles": {
         "yaml": "public/yaml/transactions/v2/course/student/credential-claim.yaml",
@@ -233,7 +233,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/project/manager/tasks/manage.yaml",
         "ts": null,
-        "mdx": "content/docs/protocol/v2/transactions/project/manager/tasks/manage.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/project/manager/tasks/manage.mdx"
       },
       "notes": "Batch task management. Mints task-escrow tokens (parameterized per project). Token name = 32-byte SLT hash. Uses task-manage-observer. No protocol fee."
     },
@@ -249,7 +249,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/project/manager/tasks/assess.yaml",
         "ts": null,
-        "mdx": "content/docs/protocol/v2/transactions/project/manager/tasks/assess.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/project/manager/tasks/assess.mdx"
       },
       "notes": "Spend-and-recreate pattern. Uses task-assess-observer (constr 2). Can batch multiple decisions. No minting (spend and recreate). No protocol fee."
     },
@@ -265,7 +265,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/project/contributor/task/commit.yaml",
         "ts": null,
-        "mdx": "content/docs/protocol/v2/transactions/project/contributor/task/commit.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/project/contributor/task/commit.mdx"
       },
       "notes": "MINTS contributor-state token + updates global state + updates task-escrow. Uses task-commit-observer. Prerequisite check via contributor_state_id (course credential). No protocol fee. ~14.5 ADA deposit held in contributor-state."
     },
@@ -297,7 +297,7 @@
       "files": {
         "yaml": "public/yaml/transactions/v2/project/contributor/credential/claim.yaml",
         "ts": null,
-        "mdx": "content/docs/protocol/v2/transactions/project/contributor/credential/claim.mdx"
+        "mdx": "content/docs/(protocol)/protocol/v2/transactions/project/contributor/credential/claim.mdx"
       },
       "notes": "BURNS contributor-state token (qty: -1). 1 ADA protocol fee to instance-treasury. NET GAIN ~13 ADA (releases ~14.5 ADA deposit minus fees). Updates global state with credential hash."
     }
