@@ -90,7 +90,7 @@ Components available in every MDX page are registered in `mdx-components.tsx`:
 
 - **`<TransactionStepper>`** - Transaction-sequence steppers (`content/docs/(protocol)/protocol/v2/sequences/`)
 
-- **Other components**: `FlywheelDiagram`, `LinearDiagram`, `ThemedImage`, `GuideHeader`, `TreasuryVerifier`, `BadgeAnatomyExplorer`, `StartCards` and `ExploreLinks` (the /docs home)
+- **Other components**: `FlywheelDiagram`, `LinearDiagram`, `ThemedImage`, `GuideHeader`, `TreasuryVerifier`, `BadgeAnatomyExplorer`, `StartCards` and `ExploreLinks` (the /docs home), `CredentialLoop`, `OnboardCard`, `RoleCards` and `ActionCards` (Issuer Roles and actions)
 
 Pages can also import a component directly (e.g. `ValidatorsReference` in `protocol/v2/validators.mdx`). Knip scans MDX imports, so a component used only that way still counts as used.
 

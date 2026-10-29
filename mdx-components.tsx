@@ -9,6 +9,7 @@ import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { ThemedImage } from "@/components/mdx/themed-image";
 import { GuideHeader } from "@/components/mdx/guide-header";
 import { ExploreLinks, StartCards } from "@/components/mdx/start-cards";
+import { ActionCards, CredentialLoop, OnboardCard, RoleCards } from "@/components/mdx/issuer-actions";
 import TreasuryVerifier from "@/components/protocol-info/TreasuryVerifier";
 import BadgeAnatomyExplorer from "@/components/credential-badges/BadgeAnatomyExplorer";
 import TransactionStepper from "@/components/protocol/TransactionStepper";
@@ -29,6 +30,10 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     TreasuryVerifier,
     StartCards,
     ExploreLinks,
+    CredentialLoop,
+    ActionCards,
+    OnboardCard,
+    RoleCards,
     BadgeAnatomyExplorer,
     TransactionStepper,
     ...components,
