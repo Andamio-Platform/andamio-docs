@@ -3,7 +3,7 @@ title: Glossary
 description: A reference guide for key terms, concepts, and acronyms used throughout Andamio documentation.
 ---
 
-Andamio is a system for issuing credentials and granting role-based access to holders of those credentials. Every credential lives on Cardano. The docs, and this glossary, sort Andamio into **products** and the **tools** for building on them.
+Andamio lets groups of people issue, earn and verify proof of real learning, work, and contribution. Every credential lives on Cardano. The docs, and this glossary, sort Andamio into **products** and the **tools** for building on them.
 
 ## Products
 
@@ -36,6 +36,9 @@ Agent Skills that pair with the CLI so an AI coding agent can operate Andamio wi
 ### Coach
 Agent Skills for writing course lesson content with an AI agent and shaping it to Andamio's course model, ready to publish through the CLI. See [Coach](/docs/apps-tooling/coach).
 
+### Credential Badges
+Shows a credential as an image. A badge at `credentials.andamio.io` is read straight from the chain and carries the credential in the Open Badges form, so anyone can show or check it. See [Credential Badges](/docs/credential-badges).
+
 ## Protocol Concepts
 
 ### Access Token (Andamio Access Token)
@@ -47,14 +50,11 @@ Decentralized identity framework enabling portable, self-controlled records of p
 ### Credentials
 Cryptographically verified attestations of skills, achievements, or qualifications issued through the protocol and attached to a user's SSOI. On-chain verifiable, portable across platforms, and irrevocable once earned. Organizations can recognize other organizations' credentials as prerequisites, enabling permissionless trust networks.
 
-### Credential Badge
-An image of a credential, served at `credentials.andamio.io` and read straight from the chain. It carries the credential in the Open Badges form, so anyone can show or check it. See [Credential Badges](/docs/credential-badges).
-
 ### Local State
-Implementations of specific work scopes (courses, projects, future types) containing granular data and business logic. Each System (Course, Project) can have multiple Instances owned by Access Token Holders. Owners manage requirements and approvals; data represents work scope. Local states report to Global State as policy ID + hash pairs. Enables custom validator types while maintaining protocol interoperability through standardized SSOI format.
+Implementations of specific work scopes (courses, projects, future types) containing granular data and business logic. Each System (Course, Project) can have multiple Instances owned by Access Token Holders. Owners assign Teachers or Managers, who author and assess the work; data represents work scope. Local states report to Global State as policy ID + hash pairs. Enables custom validator types while maintaining protocol interoperability through standardized SSOI format.
 
 ### Instance Ownership
-On-chain ownership of a specific Local State instance by a single Access Token holder with sole administrative control. Uses parameterized validators to create distinct instances from the same base code. Owner sets requirements, approves completions, and manages participants. One Access Token can own multiple instances. Ownership is instance-specific and currently non-transferable.
+On-chain ownership of a specific Local State instance by a single Access Token holder with sole administrative control. Uses parameterized validators to create distinct instances from the same base code. The Owner assigns the instance's Teachers or Managers, who author and assess the work. One Access Token can own multiple instances. Ownership is instance-specific and currently non-transferable.
 
 ### Global State
 Protocol-level registry and index for all local states. Holds all users' 100 tokens (SSOI data) at a single validator address; users own via 222 tokens. Stores local state participation as policy ID + hash pairs. Instance Registry tracks authorized Local States that can write to SSoIs, preventing identity pollution. Creates trusted network where credentials come from registered sources.
@@ -74,7 +74,7 @@ Access Token holders who have committed to work. A learner has committed to an a
 Instance-specific role for Access Token Holders in Course Local States. Initial Course Owner is assigned at instance creation. Manages teacher access, course governance, and course lifecycle within their specific instance.
 
 ### Course Teacher
-An Access Token Holder assigned to assess student work within a specific Course Local State instance. Reviews and accepts or denies student assignment submissions.
+An Access Token Holder assigned by the Course Owner within a specific Course Local State instance. Authors the course's lessons and assignments, and reviews and accepts or denies student assignment submissions.
 
 ### Student
 A learner in a course: anyone who has committed to one of its assignments. Not a role. Earns a credential when a Course Teacher accepts their work, and that credential can be a prerequisite for a project.
