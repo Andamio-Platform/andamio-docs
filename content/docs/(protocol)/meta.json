@@ -1,0 +1,12 @@
+{
+    "title": "Protocol",
+    "icon": "Layers",
+    "description": "The Cardano contracts under every Andamio product",
+    "root": true,
+    "pages": [
+        "protocol",
+        "--- Trust & Verification ---",
+        "contract-verification",
+        "security-audit"
+    ]
+}

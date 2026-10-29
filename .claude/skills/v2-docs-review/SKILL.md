@@ -10,7 +10,7 @@ This skill reviews individual V2 transaction MDX documentation files for complet
 
 **Source of Truth**: YAML files in `public/yaml/transactions/v2/`
 
-**Output**: Updated MDX files in `content/docs/protocol/v2/transactions/`
+**Output**: Updated MDX files in `content/docs/(protocol)/protocol/v2/transactions/`
 </introduction>
 
 <workflow>
@@ -216,7 +216,7 @@ POST /v2/tx/{system}/{role}/{action}
 ### File Path
 MDX file path must match API endpoint structure:
 - API: `/v2/tx/{system}/{role}/{action}`
-- MDX: `content/docs/protocol/v2/transactions/{system}/{role}/{action}.mdx`
+- MDX: `content/docs/(protocol)/protocol/v2/transactions/{system}/{role}/{action}.mdx`
 
 ### tx_file Frontmatter
 Points to YAML source (relative to `public/yaml/transactions/v2/`):

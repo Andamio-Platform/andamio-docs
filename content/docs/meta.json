@@ -1,23 +1,12 @@
 {
     "pages": [
         "index",
-        "--- Get Started ---",
-        "api",
+        "--- Products ---",
         "issuer",
-        "--- Explore & build ---",
-        "apps-tooling",
-        "credential-badges",
-        "developer-community",
-        "protocol",
-        "--- Trust & Verification ---",
-        "contract-verification",
-        "security-audit",
-        "--- Reference ---",
+        "(developer)",
+        "(protocol)",
+        "--- Shared ---",
         "glossary",
-        "--- External ---",
-        "[API Reference](https://api.andamio.io)",
-        "[Andamio App](https://mainnet.app.andamio.io)",
-        "[andamio.io](https://andamio.io)",
-        "[GitHub](https://github.com/Andamio-Platform)"
+        "developer-community"
     ]
 }
