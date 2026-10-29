@@ -12,6 +12,9 @@
         "integrate",
         "badges",
         "support",
-        "[Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html)"
+        "[Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html)",
+        "---",
+        "[Home](/docs)",
+        "[Glossary](/docs/glossary)"
     ]
 }

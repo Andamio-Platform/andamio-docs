@@ -1,21 +1,21 @@
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import type { LinkItemType } from "fumadocs-ui/layouts/links";
+import { RootToggle } from "fumadocs-ui/components/layout/root-toggle";
+import { getSidebarTabs } from "fumadocs-ui/utils/get-sidebar-tabs";
 import { AppWindow, Github, Globe } from "lucide-react";
 import type { ReactNode } from "react";
 import { baseOptions } from "@/app/layout.config";
-import { SidebarFolderNode } from "@/components/sidebar-folder";
+import { SidebarFolderNode, SidebarSeparatorNode } from "@/components/sidebar-folder";
 import { source } from "@/lib/source";
 
 // Three sidebar roots (Andamio Issuer, Andamio API, Protocol) are `root: true`
 // folders in content/docs, switched with the stock root toggle. Inside a root
-// the sidebar shows only that root's tree, so the shared pages (Home, Glossary)
-// are reached through these links, which render above every sidebar. Developer
-// community stays in the root sidebar only, unfeatured while it is unsupported.
-// Icon links render in the sidebar footer. They live here, not in
-// baseOptions.links, because baseOptions also feeds the `/` navbar.
+// the sidebar shows only that root's tree, so each root's meta.json ends with a
+// bare "---" divider and links to Home and Glossary. Developer community stays
+// in the root sidebar only, unfeatured while it is unsupported. The icon links
+// below render in the sidebar footer. They live here, not in baseOptions.links,
+// because baseOptions also feeds the `/` navbar.
 const docsLinks: LinkItemType[] = [
-  { text: "Home", url: "/docs" },
-  { text: "Glossary", url: "/docs/glossary" },
   {
     type: "icon",
     text: "Andamio App",
@@ -48,7 +48,18 @@ export default function Layout({ children }: { children: ReactNode }) {
       tree={source.pageTree}
       {...baseOptions}
       links={docsLinks}
-      sidebar={{ components: { Folder: SidebarFolderNode } }}
+      // Fumadocs renders the root toggle above search. Turn the built-in one
+      // off and render it in the banner slot, which comes after search.
+      sidebar={{
+        tabs: false,
+        banner: (
+          <RootToggle
+            options={getSidebarTabs(source.pageTree)}
+            className="mt-2 mb-1 w-full border border-fd-border p-2 transition-colors hover:bg-fd-accent/50"
+          />
+        ),
+        components: { Folder: SidebarFolderNode, Separator: SidebarSeparatorNode },
+      }}
     >
       {children}
     </DocsLayout>

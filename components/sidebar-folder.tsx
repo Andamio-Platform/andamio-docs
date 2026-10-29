@@ -7,6 +7,7 @@ import {
   SidebarFolderLink,
   SidebarFolderTrigger,
   SidebarItem,
+  SidebarSeparator,
 } from "fumadocs-ui/components/layout/sidebar";
 import { useTreePath } from "fumadocs-ui/provider";
 import type { ReactNode } from "react";
@@ -64,5 +65,20 @@ export function SidebarFolderNode({
       )}
       <SidebarFolderContent>{children}</SidebarFolderContent>
     </SidebarFolder>
+  );
+}
+
+/* Sidebar separator renderer. A bare "---" in meta.json (no title) draws a
+   thin rule; each product root uses one to set Home and Glossary apart below
+   its own pages. Titled separators keep the stock look. */
+export function SidebarSeparatorNode({ item }: { item: PageTree.Separator }) {
+  if (!item.name) {
+    return <hr className="mx-2 my-3 border-fd-border" />;
+  }
+  return (
+    <SidebarSeparator className="mt-6 first:mt-0">
+      {item.icon}
+      {item.name}
+    </SidebarSeparator>
   );
 }
