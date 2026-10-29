@@ -21,6 +21,8 @@ const config = {
   async redirects() {
     return [
       // Andamio Issuer is now its own product section; the old single page moved.
+      // The docs home at /docs is the landing page; there is no separate / page.
+      { source: '/', destination: '/docs', permanent: true },
       { source: '/docs/andamio-issuer', destination: '/docs/issuer', permanent: true },
       { source: '/docs/issuer/quickstart', destination: '/docs/issuer/integrate', permanent: true },
 

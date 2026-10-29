@@ -4,9 +4,8 @@ import Image from "next/image";
 /**
  * Shared layout configurations
  *
- * you can customise layouts individually from:
- * Home Layout: app/(home)/layout.tsx
- * Docs Layout: app/docs/layout.tsx
+ * Used by the docs layout (app/docs/layout.tsx). `/` redirects to /docs, so
+ * there is no separate home layout.
  */
 export const baseOptions: BaseLayoutProps = {
   nav: {
