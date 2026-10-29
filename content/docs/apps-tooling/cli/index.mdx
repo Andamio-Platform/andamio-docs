@@ -37,7 +37,8 @@ The Andamio CLI is open source, and the [andamio-cli repo](https://github.com/An
 | Task | Command |
 |------|---------|
 | List courses you own | `andamio course owner list` |
-| Create a course | `andamio course owner create --course-id <id> --pending-tx-hash <hash>` |
+| Create a course on-chain | `andamio tx run /v2/tx/instance/owner/course/create --body '<json>' --skey ./payment.skey --tx-type course_create` |
+| Set course metadata | `andamio course owner update --course-id <id> --title "My Course" --description "..." --public` |
 | List courses you teach | `andamio teacher courses` |
 | Export a module for editing | `andamio course export <course-id> <module-code>` or `--course "Name"` |
 | Import updated content | `andamio course import ./compiled/101 --course-id <id>` or `--course "Name"` |
@@ -49,6 +50,8 @@ The Andamio CLI is open source, and the [andamio-cli repo](https://github.com/An
 | List pending reviews | `andamio course teacher commitments --course-id <id>` |
 | Read one submission in full | `andamio teacher assignments get <course-id> <module-code> <student-alias>` |
 | Build an assessment without signing it | `andamio teacher assessment build --course-id <id> --alias <you> --decision <student>=accept` |
+
+Creating a course takes two commands. `tx run` builds, signs, submits and registers the course transaction. The API registers the course once the transaction confirms, and the response includes the `course_id`. `course owner update` then sets the course metadata. The `--body` JSON names your alias, the teachers and your wallet addresses, as shown in the [Course Creation Workflow](https://github.com/Andamio-Platform/andamio-cli/blob/main/README.md#course-creation-workflow). This needs CLI v1.2.0 or later. `course owner create` is deprecated, and its `--pending-tx-hash` flag is ignored.
 
 Two paths lead to the same decision. `course teacher review` accepts or refuses one submission in a single step — reach for it when you are reviewing by hand. `teacher assessment build` stops at the unsigned transaction so a person can see the decisions before approving them, which is what you want when a script or an agent proposed them. Pass `--decision` once per learner, or `--decisions-file <path>` for a cohort; signing and submitting stay separate steps (see [Transactions](#transactions)), and `andamio tx run` still does the whole lifecycle in one go.
 
