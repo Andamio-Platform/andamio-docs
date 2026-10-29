@@ -1,0 +1,53 @@
+---
+title: Before you start
+description: The decisions and setup to have ready before you issue a credential
+---
+
+Most of what you need ready are decisions, not setup. The credential text takes longest, because it can never change once it is on chain.
+
+## A plan and someone to order it
+
+Order a plan in the [Issuer app](https://issuer.andamio.io). Know your cohort size first. A plan has three allocations:
+
+| Allocation | What uses one |
+|---|---|
+| **Users** | Each account you create for a person with `POST /accounts/create` |
+| **Credentials** | Each learner whose evidence a teacher accepts |
+| **Courses** | Each course you create with `POST /courses/create` |
+
+A Credentials unit is drawn when the accept transaction is submitted, and it is refunded if that transaction does not land. A batch that accepts ten learners needs ten units, or the whole batch is refused with `402 QUOTA_EXHAUSTED`. Read what is left with `GET /quota`.
+
+## A developer
+
+Andamio Issuer is an API. It has no learner or reviewer app, so a developer builds the screens your people use: where a learner submits evidence, where a teacher accepts it, and where a learner claims the credential.
+
+## Which programs become courses
+
+Every credential belongs to a course. Decide which of your programs become courses, and which credentials each course issues.
+
+## The final statements for each credential
+
+A credential is an ordered list of statements, and the credential is the hash of that list. A changed word or a new order makes a different credential, and nothing can be edited on mainnet. Get each list written, approved and put in order before you define it. [How it works](/docs/issuer/how-it-works) has the rules for a statement.
+
+## What learners submit as evidence, and where you keep it
+
+Only a short text of up to 140 characters goes on chain with each submission. A hash of the evidence is recommended, and a public URL is fine where the evidence is already public. That text is public and permanent. Never put personal data in it.
+
+The evidence itself stays with you. Decide where you store it, how long you keep it and how you delete it when someone asks.
+
+## A course owner and teachers
+
+Name a course owner from your own staff, and the teachers who will accept evidence. Each one needs an alias held in a wallet, through a social login or a browser wallet. Aliases are public and permanent, so choose them with that in mind.
+
+## Your site's address for social login
+
+Social login lets people sign without installing a wallet. It works only on a site address Andamio has allowlisted. Register the address (for example `app.yourcompany.com`) in the [Issuer app](https://issuer.andamio.io). An Andamio operator still allowlists it by hand, and your key is issued after that, so register it early.
+
+## A privacy notice
+
+Show a privacy notice before anyone connects a wallet. It names who controls the data.
+
+## Next
+
+- [Actions](/docs/issuer/actions) lists each action, who signs it and how a write completes.
+- [Quickstart](/docs/issuer/quickstart) takes a key to a first claimed credential on preprod.

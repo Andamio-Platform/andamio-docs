@@ -1,19 +1,15 @@
 ---
 title: Andamio Issuer
-description: Low-code, verifiable credentials for the systems you already run
+description: Verifiable credentials for the programs your organization already runs
 ---
 
-<Callout type="info" title="This is the enterprise-key path">
-  These docs cover the Andamio **Issuer**, which uses an **enterprise key**: Andamio sponsors every transaction and your application is the only credential the API needs. Hold a **developer key** instead (you build on `/api/v2` and fund your own transactions)? See the [API](/docs/api/getting-started) docs.
+<Callout type="info" title="Andamio Issuer uses an enterprise key">
+  These docs cover Andamio **Issuer** and its API at `/issuer/v1`, which takes an **enterprise key**. Andamio sponsors every transaction. Hold a **developer key** instead (you build on `/api/v2` and fund your own transactions)? See the [API](/docs/api/getting-started) docs.
 </Callout>
 
-<Callout type="info">
-  Andamio Issuer is in active development. This section is a scaffold: the shape is settling, and detailed guides will land as the product firms up.
-</Callout>
+Andamio Issuer adds a verifiable credential to the programs your organization already runs. You define what a credential certifies, your learners submit evidence, your teachers accept it, and the learner claims a credential that anyone can verify on a public ledger.
 
-Andamio Issuer adds a verifiable credential layer on top of the programs your organization already runs. It is built on the [Andamio API](/docs/api/getting-started) and abstracts the blockchain away entirely: no wallets, no tokens, nothing new for you or the people you credential to learn.
-
-You get what a public ledger guarantees, a credential you control that anyone can verify, without anyone having to understand the chain underneath.
+Issuer is an API built on the [Andamio API](/docs/api/getting-started). Andamio builds every transaction and pays its fees. The people taking each action sign it with a social login or a browser wallet, and they never hold ADA.
 
 ## Who it's for
 
@@ -31,7 +27,7 @@ A typical digital badge is a picture in a vendor's database. It can be changed, 
     Machine-readable. Your systems can verify it and act on it.
   </Card>
   <Card title="Private" href="/docs/issuer/how-it-works">
-    Proof is public and verifiable; the work behind it stays private.
+    Proof is public and verifiable. The work behind it stays with you.
   </Card>
   <Card title="Owned by the earner" href="/docs/issuer/how-it-works">
     It belongs to the person who earned it, and travels with them.
@@ -40,16 +36,34 @@ A typical digital badge is a picture in a vendor's database. It can be changed, 
 
 [How it works](/docs/issuer/how-it-works) walks through the full credential model.
 
+## What it takes to start
+
+- A plan, sized to your cohort.
+- A developer to build the screens your people use. Issuer has no learner or reviewer app.
+- The final, approved statements for each credential.
+- Your site's address registered for social login, which Andamio allowlists before your key is issued.
+
+[Before you start](/docs/issuer/before-you-start) lists every decision and setup step.
+
 ## Get started
 
 <Cards>
+  <Card title="Before you start" href="/docs/issuer/before-you-start">
+    The decisions and setup to have ready
+  </Card>
+  <Card title="Actions" href="/docs/issuer/actions">
+    The seven actions, who signs each, and how a write completes
+  </Card>
   <Card title="Quickstart" href="/docs/issuer/quickstart">
-    Issue your first credential (coming soon)
+    From a key to a first claimed credential on preprod
   </Card>
   <Card title="Integrate via API" href="/docs/issuer/integrate">
     The Issuer API surface and how it plugs into your systems
   </Card>
   <Card title="Pricing" href="https://www.andamio.io/pricing">
     What each plan includes
+  </Card>
+  <Card title="Support" href="/docs/issuer/support">
+    Where to ask a question
   </Card>
 </Cards>

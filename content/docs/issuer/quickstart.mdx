@@ -1,17 +1,89 @@
 ---
 title: Quickstart
-description: Issue your first credential with Andamio Issuer
+description: From an enterprise key to a first claimed credential on preprod
 ---
 
-<Callout type="info">
-  Coming soon. The Issuer quickstart will land once the onboarding flow and API payloads are finalized. In the meantime, see [How it works](/docs/issuer/how-it-works) for the model and [Integrate via API](/docs/issuer/integrate) for the API shape.
-</Callout>
+This guide takes you from a key to a first claimed credential on preprod. It uses three people, each with their own browser wallet: a course owner, a teacher and a learner. Each request below shows the method, path and key fields. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has the full schemas.
 
-This guide will walk an organization from zero to a first issued credential:
+## Before you begin
 
-1. Create your issuer account and get an API key.
-2. Define a credential: what it certifies and the work behind it.
-3. Issue it to a recipient, with the transaction sponsored end to end.
-4. Verify it independently, without calling Andamio.
+- An enterprise key for preprod. Send it in the `X-API-Key` header on every request.
+- Three CIP-30 browser wallets on preprod, one each for the course owner, the teacher and the learner. They need no ADA.
+- The base URL `https://preprod.api.andamio.io/issuer/v1`.
 
-If you want to start now, the [Andamio API quickstart](/docs/api/getting-started) covers the lower-level developer path that Issuer is built on.
+Check the key first. `GET /config` returns `network_id`, which should be `preprod`, and `GET /quota` shows what is left in your plan.
+
+## How each write completes
+
+Steps 2 to 6 each return an `unsigned_tx`. The wallet that holds the acting alias signs it as a partial signature (CIP-30 `signTx` with `partialSign` set to `true`), and you send the signed transaction to `POST /submit` as `tx`. Andamio adds its sponsorship and submits it. Then poll the read the step names until the result shows. [Actions](/docs/issuer/actions) covers this rhythm and the errors `/submit` can return.
+
+## 1. Create an account for each wallet
+
+Call this once for each of the three wallets, with that wallet's own address as `receiver_address`.
+
+```http
+POST /accounts/create
+{ "alias": "acme-owner", "receiver_address": "addr_test1..." }
+```
+
+Andamio builds, sponsors and submits this one itself, and returns a `tx_hash`. Nobody signs. Poll `GET /addresses/{address}/accounts` until the alias appears. `GET /accounts/{alias}/availability` tells you first whether an alias is free.
+
+The steps below use the aliases `acme-owner`, `acme-teacher` and `acme-learner`.
+
+## 2. Create a course
+
+```http
+POST /courses/create
+{ "alias": "acme-owner", "teachers": ["acme-teacher"] }
+```
+
+The response carries `unsigned_tx` and the new `course_id`. The course owner's wallet signs. Submit, then poll `GET /courses/{course_id}` until the course returns.
+
+## 3. Define a credential
+
+```http
+POST /courses/{course_id}/credentials/create
+{
+  "alias": "acme-teacher",
+  "credentials_to_add": [
+    {
+      "slts": ["Completed security awareness training"],
+      "allowed_student_state_ids": [],
+      "prereq_credential_hashes": []
+    }
+  ]
+}
+```
+
+The response carries `unsigned_tx` and `credential_hashes`, one for each definition, in order. The teacher's wallet signs. Submit, then poll `GET /courses/{course_id}` until the credential is listed with a `defined_tx`. [How it works](/docs/issuer/how-it-works) has the rules for a statement.
+
+## 4. Submit evidence
+
+```http
+POST /courses/{course_id}/credentials/{credential_hash}/evidence/submit
+{ "alias": "acme-learner", "evidence_info": "<hash of the learner's evidence>" }
+```
+
+`evidence_info` is public and permanent. Send a hash of the evidence, never personal data. The learner's wallet signs. Submit, then poll `GET /accounts/acme-learner/submissions` until the submission shows with status `pending`.
+
+## 5. Accept the evidence
+
+```http
+POST /courses/{course_id}/credentials/evidence/approve
+{ "alias": "acme-teacher", "approvals": ["acme-learner"] }
+```
+
+The teacher's wallet signs. Submit, then poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. This uses one Credentials unit from your plan.
+
+## 6. Claim the credential
+
+```http
+POST /courses/{course_id}/credentials/claim
+{ "alias": "acme-learner" }
+```
+
+The learner's wallet signs. Submit, then poll `GET /accounts/acme-learner/credentials` until the credential is listed with a `claimed_tx`. The learner now holds the credential.
+
+## Next
+
+In production, most people sign with a social login instead of a browser wallet. Social login uses the `project_id` from `GET /config`, and it works only after Andamio allowlists your site's address. See [Before you start](/docs/issuer/before-you-start).
