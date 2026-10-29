@@ -39,6 +39,11 @@ Shared pages sit outside every root and are reachable from all of them through p
 links: `/docs` (a neutral front door, no product preselected), the Glossary, and **Developer
 Community** (Pioneers, Repositories, community tools).
 
+Two rules keep this structure intact. Never put an `index.mdx` directly in a group folder such as
+`(developer)/` or `(protocol)/`: group folders are dropped from URLs, so that page would serve `/docs`
+and shadow the home page. And list every root folder in `content/docs/meta.json`: an unlisted root
+silently disappears from the sidebar. `npm run docs-orphans` fails on both.
+
 Two **products** anchor the structure (Issuer, API). They are bought by different customers with
 different keys, and a key for one gets a 403 on the other, so each product's reader should see only
 that product's pages. Apps & Tooling, Credential Badges, Developer Community and Protocol are

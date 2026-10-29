@@ -14,7 +14,7 @@ import { source } from "@/lib/source";
 const docsLinks: LinkItemType[] = [
   { text: "Home", url: "/docs" },
   { text: "Glossary", url: "/docs/glossary" },
-  { text: "Developer community", url: "/docs/developer-community", active: "nested-url" },
+  { text: "Developer community", url: "/docs/developer-community" },
   {
     type: "icon",
     text: "Andamio App",

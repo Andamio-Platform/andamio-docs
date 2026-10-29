@@ -15,7 +15,7 @@
       "id": "getting-started",
       "title": "Getting Started",
       "role": "general",
-      "guideFile": "content/docs/(developer)/apps-tooling/explore-getting-started.mdx",
+      "guideFile": "content/docs/(developer)/apps-tooling/andamio-app/explore-getting-started.mdx",
       "description": "Create your on-chain identity and mint an access token",
       "status": "published",
       "uxReadiness": {

@@ -87,7 +87,7 @@ The project contains comprehensive documentation for the Andamio protocol:
 
 - **Transaction specifications**: Found in `public/yaml/transactions/v2/` organized by system and role
 - **Registry files**: `address-registry.json`, `cost-registry.json`, `endpoint-registry.json` in `public/yaml/transactions/v2/`
-- **Protocol documentation**: MDX files in `content/docs/protocol/v2/`
+- **Protocol documentation**: MDX files in `content/docs/(protocol)/protocol/v2/`
 - **Working glossary**: Located at `docs/reference/GLOSSARY.md`
 
 For details on the documentation system architecture, see `CLAUDE.md`.

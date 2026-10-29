@@ -3,7 +3,7 @@
     {
       "id": "getting-started",
       "title": "Getting Started",
-      "filePath": "content/docs/(developer)/apps-tooling/explore-getting-started.mdx",
+      "filePath": "content/docs/(developer)/apps-tooling/andamio-app/explore-getting-started.mdx",
       "role": "general",
       "description": "Create your on-chain identity and mint an access token",
       "status": "completed",
