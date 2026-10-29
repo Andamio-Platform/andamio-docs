@@ -13,8 +13,7 @@ import { source } from "@/lib/source";
 // the sidebar shows only that root's tree, so each root's meta.json ends with a
 // bare "---" divider and links to Home and Glossary. Developer community stays
 // in the root sidebar only, unfeatured while it is unsupported. The icon links
-// below render in the sidebar footer. They live here, not in baseOptions.links,
-// because baseOptions also feeds the `/` navbar.
+// below render in the sidebar footer.
 const docsLinks: LinkItemType[] = [
   {
     type: "icon",

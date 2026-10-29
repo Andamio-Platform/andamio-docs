@@ -57,8 +57,7 @@ This is a Next.js documentation site built with Fumadocs, using content collecti
 - **Layout Configuration**: `app/layout.config.tsx` contains shared layout options including navigation title with Andamio logo
 
 ### Route Structure
-- `app/(home)/` - Landing page and home routes
-- `app/docs/` - Documentation layout and pages
+- `app/docs/` - Documentation layout and pages. `/docs` is the landing page; `/` redirects to it
 - `app/api/search/` - Search functionality
 
 ### Content Organization
@@ -70,7 +69,7 @@ The sidebar has three roots, each a folder with `"root": true` in its `meta.json
 - **Protocol**: `content/docs/(protocol)/` holding `protocol/`, `contract-verification.mdx`, `security-audit.mdx`
 - **Shared** (outside every root): `index.mdx` (`/docs`), `glossary.mdx`, `developer-community/`
 
-Group folders like `(developer)` do not appear in URLs, so `(developer)/api/index.mdx` serves `/docs/api`. Never put an `index.mdx` directly in a group folder (it would serve `/docs` and shadow the home page). A root folder must be listed in `content/docs/meta.json` or it vanishes from the sidebar. `npm run docs-orphans` catches both. Shared pages are reached from inside a root through the `links` prop in `app/docs/layout.tsx`.
+Group folders like `(developer)` do not appear in URLs, so `(developer)/api/index.mdx` serves `/docs/api`. Never put an `index.mdx` directly in a group folder (it would serve `/docs` and shadow the home page). A root folder must be listed in `content/docs/meta.json` or it vanishes from the sidebar. `npm run docs-orphans` catches both. Shared pages are reached from inside a root through links at the end of each root's `meta.json` (a bare `---` divider, then Home and Glossary).
 
 - Protocol documentation in `content/docs/(protocol)/protocol/`
 - Transaction documentation in `content/docs/(protocol)/protocol/v2/transactions/`
