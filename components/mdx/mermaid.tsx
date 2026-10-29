@@ -12,8 +12,10 @@ export function Mermaid({ chart }: { chart: string }) {
 
   useEffect(() => {
     const container = containerRef.current;
-    if (currentChartRef.current === chart || !container) return;
-    currentChartRef.current = chart;
+    // Re-render when the theme changes too, not just the chart source.
+    const renderKey = `${resolvedTheme}:${chart}`;
+    if (currentChartRef.current === renderKey || !container) return;
+    currentChartRef.current = renderKey;
 
     async function renderChart() {
       const { default: mermaid } = await import("mermaid");
