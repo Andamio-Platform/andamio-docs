@@ -128,6 +128,4 @@ After adding a new section, grep for sibling section names to find pages that en
 
 - **PR:** [#13 — Add TxPipe V2 smart contract security audit report](https://github.com/Andamio-Platform/andamio-docs/pull/13)
 - **Issue:** [#12 — Add TxPipe smart contract audit report to docs](https://github.com/Andamio-Platform/andamio-docs/issues/12)
-- **Plan:** `docs/plans/2026-03-17-feat-publish-txpipe-audit-report-plan.md`
 - **Architecture ref:** `.claude/CLAUDE.md` (content organization, URL patterns)
-- **Similar pattern:** `docs/plans/2026-03-13-feat-txsm-architecture-patterns-plan.md` (adding new content sections)
