@@ -1,0 +1,59 @@
+---
+title: Badges
+description: How you and your learners view a credential's badge
+---
+
+Every Andamio credential has a badge: an image of the credential at a public URL. Anyone can open it. No key or account is needed to read it.
+
+## Build the URL
+
+A badge URL is built from the two values that identify a credential. The Issuer API returns both.
+
+| Value | Where it comes from |
+|---|---|
+| `course_id` | Returned by `POST /courses/create` |
+| `credential_hash` | Returned by `POST /courses/{course_id}/credentials/create` as `credential_hashes`, in order |
+
+Join them with a dot to get the badge's stem: `{course_id}.{credential_hash}`. Every badge URL starts from that stem.
+
+| URL | What it shows |
+|---|---|
+| `https://credentials.andamio.io/badges/{course_id}.{credential_hash}.svg` | The badge image |
+| `https://credentials.andamio.io/badges/{course_id}.{credential_hash}` | The badge's share page |
+| `https://credentials.andamio.io/badges/{course_id}.{credential_hash}/{alias}` | One learner's view of the badge |
+
+Both values are lowercase hex. Use them exactly as the API returns them. An uppercase URL is a different URL and does not resolve.
+
+## Show the image
+
+The image is an SVG. It renders on demand the first time anyone asks for it, so a new credential's badge needs no setup. Show it with a plain image tag:
+
+```html
+<img
+  src="https://credentials.andamio.io/badges/{course_id}.{credential_hash}.svg"
+  alt="Credential badge"
+  width="180"
+  height="180"
+/>
+```
+
+One image serves every learner who holds the credential. It names the credential, not the person.
+
+## The share page
+
+The share page displays the badge on its own page, ready to link. It exists only for badges in Andamio's published set. For any other badge it returns `404`, and the image URL is the one to share.
+
+## A learner's view
+
+Add a learner's alias to the stem to get their view: `/badges/{course_id}.{credential_hash}/{alias}`. The alias is the one the learner's account was created with. The page reads the learner's live state from the public ledger in their browser and shows this badge for that learner, along with every other badge they hold.
+
+The page loads for any alias, so the link alone proves nothing. What the page reads from the ledger is what counts.
+
+## What the badge shows
+
+- **Two rings.** The outer ring encodes the `course_id` and the inner ring encodes the `credential_hash`. The rings can be decoded back to the values on the public ledger.
+- **A course title and a credential title.** Andamio reads both from the Andamio API. When a course has no title, the badge shows "Andamio". When a credential has no title, it shows the credential's first statement.
+
+The Issuer API takes no title for a course or a credential. Write your first statement so it reads well as a title.
+
+The badge is a picture of the credential. The record on the public ledger is the credential itself. Andamio can refresh a badge's art, but its URL never changes.
