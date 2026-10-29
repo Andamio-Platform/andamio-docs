@@ -261,6 +261,7 @@ export interface V2Wallet {
   inferredFrom?: string[];
 }
 
+/** @public Documents the shape of public/yaml/transactions/v2/address-registry.json; no code reads it typed yet. */
 export interface V2AddressRegistry {
   version: string;
   lastUpdated: string;
@@ -306,6 +307,7 @@ export interface V2Endpoint {
   };
 }
 
+/** @public Documents the shape of public/yaml/transactions/v2/endpoint-registry.json; no code reads it typed yet. */
 export interface V2EndpointRegistry {
   version: string;
   lastUpdated: string;
@@ -364,6 +366,7 @@ export interface V2CostEntry {
   }>;
 }
 
+/** @public Documents the shape of public/yaml/transactions/v2/cost-registry.json; no code reads it typed yet. */
 export interface V2CostRegistry {
   version: string;
   lastUpdated: string;
