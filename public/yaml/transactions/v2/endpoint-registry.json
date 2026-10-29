@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "lastUpdated": "2025-12-08",
-  "baseUrl": "https://atlas-api-preprod-507341199760.us-central1.run.app",
+  "baseUrl": "https://preprod.api.andamio.io/api",
   "notes": [
     "TEMPORARY: Endpoint pattern will change from /tx/v2/{role}/{system}/{action} to /tx/v2/{system}/{role}/{action}",
     "Update the 'endpoint' field for each transaction when the API pattern changes"

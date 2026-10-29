@@ -2,7 +2,7 @@
   "version": "1.4.0",
   "lastUpdated": "2026-01-09",
   "lastSwaggerSync": "2026-01-09",
-  "swaggerSource": "https://atlas-api-preprod-507341199760.us-central1.run.app/swagger.json",
+  "swaggerSource": "https://preprod.api.andamio.io/openapi/swagger.public.json",
   "totalTransactions": 16,
   "summary": {
     "pending-review": 0,
