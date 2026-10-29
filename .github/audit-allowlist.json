@@ -1,0 +1,35 @@
+{
+  "_comment": "Runtime advisories accepted by the CI Audit job (.github/scripts/audit-gate.mjs). Each entry needs the GHSA id, the package path, and why it can't be fixed here. Remove an entry when the advisory stops being reported; the job fails until you do.",
+  "advisories": [
+    {
+      "id": "GHSA-82x6-q7mm-w9cf",
+      "package": "toml",
+      "path": "@fumadocs/content-collections > @content-collections/mdx > mdx-bundler > remark-mdx-frontmatter > toml",
+      "reason": "No fixed toml release, and every mdx-bundler 3.x pulls it in. The chain only parses TOML frontmatter in our own MDX at build time, never request input."
+    },
+    {
+      "id": "GHSA-v5mp-jgw5-2x6j",
+      "package": "toml",
+      "path": "@fumadocs/content-collections > @content-collections/mdx > mdx-bundler > remark-mdx-frontmatter > toml",
+      "reason": "No fixed toml release, and every mdx-bundler 3.x pulls it in. The chain only parses TOML frontmatter in our own MDX at build time, never request input."
+    },
+    {
+      "id": "GHSA-4qx8-w7c3-pj3p",
+      "package": "toml",
+      "path": "@fumadocs/content-collections > @content-collections/mdx > mdx-bundler > remark-mdx-frontmatter > toml",
+      "reason": "No fixed toml release, and every mdx-bundler 3.x pulls it in. The chain only parses TOML frontmatter in our own MDX at build time, never request input."
+    },
+    {
+      "id": "GHSA-9j65-hcg3-gc64",
+      "package": "toml",
+      "path": "@fumadocs/content-collections > @content-collections/mdx > mdx-bundler > remark-mdx-frontmatter > toml",
+      "reason": "No fixed toml release, and every mdx-bundler 3.x pulls it in. The chain only parses TOML frontmatter in our own MDX at build time, never request input."
+    },
+    {
+      "id": "GHSA-9qmh-m7c6-f92p",
+      "package": "toml",
+      "path": "@fumadocs/content-collections > @content-collections/mdx > mdx-bundler > remark-mdx-frontmatter > toml",
+      "reason": "No fixed toml release, and every mdx-bundler 3.x pulls it in. The chain only parses TOML frontmatter in our own MDX at build time, never request input."
+    }
+  ]
+}
