@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-/* Documentation entry point: a single Quickstart CTA over an index of the
+/* Documentation entry point: one CTA to the /docs routing page over an index of the
    three docs roots (Andamio Issuer, Andamio API, Protocol) and the shared
    pages. Editorial brand tokens (mono kickers, Inter display, thin rules) are
    kept; the marketing chrome (oversized hero, ghost numerals, eyebrow, trust
@@ -91,17 +91,10 @@ export default function HomePage() {
 
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
           <Link
-            href="/docs/api/getting-started"
+            href="/docs"
             className="flex w-fit items-center gap-2 bg-brand px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-brand-foreground transition-opacity hover:opacity-90"
           >
-            Quickstart
-            <span aria-hidden>&rarr;</span>
-          </Link>
-          <Link
-            href="/docs"
-            className="flex w-fit items-center gap-2 border border-border px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-foreground transition-colors hover:border-brand hover:text-brand"
-          >
-            Open Docs
+            Where to start
             <span aria-hidden>&rarr;</span>
           </Link>
         </div>
