@@ -1,0 +1,53 @@
+# Weekly grouped update PRs. A dependency joins the first group it matches,
+# so the named groups come before the catch-all dev-dependencies group.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      next:
+        patterns:
+          - next
+          - eslint-config-next
+      react:
+        patterns:
+          - react
+          - react-dom
+          - "@types/react"
+          - "@types/react-dom"
+      fumadocs:
+        patterns:
+          - fumadocs-core
+          - fumadocs-ui
+          - "@fumadocs/*"
+      content-collections:
+        patterns:
+          - "@content-collections/*"
+      dev-dependencies:
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Tracks the Node major in the Dockerfile (node:20-alpine). Drop this
+      # ignore when the Dockerfile moves to a new Node major, and bump
+      # @types/node to match in the same PR.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # ESLint stays on 8 until .eslintrc.json is migrated to flat config.
+      # Drop this ignore in that migration PR.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      actions:
+        patterns:
+          - "*"
