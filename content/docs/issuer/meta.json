@@ -3,8 +3,11 @@
     "icon": "BadgeCheck",
     "pages": [
         "index",
+        "before-you-start",
         "how-it-works",
+        "actions",
         "quickstart",
-        "integrate"
+        "integrate",
+        "support"
     ]
 }
