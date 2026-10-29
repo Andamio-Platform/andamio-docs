@@ -1,10 +1,11 @@
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import type { LinkItemType } from "fumadocs-ui/layouts/links";
-import { RootToggle } from "fumadocs-ui/components/layout/root-toggle";
 import { getSidebarTabs } from "fumadocs-ui/utils/get-sidebar-tabs";
+import type { PageTree } from "fumadocs-core/server";
 import { AppWindow, Github, Globe } from "lucide-react";
 import type { ReactNode } from "react";
 import { baseOptions } from "@/app/layout.config";
+import { ProductToggle } from "@/components/product-toggle";
 import { SidebarFolderNode, SidebarSeparatorNode } from "@/components/sidebar-folder";
 import { source } from "@/lib/source";
 
@@ -41,6 +42,26 @@ const docsLinks: LinkItemType[] = [
   },
 ];
 
+// Pages outside the three product folders (the /docs home, Glossary,
+// Developer community). Each product's meta.json links Home and Glossary, so
+// they would otherwise count as part of every product and show the picker.
+function sharedUrls(nodes: PageTree.Node[], out = new Set<string>()): Set<string> {
+  for (const node of nodes) {
+    if (node.type === "page") out.add(node.url);
+    if (node.type === "folder" && !node.root) {
+      if (node.index) out.add(node.index.url);
+      sharedUrls(node.children, out);
+    }
+  }
+  return out;
+}
+
+const shared = sharedUrls(source.pageTree.children);
+const productOptions = getSidebarTabs(source.pageTree).map((option) => ({
+  ...option,
+  urls: option.urls && new Set([...option.urls].filter((url) => !shared.has(url))),
+}));
+
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <DocsLayout
@@ -52,8 +73,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       sidebar={{
         tabs: false,
         banner: (
-          <RootToggle
-            options={getSidebarTabs(source.pageTree)}
+          <ProductToggle
+            options={productOptions}
             className="mt-2 mb-1 w-full border border-fd-border p-2 transition-colors hover:bg-fd-accent/50"
           />
         ),
