@@ -6,7 +6,6 @@ A confirm-first plan to make the [six roots](./SKILL.md#context-the-spine-the-ru
 here because it is the first major application of the governance.
 
 > **Status:** roadmap-aligned six-root spine signed off (orch Phase-2 IA session, 2026-06-29).
-> Execution tracked in `andamio-docs` (`docs/plans/2026-06-29-001-feat-docs-phase2-six-root-ia-plan.md`).
 > Phase 1 (front door + Issuer scaffold) shipped in PR #30.
 
 ## Goal

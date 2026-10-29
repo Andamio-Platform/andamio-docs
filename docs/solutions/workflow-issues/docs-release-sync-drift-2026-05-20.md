@@ -169,7 +169,6 @@ content/docs/protocol/v2/state-machine/index.mdx:261: v2.1.1-rc12               
 ## Related
 
 - [PR #16 — docs: sync developer docs with v2.3 platform state](https://github.com/Andamio-Platform/andamio-docs/pull/16) — the triggering audit.
-- `docs/plans/2026-04-06-001-feat-docs-audit-remediation-plan.md` — prior remediation cycle; this learning generalizes its lesson.
 - `.claude/skills/transaction-audit/SKILL.md` — domain-specific instance of release-cycle drift (Atlas swagger → V2 transaction YAML); should cross-link as the V2-transactions-only instance of this practice.
 - `.claude/skills/v2-docs-audit/SKILL.md` — coverage tracking for V2 transaction MDX; same family, narrower scope.
 - `.claude/skills/guide-pipeline/SKILL.md` "Cross-Repo Sync" section — proves the cross-repo tracker pattern; scope is onboarding guides + UX readiness.
