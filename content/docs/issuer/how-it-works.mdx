@@ -1,13 +1,46 @@
 ---
 title: How it works
-description: The design decisions that make an Andamio credential a building block
+description: What an Andamio credential is, the rules for defining one, and why it is a building block
 ---
 
-<Callout type="info">
-  Scaffold in progress. The model below is stable; worked examples and screenshots will follow as the product firms up.
-</Callout>
-
 An Andamio credential behaves differently from a badge because of a few deliberate design decisions. Each one follows from anchoring credentials on a public ledger instead of inside a single company's database.
+
+## What a credential is
+
+A credential is an ordered list of statements. A statement is anything you are willing to certify: a learning target, a skill, a behavior or a completion criterion. One statement is enough.
+
+The API calls the list `slts`, short for Student Learning Targets, the statements a credential certifies. The name comes from courses, but a credential does not have to be a course. Here is a team-member credential, defined with `POST /courses/{course_id}/credentials/create`:
+
+```json
+{
+  "alias": "ops-lead",
+  "credentials_to_add": [
+    {
+      "slts": [
+        "Completed security awareness training",
+        "Shadowed two on-call shifts",
+        "Follows the incident reporting procedure"
+      ],
+      "allowed_student_state_ids": [],
+      "prereq_credential_hashes": []
+    }
+  ]
+}
+```
+
+Every credential belongs to a course, which groups the credentials one program issues. The response returns a `credential_hash` for each definition. With the course's `course_id`, it identifies the credential.
+
+## Rules for defining a credential
+
+The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) does not state these rules. Plan for them before you define anything.
+
+- **Each statement is at most 140 characters of plain ASCII.** Text with other characters is rejected.
+- **Order matters.** The `credential_hash` is the hash of the list in order. A changed word, a new order, or the same text split differently makes a new credential.
+- **Nothing can be edited on mainnet.** To change a credential, define a new one.
+- **The list cannot be empty.** One statement is enough. An empty string and a repeated statement are accepted, but they certify nothing useful.
+- **One call creates at most 25 credentials.**
+- **Send `[]` for `allowed_student_state_ids`**, and for `prereq_credential_hashes` when the credential has no prerequisites. The reference marks both optional, but omitting either fails with `400` "Missing required field".
+- **A prerequisite works only within the same course.** A prerequisite that points at another course or another issuer is accepted when the credential is created, and then every learner is refused when they submit evidence.
 
 ## The credential model
 
@@ -17,28 +50,24 @@ The credential is immutable and stored on public infrastructure that no single c
 
 ### It can build on other credentials
 
-A credential can be required before someone takes on the work that earns another, so what someone holds opens the door to what comes next.
-
-<Callout type="warn">
-  Cross-organization prerequisite enforcement (a credential from one issuer gating another issuer's program automatically, on-chain) is on the roadmap and not yet a shipped capability. This page will state precisely what is enforced today once that line is settled.
-</Callout>
+A credential can be required before someone takes on the work that earns another credential in the same course. List the required credentials in `prereq_credential_hashes`, so what someone holds opens the door to what comes next.
 
 ### Software can act on it
 
 The credential is machine-readable. An application can check that someone holds it and gate access on that, unlock the next step, or drive what happens next. It stops being something to look at and becomes something your systems use.
 
-### Proof is public; evidence is private
+### Proof is public, evidence is private
 
-Anyone can verify that a credential is real, while the work behind it stays with the person who earned it. This is how a diploma works: the credential is public, the exam papers are not. Andamio puts a hash of the evidence on-chain; the evidence itself never leaves your control.
+Anyone can verify that a credential is real, while the work behind it stays with you. This is how a diploma works: the credential is public, the exam papers are not. With each submission, the learner puts a short reference on chain, at most 140 characters. A hash of the evidence is recommended. The evidence itself stays in your own store.
 
 ### You own what it means
 
-The barrier to issue is low, and the credential makes no claim about its own value. You define what it certifies; its value comes from the track record it earns once it is in the world. Andamio provides the issuance infrastructure; the meaning is yours.
+The barrier to issue is low, and the credential makes no claim about its own value. You define what it certifies, and its value comes from the track record it earns once it is in the world. Andamio provides the issuance infrastructure. The meaning is yours.
 
 ### The earner keeps it
 
 The credential lives with the person who earned it, not in your system, and they can carry it anywhere it is useful, even if they leave your program.
 
-## No blockchain to learn
+## Who signs
 
-Issuer covers the chain entirely. Transactions are sponsored, so the people you credential never hold ADA or manage a wallet. From your side, you call an API; from their side, they earn a credential. The ledger is invisible to both.
+Andamio builds every transaction and sponsors it, so the people you credential never hold ADA. Each person signs their own actions with a social login or a browser wallet: the learner signs their evidence and their claim, and a teacher signs the accept. [Actions](/docs/issuer/actions) lists who signs each action.

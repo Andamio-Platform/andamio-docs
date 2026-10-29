@@ -1,0 +1,78 @@
+---
+title: Actions
+description: The seven actions Issuer is built on, who signs each, and how every write completes
+---
+
+Andamio Issuer is built on seven actions, one rhythm and three identifiers. Every route below is under `/issuer/v1` and takes your enterprise key in the `X-API-Key` header. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has the full request and response schemas.
+
+<Mermaid chart='flowchart LR
+    subgraph ACTIONS["The seven actions"]
+        direction TB
+        A1["1 Give someone an identity\nAndamio submits, nobody signs"] --> A2["2 Create a course\ncourse owner signs"]
+        A2 --> A3["3 Name the teachers\ncourse owner signs"]
+        A3 --> A4["4 Define a credential\na teacher signs"]
+        A4 --> A5["5 Submit or update evidence\nthe learner signs"]
+        A5 --> A6["6 Accept evidence\na teacher signs"]
+        A6 --> A7["7 Claim the credential\nthe learner signs"]
+    end
+    subgraph RHYTHM["The rhythm for actions 2 to 7"]
+        direction TB
+        R1["BUILD\nPOST the action\nAndamio returns unsigned_tx"] --> R2["SIGN\nthe acting alias wallet signs"]
+        R2 --> R3["SUBMIT\nPOST /submit\nAndamio adds its sponsorship"]
+        R3 --> R4["POLL\nread until the result shows"]
+    end
+    ACTIONS -.-> RHYTHM' />
+
+## The actions
+
+Every write except the first is signed by the wallet that holds the acting alias, the `alias` field in the request body. People sign with a social login or a browser wallet. Andamio sponsors every transaction, so nobody holds ADA or pays a fee.
+
+| Action | Route | Who signs | Read to poll |
+|---|---|---|---|
+| **Give someone an identity** | `POST /accounts/create` | Nobody. Andamio builds, sponsors and submits it | `GET /addresses/{address}/accounts` |
+| **Create a course** | `POST /courses/create` | The course owner | `GET /courses/{course_id}` |
+| **Name the teachers** | `POST /courses/{course_id}/teachers` | The course owner | `GET /courses/{course_id}/teachers` |
+| **Define a credential** | `POST /courses/{course_id}/credentials/create` | A teacher | `GET /courses/{course_id}` |
+| **Submit evidence**, and update it until it is accepted | `POST /courses/{course_id}/credentials/{credential_hash}/evidence/submit` and `.../evidence/update` | The learner | `GET /accounts/{alias}/submissions` |
+| **Accept evidence**, in batches, all or nothing | `POST /courses/{course_id}/credentials/evidence/approve` | A teacher | `GET /courses/{course_id}/credentials/issuances` |
+| **Claim the credential** | `POST /courses/{course_id}/credentials/claim` | The learner | `GET /accounts/{alias}/credentials` |
+
+`GET /accounts/{alias}/activity` shows every event for an account with its transaction hash, so it works as a poll for any action.
+
+A few details change how you build on these:
+
+- **Create a course can name the first teachers.** `POST /courses/create` takes a `teachers` list, which defaults to the course owner. Use the teachers route to change the list later.
+- **Accept is accept-only and all or nothing.** If any learner in the batch was already assessed or has no submission, the whole batch fails and the error names every such learner. Each learner accepted uses one Credentials unit.
+- **Claiming ends enrollment.** A learner who claims a credential is unenrolled from the course.
+- **A teacher can remove a credential definition.** `POST /courses/{course_id}/credentials/remove` takes the hashes to remove, and a teacher signs it. It removes a definition from the course. It does not edit one.
+
+## The rhythm
+
+`POST /accounts/create` completes in one call and returns a `tx_hash`. Every other write follows the same four steps.
+
+1. **Build.** `POST` the action. Andamio returns an `unsigned_tx` (and `course_id` or `credential_hashes` where the action creates one).
+2. **Sign.** The wallet that holds the acting alias signs it as a partial signature (CIP-30 `signTx` with `partialSign` set to `true`). Raw CIP-30 returns only the witness set, so add it to the transaction before you submit. Most wallet libraries do this for you.
+3. **Submit.** `POST /submit` with the signed transaction hex as `tx`. Andamio adds its sponsorship and submits it, and returns the `tx_hash`.
+4. **Poll.** Read the route in the table above until the result shows. There is no transaction-status route.
+
+What `POST /submit` can return besides success:
+
+| Status | Meaning |
+|---|---|
+| `400 MISSING_VKEY_WITNESS` | The transaction carries no signature. Sign it with the acting wallet |
+| `402 QUOTA_EXHAUSTED` | Your plan has no allocation left for this action |
+| `404` | No pending build matches this transaction |
+| `409` | This transaction was already submitted |
+| `410` | The build expired. Build it again |
+
+## The three identifiers
+
+| Identifier | What it is | Where it comes from |
+|---|---|---|
+| `course_id` | The on-chain course | Returned by `POST /courses/create` |
+| `credential_hash` | The hash of the credential's statements, in order | Returned by `POST /courses/{course_id}/credentials/create` as `credential_hashes`, in the same order as `credentials_to_add` |
+| Evidence | The learner's reference to their work | Sent as `evidence_info` on submit and update, read back as `evidence_hash` |
+
+A credential is identified by the pair `course_id` and `credential_hash`. A hash alone does not name it.
+
+Evidence is free text of up to 140 characters. A hash of the evidence is recommended, and a public URL is fine where the evidence is already public. It is written to the chain as sent, so it is public and permanent. Never put personal data in it.

@@ -64,7 +64,7 @@ When a transaction expires, most commitment states revert to their previous valu
 | **`PENDING_TX_LEAVE`** | **No revert** | Reverting would undo an intentional user action |
 
 The two non-reverting states require special handling:
-- **PENDING_TX_COMMIT**: The commitment record stays in pending state. Your app must let the user retry the transaction or delete the commitment.
+- **PENDING_TX_COMMIT**: The commitment record stays in pending state. Your app must let the user retry the transaction.
 - **PENDING_TX_LEAVE**: The commitment record stays in pending state. The user intended to leave — don't automatically re-enroll them.
 
 ## Recovery Patterns

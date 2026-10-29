@@ -5,9 +5,12 @@
     "root": true,
     "pages": [
         "index",
+        "before-you-start",
         "how-it-works",
+        "actions",
         "quickstart",
         "integrate",
+        "support",
         "[Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html)"
     ]
 }
