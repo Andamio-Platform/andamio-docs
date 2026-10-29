@@ -3,13 +3,9 @@ title: Andamio Issuer
 description: Verifiable credentials for the programs your organization already runs
 ---
 
-<Callout type="info" title="Andamio Issuer uses an enterprise key">
-  These docs cover Andamio **Issuer** and its API at `/issuer/v1`, which takes an **enterprise key**. Andamio sponsors every transaction. Hold a **developer key** instead (you build on `/api/v2` and fund your own transactions)? See the [API](/docs/api/getting-started) docs.
-</Callout>
-
 Andamio Issuer adds a verifiable credential to the programs your organization already runs. You define what a credential certifies, your learners submit evidence, your teachers accept it, and the learner claims a credential that anyone can verify on a public ledger.
 
-Issuer is an API built on the [Andamio API](/docs/api/getting-started). Andamio builds every transaction and pays its fees. The people taking each action sign it with a social login or a browser wallet, and they never hold ADA.
+Each credential lives on a public blockchain, so it is permanent, belongs to the person who earned it, and anyone can verify it without asking you. Andamio Issuer is a lightweight API that gives you all of that without touching crypto. Andamio builds and pays for every transaction, and people sign with a social login, so nobody buys or holds ADA.
 
 ## Who it's for
 
@@ -51,14 +47,11 @@ A typical digital badge is a picture in a vendor's database. It can be changed, 
   <Card title="Before you start" href="/docs/issuer/before-you-start">
     The decisions and setup to have ready
   </Card>
-  <Card title="Actions" href="/docs/issuer/actions">
-    The seven actions, who signs each, and how a write completes
+  <Card title="Roles and actions" href="/docs/issuer/actions">
+    The access token, the roles, and the credential loop every action follows
   </Card>
-  <Card title="Quickstart" href="/docs/issuer/quickstart">
-    From a key to a first claimed credential on preprod
-  </Card>
-  <Card title="Integrate via API" href="/docs/issuer/integrate">
-    The Issuer API surface and how it plugs into your systems
+  <Card title="API integration" href="/docs/issuer/integrate">
+    From an enterprise key to issuing credentials from your systems
   </Card>
   <Card title="Badges" href="/docs/issuer/badges">
     How you and your learners view a credential's badge

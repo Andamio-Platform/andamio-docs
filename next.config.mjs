@@ -22,6 +22,7 @@ const config = {
     return [
       // Andamio Issuer is now its own product section; the old single page moved.
       { source: '/docs/andamio-issuer', destination: '/docs/issuer', permanent: true },
+      { source: '/docs/issuer/quickstart', destination: '/docs/issuer/integrate', permanent: true },
 
       // Papers live on the landing (www.andamio.io/whitepaper), not in docs. The
       // old docs "Coming soon" stubs were removed; redirect their URLs to the

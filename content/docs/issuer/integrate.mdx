@@ -1,26 +1,134 @@
 ---
-title: Integrate via API
-description: How Andamio Issuer plugs into the systems you already run
+title: API integration
+description: Connect your systems to Andamio Issuer, then run every action from access token to claimed credential
 ---
 
-Andamio Issuer is one REST API that you call from the systems you already run. Andamio builds each transaction, the person taking the action signs it with a social login or a browser wallet, and Andamio adds its sponsorship when you submit. Nobody holds ADA.
+This page is for developers who integrate Andamio Issuer into your systems. It follows [Roles and actions](/docs/issuer/actions): read that first for the access token, the roles and the credential loop. Here, each action gets its request, who signs it and what to read when it is done.
 
-The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has every route with its full request and response schema.
+Work through it on preprod before you go live on mainnet. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has every route with its full request and response schema.
 
-## The shape
+## Connect
 
-**One namespace, `/issuer/v1`.** Mainnet is at `https://api.andamio.io/issuer/v1` and preprod at `https://preprod.api.andamio.io/issuer/v1`. Your key decides the network.
+Andamio Issuer is one REST API under one namespace, `/issuer/v1`.
 
-**Authentication.** Send your enterprise key in the `X-API-Key` header. It is the only credential the routes take, with no end-user token. A developer key gets `403`.
+| Network | Base URL |
+|---|---|
+| Preprod | `https://preprod.api.andamio.io/issuer/v1` |
+| Mainnet | `https://api.andamio.io/issuer/v1` |
 
-**Writes (`POST`).** Paths name the transaction being built, such as `/courses/create` or `/courses/{course_id}/credentials/claim`. The response shape tells you what to do next:
+Your key decides the network. Send your enterprise key in the `X-API-Key` header on every request. It is the only credential the routes take, with no end-user token. A developer key gets `403`.
 
-- `POST /accounts/create` returns a `tx_hash`. Andamio has already built, sponsored and submitted it, and nobody signs.
-- Every other write returns an `unsigned_tx`. The wallet that holds the acting alias (the `alias` in the request body) signs it, and you send it to `POST /submit`. Andamio adds its sponsorship and submits it.
+Check the key before anything else. `GET /config` returns `network_id`, which should match the network you expect, and `GET /quota` shows what is left in your plan.
 
-There is no transaction-status route. Poll a read until the result shows. [Actions](/docs/issuer/actions) lists each write, who signs it and which read to poll.
+For preprod, set up three CIP-30 browser wallets, one each for a course owner, a teacher and a learner. They need no ADA. The examples below use the aliases `acme-owner`, `acme-teacher` and `acme-learner`.
 
-**Reads (`GET`).** Courses, credentials, teachers, learners, and per-account views of credentials, submissions, reviews and activity. Results are always limited to the courses your key holds. Snapshot lists page with `page` and `limit`. Activity feeds page with an opaque `cursor`. `limit` defaults to 25, with a maximum of 100.
+## Give each person an access token
+
+Call this once for each person, with their wallet's address as `receiver_address`.
+
+```http
+POST /accounts/create
+{ "alias": "acme-owner", "receiver_address": "addr_test1..." }
+```
+
+Andamio builds, sponsors and submits this one itself, and returns a `tx_hash`. Nobody signs. Poll `GET /addresses/{address}/accounts` until the alias appears. `GET /accounts/{alias}/availability` tells you first whether an alias is free.
+
+## Run the six actions
+
+Each of these returns an `unsigned_tx` and runs the [credential loop](/docs/issuer/actions#the-credential-loop):
+
+1. The wallet that holds the acting alias, the `alias` in the request body, signs it as a partial signature (CIP-30 `signTx` with `partialSign` set to `true`). Raw CIP-30 returns only the witness set, so add it to the transaction before you submit. Most wallet libraries do this for you.
+2. Send the signed transaction hex to `POST /submit` as `tx`. Andamio adds its sponsorship, submits it and returns the `tx_hash`.
+3. Poll the read each action names until the result shows. There is no transaction-status route. `GET /accounts/{alias}/activity` shows every event for an account with its transaction hash, so it works as a poll for any action.
+
+### 1. Create a course
+
+The course owner signs.
+
+```http
+POST /courses/create
+{ "alias": "acme-owner", "teachers": ["acme-teacher"] }
+```
+
+The response carries the new `course_id`. Poll `GET /courses/{course_id}` until the course returns. The `teachers` list defaults to the course owner.
+
+### 2. Name the teachers
+
+The course owner signs. Use this to add or remove teachers after the course exists.
+
+```http
+POST /courses/{course_id}/teachers
+{ "alias": "acme-owner", "teachers_to_add": ["acme-teacher-2"], "teachers_to_remove": [] }
+```
+
+Poll `GET /courses/{course_id}/teachers` until the list shows the change.
+
+### 3. Define a credential
+
+A teacher signs.
+
+```http
+POST /courses/{course_id}/credentials/create
+{
+  "alias": "acme-teacher",
+  "credentials_to_add": [
+    {
+      "slts": ["Completed security awareness training"],
+      "allowed_student_state_ids": [],
+      "prereq_credential_hashes": []
+    }
+  ]
+}
+```
+
+The response carries `credential_hashes`, one for each definition, in the same order as `credentials_to_add`. Poll `GET /courses/{course_id}` until the credential is listed with a `defined_tx`. [How it works](/docs/issuer/how-it-works) has the rules for a statement.
+
+To take a definition out of a course, a teacher signs `POST /courses/{course_id}/credentials/remove` with the hashes to remove. Nothing can be edited.
+
+### 4. Submit evidence
+
+The learner signs.
+
+```http
+POST /courses/{course_id}/credentials/{credential_hash}/evidence/submit
+{ "alias": "acme-learner", "evidence_info": "<hash of the learner's evidence>" }
+```
+
+`evidence_info` is up to 140 characters, written to the chain as sent. Send a hash of the evidence, or a public URL if the evidence is already public, and never personal data. Poll `GET /accounts/acme-learner/submissions` until the submission shows with status `pending`. Until it is accepted, the learner can replace it with `.../evidence/update`.
+
+### 5. Accept evidence
+
+A teacher signs. Accept takes a batch of learners.
+
+```http
+POST /courses/{course_id}/credentials/evidence/approve
+{ "alias": "acme-teacher", "approvals": ["acme-learner"] }
+```
+
+Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted uses one Credentials unit from your plan.
+
+The batch is all or nothing. If any learner in it was already assessed or has no submission, the whole batch fails and the error names every such learner.
+
+### 6. Claim the credential
+
+The learner signs.
+
+```http
+POST /courses/{course_id}/credentials/claim
+{ "alias": "acme-learner" }
+```
+
+Poll `GET /accounts/acme-learner/credentials` until the credential is listed with a `claimed_tx`. The learner now holds the credential, and claiming unenrolls them from the course.
+
+## Go live with social login
+
+In production, most people sign with a social login instead of a browser wallet. Social login uses the `project_id` from `GET /config`, and it works only on a site address Andamio has allowlisted. Register your address early, as [Before you start](/docs/issuer/before-you-start) describes.
+
+## Reads
+
+Reads cover courses, credentials, teachers, learners, and per-account views of credentials, submissions, reviews and activity. Results are always limited to the courses your key holds.
+
+Snapshot lists page with `page` and `limit`. Activity feeds page with an opaque `cursor`. `limit` defaults to 25, with a maximum of 100.
 
 ## Errors
 
@@ -28,14 +136,18 @@ Errors return an `error` object with a `code` and a `message`. The `code` is sta
 
 | Code | Meaning |
 |---|---|
+| `400 MISSING_VKEY_WITNESS` | The transaction sent to `/submit` carries no signature. Sign it with the acting wallet |
 | `402 QUOTA_EXHAUSTED` | Your plan has no allocation left for this action |
 | `402 ACCOUNT_DISABLED` | Your enterprise account is disabled |
 | `403 COURSE_NOT_AUTHORIZED` | Your key does not hold this course |
+| `404` on `/submit` | No pending build matches this transaction |
+| `409` on `/submit` | This transaction was already submitted |
+| `410` on `/submit` | The build expired. Build it again |
 
 An error on a limit can name internal fields, such as `modules_to_add`, instead of the reference's `credentials_to_add`.
 
 ## How it relates to the Andamio API
 
-Issuer is a higher-level surface built on the [Andamio API](/docs/api/getting-started). The API gives developers the full protocol, and they fund their own transactions. Issuer narrows it to the credentialing job and sponsors every transaction. If you want lower-level control or are building something beyond credential issuance, build on the API directly.
+Issuer and the [Andamio API](/docs/api/getting-started) are separate products with separate keys, both built on the [Andamio Protocol](/docs/protocol). Issuer covers issuing credentials and sponsors every transaction. The Andamio API gives developers the whole protocol, and they decide who funds each transaction. If you are building something beyond credential issuance, use the Andamio API.
 
 Questions about an integration go to [Support](/docs/issuer/support).
