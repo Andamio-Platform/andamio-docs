@@ -3,18 +3,19 @@ import type { LinkItemType } from "fumadocs-ui/layouts/links";
 import { AppWindow, Github, Globe } from "lucide-react";
 import type { ReactNode } from "react";
 import { baseOptions } from "@/app/layout.config";
+import { SidebarFolderNode } from "@/components/sidebar-folder";
 import { source } from "@/lib/source";
 
 // Three sidebar roots (Andamio Issuer, Andamio API, Protocol) are `root: true`
 // folders in content/docs, switched with the stock root toggle. Inside a root
-// the sidebar shows only that root's tree, so the shared pages (Home, Glossary,
-// Developer community) are reached through these links, which render above
-// every sidebar. Icon links render in the sidebar footer. They live here, not
-// in baseOptions.links, because baseOptions also feeds the `/` navbar.
+// the sidebar shows only that root's tree, so the shared pages (Home, Glossary)
+// are reached through these links, which render above every sidebar. Developer
+// community stays in the root sidebar only, unfeatured while it is unsupported.
+// Icon links render in the sidebar footer. They live here, not in
+// baseOptions.links, because baseOptions also feeds the `/` navbar.
 const docsLinks: LinkItemType[] = [
   { text: "Home", url: "/docs" },
   { text: "Glossary", url: "/docs/glossary" },
-  { text: "Developer community", url: "/docs/developer-community" },
   {
     type: "icon",
     text: "Andamio App",
@@ -43,7 +44,12 @@ const docsLinks: LinkItemType[] = [
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <DocsLayout tree={source.pageTree} {...baseOptions} links={docsLinks}>
+    <DocsLayout
+      tree={source.pageTree}
+      {...baseOptions}
+      links={docsLinks}
+      sidebar={{ components: { Folder: SidebarFolderNode } }}
+    >
       {children}
     </DocsLayout>
   );
