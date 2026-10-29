@@ -73,20 +73,16 @@ This is a Next.js documentation site built with Fumadocs, using content collecti
 - Content collections with MDX transformation and meta schema validation
 
 ### Custom MDX Components
-The documentation system includes several custom React components for interactive visualizations:
-
-- **`<TransactionDiagram>`** - Renders interactive transaction flow diagrams from YAML files
-  - Props: `txFile` (path to YAML), `title`, `description`
-  - Example: `<TransactionDiagram txFile="admin/add-course-creators.yaml" />`
-
-- **`<ValidatorDiagram>`** - Renders validator system architecture diagrams
-  - Props: `system` (required), `validator` (optional), `title`, `description`
-  - Example: `<ValidatorDiagram system="global-state" validator="global-state" />`
+Components available in every MDX page are registered in `mdx-components.tsx`:
 
 - **`<Mermaid>`** - Renders Mermaid diagram syntax
   - Used for flowcharts, sequence diagrams, and other visualizations
 
-- **Other diagram components**: `flywheel-diagram`, `linear-diagram`, `protocol-diagram`
+- **`<TransactionStepper>`** - Transaction-sequence steppers (`content/docs/protocol/v2/sequences/`)
+
+- **Other components**: `FlywheelDiagram`, `LinearDiagram`, `ThemedImage`, `GuideHeader`, `TreasuryVerifier`, `BadgeAnatomyExplorer`
+
+Pages can also import a component directly (e.g. `ValidatorsReference` in `protocol/v2/validators.mdx`). Knip scans MDX imports, so a component used only that way still counts as used.
 
 ### MDX Gotchas
 

@@ -81,11 +81,6 @@ export interface TransactionYaml {
   withdraws?: Withdraw[];
 }
 
-// Props for the DiagramTransactionWrapper component
-export interface DiagramTransactionWrapperProps {
-  yamlPath?: string; // Optional path to the YAML file
-}
-
 // Validator Types
 // Props interface for the component
 export interface DiagramValidatorOverviewProps {
@@ -93,12 +88,6 @@ export interface DiagramValidatorOverviewProps {
   validatorId: string;
   version?: string;
 }
-
-// Node type identifiers for validator diagram
-export type ValidatorNodeTypes = {
-  validatorNode: "validatorNode";
-  redeemerNode: "redeemerNode";
-};
 
 // Registry types based on validator-registry-v2.yaml structure
 export interface RedeemerAction {
