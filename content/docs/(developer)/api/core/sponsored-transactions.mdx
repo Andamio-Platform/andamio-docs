@@ -1,35 +1,24 @@
 ---
 title: Sponsored Transactions
-description: Enterprise transaction sponsorship — let your organization pay blockchain fees on behalf of users
+description: Pay your users' transaction fees from a sponsor wallet you run
 ---
 
-Enterprise transaction sponsorship lets your organization pay the blockchain costs of an Andamio action so the end user never needs ADA in their wallet. This removes the single biggest onboarding barrier for Web3 learning experiences.
+The Andamio API builds transactions. Who pays the fees is your choice. By default the user's own wallet pays, as described in [Transaction Handling](/docs/api/core/transactions). On eight course routes you can name a sponsor wallet you run instead, so your users never need ADA.
 
-Sponsorship is opt-in and tied to an **enterprise API key**. When a sponsored route is called with an enterprise key that has remaining quota, the Andamio gateway covers the sponsor side of the transaction automatically. No request body changes are required to opt in — the gateway decides based on the key and the route.
+Andamio does not pay the fees of a transaction built through the Andamio API. Your sponsor wallet does.
 
-<Callout type="info">
-Sponsorship is an enterprise feature. Contact the Andamio team to provision sponsorship quota for your API key. Free, Starter, and Growth tiers build self-funded transactions as described in [Transaction Handling](/docs/api/core/transactions).
+<Callout type="info" title="Want Andamio to sponsor for you?">
+That is [Andamio Issuer](/docs/issuer), a separate product with its own enterprise key. Andamio builds, sponsors and submits Issuer transactions. An enterprise key gets a `403` on every Andamio API transaction build route.
 </Callout>
 
 ## Sponsored Routes
 
-Eight transaction-build routes support sponsorship today, grouped by how quota is counted.
+These eight routes accept an optional `sponsor_data` object. Each returns the same response as a self-funded build.
 
-### Bootstrap routes (route-scoped quota)
-
-These run before a `course_id` exists, so quota is counted per route:
-
-| Route | Returns |
-|-------|---------|
-| `POST /api/v2/tx/global/user/access-token/mint` | `{ tx_hash }` — submitted for you |
-| `POST /api/v2/tx/instance/owner/course/create` | `{ course_id, unsigned_tx }` — holder signs |
-
-### Course-bound routes (course-scoped quota)
-
-These act on an existing course, so quota is counted per `(api_key, course_id)`:
-
-| Route | Returns |
-|-------|---------|
+| Request | Response |
+|---------|----------|
+| `POST /api/v2/tx/global/user/access-token/mint` | `{ unsigned_tx }` |
+| `POST /api/v2/tx/instance/owner/course/create` | `{ course_id, unsigned_tx }` |
 | `POST /api/v2/tx/course/owner/teachers/manage` | `{ unsigned_tx }` |
 | `POST /api/v2/tx/course/teacher/modules/manage` | `{ unsigned_tx }` |
 | `POST /api/v2/tx/course/teacher/assignments/assess` | `{ unsigned_tx }` |
@@ -37,92 +26,58 @@ These act on an existing course, so quota is counted per `(api_key, course_id)`:
 | `POST /api/v2/tx/course/student/assignment/update` | `{ unsigned_tx }` |
 | `POST /api/v2/tx/course/student/credential/claim` | `{ unsigned_tx }` |
 
-A typical enterprise lifecycle is: sponsor `access-token/mint`, then `course/create`, then downstream course-bound actions against the new `course_id`.
+The project routes and the other transaction routes build self-funded transactions only.
 
-## How a Sponsored Build Differs
+## The sponsor_data Object
 
-When a request qualifies for sponsorship, the gateway:
+`sponsor_data` names the sponsor wallet and two UTxO references. The two references come from `getStaticInfo()` in the [utxos.dev](https://utxos.dev) SDK, which you call yourself. Do not pick arbitrary UTxOs: the sponsorship contract requires these exact references.
 
-1. **Rejects any caller-supplied `sponsor_data`.** The gateway owns the sponsor configuration — supplying your own is a `400`.
-2. Resolves quota — by route for bootstrap routes, by `course_id` for course-bound routes.
-3. Builds the transaction with the gateway's sponsor inputs and applies the sponsor signature.
-4. Returns one of two shapes (see below).
+| Field | Required | Description |
+|-------|----------|-------------|
+| `sponsor_address` | Yes | Bech32 address of the sponsor wallet that pays the fees |
+| `static_utxo_ref` | Yes | UTxO reference (`txhash#index`) from `getStaticInfo()` |
+| `collateral_utxo_ref` | Yes | Collateral UTxO reference (`txhash#index`) from `getStaticInfo()` |
+| `access_token_receiver` | Mint only | Bech32 address of the user's wallet that receives the access token. Must differ from `sponsor_address` |
 
-You do **not** change your request body to request sponsorship. Send the same fields you would for a self-funded build.
-
-### Shape 1 — Direct submit (`access-token/mint` only)
-
-No holder signature is needed, so the gateway submits for you and returns the hash:
+On the seven course routes, add `sponsor_data` to the body you would send for a self-funded build:
 
 ```json
-{ "tx_hash": "<tx-hash>" }
+{
+  "alias": "student1",
+  "course_id": "ff80aaaf03a273b8f5c558168dc0e2377eea810badbae6eceefc14ef",
+  "slt_hash": "a1b2c3d4...",
+  "assignment_info": "My submission",
+  "sponsor_data": {
+    "sponsor_address": "addr1...",
+    "static_utxo_ref": "<txhash>#0",
+    "collateral_utxo_ref": "<txhash>#1"
+  }
+}
 ```
 
-### Shape 2 — Holder signs, then submits
+On `access-token/mint`, send either `initiator_data` (self-funded) or `sponsor_data` (sponsored). Sending neither or both returns a `400`.
 
-Every other sponsored route returns an unsigned transaction (plus `course_id` for `course/create`). The holder signs it and submits through the shared sponsored-submit endpoint:
+## After the Build
 
-```json
-{ "unsigned_tx": "<tx-cbor-hex>" }
-```
+The route returns an unsigned transaction. The Andamio API has no submit route: the sponsor's signature, the user's signature and submission to Cardano are yours. After you submit it, register it with `POST /api/v2/tx/register` and monitor it exactly as in [Transaction Handling](/docs/api/core/transactions).
 
-## Submitting a Holder-Signed Sponsored Transaction
-
-After the user signs the returned `unsigned_tx`, submit it to the shared endpoint. Do **not** submit it directly to a node — the sponsor signature is merged in by the gateway at submit time.
-
-```typescript
-const API = "https://preprod.api.andamio.io/api/v2";
-
-// 1. Build (sponsored automatically for an enterprise key)
-const { unsigned_tx } = await fetch(`${API}/tx/course/student/assignment/commit`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "X-API-Key": ENTERPRISE_API_KEY,
-    "Authorization": `Bearer ${userJwt}`,
-  },
-  body: JSON.stringify({ alias: "student1", course_id: "abc123...", /* ... */ }),
-}).then(r => r.json());
-
-// 2. Holder signs in their wallet
-const signedTx = await wallet.signTx(unsigned_tx);
-
-// 3. Submit to the shared sponsored endpoint (NOT wallet.submitTx)
-const { tx_hash } = await fetch(`${API}/tx/sponsored/submit`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    "X-API-Key": ENTERPRISE_API_KEY,
-    "Authorization": `Bearer ${userJwt}`,
-  },
-  body: JSON.stringify({ tx: signedTx }),
-}).then(r => r.json());
-```
-
-`POST /api/v2/tx/sponsored/submit` takes `{ "tx": "<holder-signed-cbor-hex>" }` and returns `{ "tx_hash": "<tx-hash>" }`. From there, register and monitor exactly as in [Transaction Handling](/docs/api/core/transactions) — the lifecycle after submission is identical.
-
-<Callout type="warn">
-A sponsored build is reserved against quota when it is built. It must be submitted before it expires, or the build is lost and must be rebuilt (and re-counted against quota).
+<Callout type="warn" title="Sponsor signing is not documented here">
+The Andamio API contract does not describe how the sponsor wallet adds its signature to a sponsored build. It names only the utxos.dev sponsorship contract and the SDK's `getStaticInfo()`. Follow the utxos.dev documentation for that step.
 </Callout>
 
-## Error Contract
+## Errors
 
-Sponsorship adds a few failure modes on top of the standard transaction errors:
+A sponsored build returns the same errors as a self-funded build, plus these:
 
 | Status | Meaning |
 |--------|---------|
-| `402 Payment Required` | No matching sponsorship allocation, or quota is exhausted. Can also occur at submit time if quota ran out between build and submit. |
-| `400 Bad Request` | Caller supplied `sponsor_data` on a sponsored route, the `access-token/mint` receiver matched the sponsor address, or the submitted transaction was rejected. |
-| `404 Not Found` | No pending sponsored build exists for the submitted transaction. |
-| `409 Conflict` | The sponsored build was already submitted. |
-| `410 Gone` | The sponsored build expired — rebuild it. |
-| `502 Bad Gateway` | The sponsorship or submission service was unavailable. Safe to retry the build. |
+| `400 Bad Request` | On `access-token/mint`: neither or both of `initiator_data` and `sponsor_data`, or `access_token_receiver` equals `sponsor_address`. |
+| `403 Forbidden` | The request used an enterprise key. Andamio API transaction build routes take a developer key. |
 
-Treat `402` as the signal to surface an "out of sponsored capacity" state in your app, and `410` as "rebuild and retry."
+Andamio keeps no sponsorship quota for these builds. Your tier's normal API quotas still apply.
 
 ## Next Steps
 
-- [Transaction Handling](/docs/api/core/transactions) — The self-funded lifecycle and post-submit monitoring
-- [API Keys](/docs/api/accounts/api-keys) — Enterprise key provisioning
-- [Billing & Pricing](/docs/api/billing) — Tiers and quotas
-- [Error Handling](/docs/api/core/error-handling) — Recovery patterns
+- [Transaction Handling](/docs/api/core/transactions): The build, sign, submit, register lifecycle
+- [API Keys](/docs/api/accounts/api-keys): Get a developer key
+- [Error Handling](/docs/api/core/error-handling): Recovery patterns
