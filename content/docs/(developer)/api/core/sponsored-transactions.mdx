@@ -8,7 +8,7 @@ The Andamio API builds transactions. Who pays the fees is your choice. By defaul
 Andamio does not pay the fees of a transaction built through the Andamio API. Your sponsor wallet does.
 
 <Callout type="info" title="Want Andamio to sponsor for you?">
-That is [Andamio Issuer](/docs/issuer), a separate product with its own enterprise key. Andamio builds, sponsors and submits Issuer transactions. An enterprise key gets a `403` on every Andamio API transaction route.
+That is [Andamio Issuer](/docs/issuer), a separate product with its own enterprise key. Andamio builds, sponsors and submits Issuer transactions. An enterprise key gets a `403` on every Andamio API transaction build route.
 </Callout>
 
 ## Sponsored Routes
@@ -72,7 +72,7 @@ A sponsored build returns the same errors as a self-funded build, plus these:
 | Status | Meaning |
 |--------|---------|
 | `400 Bad Request` | On `access-token/mint`: neither or both of `initiator_data` and `sponsor_data`, or `access_token_receiver` equals `sponsor_address`. |
-| `403 Forbidden` | The request used an enterprise key. Andamio API transaction routes take a developer key. |
+| `403 Forbidden` | The request used an enterprise key. Andamio API transaction build routes take a developer key. |
 
 Andamio keeps no sponsorship quota for these builds. Your tier's normal API quotas still apply.
 

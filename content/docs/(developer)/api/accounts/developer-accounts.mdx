@@ -14,7 +14,7 @@ Your app sends two things to the Andamio API. Your developer account is what get
 | **API key** | Your application | Generate it in the [developer portal](https://app.andamio.io/api-setup) ([API Keys](/docs/api/accounts/api-keys)) | `X-API-Key` |
 | **User login token** (User JWT) | The user acting | The user signs a wallet challenge ([Authentication](/docs/api/accounts/authentication)) | `Authorization: Bearer` |
 
-Every request needs the API key. Requests that act for a user also need that user's login token.
+Authenticated requests need the API key. Requests that act for a user also need that user's login token.
 
 The developer portal signs you in with its own developer login token. That token is for the portal only. Your app never needs it, and no route on the public API accepts it.
 
