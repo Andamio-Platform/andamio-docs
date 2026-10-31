@@ -54,6 +54,6 @@ jobs:
       - name: Smoke test the new revision
         run: |
           URL=$(gcloud run services describe "${SERVICE}" --region="${REGION}" --project="${PROJECT_ID}" --format='value(status.url)')
-          code=$(curl -s -o /dev/null -w '%{http_code}' "${URL}/")
-          echo "${URL}/ -> ${code}"
+          code=$(curl -s -o /dev/null -w '%{http_code}' "${URL}/docs")
+          echo "${URL}/docs -> ${code}"
           test "${code}" = "200"
