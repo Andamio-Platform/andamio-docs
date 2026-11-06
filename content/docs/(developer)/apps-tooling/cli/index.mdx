@@ -86,7 +86,10 @@ That work happens in the [Andamio app](https://app.andamio.io), which signs and 
 ## Quick Start
 
 ```bash
-# Install
+# Install with Homebrew (macOS and Linux)
+brew install Andamio-Platform/tap/andamio-cli
+
+# Or build from source (Go 1.21+)
 go install github.com/Andamio-Platform/andamio-cli/cmd/andamio@latest
 
 # Configure
@@ -101,6 +104,8 @@ andamio course export <course-id> 101
 vim compiled/my-course/101/lesson-1.md
 andamio course import compiled/my-course/101 --course-id <course-id>
 ```
+
+Prebuilt binaries for macOS, Linux and Windows are on the [Releases page](https://github.com/Andamio-Platform/andamio-cli/releases/latest). The [Installation section of the README](https://github.com/Andamio-Platform/andamio-cli/blob/main/README.md#installation) covers every install path and how to check a download.
 
 ## Scripting
 
