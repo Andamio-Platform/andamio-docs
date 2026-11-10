@@ -1,0 +1,54 @@
+# =============================================================================
+# Weekly dependency report
+# =============================================================================
+# Dependabot opens PRs for security updates only (dependabot.yml sets the
+# version-update PR limit to 0). Every other available npm and GitHub Actions
+# update is listed in one issue, edited in place each Monday (or opened fresh
+# when none is open). The devkit's /dependency-triage closes it with one batch
+# PR per week instead of a stream of PRs.
+# =============================================================================
+name: Weekly dependency report
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: outdated-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    name: Report
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TITLE: Weekly dependency report
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci --ignore-scripts
+      # npm outdated exits 1 whenever something is outdated.
+      - run: npm outdated --json > outdated.json || true
+      - run: node scripts/ci/outdated-report.mjs outdated.json > report.md
+      - name: Create or update the report issue
+        run: |
+          # The issue is found by its label, so the label has to exist.
+          gh label create dependencies --color 0366d6 \
+            --description "Dependency updates" 2>/dev/null || true
+          number=$(gh issue list --state open --label dependencies \
+            --search "\"$TITLE\" in:title" --json number,title \
+            --jq "map(select(.title == \"$TITLE\")) | .[0].number // empty")
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file report.md
+          else
+            gh issue create --title "$TITLE" --label dependencies --body-file report.md
+          fi
