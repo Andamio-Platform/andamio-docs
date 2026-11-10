@@ -45,8 +45,8 @@ updates:
           - "@content-collections/*"
     # Held majors. These are notes, not `ignore` entries, because an ignore
     # also blocks security updates:
-    # - @types/node tracks the Node major in the Dockerfile (node:20-alpine);
-    #   move both in the same PR.
+    # - @types/node tracks the Node major in .nvmrc and the Dockerfile; move
+    #   them in the same PR.
     # - eslint stays on 8 until .eslintrc.json is migrated to flat config.
 
   - package-ecosystem: github-actions

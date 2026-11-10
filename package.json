@@ -19,6 +19,9 @@
     "docs-validators": "node scripts/generate-validators.mjs",
     "docs-validators:check": "npx tsx scripts/check-validators-manifest.ts"
   },
+  "engines": {
+    "node": "26.x"
+  },
   "dependencies": {
     "@content-collections/core": "^0.14.2",
     "@content-collections/mdx": "^0.2.2",
@@ -51,7 +54,7 @@
     "@tailwindcss/postcss": "^4.1.7",
     "@types/js-yaml": "^4.0.9",
     "@types/mdx": "^2.0.13",
-    "@types/node": "^20.19.43",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
     "eslint": "^8",
