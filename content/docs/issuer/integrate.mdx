@@ -21,7 +21,7 @@ Andamio Issuer is one REST API under one namespace, `/issuer/v1`.
 | Preprod | `https://preprod.api.andamio.io/issuer/v1` |
 | Mainnet | `https://api.andamio.io/issuer/v1` |
 
-Your key decides the network. Send your Andamio Issuer API key in the `X-API-Key` header on every request. It is the only credential the routes take, with no end-user token. A developer key gets `403`.
+Your key decides the network. Send your Andamio Issuer API key in the `X-API-Key` header on every request. It is the only key the routes take, with no end-user token. A developer key gets `403`.
 
 Check the key before anything else with `GET /config`:
 
@@ -145,7 +145,7 @@ Poll `GET /accounts/acme-learner/credentials` until the credential is listed wit
 
 ## Go live with social login
 
-In production, most people sign with a social login instead of a browser wallet. Social login uses the `project_id` from `GET /config`, and it works only on a site address Andamio has allowlisted. Register your address early, as [Before you start](/docs/issuer/before-you-start) describes.
+In production, most people sign with a social login instead of a browser wallet. Social login uses the `project_id` from `GET /config`, and it works only on a sign-in domain Andamio has allowlisted. Register your domain early, as [Before you start](/docs/issuer/before-you-start) describes.
 
 ## Reads
 
