@@ -3,7 +3,8 @@
   "entry": [
     "content-collections.ts",
     "content/docs/**/*.mdx",
-    ".github/scripts/*.mjs"
+    ".github/scripts/*.mjs",
+    "scripts/ci/*.mjs"
   ],
   "project": [
     "**/*.{ts,tsx,js,mjs,mdx,css}",
