@@ -21,9 +21,27 @@ Andamio Issuer is one REST API under one namespace, `/issuer/v1`.
 | Preprod | `https://preprod.api.andamio.io/issuer/v1` |
 | Mainnet | `https://api.andamio.io/issuer/v1` |
 
-Your key decides the network. Send your enterprise key in the `X-API-Key` header on every request. It is the only credential the routes take, with no end-user token. A developer key gets `403`.
+Your key decides the network. Send your Andamio Issuer API key in the `X-API-Key` header on every request. It is the only credential the routes take, with no end-user token. A developer key gets `403`.
 
-Check the key before anything else. `GET /config` returns `network_id`, which should match the network you expect, and `GET /quota` shows what is left in your plan.
+Check the key before anything else with `GET /config`:
+
+```bash
+curl https://preprod.api.andamio.io/issuer/v1/config \
+  -H "X-API-Key: $ANDAMIO_API_KEY"
+```
+
+A working key returns `200`:
+
+```json
+{
+  "project_id": "<project id>",
+  "network_id": "preprod"
+}
+```
+
+`network_id` is `preprod` or `mainnet`, and it should match the network you expect. `project_id` is the value [social login](#go-live-with-social-login) needs. A `401` means the key is missing or invalid.
+
+`GET /quota` shows what is left in your plan.
 
 For preprod, set up three CIP-30 browser wallets, one each for a course owner, a teacher and a learner. They need no ADA. The examples below use the aliases `acme-owner`, `acme-teacher` and `acme-learner`.
 
