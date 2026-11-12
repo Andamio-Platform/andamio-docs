@@ -16,17 +16,22 @@ The Andamio API uses tiered pricing. Each tier determines your rate limits, mont
 
 Start with Free for development and testing. Upgrade when you need higher limits.
 
-## Rate Limit Headers
+## Quota Headers
 
-Every API response includes rate limit information:
+This section covers the Andamio API, called with a developer key. Each request that counts against your developer quota returns what is left in its response headers:
 
 | Header | Description |
 |--------|-------------|
-| `X-RateLimit-Limit` | Maximum requests allowed in the current window |
-| `X-RateLimit-Remaining` | Requests remaining in the current window |
-| `X-RateLimit-Reset` | Unix timestamp when the window resets |
+| `X-Quota-Remaining-Monthly` | Requests left this month, after this one |
+| `X-Quota-Reset-Monthly` | When the monthly quota resets, as an RFC 3339 timestamp (the start of next month, UTC) |
+| `X-Quota-Remaining-Daily` | Requests left today, after this one |
+| `X-Quota-Reset-Daily` | When the daily quota resets, as an RFC 3339 timestamp |
 
-When you exceed your rate limit, the API returns `429 Too Many Requests`. Implement backoff based on the `X-RateLimit-Reset` header.
+No header reports the per-second or per-minute limits.
+
+When you exceed a limit, the API returns `429 Too Many Requests`. A 429 carries none of these headers, and its body is `{ "error": "<message>" }` rather than the error envelope. The message names the limit you hit: per second, per minute, daily or monthly. After a per-second or per-minute 429, back off and retry within the minute. After a daily or monthly 429, wait until the reset time from your last successful response.
+
+Andamio Issuer keeps its own quota and returns `402 QUOTA_EXHAUSTED` when it runs out. See [Andamio Issuer API integration](/docs/issuer/integrate).
 
 ## View Available Plans
 
@@ -94,5 +99,5 @@ curl https://preprod.api.andamio.io/api/v2/billing/status \
 ## Next Steps
 
 - [API Keys](/docs/api/accounts/api-keys) — Create and manage API keys for your tier
-- [API Integration](/docs/api/accounts/api-integration) — Making requests with rate limit awareness
+- [API Integration](/docs/api/accounts/api-integration) — Making requests with quota awareness
 - [Developer Accounts](/docs/api/accounts/developer-accounts) — Registration and account setup

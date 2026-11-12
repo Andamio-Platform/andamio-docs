@@ -36,7 +36,7 @@ const PATHS: Path[] = [
     goal: "Use the contracts",
     product: "Protocol",
     body: "Work directly with the smart contracts on Cardano.",
-    facts: ["For Cardano developers", "Audited by TxPipe"],
+    facts: ["For Cardano developers", "Access token and global state audited"],
     href: "/docs/protocol",
   },
 ];

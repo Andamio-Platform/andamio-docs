@@ -6,7 +6,9 @@ sources:
   - what-is-delivered/requirements/vocabulary/badge-vocabulary.md
 ---
 
-Every Andamio credential has a badge: an image of the credential at a public URL. Anyone can open it. No key or account is needed to read it.
+A badge is an image of a credential at a public URL. Andamio sets up badges for Issuer credentials by hand, for its first Issuer customers. Self-serve badges, where a course owner sets up badges for their own credentials, are planned. To ask about badges for your credentials, email [support@andamio.io](mailto:support@andamio.io).
+
+Once a badge is set up, anyone can open it. No key or account is needed to read it.
 
 ## Build the URL
 
@@ -29,7 +31,7 @@ Both values are lowercase hex. Use them exactly as the API returns them. An uppe
 
 ## Show the image
 
-The image is an SVG. It renders on demand the first time anyone asks for it, so a new credential's badge needs no setup. Show it with a plain image tag:
+The image is an SVG. It renders on demand the first time anyone asks for it. Show it with a plain image tag:
 
 ```html
 <img
