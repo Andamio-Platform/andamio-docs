@@ -18,7 +18,7 @@ Start with Free for development and testing. Upgrade when you need higher limits
 
 ## Quota Headers
 
-Each request that counts against your quota returns what is left in its response headers:
+This section covers the Andamio API, called with a developer key. Each request that counts against your developer quota returns what is left in its response headers:
 
 | Header | Description |
 |--------|-------------|
@@ -29,7 +29,9 @@ Each request that counts against your quota returns what is left in its response
 
 No header reports the per-second or per-minute limits.
 
-When you exceed a limit, the API returns `429 Too Many Requests`. A 429 carries none of these headers. Its body names the limit you hit: per second, per minute, daily or monthly. After a per-second or per-minute 429, back off and retry within the minute. After a daily or monthly 429, wait until the reset time from your last successful response.
+When you exceed a limit, the API returns `429 Too Many Requests`. A 429 carries none of these headers, and its body is `{ "error": "<message>" }` rather than the error envelope. The message names the limit you hit: per second, per minute, daily or monthly. After a per-second or per-minute 429, back off and retry within the minute. After a daily or monthly 429, wait until the reset time from your last successful response.
+
+Andamio Issuer keeps its own quota and returns `402 QUOTA_EXHAUSTED` when it runs out. See [Andamio Issuer API integration](/docs/issuer/integrate).
 
 ## View Available Plans
 
