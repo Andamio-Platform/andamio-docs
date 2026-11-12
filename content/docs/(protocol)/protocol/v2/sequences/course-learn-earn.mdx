@@ -6,7 +6,7 @@ full: true
 
 import { courseLearnEarn } from "@/components/protocol/sequences/course-learn-earn";
 
-A student enrolls by committing to an assignment, revises their evidence, has a teacher assess it, and — once accepted — claims a verifiable credential NFT and recovers their deposit.
+A student enrolls by committing to an assignment, revises their evidence, has a teacher assess it, and — once accepted — claims the credential and recovers their deposit. The claim burns their course-state token and records a credential hash in their global state.
 
 <TransactionStepper
   title={courseLearnEarn.title}
