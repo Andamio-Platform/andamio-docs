@@ -139,17 +139,22 @@ Used by merged data endpoints (`/v2/course/*/merged`, `/v2/project/*/merged`, mo
 
 See [Error Handling](/docs/api/core/error-handling) for recovery patterns.
 
-## Rate Limit Headers
+## Quota Headers
 
-Every API response includes rate limit information in the response headers:
+Each request that counts against your quota returns what is left in its response headers:
 
 | Header | Description |
 |--------|-------------|
-| `X-RateLimit-Limit` | Maximum requests allowed in the current window |
-| `X-RateLimit-Remaining` | Requests remaining in the current window |
-| `X-RateLimit-Reset` | Unix timestamp when the window resets |
+| `X-Quota-Remaining-Monthly` | Requests left this month, after this one |
+| `X-Quota-Reset-Monthly` | When the monthly quota resets, as an RFC 3339 timestamp (the start of next month, UTC) |
+| `X-Quota-Remaining-Daily` | Requests left today, after this one |
+| `X-Quota-Reset-Daily` | When the daily quota resets, as an RFC 3339 timestamp |
 
-When you exceed your limit, the API returns `429 Too Many Requests`. Use `X-RateLimit-Reset` to schedule your retry. Rate limits are determined by your billing tier — see [Billing](/docs/api/billing) for the limits per plan.
+No header reports the per-second or per-minute limits.
+
+When you exceed a limit, the API returns `429 Too Many Requests`. A 429 carries none of these headers. Its body names the limit you hit: per second, per minute, daily or monthly. After a per-second or per-minute 429, back off and retry within the minute. After a daily or monthly 429, wait until the reset time from your last successful response.
+
+Your billing tier sets the limits. See [Billing](/docs/api/billing) for the limits per plan.
 
 ## Issuer Route Auth
 
