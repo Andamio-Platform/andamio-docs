@@ -106,7 +106,7 @@ cardano-cli address info --address "$ADDR" | jq -r .base16 | cut -c3-58
 
 The contracts above are the **global** protocol — one deployment, one hash each. **Project treasuries are different.** Each project holds its funds in its own treasury contract, so there is no single static hash to publish. That is exactly where an enterprise's money sits, so it is exactly where verification matters most.
 
-Every project treasury is the **same audited validator**, parameterized for one project. Six parameters are applied to it; five are global constants shared by every project, and only one varies: the **project NFT policy ID**, which *is* the project's ID. Both that ID and the shared parameters are public, so a project's treasury hash is fully determined by public data. Nothing is hidden, so verification stays as trustless as the static contracts above, just recomputed per project.
+Every project treasury is the **same validator**, parameterized for one project. Six parameters are applied to it; five are global constants shared by every project, and only one varies: the **project NFT policy ID**, which *is* the project's ID. Both that ID and the shared parameters are public, so a project's treasury hash is fully determined by public data. Nothing is hidden, so verification stays as trustless as the static contracts above, just recomputed per project.
 
 In practice the recompute is even simpler than applying parameters from scratch. We pin one **deployed** treasury as a reference script; the only thing that differs between any two project treasuries is a single 28-byte run (the project NFT policy ID). Substitute your project's ID into the reference script, hash `0x03 || script` with `blake2b-224`, and you have that project's treasury hash. The widget below does this in your browser. Nothing is sent anywhere.
 
@@ -122,6 +122,6 @@ To confirm a result is the treasury actually in use, open the derived address in
 ## Identity and correctness, together
 
 - **Identity** (this page): the cryptographic proof above confirms *which* code is deployed.
-- **Correctness** ([Security Audit](/docs/security-audit)): TxPipe independently audited the validator and minting-policy surface, covering threats like token theft, protocol halting, and double satisfaction.
+- **Correctness** ([Security Audit](/docs/security-audit)): TxPipe independently audited the access-token and global-state contracts, covering threats like token theft, protocol halting, and double satisfaction.
 
 Together they let an integrator confirm both that Andamio runs the code it claims, and that the code was independently reviewed.
