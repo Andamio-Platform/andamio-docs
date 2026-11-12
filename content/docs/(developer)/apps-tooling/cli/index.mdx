@@ -46,14 +46,13 @@ The Andamio CLI is open source, and the [andamio-cli repo](https://github.com/An
 | Create a new module | `andamio course create-module --course-id <id> --code 101 --title "My Module"` |
 | Register a module from chain | `andamio course teacher register-module --course-id <id> --module-code 101 --slt-hash <hash>` |
 | Publish a module | `andamio course teacher publish-module --course-id <id> --module-code 101` |
-| Review a submission in one step | `andamio course teacher review --course-id <id> --module-code 101 --participant-alias student1 --decision accept` |
 | List pending reviews | `andamio course teacher commitments --course-id <id>` |
 | Read one submission in full | `andamio teacher assignments get <course-id> <module-code> <student-alias>` |
-| Build an assessment without signing it | `andamio teacher assessment build --course-id <id> --alias <you> --decision <student>=accept` |
+| Assess submissions (build the transaction) | `andamio teacher assessment build --course-id <id> --alias <you> --decision <student>=accept` |
 
 Creating a course takes two commands. `tx run` builds, signs, submits and registers the course transaction. The API registers the course once the transaction confirms, and the response includes the `course_id`. `course owner update` then sets the course metadata. The `--body` JSON names your alias, the teachers and your wallet addresses, as shown in the [Course Creation Workflow](https://github.com/Andamio-Platform/andamio-cli/blob/main/README.md#course-creation-workflow). This needs CLI v1.2.0 or later. `course owner create` is deprecated, and its `--pending-tx-hash` flag is ignored.
 
-Two paths lead to the same decision. `course teacher review` accepts or refuses one submission in a single step — reach for it when you are reviewing by hand. `teacher assessment build` stops at the unsigned transaction so a person can see the decisions before approving them, which is what you want when a script or an agent proposed them. Pass `--decision` once per learner, or `--decisions-file <path>` for a cohort; signing and submitting stay separate steps (see [Transactions](#transactions)), and `andamio tx run` still does the whole lifecycle in one go.
+The assess transaction is the only way to record a teacher's decision. `teacher assessment build` builds it and stops at the unsigned transaction, so a person can see the decisions before approving them. Pass `--decision` once per learner, or `--decisions-file <path>` for a cohort. Then sign and submit it with `tx sign` and `tx submit` (see [Transactions](#transactions)), or run the whole lifecycle with `andamio tx run`. CLI v1.3.0 removed `course teacher review`, which recorded nothing on chain.
 
 `andamio teacher assignments list --course <id>` returns each pending submission as Markdown in `content.evidence_text`, alongside the raw Tiptap document in `content.evidence` — read the first for the prose, the second to verify an on-chain commitment hash.
 
