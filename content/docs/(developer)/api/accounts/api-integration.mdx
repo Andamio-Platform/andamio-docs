@@ -132,11 +132,12 @@ Used by merged data endpoints (`/v2/course/*/merged`, `/v2/project/*/merged`, mo
 | 404 | `NOT_FOUND` |
 | 409 | `CONFLICT` |
 | 422 | `UNPROCESSABLE_ENTITY` |
+| 429 | `TOO_MANY_REQUESTS` |
 | 500 | `INTERNAL_SERVER_ERROR` |
 | 502 | `BAD_GATEWAY` |
 | 503 | `SERVICE_UNAVAILABLE` |
 
-A `429` from a rate limit or quota does not use this envelope. See [Quota Headers](#quota-headers).
+A `429` from your tier's rate limits or request quota does not use this envelope. See [Quota Headers](#quota-headers).
 
 See [Error Handling](/docs/api/core/error-handling) for recovery patterns.
 
