@@ -21,7 +21,7 @@ Andamio Issuer is one REST API under one namespace, `/issuer/v1`.
 | Preprod | `https://preprod.api.andamio.io/issuer/v1` |
 | Mainnet | `https://api.andamio.io/issuer/v1` |
 
-Your key decides the network. Send your Andamio Issuer API key in the `X-API-Key` header on every request. It is the only credential the routes take, with no end-user token. A developer key gets `403`.
+Your key decides the network. Send your Andamio Issuer API key in the `X-API-Key` header on every request. It is the only key the routes take, with no end-user token. A developer key gets `403`.
 
 Check the key before anything else with `GET /config`:
 
@@ -145,7 +145,7 @@ Poll `GET /accounts/acme-learner/credentials` until the credential is listed wit
 
 ## Go live with social login
 
-In production, most people sign with a social login instead of a browser wallet. Social login uses the `project_id` from `GET /config`, and it works only on a site address Andamio has allowlisted. Register your address early, as [Before you start](/docs/issuer/before-you-start) describes.
+In production, most people sign with a social login instead of a browser wallet. Social login uses the `project_id` from `GET /config`, and it works only on a sign-in domain Andamio has allowlisted. Register your domain early, as [Before you start](/docs/issuer/before-you-start) describes.
 
 ## Reads
 
@@ -161,7 +161,7 @@ Errors return an `error` object with a `code` and a `message`. The `code` is sta
 |---|---|
 | `400 MISSING_VKEY_WITNESS` | The transaction sent to `/submit` carries no signature. Sign it with the acting wallet |
 | `402 QUOTA_EXHAUSTED` | Your plan has no allocation left for this action |
-| `402 ACCOUNT_DISABLED` | Your enterprise account is disabled |
+| `402 ACCOUNT_DISABLED` | Your Andamio Issuer account is disabled |
 | `403 COURSE_NOT_AUTHORIZED` | Your key does not hold this course |
 | `404` on `/submit` | No pending build matches this transaction |
 | `409` on `/submit` | This transaction was already submitted |

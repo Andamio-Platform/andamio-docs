@@ -8,7 +8,7 @@ Andamio lets groups of people issue, earn and verify proof of real learning, wor
 ## Products
 
 ### Andamio Issuer
-For an organization that wants to issue credentials from a program it already runs. A developer integrates it with an enterprise key, under `/issuer/v1`. Andamio sponsors every transaction, so the people in the program never hold ADA or pay a fee. See [Andamio Issuer](/docs/issuer).
+For an organization that wants to issue credentials from a program it already runs. A developer integrates it with an Andamio Issuer API key, under `/issuer/v1`. Andamio sponsors every transaction, so the people in the program never hold ADA or pay a fee. See [Andamio Issuer](/docs/issuer).
 
 ### Andamio API
 For a developer building an app where people earn and use credentials. The API lives under `/api/v2` and takes a developer key. It serves courses, projects, commitments and credentials, and it builds the transactions that change them. See [Andamio API](/docs/api).
@@ -131,7 +131,7 @@ Transaction that records a credential once someone meets every requirement in a 
 ## Technical Architecture
 
 ### Transaction Sponsorship (Tx Sponsorship)
-Feature allowing organizations to pay blockchain transaction fees on behalf of users, removing Web3 adoption barriers. Available to enterprise API keys — see [Sponsored Transactions](/docs/api/core/sponsored-transactions).
+Paying a transaction's fees on behalf of the people who sign it, so they never hold ADA. Andamio Issuer sponsors every transaction. On the Andamio API, your own sponsor wallet pays. See [Sponsored Transactions](/docs/api/core/sponsored-transactions).
 
 ### Service Fees
 Protocol fees charged for certain operations, creating sustainable revenue for Andamio Inc.
