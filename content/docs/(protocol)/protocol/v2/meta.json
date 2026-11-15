@@ -2,10 +2,8 @@
     "title": "Protocol V2",
     "pages": [
         "index",
-        "validators",
         "sequences",
-        "cost-estimation",
-        "whats-new"
+        "cost-estimation"
     ],
     "defaultOpen": false
 }

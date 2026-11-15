@@ -73,7 +73,6 @@ Group folders like `(developer)` do not appear in URLs, so `(developer)/api/inde
 
 - Protocol documentation in `content/docs/(protocol)/protocol/`
 - Transaction documentation in `content/docs/(protocol)/protocol/v2/transactions/`
-- Validator documentation in `content/docs/(protocol)/protocol/v2/validators/`
 - Token documentation in `content/docs/(protocol)/protocol/v2/tokens/`
 - The Andamio papers live on the landing (`www.andamio.io/whitepaper`), not in docs. The old docs stubs (`light-paper`, `api/building-on-andamio`) were removed and permanently redirect to the landing (see `next.config.mjs`). The `issuer` paper is now the `content/docs/issuer/` Product section. The glossary (`content/docs/glossary.mdx`) is kept as a docs-native term reference (not the paper).
 
@@ -91,7 +90,7 @@ Components available in every MDX page are registered in `mdx-components.tsx`:
 
 - **Other components**: `FlywheelDiagram`, `LinearDiagram`, `ThemedImage`, `GuideHeader`, `TreasuryVerifier`, `BadgeAnatomyExplorer`, `StartCards` and `ExploreLinks` (the /docs home), `CredentialLoop`, `OnboardCard`, `RoleCards` and `ActionCards` (Issuer Roles and actions)
 
-Pages can also import a component directly (e.g. `ValidatorsReference` in `protocol/v2/validators.mdx`). Knip scans MDX imports, so a component used only that way still counts as used.
+Pages can also import a component directly. Knip scans MDX imports, so a component used only that way still counts as used.
 
 ### MDX Gotchas
 
@@ -123,7 +122,6 @@ Documentation follows standardized URL patterns for predictable linking:
 ### URL Patterns
 - **Transactions**: `/docs/protocol/v2/transactions/<scope>/<role>/<transaction-name>`
 - **Tokens**: `/docs/protocol/v2/tokens/<system>/<token-name>`
-- **Validators**: `/docs/protocol/v2/validators/<system>/<validator-name>`
 
 ### File Organization
 

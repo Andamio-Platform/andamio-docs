@@ -94,7 +94,7 @@ Assessment activity within a Course Module. Students submit evidence of completi
 ## Project System
 
 ### Project
-Local State type with multiple on-chain validators (treasury, escrow). Coordinates work, manages funds, and tracks contributions through multi-validator architecture.
+Local State type with multiple on-chain validators (treasury, contributor state). Coordinates work, manages funds, and tracks contributions through multi-validator architecture.
 
 ### Project Owner
 Instance-specific role for Access Token Holders in Project Local States. The Project Owner is assigned at instance creation. Adds and removes Project Managers and manages the contributor blacklist. Can also commit to tasks as a contributor.
@@ -106,13 +106,10 @@ An Access Token Holder assigned to run a specific Project Local State instance. 
 A discrete unit of work within a Project, content-addressed by its blake2b-256 hash. Project Managers author tasks. Contributors commit to tasks and submit evidence of completion, and Project Managers assess the work. Tasks have associated rewards from the Project Treasury.
 
 ### Project Treasury
-On-chain validator holding project funds and tracking approved work. Locks funds into escrow validators when contributors commit to tasks, enabling transparent management and automated disbursements.
+On-chain validator holding project funds and the list of open tasks. When a contributor commits to a task, that task's reward moves from the treasury into the contributor's own contributor-state UTxO.
 
 ### Prerequisites (Prereqs)
-Role-specific requirements contributors must meet to participate in project activities. Each role has its own escrow validator for managing commitments and rewards.
-
-### Escrow Validator
-Smart contract locking tasks and rewards from Project Treasury when contributors commit to work. Each prerequisite set has its own escrow validator, ensuring payment upon completion.
+Course credentials a contributor must hold to commit to a project's tasks. A contributor's first commitment presents the credentials that satisfy them.
 
 ## Workflow
 
