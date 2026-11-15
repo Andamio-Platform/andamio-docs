@@ -201,7 +201,6 @@ Create a GitHub issue in the app repo for a problem found during guide writing.
 | Skill | Relationship |
 |-------|-------------|
 | `scribe-walkthrough` | Guides with Scribe recordings reference the same content. Check `scribeUrl` and `walkthrough-tracker.json` for recording status. |
-| `v2-docs-audit` | Complementary tracker — guides link to protocol docs as references |
 | `glossary-game` | Terminology questions during guide writing delegate to glossary-game |
 | `ux-readiness` (app repo) | Cross-repo partner. Writes UX assessment results to this tracker. Run `/ux-readiness assess <id>` from the app repo to update readiness scores. |
 

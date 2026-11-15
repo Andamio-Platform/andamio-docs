@@ -8,7 +8,6 @@
 # Scope (deliberately narrow):
 #   Includes — content/docs/(developer)/api/guides/**, state-machine/**, getting-started.mdx
 #   Excludes — protocol/v2/transactions/**, validators/**, tokens/**
-#              (owned by /v2-docs-audit and /transaction-audit skills)
 #              plus historical pages (whats-new.mdx, glossary.mdx, pioneers/**)
 #
 # Allowlist: lines listed in .drift-allowlist (one "file:pattern" per line, # comments OK)
@@ -127,7 +126,7 @@ Authoritative sources:
 - CLI (latest git tag):      ${CLI_TAG:-(unavailable)}
 
 Scope: developer guides + state-machine + getting-started + reference.
-Excluded: transactions/validators/tokens (owned by /v2-docs-audit, /transaction-audit), pioneers/, whats-new.mdx, glossary.mdx.
+Excluded: transactions/validators/tokens, pioneers/, whats-new.mdx, glossary.mdx.
 
 EOF
 

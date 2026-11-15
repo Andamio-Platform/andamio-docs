@@ -117,61 +117,10 @@ On-chain data reconstruction is a design goal of the Andamio protocol — applic
 
 ---
 
-### 4. V2 Transaction Parsing ✅ Complete
-
-All 8 course system transactions have been parsed from decoded CBORs.
-
-**Completed (8/8):**
-- `general/mint-access-token.yaml`
-- `course/admin/create.yaml`
-- `course/admin/teachers-update.yaml`
-- `course/teacher/modules-manage.yaml`
-- `course/teacher/assignments-assess.yaml`
-- `course/student/assignment/commit.yaml`
-- `course/student/assignment-update.yaml`
-- `course/student/credential-claim.yaml`
-
-**MDX Documentation Generated:**
-All transactions have corresponding MDX pages at `/docs/protocol/v2/sequences/`.
-
-**API Endpoints Created:**
-- `/api/transaction-v2?file=<path>` - Get transaction YAML data
-- `/api/costs/v2` - Get cost registry (supports `?tx=`, `?loop=`, `?summary=true`)
-
----
-
 ### 6. Action Items (from Session #1)
 
 - [ ] **API docs**: Add note that `wallet_data` object is optional when building transactions (alias is sufficient)
 - [ ] **GitHub**: Add remaining pioneers to the Andamio Pioneers 2026 team
-
----
-
-## Resources
-
-- **Transaction YAMLs:** `/public/yaml/transactions/v2/`
-- **Registries:** `address-registry.json`, `cost-registry.json`, `endpoint-registry.json`
-- **Example CBORs:** `/drafts/example-txs/v2/`
-- **Andamio API (preprod):** `https://preprod.api.andamio.io`
-
----
-
-### 5. V2 Documentation Generation System
-
-Building tooling to auto-generate MDX docs from V2 YAML files.
-
-**Key Findings:**
-- V1 system works well, must not be modified
-- V2 YAMLs have different schema (CBOR analysis vs diagram rendering)
-- Need new V2-specific: types, API route, MDX generator, coverage checker
-
-**Files Created:**
-- [x] `types/v2.ts` - V2 type definitions + `transformV2ToDiagramData()` helper
-- [x] `scripts/generate-v2-tx-docs.mjs` - MDX generator (run with `node scripts/generate-v2-tx-docs.mjs`)
-- [x] `app/api/transaction-v2/route.ts` - V2 API route
-
-**Files Remaining:**
-- [ ] `scripts/docs-coverage-check-v2.ts` - Coverage validation
 
 ---
 

@@ -19,7 +19,7 @@ Deliberately narrow — only the developer-facing surface this repo owns:
 
 | Included | Excluded |
 |---|---|
-| `content/docs/(developer)/api/guides/**` | `content/docs/(protocol)/protocol/v2/transactions/**` (owned by `/v2-docs-audit`, `/transaction-audit`) |
+| `content/docs/(developer)/api/guides/**` | `content/docs/(protocol)/protocol/v2/transactions/**` |
 | `content/docs/(protocol)/protocol/v2/state-machine/**` | `content/docs/(protocol)/protocol/v2/validators/**` |
 | `content/docs/(developer)/api/getting-started.mdx` | `content/docs/(protocol)/protocol/v2/tokens/**` |
 | `content/docs/(developer)/api/reference/**` | `content/docs/developer-community/pioneers/**` |

@@ -106,7 +106,7 @@ Drift checks must filter to the **developer-facing surface**: gateway routes + C
 The public docs site has two surfaces with different audit owners (session history):
 
 - **Developer guides** (`content/docs/guides/developers/`) — operational knowledge: source field, safe refetch, billing, sponsorship. Owned by the release-sync workflow this doc defines.
-- **Protocol/transaction docs** (`content/docs/protocol/v2/transactions/`, `…/validators/`, `…/tokens/`) — owned by the existing `/v2-docs-audit` and `/transaction-audit` skills, which sync against Atlas swagger.
+- **Protocol/transaction docs** (`content/docs/protocol/v2/transactions/`, `…/validators/`, `…/tokens/`) — owned at the time by two transaction-docs skills, which synced against Atlas swagger. Both have since been removed.
 
 A drift detector should route by file path, not by version string alone, so the right skill picks up each finding.
 
@@ -169,7 +169,5 @@ content/docs/protocol/v2/state-machine/index.mdx:261: v2.1.1-rc12               
 ## Related
 
 - [PR #16 — docs: sync developer docs with v2.3 platform state](https://github.com/Andamio-Platform/andamio-docs/pull/16) — the triggering audit.
-- `.claude/skills/transaction-audit/SKILL.md` — domain-specific instance of release-cycle drift (Atlas swagger → V2 transaction YAML); should cross-link as the V2-transactions-only instance of this practice.
-- `.claude/skills/v2-docs-audit/SKILL.md` — coverage tracking for V2 transaction MDX; same family, narrower scope.
 - `.claude/skills/guide-pipeline/SKILL.md` "Cross-Repo Sync" section — proves the cross-repo tracker pattern; scope is onboarding guides + UX readiness.
 - `$REPOS/andamio-dev-kit-internal/docs/releases/v2.3/RELEASE_REPORT.md` — the source-of-truth artifact a release-cycle hook would consume.

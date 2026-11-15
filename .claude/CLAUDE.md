@@ -12,10 +12,6 @@ Specialized tasks are organized into skills located in `.claude/skills/`. Each s
 
 | Skill | Description | Folder |
 |-------|-------------|--------|
-| **analyze-transaction** | Parse and document V2 transaction CBORs from Atlas API | `.claude/skills/analyze-transaction/` |
-| **transaction-audit** | Orchestrate V2 CBOR analysis, track progress against swagger | `.claude/skills/transaction-audit/` |
-| **v2-docs-audit** | Orchestrate V2 MDX documentation coverage and quality | `.claude/skills/v2-docs-audit/` |
-| **v2-docs-review** | Review individual V2 transaction MDX for completeness | `.claude/skills/v2-docs-review/` |
 | **glossary-game** | Collaborative terminology validation and refinement | `.claude/skills/glossary-game/` |
 | **scribe-walkthrough** | Convert Scribe markdown into polished MDX walkthrough pages | `.claude/skills/scribe-walkthrough/` |
 | **guide-pipeline** | Track guide writing progress, manage blockers, and publish pipeline | `.claude/skills/guide-pipeline/` |
@@ -100,18 +96,6 @@ Pages can also import a component directly (e.g. `ValidatorsReference` in `proto
 - Em dash characters (`—`) are fine in MDX content. The issue is always frontmatter or JSX syntax.
 - To debug MDX build failures: simplify file to minimal content, then add sections back incrementally.
 
-### MDX Frontmatter Schema
-MDX files support custom frontmatter fields defined in `content-collections.ts`:
-
-- **`tx_file`** (string, optional) - Path to transaction YAML file for automatic diagram rendering
-  - Example: `tx_file: "admin/add-course-creators.yaml"`
-
-- **`validator_system`** (string, optional) - Validator system identifier
-  - Example: `validator_system: "global-state"`
-
-- **`validator_id`** (string or array, optional) - Validator identifier(s)
-  - Example: `validator_id: "global-state"` or `validator_id: ["validator-1", "validator-2"]`
-
 ### TypeScript Configuration
 - **Path aliases**: Use `@/*` to import from project root (e.g., `import { Component } from "@/components/..."`)
 - **Content collections**: Auto-generated types available at `content-collections` import path
@@ -132,8 +116,6 @@ content/docs/(protocol)/protocol/v2/
 ├── transactions/          # Organized by scope/role
 ├── tokens/                # Organized by system
 └── validators/            # Organized by system with observers/ subdirectories
-
-public/yaml/transactions/v2/  # V2 YAML files
 ```
 
 ## Glossary and Terminology
@@ -143,25 +125,6 @@ For collaborative terminology validation and refinement, see the **glossary-game
 Key files:
 - `docs/reference/GLOSSARY.md` - Team-facing working glossary (can include private sections)
 - `content/docs/glossary.mdx` - Public-facing glossary (core concepts only)
-
-## V2 Protocol Documentation
-
-V2 protocol documentation is built by parsing decoded transaction CBORs from the Atlas API. For detailed analysis workflows, see the **analyze-transaction** skill in `.claude/skills/analyze-transaction/`.
-
-### Key Files
-
-**Registry Files** (source of truth):
-- `public/yaml/transactions/v2/SESSION-NOTES.md` - Full session context, validator mapping, swagger sync workflow
-- `public/yaml/transactions/v2/address-registry.json` - Validators, policies, observers
-- `public/yaml/transactions/v2/cost-registry.json` - Fee structures with loop costs
-- `public/yaml/transactions/v2/endpoint-registry.json` - API schemas (aligned with swagger)
-
-**Public Docs**:
-- `content/docs/(protocol)/protocol/v2/transactions/` - MDX documentation pages
-
-**API Endpoints**:
-- `/api/transaction-v2?file=<path>&format=v1` - Get transaction YAML data
-- `/api/costs/v2` - Get cost registry
 
 ## Andamio Pioneers Session Archival
 
