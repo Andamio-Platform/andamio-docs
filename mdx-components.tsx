@@ -1,5 +1,14 @@
 import defaultMdxComponents from "fumadocs-ui/mdx";
 import type { MDXComponents } from "mdx/types";
+import {
+  Code,
+  ExternalLink,
+  Globe,
+  Key,
+  Search,
+  Terminal,
+  Users,
+} from "lucide-react";
 import { Mermaid } from "@/components/mdx/mermaid";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Callout } from "fumadocs-ui/components/callout";
@@ -36,6 +45,15 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     RoleCards,
     BadgeAnatomyExplorer,
     TransactionStepper,
+    // Icons for MDX pages. Pages use them without importing: lucide-react 1
+    // cannot be imported from MDX, which renders with the server React.
+    Code,
+    ExternalLink,
+    Globe,
+    Key,
+    Search,
+    Terminal,
+    Users,
     ...components,
   };
 }
