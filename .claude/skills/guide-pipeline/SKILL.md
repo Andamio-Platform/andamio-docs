@@ -7,6 +7,8 @@ description: Track guide writing progress, manage blockers, and coordinate the p
 
 Manages the end-to-end lifecycle of Andamio documentation guides — from UX readiness assessment through drafting, review, and publication.
 
+**App repository.** UX issues that block or slow a guide are filed in the app repository. Below, `$APP_REPO` stands for it as `owner/name`, and `$APP_REPO_DIR` for its local checkout.
+
 ## Commands
 
 ### `/guide-pipeline` or `/guide-pipeline status`
@@ -50,7 +52,7 @@ Refresh blocker and friction issue states from GitHub.
 1. Read tracker
 2. For each guide with entries in `blockerIssues` or `frictionIssues`:
    ```bash
-   gh issue view <NUMBER> --repo Andamio-Platform/andamio-app-v2 --json state,title,labels
+   gh issue view <NUMBER> --repo "$APP_REPO" --json state,title,labels
    ```
 3. Update each issue's `state` field in the tracker (`OPEN` or `CLOSED`)
 4. Recalculate UX readiness scores:
@@ -158,7 +160,7 @@ Create a GitHub issue in the app repo for a problem found during guide writing.
 2. Create the issue:
    ```bash
    gh issue create \
-     --repo Andamio-Platform/andamio-app-v2 \
+     --repo "$APP_REPO" \
      --title "<TITLE>" \
      --body "<BODY>" \
      --label "documentation,ux-readiness"
@@ -186,7 +188,7 @@ Create a GitHub issue in the app repo for a problem found during guide writing.
 4. Add to tracker:
    - If `blocker`: add to `uxReadiness.blockerIssues[]`
    - If `friction`: add to `uxReadiness.frictionIssues[]`
-   - Entry shape: `{"repo": "Andamio-Platform/andamio-app-v2", "number": <N>, "title": "<TITLE>", "state": "OPEN"}`
+   - Entry shape: `{"repo": "<APP_REPO>", "number": <N>, "title": "<TITLE>", "state": "OPEN"}`
 5. Recalculate UX score:
    - If any blocker is `OPEN` → score becomes `blocked`
    - Else if any friction is `OPEN` → score becomes `friction`
@@ -206,7 +208,7 @@ Create a GitHub issue in the app repo for a problem found during guide writing.
 
 ## Cross-Repo Sync
 
-The `guide-tracker.json` in this directory is the shared source of truth. The `ux-readiness` skill in the app repo (`$REPOS/andamio-app-v2`) reads and writes to this file via absolute filesystem path.
+The `guide-tracker.json` in this directory is the shared source of truth. The `ux-readiness` skill in the app repo (`$APP_REPO_DIR`) reads and writes to this file via absolute filesystem path.
 
 - Changes from the app repo appear as unstaged modifications here — commit them during your next docs session
 - Issue states are always verified live via `gh issue view`
