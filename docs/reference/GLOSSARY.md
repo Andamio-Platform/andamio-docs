@@ -149,16 +149,13 @@ An Access Token Holder assigned to manage day-to-day operations within a specifi
 An Access Token Holder who participates in Project Local States. Contributors commit to specific tasks (code, facilitation, project management, etc.) defined by Project Owners and earn rewards upon completion. Contributors earn access to projects by completing Course prerequisites and earning the required Credentials.
 
 ### Project
-A complete Andamio entity consisting of multiple on-chain validators including a treasury validator and escrow validators. Projects coordinate work, manage funds, and track contributions through this multi-validator architecture.
+Local State type with multiple on-chain validators (treasury, contributor state). Coordinates work, manages funds, and tracks contributions through multi-validator architecture.
 
 ### Project Treasury
-On-chain treasury validator that holds funds for projects, maintaining lists of approved work. Funds are locked into escrow validators when contributors commit to specific tasks, enabling transparent financial management and automated disbursements based on milestones.
+On-chain validator holding project funds and the list of open tasks. When a contributor commits to a task, that task's reward moves from the treasury into the contributor's own contributor-state UTxO.
 
 ### Prerequisites (Prereqs)
-Role-specific requirements that contributors must meet to participate in certain project activities. Different prereqs can be defined for different roles (e.g., social media manager, meeting facilitator), with each set having its own escrow validator.
-
-### Escrow Validator
-Smart contract that locks specific tasks and their associated rewards from the Project Treasury when a contributor commits to work. Each set of prerequisites has its own escrow validator, ensuring contributors are paid for their committed work upon completion.
+Course credentials a contributor must hold to commit to a project's tasks. A contributor's first commitment presents the credentials that satisfy them.
 
 ## Technical Architecture
 

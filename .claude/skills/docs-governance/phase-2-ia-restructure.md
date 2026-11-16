@@ -147,8 +147,9 @@ new `developer-community/` location — reconcile, don't duplicate.)
 
 ## Out of scope (separate workstreams — do NOT do here)
 
-- **Protocol deep triage** — the contents of `protocol/v2/*` (state-machine, transactions, validators,
-  tokens) and the **Understand cluster** placement (`whats-new`, `cost-estimation`, `security-audit`).
+- **Protocol deep triage** — the contents of `protocol/v2/*` and the **Understand cluster** placement
+  (`cost-estimation`, `security-audit`). The `state-machine`, `transactions`, `validators` and `tokens`
+  trees and `whats-new` were removed in #155.
   This restructure stands up the `protocol/` root but does **not** triage its contents.
   (`security-audit` / contract-verification is integrator-facing → likely also surfaces under API, but
   that's decided in the triage, not here.)

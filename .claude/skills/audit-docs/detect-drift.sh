@@ -6,10 +6,8 @@
 #   - CLI tag       ← latest git tag in andamio-cli ($REPOS/andamio-cli)
 #
 # Scope (deliberately narrow):
-#   Includes — content/docs/(developer)/api/guides/**, state-machine/**, getting-started.mdx
-#   Excludes — protocol/v2/transactions/**, validators/**, tokens/**
-#              (owned by /v2-docs-audit and /transaction-audit skills)
-#              plus historical pages (whats-new.mdx, glossary.mdx, pioneers/**)
+#   Includes — content/docs/(developer)/api/guides/**, getting-started.mdx, reference/**
+#   Excludes — historical pages (glossary.mdx, pioneers/**)
 #
 # Allowlist: lines listed in .drift-allowlist (one "file:pattern" per line, # comments OK)
 # are skipped. Use for intentional historical version references.
@@ -56,12 +54,11 @@ GATEWAY_BASE="${GATEWAY_TAG#v}"  # 2.3.5
 
 INCLUDE_GLOBS=(
   "$DOCS_REPO/content/docs/(developer)/api/guides"
-  "$DOCS_REPO/content/docs/(protocol)/protocol/v2/state-machine"
   "$DOCS_REPO/content/docs/(developer)/api/getting-started.mdx"
   "$DOCS_REPO/content/docs/(developer)/api/reference"
 )
 
-EXCLUDE_REGEX='/(transactions|validators|tokens|pioneers)/|/(whats-new|glossary)\.mdx$'
+EXCLUDE_REGEX='/pioneers/|/glossary\.mdx$'
 
 # --- Allowlist ----------------------------------------------------------------
 
@@ -126,8 +123,8 @@ Authoritative sources:
 - Gateway (devkit VERSIONS): ${GATEWAY_TAG:-(unavailable)}
 - CLI (latest git tag):      ${CLI_TAG:-(unavailable)}
 
-Scope: developer guides + state-machine + getting-started + reference.
-Excluded: transactions/validators/tokens (owned by /v2-docs-audit, /transaction-audit), pioneers/, whats-new.mdx, glossary.mdx.
+Scope: developer guides + getting-started + reference.
+Excluded: pioneers/, glossary.mdx.
 
 EOF
 
