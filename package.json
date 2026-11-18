@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "prebuild": "npx tsx scripts/check-doc-headings.ts && npx tsx scripts/check-contract-manifest.ts && npx tsx scripts/check-treasury-reference.ts && npx tsx scripts/check-validators-manifest.ts && npx tsx scripts/check-orphan-routes.ts",
+    "prebuild": "npx tsx scripts/check-doc-headings.ts && npx tsx scripts/check-contract-manifest.ts && npx tsx scripts/check-treasury-reference.ts && npx tsx scripts/check-orphan-routes.ts",
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
@@ -15,9 +15,7 @@
     "docs-manifest": "npx tsx scripts/check-contract-manifest.ts",
     "docs-treasury": "npx tsx scripts/check-treasury-reference.ts",
     "docs-orphans": "npx tsx scripts/check-orphan-routes.ts",
-    "docs-drift": ".claude/skills/audit-docs/detect-drift.sh",
-    "docs-validators": "node scripts/generate-validators.mjs",
-    "docs-validators:check": "npx tsx scripts/check-validators-manifest.ts"
+    "docs-drift": ".claude/skills/audit-docs/detect-drift.sh"
   },
   "engines": {
     "node": "26.x"
@@ -33,7 +31,7 @@
     "fumadocs-core": "15.4.1",
     "fumadocs-ui": "15.4.1",
     "js-yaml": "^4.1.0",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^1.70.0",
     "mermaid": "^11.6.0",
     "next": "^15.5.28",
     "next-themes": "^0.4.6",

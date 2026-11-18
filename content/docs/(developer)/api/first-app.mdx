@@ -3,7 +3,7 @@ title: Your First Andamio App
 description: Learn Andamio by building — create a course and enroll your first student
 ---
 
-Create a course, add a module, enroll as a student, and submit an assignment — all on preprod.
+Create a course, add a module, and enroll as a student by committing to an assignment, all on preprod.
 
 **Time**: ~30 minutes. **Prerequisite**: [Getting Started](/docs/api/getting-started).
 
@@ -57,27 +57,28 @@ Add a simple module to your course. The module metadata lives off-chain, but the
 
 ---
 
-## Step 4: Enroll as a Student
+## Step 4: Commit to an Assignment
 
-Now switch perspectives. Using a different wallet (or the same one on a test course), enroll as a student.
+Now switch perspectives. Using a different wallet (or the same one on a test course), commit to the assignment in your module as a student. There is no separate enrollment step. Your first commitment enrolls you in the course.
 
 ### What happens on-chain
 
-Enrollment creates:
-- A **Student Token** linking you to the course
-- An **Enrollment UTxO** tracking your progress
+The commitment transaction:
+- Mints your **course-state token**, named after your Access Token alias
+- Creates a UTxO holding that token, a refundable deposit and your commitment
+- Records the course in your global state
 
-You now have an on-chain relationship with the course.
+You are now enrolled in the course.
 
 ---
 
-## Step 5: Submit an Assignment
+## Step 5: Get Assessed
 
-Complete the loop by submitting an assignment. This demonstrates the full Andamio workflow:
+Your commitment carries a hash of your evidence. The evidence itself stays off-chain.
 
-1. Student submits work (reference to off-chain content)
-2. Transaction records submission on-chain
-3. Course creator can now review and accept/reject
+1. You can replace your evidence with a second transaction
+2. A course teacher assesses the commitment and accepts or refuses it
+3. Once it is accepted, you can claim the credential
 
 ---
 
@@ -87,8 +88,8 @@ Complete the loop by submitting an assignment. This demonstrates the full Andami
 |--------|-----------------|
 | Create course | Course Token + Course State UTxO |
 | Add module | Module reference in course state |
-| Enroll student | Student Token + Enrollment UTxO |
-| Submit assignment | Assignment UTxO with submission reference |
+| Commit to assignment | Course-state token + a UTxO holding the commitment |
+| Update evidence | Same UTxO, new evidence hash |
 
 Every interaction follows the same build → sign → submit pattern. The Gateway handles transaction construction; your app handles UX.
 

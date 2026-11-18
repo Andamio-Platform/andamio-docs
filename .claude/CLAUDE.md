@@ -68,9 +68,6 @@ The sidebar has three roots, each a folder with `"root": true` in its `meta.json
 Group folders like `(developer)` do not appear in URLs, so `(developer)/api/index.mdx` serves `/docs/api`. Never put an `index.mdx` directly in a group folder (it would serve `/docs` and shadow the home page). A root folder must be listed in `content/docs/meta.json` or it vanishes from the sidebar. `npm run docs-orphans` catches both. Shared pages are reached from inside a root through links at the end of each root's `meta.json` (a bare `---` divider, then Home and Glossary).
 
 - Protocol documentation in `content/docs/(protocol)/protocol/`
-- Transaction documentation in `content/docs/(protocol)/protocol/v2/transactions/`
-- Validator documentation in `content/docs/(protocol)/protocol/v2/validators/`
-- Token documentation in `content/docs/(protocol)/protocol/v2/tokens/`
 - The Andamio papers live on the landing (`www.andamio.io/whitepaper`), not in docs. The old docs stubs (`light-paper`, `api/building-on-andamio`) were removed and permanently redirect to the landing (see `next.config.mjs`). The `issuer` paper is now the `content/docs/issuer/` Product section. The glossary (`content/docs/glossary.mdx`) is kept as a docs-native term reference (not the paper).
 
 ### Special Features
@@ -87,7 +84,7 @@ Components available in every MDX page are registered in `mdx-components.tsx`:
 
 - **Other components**: `FlywheelDiagram`, `LinearDiagram`, `ThemedImage`, `GuideHeader`, `TreasuryVerifier`, `BadgeAnatomyExplorer`, `StartCards` and `ExploreLinks` (the /docs home), `CredentialLoop`, `OnboardCard`, `RoleCards` and `ActionCards` (Issuer Roles and actions)
 
-Pages can also import a component directly (e.g. `ValidatorsReference` in `protocol/v2/validators.mdx`). Knip scans MDX imports, so a component used only that way still counts as used.
+Pages can also import a component directly. Knip scans MDX imports, so a component used only that way still counts as used.
 
 ### MDX Gotchas
 
@@ -99,24 +96,6 @@ Pages can also import a component directly (e.g. `ValidatorsReference` in `proto
 ### TypeScript Configuration
 - **Path aliases**: Use `@/*` to import from project root (e.g., `import { Component } from "@/components/..."`)
 - **Content collections**: Auto-generated types available at `content-collections` import path
-
-## Documentation Linking System
-
-Documentation follows standardized URL patterns for predictable linking:
-
-### URL Patterns
-- **Transactions**: `/docs/protocol/v2/transactions/<scope>/<role>/<transaction-name>`
-- **Tokens**: `/docs/protocol/v2/tokens/<system>/<token-name>`
-- **Validators**: `/docs/protocol/v2/validators/<system>/<validator-name>`
-
-### File Organization
-
-```
-content/docs/(protocol)/protocol/v2/
-├── transactions/          # Organized by scope/role
-├── tokens/                # Organized by system
-└── validators/            # Organized by system with observers/ subdirectories
-```
 
 ## Glossary and Terminology
 
