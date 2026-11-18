@@ -130,15 +130,16 @@ const config = {
       { source: '/docs/protocol/v1/:path*', destination: '/docs/protocol/v2', permanent: true },
       { source: '/docs/protocol/v1', destination: '/docs/protocol/v2', permanent: true },
 
-      // Protocol docs redesign — the transactions/, validators/(deep), tokens/,
-      // and state-machine/ trees were retired in favour of three surfaces:
-      // the intro (/docs/protocol/v2), the single Validators page, and the
-      // transaction-sequence steppers. Specific transaction pages point at the
-      // sequence stepper that now covers their workflow; the rest fall through
-      // to broader rules. Order matters (specific before the :path+ catch-alls).
+      // Protocol docs redesign: the transactions/, validators/, tokens/ and
+      // state-machine/ trees were retired in favor of two surfaces, the intro
+      // (/docs/protocol/v2) and the transaction-sequence steppers. Specific
+      // transaction pages point at the sequence stepper that now covers their
+      // workflow; the rest fall through to broader rules. Order matters
+      // (specific before the :path+ catch-alls).
       //
-      // NOTE: /docs/protocol/v2/validators (bare) is the NEW Validators page —
-      // only the deep validators/:path+ tree is redirected, never the bare path.
+      // The single Validators page and the "What's New in V2" page were removed
+      // later. Their URLs, and the token and validator stub trees that pointed
+      // at the Validators page, now land on the protocol intro.
 
       // Course transactions → course steppers
       { source: '/docs/protocol/v2/transactions/instance/owner/course/create', destination: '/docs/protocol/v2/sequences/course-author-operate', permanent: true },
@@ -164,12 +165,17 @@ const config = {
       { source: '/docs/protocol/v2/transactions/:path+', destination: '/docs/protocol/v2/sequences', permanent: true },
       { source: '/docs/protocol/v2/transactions', destination: '/docs/protocol/v2/sequences', permanent: true },
 
-      // Token stubs → the Validators page (tokens are now explained inline there)
-      { source: '/docs/protocol/v2/tokens/:path+', destination: '/docs/protocol/v2/validators', permanent: true },
-      { source: '/docs/protocol/v2/tokens', destination: '/docs/protocol/v2/validators', permanent: true },
+      // Token stubs → the protocol intro
+      { source: '/docs/protocol/v2/tokens/:path+', destination: '/docs/protocol/v2', permanent: true },
+      { source: '/docs/protocol/v2/tokens', destination: '/docs/protocol/v2', permanent: true },
 
-      // Validator stub tree (deep only — the bare path is the new Validators page)
-      { source: '/docs/protocol/v2/validators/:path+', destination: '/docs/protocol/v2/validators', permanent: true },
+      // Validator stub tree, then the removed Validators page itself (deep
+      // paths first, then the bare path) → the protocol intro
+      { source: '/docs/protocol/v2/validators/:path+', destination: '/docs/protocol/v2', permanent: true },
+      { source: '/docs/protocol/v2/validators', destination: '/docs/protocol/v2', permanent: true },
+
+      // "What's New in V2" was removed → the protocol intro
+      { source: '/docs/protocol/v2/whats-new', destination: '/docs/protocol/v2', permanent: true },
 
       // State-machine tree → the sequence stepper that re-composed each page's
       // content (specific first), with anything unmapped + the bare path falling

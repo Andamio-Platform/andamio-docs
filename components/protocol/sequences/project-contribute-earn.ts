@@ -38,7 +38,7 @@ export const projectContributeEarn: Sequence = {
       n: 2,
       actor: "Contributor",
       transaction: "Submit Task Work",
-      validatorAction: "escrow1: UserAction",
+      validatorAction: "contributor_state: ContributorAction",
       tokenDelta:
         "No mint or burn. The actual work happens off-chain; this transaction records the contributor's evidence of completion in the on-chain task state.",
       resultingState:
@@ -51,9 +51,9 @@ export const projectContributeEarn: Sequence = {
       n: 3,
       actor: "Manager",
       transaction: "Assess Tasks",
-      validatorAction: "escrow1: Accept + contributor_state: AddCompleted",
+      validatorAction: "contributor_state: ProjectAction",
       tokenDelta:
-        "No mint or burn — records an accept or reject decision per contributor against the task escrow (decisions can be batched).",
+        "No mint or burn — records an accept or reject decision on each contributor's contributor-state UTxO, which has held the task reward since commit (decisions can be batched).",
       resultingState:
         "Each submission is marked accepted or rejected on-chain; accepted contributors can claim their credential and reward.",
       buildEndpoint: "POST /api/v2/tx/project/manager/tasks/assess",

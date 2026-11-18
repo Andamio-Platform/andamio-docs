@@ -58,7 +58,7 @@ Runtime verification (the gate the static build can't provide):
 npx next start -p 3100 &
 curl -s -o /dev/null -w "%{http_code} %{redirect_url}\n" localhost:3100/docs/protocol/v2/transactions/course/student/assignment/commit
 # -> 308 .../sequences/course-learn-earn
-curl -s -o /dev/null -w "%{http_code}\n" localhost:3100/docs/protocol/v2/validators   # -> 200, NOT 308
+curl -s -o /dev/null -w "%{http_code}\n" localhost:3100/docs/protocol/v2/validators   # -> 200, NOT 308 (at the time; see below)
 # search re-indexed: new surfaces present, retired stubs gone
 curl -s "localhost:3100/api/search?query=transaction+sequence"
 ```
@@ -71,14 +71,15 @@ Redirect wildcard that protects a surviving page:
 // (no bare-path redirect for validators)
 ```
 
+Since #155 the Validators page itself is removed, so `next.config.mjs` now redirects both the deep tree and the bare `/docs/protocol/v2/validators` to `/docs/protocol/v2`. The `:path+` pattern above still applies whenever a bare page survives its retired subtree.
+
 Confirm content-collections actually ingested a new/edited page (frontmatter can be silently dropped):
 
 ```bash
-grep "'protocol/v2/validators'" .content-collections/generated/allDocs.js   # exactly one entry, the new page
+grep "'protocol/v2/validators'" .content-collections/generated/allDocs.js   # exactly one entry, the new page (at the time; since #155 there is none)
 ```
 
 ## Related
 
-- [Source-backed documentation with a prebuild drift guard](../design-patterns/source-backed-docs-with-drift-guard.md) — Surface 2 of the same redesign.
 - `docs/solutions/integration-issues/fumadocs-broken-directory-links.md` — directory URLs need an `index.mdx`; build page-count as the dropped-page safety net.
 - `docs/solutions/integration-issues/nextjs-fumadocs-pdf-static-asset-serving.md` — the "adding a doc section" checklist (frontmatter → meta.json → grep cross-refs → verify in dev).

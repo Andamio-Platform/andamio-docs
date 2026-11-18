@@ -51,9 +51,9 @@ export const projectAuthorOperate: Sequence = {
       transaction: "Manage Tasks",
       validatorAction: "treasury: Manage",
       tokenDelta:
-        "No new tokens minted — uses existing treasury tokens. Adds or removes task definitions; each active task's reward amount is held in task escrow.",
+        "No new tokens minted — uses existing treasury tokens. Adds or removes task definitions; each open task's reward stays in the treasury until a contributor commits to it.",
       resultingState:
-        "Tasks are live on-chain with rewards escrowed; contributors can commit to them. Removed tasks are cancelled.",
+        "Tasks are listed in the treasury with their rewards; contributors can commit to them. Removed tasks are cancelled.",
       buildEndpoint: "POST /api/v2/tx/project/manager/tasks/manage",
       link: LIFECYCLE_LINK,
     },

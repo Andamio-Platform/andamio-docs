@@ -1,7 +1,6 @@
 # Checks every PR (and main after merge) so a broken typecheck, lint or doc
 # check fails here, not as a failed deploy. Build runs the `prebuild` doc
-# checks (headings, contract manifest, treasury reference, validators
-# manifest, orphan routes).
+# checks (headings, contract manifest, treasury reference, orphan routes).
 name: CI
 
 on:
