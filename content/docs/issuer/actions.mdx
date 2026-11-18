@@ -54,7 +54,7 @@ Each card shows the action, the role that signs it, and that action's run throug
 
 A few details change how you build on these:
 
-- **Create a course can name the first teachers.** `POST /courses/create` takes a `teachers` list, which defaults to the course owner. Use the teachers route to change the list later.
+- **Create a course can name the first teachers.** `POST /courses/create` takes a required `teachers` list of one to 10 aliases. Include the owner's alias if the owner teaches. Use the teachers route to change the list later.
 - **Accept is accept-only and all or nothing.** If any learner in the batch was already assessed or has no submission, the whole batch fails and the error names every such learner. Each learner accepted uses one Credentials unit.
 - **Claiming ends enrollment.** A learner who claims a credential is unenrolled from the course.
 - **A teacher can remove a credential definition.** `POST /courses/{course_id}/credentials/remove` takes the hashes to remove, and a teacher signs it. It removes a definition from the course. It does not edit one.

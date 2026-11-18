@@ -34,12 +34,14 @@ A working key returns `200`:
 
 ```json
 {
-  "project_id": "<project id>",
-  "network_id": "preprod"
+  "data": {
+    "project_id": "<project id>",
+    "network_id": "preprod"
+  }
 }
 ```
 
-`network_id` is `preprod` or `mainnet`, and it should match the network you expect. `project_id` is the value [social login](#go-live-with-social-login) needs. A `401` means the key is missing or invalid.
+`network_id` is `preprod` or `mainnet`, and it should match the network you expect. `project_id` is the value [social login](#go-live-with-social-login) needs. A `401` means the key is missing or invalid. A `503` means Andamio could not check the key: try again in a minute.
 
 `GET /quota` shows what is left in your plan.
 
@@ -73,7 +75,7 @@ POST /courses/create
 { "alias": "acme-owner", "teachers": ["acme-teacher"] }
 ```
 
-The response carries the new `course_id`. Poll `GET /courses/{course_id}` until the course returns. The `teachers` list defaults to the course owner.
+The response carries the new `course_id`. Poll `GET /courses/{course_id}` until the course returns. `teachers` is required: one to 10 aliases. Include the owner's alias if the owner teaches.
 
 ### 2. Name the teachers
 
@@ -159,15 +161,13 @@ Errors return an `error` object with a `code` and a `message`. The `code` is sta
 
 | Code | Meaning |
 |---|---|
-| `400 MISSING_VKEY_WITNESS` | The transaction sent to `/submit` carries no signature. Sign it with the acting wallet |
+| `400 MISSING_SIGNATURE` | The transaction sent to `/submit` carries no signature. Sign it with the acting wallet |
 | `402 QUOTA_EXHAUSTED` | Your plan has no allocation left for this action |
 | `402 ACCOUNT_DISABLED` | Your Andamio Issuer account is disabled |
 | `403 COURSE_NOT_AUTHORIZED` | Your key does not hold this course |
-| `404` on `/submit` | No pending build matches this transaction |
-| `409` on `/submit` | This transaction was already submitted |
-| `410` on `/submit` | The build expired. Build it again |
-
-An error on a limit can name internal fields, such as `modules_to_add`, instead of the reference's `credentials_to_add`.
+| `404 BUILD_NOT_FOUND` on `/submit` | Andamio has no record of building this transaction. Build it again |
+| `409 ALREADY_SUBMITTED` on `/submit` | This transaction was already submitted |
+| `410 BUILD_EXPIRED` on `/submit` | The build expired. Build it again |
 
 ## How it relates to the Andamio API
 
