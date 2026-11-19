@@ -17,7 +17,7 @@ Work through it on preprod before you go live on mainnet. The [Issuer API refere
 
 Andamio Issuer is one REST API under one namespace, `/issuer/v1`.
 
-This page documents the Andamio Issuer API served by Andamio API 2.7.0. Nothing on `/issuer/v1` changes in a way that breaks an integration. A breaking change ships under a new path version, such as `/issuer/v2`. `GET /api/health` on either host returns the release it serves.
+This page documents the Andamio Issuer API served by Andamio API 2.7.0. `/issuer/v1` only gains routes, optional fields, enum values and error codes, so handle a value you do not recognize. Any other change ships under a new path version, such as `/issuer/v2`. `GET /api/health` on either host returns the release it serves.
 
 | Network | Base URL |
 |---|---|
