@@ -1,6 +1,7 @@
 ---
 title: API integration
 description: Connect your systems to Andamio Issuer, then run every action from access token to claimed credential
+verified_at: df90e269
 sources:
   - what-is-delivered/requirements/issuer/overview.md
   - what-is-delivered/requirements/issuer/api/account-reads.md
@@ -21,7 +22,7 @@ Andamio Issuer is one REST API under one namespace, `/issuer/v1`.
 | Preprod | `https://preprod.api.andamio.io/issuer/v1` |
 | Mainnet | `https://api.andamio.io/issuer/v1` |
 
-Your key decides the network. Send your Andamio Issuer API key in the `X-API-Key` header on every request. It is the only key the routes take, with no end-user token. A developer key gets `403`.
+Your key decides the network. Send your Andamio Issuer API key in the `X-API-Key` header on every request. It is the only key the routes take, with no end-user token. A developer key gets `403`. Send every write's body as JSON with `Content-Type: application/json`. Without that header the body is read as invalid JSON, and the request gets `400` with code `BAD_REQUEST`.
 
 Check the key before anything else with `GET /config`:
 
