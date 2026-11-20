@@ -2,11 +2,6 @@
 title: API integration
 description: Connect your systems to Andamio Issuer, then run every action from access token to claimed credential
 verified_at: df90e269
-sources:
-  - what-is-delivered/requirements/issuer/overview.md
-  - what-is-delivered/requirements/issuer/api/account-reads.md
-  - what-is-delivered/requirements/issuer/api/course-reads.md
-  - what-is-delivered/requirements/issuer/api/quota.md
 ---
 
 This page is for developers who integrate Andamio Issuer into your systems. It follows [Roles and actions](/docs/issuer/actions): read that first for the access token, the roles and the credential loop. Here, each action gets its request, who signs it and what to read when it is done.
@@ -84,9 +79,9 @@ const wallet = await BrowserWallet.enable(walletName);
 const signedTx = await wallet.signTx(unsignedTx, true);
 ```
 
-Raw CIP-30 `signTx` returns only a witness set. Add its signatures to the witnesses the transaction already carries, and keep those. Do not re-encode the transaction body: `POST /submit` finds your build by the hash of the body bytes, so a re-encoded body gets `404 BUILD_NOT_FOUND`. `@meshsdk/core-cst` does this for you:
+Raw CIP-30 `signTx` returns only a witness set. Add its signatures to the witnesses the transaction already carries, and keep those. Do not re-encode the transaction body: `POST /submit` finds your build by the hash of the body bytes, so a re-encoded body gets `404 BUILD_NOT_FOUND`. `@meshsdk/core-cst` does this for you (tested with `@meshsdk/core-cst` 1.9.1):
 
-```ts
+```js
 import { addVKeyWitnessSetToTransaction } from "@meshsdk/core-cst";
 
 const api = await window.cardano[walletName].enable();
@@ -171,7 +166,7 @@ POST /courses/{course_id}/credentials/evidence/approve
 { "alias": "acme-teacher", "approvals": ["acme-learner"] }
 ```
 
-Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit. A batch succeeds or fails whole. To find the learners that failed it, use `GET /accounts/{alias}/reviews?status=pending` with the teacher's alias.
+Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit. A batch succeeds or fails whole. To find the learners that failed it, compare the batch's `approvals` with `GET /accounts/{alias}/reviews?status=pending` for the teacher's alias: any alias not in that list caused the failure.
 
 ### 6. Claim the credential
 
@@ -320,6 +315,8 @@ These answer the six actions when they build, and `POST /accounts/create` too, a
 
 These answer `POST /submit`. Some of the same codes answer `POST /accounts/create` with a different next step: see [Accounts](#accounts).
 
+`/submit` can also answer the two `402` codes: [Every build](#every-build) says what they mean.
+
 | Code | Cause and what to do |
 |---|---|
 | `400 MISSING_SIGNATURE` | The transaction carries no signature. Sign it with the acting wallet |
@@ -337,7 +334,7 @@ These answer `POST /submit`. Some of the same codes answer `POST /accounts/creat
 | `422 PREREQUISITES_NOT_MET` | On submit, the learner has not earned the credentials this one requires. They earn those first |
 | `422 CREDENTIAL_ALREADY_EARNED` | On submit, the learner already earned this credential. Nothing more to do |
 | `422 EVIDENCE_UNCHANGED` | On submit or update, the learner already submitted this evidence, so nothing changed |
-| `422 NO_OPEN_SUBMISSION` | On update, the learner has no open submission: check `GET /accounts/{alias}/submissions` with the learner's alias. On accept, at least one learner in `approvals` has no open submission, so the whole batch failed: check `GET /accounts/{alias}/reviews?status=pending` with the teacher's alias |
+| `422 NO_OPEN_SUBMISSION` | On update, the learner has no open submission: check `GET /accounts/{alias}/submissions` with the learner's alias. On accept, at least one learner in `approvals` has no open submission, so the whole batch failed: compare `approvals` with `GET /accounts/{alias}/reviews?status=pending` for the teacher's alias, and any alias not in that list caused the failure |
 | `422 NOTHING_TO_CLAIM` | On claim, the learner is not enrolled in this course, or already claimed |
 
 ### Teachers

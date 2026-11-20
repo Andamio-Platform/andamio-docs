@@ -2,8 +2,13 @@
 # detect-drift.sh — surface stale version pins in andamio-docs public developer surface.
 #
 # Sources of truth:
-#   - GATEWAY_TAG   ← devkit VERSIONS  ($REPOS/andamio-dev-kit-internal/VERSIONS)
-#   - CLI tag       ← latest git tag in andamio-cli ($REPOS/andamio-cli)
+#   - GATEWAY_TAG   ← the dev-kit's version pins ($DEVKIT_REPO/VERSIONS)
+#   - CLI tag       ← latest git tag in an andamio-cli checkout ($CLI_REPO)
+#
+# DEVKIT_REPO and CLI_REPO are both optional. Without DEVKIT_REPO (or when its
+# VERSIONS is unreadable) the gateway-tag check is skipped; without CLI_REPO (or
+# when it is not a git checkout) the CLI check is skipped. Each skip prints a
+# warning to stderr and in the report.
 #
 # Scope (deliberately narrow):
 #   Includes — content/docs/(developer)/api/guides/**, getting-started.mdx, reference/**
@@ -17,7 +22,7 @@
 # Usage:
 #   ./detect-drift.sh             # informational checklist
 #   ./detect-drift.sh --strict    # non-zero exit on drift (for CI)
-#   DOCS_REPO=… DEVKIT_REPO=… CLI_REPO=… ./detect-drift.sh   # override paths
+#   DEVKIT_REPO=… CLI_REPO=… DOCS_REPO=… ./detect-drift.sh   # optional paths
 
 set -euo pipefail
 
@@ -25,8 +30,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOCS_REPO="${DOCS_REPO:-$(cd "$SCRIPT_DIR/../../.." && pwd)}"
-DEVKIT_REPO="${DEVKIT_REPO:-$HOME/projects/01-projects/andamio-dev-kit-internal}"
-CLI_REPO="${CLI_REPO:-$HOME/projects/01-projects/andamio-cli}"
+DEVKIT_REPO="${DEVKIT_REPO:-}"
+CLI_REPO="${CLI_REPO:-}"
 ALLOWLIST="$SCRIPT_DIR/.drift-allowlist"
 
 STRICT=0
@@ -35,13 +40,14 @@ STRICT=0
 # --- Authoritative versions ---------------------------------------------------
 
 resolve_gateway_tag() {
+  [[ -n "$DEVKIT_REPO" ]] || { echo ""; return; }
   local versions="$DEVKIT_REPO/VERSIONS"
   [[ -r "$versions" ]] || { echo ""; return; }
   grep '^GATEWAY_TAG=' "$versions" | cut -d= -f2 | tr -d '[:space:]'
 }
 
 resolve_cli_tag() {
-  [[ -d "$CLI_REPO/.git" ]] || { echo ""; return; }
+  [[ -n "$CLI_REPO" && -d "$CLI_REPO/.git" ]] || { echo ""; return; }
   git -C "$CLI_REPO" describe --tags --abbrev=0 2>/dev/null || echo ""
 }
 
@@ -88,8 +94,17 @@ scan() {
 declare -a FINDINGS=()
 WARNINGS=()
 
-[[ -z "$GATEWAY_TAG" ]] && WARNINGS+=("Could not read GATEWAY_TAG from $DEVKIT_REPO/VERSIONS — gateway drift check skipped.")
-[[ -z "$CLI_TAG"     ]] && WARNINGS+=("Could not read CLI tag from $CLI_REPO — CLI drift check skipped.")
+if [[ -z "$DEVKIT_REPO" ]]; then
+  WARNINGS+=("DEVKIT_REPO is not set (point it at a dev-kit checkout holding VERSIONS) — gateway drift check skipped.")
+elif [[ -z "$GATEWAY_TAG" ]]; then
+  WARNINGS+=("Could not read GATEWAY_TAG from $DEVKIT_REPO/VERSIONS — gateway drift check skipped.")
+fi
+if [[ -z "$CLI_REPO" ]]; then
+  WARNINGS+=("CLI_REPO is not set (point it at an andamio-cli git checkout) — CLI drift check skipped.")
+elif [[ -z "$CLI_TAG" ]]; then
+  WARNINGS+=("Could not read CLI tag from $CLI_REPO — CLI drift check skipped.")
+fi
+if ((${#WARNINGS[@]})); then for w in "${WARNINGS[@]}"; do echo "detect-drift.sh: warning: $w" >&2; done; fi
 
 # CLI VERSION= pins
 if [[ -n "$CLI_VER" ]]; then
@@ -137,7 +152,11 @@ fi
 if ((${#FINDINGS[@]} == 0)); then
   echo "## Findings"
   echo
-  echo "No drift detected. ✓"
+  if ((${#WARNINGS[@]} > 0)); then
+    echo "No drift detected in the checks that ran. Some checks were skipped: see the warnings above."
+  else
+    echo "No drift detected. ✓"
+  fi
   exit 0
 fi
 

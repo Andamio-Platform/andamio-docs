@@ -113,7 +113,7 @@ A component of Global State that tracks which Local State instances are authoriz
 Smart contracts that enforce the rules of the Andamio protocol. Includes both Global State Validators (protocol-wide rules) and Local State Validators (app-specific rules).
 
 ### App Roles
-Andamio defines six user roles across two domains. See the [Role Name Conventions](https://github.com/anthropics/andamio-ai-context/blob/main/01-about-andamio/Andamio%20Role%20Name%20Conventions.md) for the full naming standard.
+Andamio defines six user roles across two domains. The six role names are:
 
 **Course domain:** Course Owner, Course Teacher, Course Student
 **Project domain:** Project Owner, Project Manager, Project Contributor

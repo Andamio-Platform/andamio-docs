@@ -28,7 +28,7 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 - `npm run dev` - Start development server with Turbo (http://localhost:3000)
 - `npm run build` - Build the application for production
 - `npm run start` - Start production server
-- `npm run docs-drift` - Detect stale version pins in developer guides vs devkit/CLI source-of-truth tags (see `.claude/skills/audit-docs/`)
+- `npm run docs-drift` - Detect stale version pins in developer guides against the current gateway and CLI tags. Set the optional `DEVKIT_REPO` and `CLI_REPO` env vars to enable each check; without them it warns and skips (see `.claude/skills/audit-docs/`)
 
 ## External API Documentation
 
@@ -208,10 +208,6 @@ Claude Code now has access to the Andamio Notion workspace via MCP. This enables
 - Syncing documentation progress with Product and Ecosystem circles
 - Sharing pipeline status with non-technical team members
 
-**Key Notion locations:**
-- [Dev Sprint Board](https://www.notion.so/andamio/06d10f28dd394f2bbcd5a4a5be19c07d) — task tracking
-- [Projects](https://www.notion.so/andamio/65e009324ad34d13ad345a483d9edcb5) — parent page with Epics, Sprints, OKRs
-
 **To soft-start:**
 1. When a guide moves through the pipeline (draft → review → published), consider noting it in Notion
 2. Link documentation work to the relevant Epic
@@ -232,8 +228,6 @@ The `/guide-pipeline` skill in this repo coordinates with the app repo's `/ux-re
 4. Issues in app repo tagged `documentation,ux-readiness` track blockers
 
 **Current status:** 1 published (Getting Started), 1 in draft, 8 not started, 9 not yet assessed.
-
-See [Notion: Onboarding Documentation Pipeline](https://www.notion.so/30244d820e1d81468748ee7e6e0511e1) for team-facing overview.
 
 ## Public Repo: No Customer Names
 
