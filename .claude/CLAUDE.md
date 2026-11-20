@@ -12,7 +12,6 @@ Specialized tasks are organized into skills located in `.claude/skills/`. Each s
 
 | Skill | Description | Folder |
 |-------|-------------|--------|
-| **glossary-game** | Collaborative terminology validation and refinement | `.claude/skills/glossary-game/` |
 | **scribe-walkthrough** | Convert Scribe markdown into polished MDX walkthrough pages | `.claude/skills/scribe-walkthrough/` |
 | **guide-pipeline** | Track guide writing progress, manage blockers, and publish pipeline | `.claude/skills/guide-pipeline/` |
 | **docs-governance** | Position complementary tools/support repos (CLI, SDK, templates, bots, dev repos) so they aid sales/contributions without competing with the products; holds the Phase 2 IA restructure plan | `.claude/skills/docs-governance/` |
@@ -97,13 +96,9 @@ Pages can also import a component directly. Knip scans MDX imports, so a compone
 - **Path aliases**: Use `@/*` to import from project root (e.g., `import { Component } from "@/components/..."`)
 - **Content collections**: Auto-generated types available at `content-collections` import path
 
-## Glossary and Terminology
+## Glossary
 
-For collaborative terminology validation and refinement, see the **glossary-game** skill in `.claude/skills/glossary-game/`.
-
-Key files:
-- `docs/reference/GLOSSARY.md` - Team-facing working glossary (can include private sections)
-- `content/docs/glossary.mdx` - Public-facing glossary (core concepts only)
+`content/docs/glossary.mdx` is the public glossary (core concepts only).
 
 ## Andamio Pioneers Session Archival
 
@@ -228,4 +223,3 @@ The only exception is a customer James has confirmed may be named publicly. An i
 - ALWAYS prefer editing an existing file to creating a new one
 - NEVER proactively create documentation files (*.md) or README files unless explicitly requested
 - When a task matches a skill's domain, read the skill's `SKILL.md` first for specialized instructions
-- Glossary Game and Concept Game mean the same thing - see `.claude/skills/glossary-game/` for details
