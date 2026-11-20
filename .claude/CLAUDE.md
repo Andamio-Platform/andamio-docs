@@ -201,20 +201,6 @@ Add new session to `content/docs/developer-community/pioneers/live-coding/archiv
 - Questions like "how should AI contributions be tracked?" are feature content, not noise
 - The "source of truth" discussion is protocol design, not just UX
 
-## Notion Integration (Soft Launch)
-
-Claude Code now has access to the Andamio Notion workspace via MCP. This enables:
-- Reading/writing to the Dev Sprint Board and Epics
-- Syncing documentation progress with Product and Ecosystem circles
-- Sharing pipeline status with non-technical team members
-
-**To soft-start:**
-1. When a guide moves through the pipeline (draft → review → published), consider noting it in Notion
-2. Link documentation work to the relevant Epic
-3. Share pipeline dashboards with Product/Ecosystem circles as needed
-
-**Coming soon (post-launch):** Automatic sync between guide-tracker.json status and Notion.
-
 ## Cross-Repo: Onboarding Guide Pipeline
 
 The `/guide-pipeline` skill in this repo coordinates with the app repo's `/ux-readiness` skill.

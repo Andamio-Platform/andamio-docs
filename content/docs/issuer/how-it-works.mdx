@@ -32,7 +32,7 @@ Every credential belongs to a course, which groups the credentials one program i
 
 ## Rules for defining a credential
 
-Plan for these rules before you define anything. The API refuses a request that breaks a rule marked *refused with `400`* before anything is built, with a message such as "Each item in `slts` must be at most 140 ASCII characters." Rules with no such mark are not checked when you create a credential, and only this page states them.
+Plan for these rules before you define anything. The API refuses a request that breaks a rule marked *refused with `400`* before anything is built, with a message such as "Each item in `slts` must be at most 140 ASCII characters." Rules with no such mark are not checked when you create a credential. Two of them, that nothing can be edited on mainnet and that a prerequisite works only within the same course, are stated only on this page.
 
 - **Each statement is at most 140 characters of plain ASCII.** Refused with `400`.
 - **Order matters.** The `credential_hash` is the hash of the list in order. A changed word, a new order, or the same text split differently makes a new credential.

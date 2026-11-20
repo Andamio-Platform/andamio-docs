@@ -7,16 +7,16 @@ problem_type: workflow_issue
 component: documentation
 severity: high
 applies_when:
-  - A new platform/API/CLI/devkit version ships and andamio-docs has no corresponding update PR
+  - A new platform/API/CLI version ships and andamio-docs has no corresponding update PR
   - A feature lands across multiple routes (e.g., enterprise sponsorship) without a docs entry
   - Version-pinned references (CLI install lines, API version notes, state-machine versions) appear in MDX
   - A prior "sync" commit lands without a recurring re-check scheduled
-  - CIP-30 / auth / JWT behavior changes ship in api or devkit PRs without a docs checklist
+  - CIP-30 / auth / JWT behavior changes ship in platform PRs without a docs checklist
 tags:
   - release-sync
   - docs-drift
   - andamio-docs
-  - devkit-v2.3
+  - platform-v2.3
   - version-pinning
   - release-gate
   - drift-detector
@@ -36,18 +36,18 @@ The v2.3 documentation audit (PR #16, branch `feat/docs-sync-v2.3`) surfaced sys
 
 Most tellingly, the prior remediation commit `51f5b93` ("sync with API v2.1.4, CLI v0.10.2") was already stale at the moment it merged — the sync was written against a moving target with no gate to anchor it. The root cause is structural: nothing ties a docs sync to the release cycle, so sync happens by ad-hoc audit, and the audit itself lags.
 
-This is not a one-off. Prior sessions confirm the pattern (session history):
+This is not a one-off. Earlier releases show the same pattern:
 
 - **April 6, 2026** — the `51f5b93` cycle ran a full `ce:plan`-driven remediation (16 requirements, 6 new pages, 5 updates) and explicitly acknowledged it was *remediation, not prevention*. No gate was put in place for the next cycle.
-- **May 8, 2026** — the Andamio API cut v2.3.1, opened a release-sync branch, tagged, deployed, and merged. The session ended with no corresponding check of `andamio-docs`. The release process has no docs-sync step.
-- **April 29, 2026** — an earlier session noted "CLAUDE.md polling-interval doc drift" and skipped it as natural cleanup for a later PR. Drift is normalized inside individual repos too.
+- **May 8, 2026** — the Andamio API cut v2.3.1: version references were synced, then it was tagged, deployed, and merged, with no corresponding check of `andamio-docs`. The release process has no docs-sync step.
+- **April 29, 2026** — a known polling-interval doc drift was noticed during a fix and deferred as natural cleanup for a later PR. Drift is normalized inside individual repos too.
 - **May 19, 2026** — the `andamio-cli` `apikey usage`/`profile` 401 incident: the gateway moved endpoints behind `developerJWTAuth` (v2.2→v2.3), the CLI didn't follow (PR #96). Same category — downstream surfaces don't automatically learn about behavioral changes.
 
 The April 6 plan worked for content but had no mechanism to signal when the next sync was needed. Version strings in MDX are passive drift indicators that don't self-report; they only surface when someone audits.
 
 ## Guidance
 
-Adopt a layered approach. No single layer is sufficient — each catches a different failure mode. **Implement layer 2 first** — the drift detector pays off immediately against the current `andamio-docs` state without needing devkit workflow changes.
+Adopt a layered approach. No single layer is sufficient — each catches a different failure mode. **Implement layer 2 first** — the drift detector pays off immediately against the current `andamio-docs` state without needing release-workflow changes.
 
 ### Layer 1 — Release-cycle hook (primary, once detector proves the signal)
 
@@ -57,14 +57,14 @@ Sketch (on the release side):
 
 ```bash
 # emit-docs-delta.sh
-REPORT=releases/v2.3/RELEASE_REPORT.md
+REPORT="$1"   # the release report
 awk '/^## (Developer-visible|User-requested endpoints|Security)/,/^## /' "$REPORT" \
   | grep -E '^- ' \
   | sed 's/^- /- [ ] Docs: /' \
-  > releases/v2.3/PUBLIC_DOCS_DELTA.md
+  > "$2"     # the docs delta checklist
 ```
 
-The docs PR is a tick-through of the checklist. Trade-off: requires release authors to keep `RELEASE_REPORT.md` section headers consistent — already an internal convention worth holding.
+The docs PR is a tick-through of the checklist. Trade-off: requires release authors to keep the release report's section headers consistent — already an internal convention worth holding.
 
 ### Layer 2 — Drift detector (automated, between releases — build this first)
 
@@ -95,7 +95,7 @@ Output is a checklist, **not** a hard CI fail. Hard-failing CI on every version 
 
 ### Layer 3 — Scheduled audit (fallback)
 
-A quarterly `/audit-docs` skill invocation that diffs the platform's internal plans, transaction-flow docs, and recent release reports against current MDX. Useful when Layer 1 is skipped under release pressure and Layer 2 is silenced by allowlist creep. Cheap insurance, not the primary mechanism.
+A quarterly `/audit-docs` skill invocation that diffs the platform's transaction-flow docs and recent release reports against current MDX. Useful when Layer 1 is skipped under release pressure and Layer 2 is silenced by allowlist creep. Cheap insurance, not the primary mechanism.
 
 ### Scope constraint (all three layers)
 
@@ -103,7 +103,7 @@ Drift checks must filter to the **developer-facing surface**: gateway routes + C
 
 ### Two-surface routing
 
-The public docs site has two surfaces with different audit owners (session history):
+The public docs site has two surfaces with different audit owners:
 
 - **Developer guides** (`content/docs/guides/developers/`) — operational knowledge: source field, safe refetch, billing, sponsorship. Owned by the release-sync workflow this doc defines.
 - **Protocol/transaction docs** (`content/docs/protocol/v2/transactions/`, `…/validators/`, `…/tokens/`) — owned at the time by two transaction-docs skills, which synced against Atlas swagger. Both have since been removed.
@@ -112,7 +112,7 @@ A drift detector should route by file path, not by version string alone, so the 
 
 ### Don't mirror the schema layer
 
-The live API reference is served via Scalar from the API's reference page against the generated `openapi/swagger.json` at `https://preprod.api.andamio.io/reference` (session history). Public docs should document concepts, flows, and developer patterns — not mirror request/response schemas, which the live reference always serves current. The drift detector should ignore schema-layer drift; only flag conceptual, version-pinned, or flow-level drift.
+The live API reference is served via Scalar from the API's reference page against the generated `openapi/swagger.json` at `https://preprod.api.andamio.io/reference`. Public docs should document concepts, flows, and developer patterns — not mirror request/response schemas, which the live reference always serves current. The drift detector should ignore schema-layer drift; only flag conceptual, version-pinned, or flow-level drift.
 
 ### Kill-switched features
 
@@ -137,9 +137,9 @@ Each release without a gate compounds drift (linearly in shipped features, super
 
 ## Examples
 
-**Before (v2.3 audit, PR #16):** ad-hoc workflow. Started from a manual read of the platform's internal plans, notes, and release report. Produced an audit document, then ~9 file edits across `content/docs/`. Several changes (e.g., exact CIP-30 endpoint paths) were unverifiable from docs alone because a deploy-gated kill switch made the public surface ambiguous at audit time — the audit had to make judgment calls without a feedback loop back to the release author. Total cost: a full session of human attention, and the result was a point-in-time snapshot that started drifting again immediately.
+**Before (v2.3 audit, PR #16):** ad-hoc workflow. Started from a manual read of the platform's release notes. Produced an audit document, then ~9 file edits across `content/docs/`. Several changes (e.g., exact CIP-30 endpoint paths) were unverifiable from docs alone because a deploy-gated kill switch made the public surface ambiguous at audit time — the audit had to make judgment calls without a feedback loop back to the release author. Total cost: a long stretch of human attention, and the result was a point-in-time snapshot that started drifting again immediately.
 
-**After (proposed):** the release author finalizes the v2.3 release report. A hook (or a manual `emit-docs-delta.sh` run) emits a `PUBLIC_DOCS_DELTA.md` checklist next to it:
+**After (proposed):** the release author finalizes the v2.3 release report. A hook (or a manual `emit-docs-delta.sh` run) emits a public docs delta checklist next to it:
 
 ```markdown
 # Public docs delta — v2.3

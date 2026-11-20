@@ -52,7 +52,7 @@ Each card shows the action, the role that signs it, and that action's run throug
 A few details change how you build on these:
 
 - **Create a course names the first teachers.** [Create a course](/docs/issuer/integrate#1-create-a-course) has the rules for its `teachers` list. [Name the teachers](/docs/issuer/integrate#2-name-the-teachers) changes the list later.
-- **Accept is accept-only and all or nothing.** If any learner in the batch was already assessed or has no submission, the whole batch fails. The error does not name those learners: compare the batch's `approvals` with `GET /accounts/{alias}/reviews?status=pending` for the Teacher's alias. Any alias missing from that list caused the failure. Each learner accepted counts against your plan's Credentials limit.
+- **Accept is accept-only and all or nothing.** If any learner in the batch was already assessed or has no submission, the whole batch fails. The error does not name those learners: list `GET /accounts/{alias}/reviews?status=pending&course_id={course_id}&limit=100` with the teacher's alias and read every page. Any alias in `approvals` missing from that list caused the failure. Each learner accepted counts against your plan's Credentials limit.
 - **Claiming ends enrollment.** A learner who claims a credential is unenrolled from the course.
 - **A teacher can remove a credential definition, but not edit one.** [Define a credential](/docs/issuer/integrate#3-define-a-credential) has the request.
 

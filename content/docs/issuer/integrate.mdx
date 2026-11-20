@@ -166,7 +166,7 @@ POST /courses/{course_id}/credentials/evidence/approve
 { "alias": "acme-teacher", "approvals": ["acme-learner"] }
 ```
 
-Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit. A batch succeeds or fails whole. To find the learners that failed it, compare the batch's `approvals` with `GET /accounts/{alias}/reviews?status=pending` for the teacher's alias: any alias not in that list caused the failure.
+Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit. A batch succeeds or fails whole. To find the learners that failed it, list `GET /accounts/{alias}/reviews?status=pending&course_id={course_id}&limit=100` with the teacher's alias and read every page: any alias in `approvals` missing from that list caused the failure.
 
 ### 6. Claim the credential
 
@@ -185,7 +185,7 @@ In production, most people sign with a social login instead of a browser wallet.
 
 ## Reads
 
-Reads cover courses, credentials, teachers, learners, and per-account views of credentials, submissions, reviews and activity. Results are always limited to the courses your key holds.
+Reads cover courses, credentials, teachers, learners, and per-account views of credentials, submissions, reviews and activity. Results are always limited to the courses your key holds, except the two identity reads: `/accounts/{alias}/availability` checks an alias across the whole platform, and `/addresses/{address}/accounts` lists the aliases held at an address.
 
 These are every read. **Paged** lists take `page` and `limit`. The one **cursor** feed takes `cursor` and `limit`. [Paging](#paging) shows both.
 
@@ -276,14 +276,14 @@ For example, `POST /submit` with a transaction nobody signed answers `400`:
 }
 ```
 
-The tables below are a selection: the codes you are most likely to meet while you run the six actions. The API answers other codes too, and `/issuer/v1` can gain new ones, so your program must handle a code it does not recognize. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) lists every code each route can answer.
+The tables below are a selection: the codes you are most likely to meet while you run the six actions. The API answers other codes too, and `/issuer/v1` can gain new ones, so your program must handle a code it does not recognize. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) lists the codes each route defines.
 
 ### Any route
 
 | Code | Cause and what to do |
 |---|---|
 | `400 BAD_REQUEST` | The request is malformed, or breaks a rule the API checks before it builds, such as the length of a list. Fix the request as the message says |
-| `401 UNAUTHORIZED` | The API key is missing, or not valid on this host. Check the key and the network |
+| `401 UNAUTHORIZED` | The API key is missing, or not valid on this host, or the request also sends an `Authorization` header. Check the key and the network, and send only `X-API-Key` |
 | `403 FORBIDDEN` | The key is not an Andamio Issuer API key. Use your Andamio Issuer API key |
 | `422 UNPROCESSABLE_ENTITY` | The request breaks a rule that has no code of its own. The message names the rule, such as the limit of 30 Teachers on a course, or a value in `allowed_student_state_ids` that is not in the course. Fix the request as the message says |
 | `500 INTERNAL_SERVER_ERROR` | An unexpected fault at Andamio. Contact [Support](/docs/issuer/support) with the `X-Request-Id` header from the response |
@@ -292,12 +292,12 @@ The tables below are a selection: the codes you are most likely to meet while yo
 
 ### Courses
 
-Today, a course outside your account answers `404 COURSE_NOT_FOUND` on a read and `403 COURSE_NOT_AUTHORIZED` on a write.
+Today, a course outside your account answers `404 COURSE_NOT_FOUND` on a read and `403 COURSE_NOT_AUTHORIZED` on a write. A course of your own that is not indexed yet answers `404 COURSE_NOT_FOUND` on both.
 
 | Code | Cause and what to do |
 |---|---|
 | `403 COURSE_NOT_AUTHORIZED` | A write on a course outside your account. Use a course your account owns |
-| `404 COURSE_NOT_FOUND` | A read of a course outside your account, or a course that is not indexed yet. A course you just created answers this until it is indexed, usually about a minute, so keep trying |
+| `404 COURSE_NOT_FOUND` | A read of a course outside your account, or a read or write of a course that is not indexed yet. A course you just created answers this until it is indexed, usually about a minute, so keep trying |
 
 ### Every build
 
@@ -334,7 +334,7 @@ These answer `POST /submit`. Some of the same codes answer `POST /accounts/creat
 | `422 PREREQUISITES_NOT_MET` | On submit, the learner has not earned the credentials this one requires. They earn those first |
 | `422 CREDENTIAL_ALREADY_EARNED` | On submit, the learner already earned this credential. Nothing more to do |
 | `422 EVIDENCE_UNCHANGED` | On submit or update, the learner already submitted this evidence, so nothing changed |
-| `422 NO_OPEN_SUBMISSION` | On update, the learner has no open submission: check `GET /accounts/{alias}/submissions` with the learner's alias. On accept, at least one learner in `approvals` has no open submission, so the whole batch failed: compare `approvals` with `GET /accounts/{alias}/reviews?status=pending` for the teacher's alias, and any alias not in that list caused the failure |
+| `422 NO_OPEN_SUBMISSION` | On update, the learner has no open submission: check `GET /accounts/{alias}/submissions` with the learner's alias. On accept, at least one learner in `approvals` has no open submission, or has a submission that is not indexed yet, so the whole batch failed: list `GET /accounts/{alias}/reviews?status=pending&course_id={course_id}&limit=100` with the teacher's alias and read every page. Any alias in `approvals` missing from that list caused the failure |
 | `422 NOTHING_TO_CLAIM` | On claim, the learner is not enrolled in this course, or already claimed |
 
 ### Teachers
