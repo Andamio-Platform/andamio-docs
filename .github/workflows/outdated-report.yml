@@ -4,7 +4,7 @@
 # Dependabot opens PRs for security updates only (dependabot.yml sets the
 # version-update PR limit to 0). Every other available npm and GitHub Actions
 # update is listed in one issue, edited in place each Monday (or opened fresh
-# when none is open). The devkit's /dependency-triage closes it with one batch
+# when none is open). A weekly triage closes it with one batch
 # PR per week instead of a stream of PRs.
 # =============================================================================
 name: Weekly dependency report

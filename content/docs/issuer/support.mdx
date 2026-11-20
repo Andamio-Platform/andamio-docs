@@ -1,8 +1,6 @@
 ---
 title: Support
 description: Where an Andamio Issuer customer asks a question
-sources:
-  - what-we-sell/definition/issuer/andamio-issuer-product.md
 ---
 
 Email [support@andamio.io](mailto:support@andamio.io). Andamio replies within one business day.
@@ -13,6 +11,9 @@ To get an answer faster, include:
 - The network, preprod or mainnet
 - The route you called and when
 - The error `code` and `message` from the response, if there was one
+- The `X-Request-Id` header from the response
+
+Every `500`, and a `502 BAD_GATEWAY` that keeps failing, asks you to contact Andamio with its `X-Request-Id`.
 
 Never send your API key.
 

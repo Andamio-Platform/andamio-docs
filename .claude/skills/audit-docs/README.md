@@ -7,8 +7,8 @@ Drift detector for the public developer-facing surface of `andamio-docs`.
 A small Bash script that surfaces stale version pins in MDX by comparing them
 against authoritative sources:
 
-- **Gateway tag** ← `devkit/VERSIONS` (`GATEWAY_TAG`)
-- **CLI tag**     ← latest git tag in `andamio-cli`
+- **Gateway tag** ← the dev-kit's version pins (`GATEWAY_TAG` in its `VERSIONS` file)
+- **CLI tag**     ← latest git tag in an `andamio-cli` checkout
 
 Output is a Markdown checklist. The script is informational by default; pass
 `--strict` to make it exit non-zero on drift (e.g., for CI).
@@ -23,8 +23,8 @@ Deliberately narrow — only the developer-facing surface this repo owns:
 | `content/docs/(developer)/api/getting-started.mdx` | `glossary.mdx` |
 | `content/docs/(developer)/api/reference/**` | |
 
-Internal services (`db-api`, `atlas`, `andamioscan`, `sidecar`) are intentionally
-out of scope — only `GATEWAY_TAG` and CLI tags are consulted.
+Internal services' version pins are intentionally out of scope — only
+`GATEWAY_TAG` and CLI tags are consulted.
 
 ## Usage
 
@@ -33,7 +33,15 @@ out of scope — only `GATEWAY_TAG` and CLI tags are consulted.
 .claude/skills/audit-docs/detect-drift.sh --strict  # CI mode
 ```
 
-Override repo paths via env vars when not running from defaults:
+Both source paths are optional env vars:
+
+- `DEVKIT_REPO` — a dev-kit checkout holding `VERSIONS`. Unset or unreadable:
+  the gateway-tag check is skipped.
+- `CLI_REPO` — an `andamio-cli` git checkout. Unset or not a git checkout: the
+  CLI check is skipped.
+
+Each skipped check prints a warning (to stderr and in the report); the exit
+code stays 0 unless `--strict` finds drift.
 
 ```bash
 DEVKIT_REPO=/path/to/devkit \
@@ -50,7 +58,7 @@ substring per line, `#` comments allowed). The script skips any finding whose
 ## When to run
 
 - After a sibling repo cuts a tag bump crossing a minor version
-- When a `devkit/docs/releases/vX.Y/RELEASE_REPORT.md` is being finalized
+- When a platform release report is being finalized
 - Before publishing a `/guide-pipeline` status update
 - Quarterly, as a fallback audit
 
@@ -60,8 +68,8 @@ this script is the Layer 2 piece of.
 
 ## Future work
 
-- Layer 1: a devkit-side hook that emits a `PUBLIC_DOCS_DELTA.md` checklist
-  from `RELEASE_REPORT.md` at release finalization time.
-- Layer 3: a quarterly `/audit-docs` skill that diffs devkit `plans/`,
-  `notes/`, and `tx-flows/` against current MDX (this directory is the
-  natural home).
+- Layer 1: a release-side hook that emits a public-docs delta checklist
+  from the release report at release finalization time.
+- Layer 3: a quarterly `/audit-docs` skill that diffs the platform's
+  release notes and transaction-flow docs against current MDX (this
+  directory is the natural home).

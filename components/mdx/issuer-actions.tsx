@@ -220,7 +220,7 @@ const ROLE_CARDS: { role: Role; how: string; does: string }[] = [
   {
     role: "teacher",
     how: "Named by the course owner.",
-    does: "Defines credentials and accepts evidence.",
+    does: "Defines and removes credentials, and accepts evidence.",
   },
   {
     role: "learner",
