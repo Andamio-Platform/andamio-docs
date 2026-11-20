@@ -13,6 +13,19 @@ const config = {
       },
     ],
   },
+  // Every docs page is also served as markdown at its URL plus `.md` or `.mdx`
+  // (app/llms.mdx). Redirects run before rewrites, so a wildcard redirect below
+  // also catches `.md` URLs under its old path; keep live pages out from under
+  // those paths. Exact-path redirects do not match `.md` URLs, so a moved
+  // page's old `.md` URL 404s rather than following its redirect (known gap).
+  async rewrites() {
+    return [
+      { source: '/docs.md', destination: '/llms.mdx' },
+      { source: '/docs.mdx', destination: '/llms.mdx' },
+      { source: '/docs/:path*.md', destination: '/llms.mdx/:path*' },
+      { source: '/docs/:path*.mdx', destination: '/llms.mdx/:path*' },
+    ];
+  },
   // Phase 2 six-root IA restructure — every moved URL gets a permanent
   // redirect. Order matters: Next matches in array order, so more specific
   // sources (e.g. guides/developers/cli) must precede their broader parents

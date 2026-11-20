@@ -54,6 +54,7 @@ This is a Next.js documentation site built with Fumadocs, using content collecti
 ### Route Structure
 - `app/docs/` - Documentation layout and pages. `/docs` is the landing page; `/` redirects to it
 - `app/api/search/` - Search functionality
+- `app/llms.txt/`, `app/llms-full.txt/`, `app/llms.mdx/[[...slug]]/` - Text forms of the docs for agents, built at build time from `lib/llms.ts`: an index, every page in one file, and each page as markdown. `next.config.mjs` rewrites `/docs/<page>.md` and `.mdx` to `app/llms.mdx/`
 
 ### Content Organization
 
@@ -81,7 +82,7 @@ Components available in every MDX page are registered in `mdx-components.tsx`:
 
 - **`<TransactionStepper>`** - Transaction-sequence steppers (`content/docs/(protocol)/protocol/v2/sequences/`)
 
-- **Other components**: `FlywheelDiagram`, `LinearDiagram`, `ThemedImage`, `GuideHeader`, `TreasuryVerifier`, `BadgeAnatomyExplorer`, `StartCards` and `ExploreLinks` (the /docs home), `CredentialLoop`, `OnboardCard`, `RoleCards` and `ActionCards` (Issuer Roles and actions)
+- **Other components**: `FlywheelDiagram`, `LinearDiagram`, `ThemedImage`, `GuideHeader`, `TreasuryVerifier`, `BadgeAnatomyExplorer`, `StartCards` and `ExploreLinks` (the /docs home), `CredentialLoop`, `OnboardCard`, `RoleCards` and `ActionCards` (Issuer Roles and actions). The Issuer cards' data lives in `lib/issuer-actions-data.ts`, which `lib/issuer-actions-markdown.ts` also writes out as markdown for the page's text form. A new card component, or a card tag with new props, needs a markdown form there: `npm run docs-cards` (in `prebuild`) fails until it has one
 
 Pages can also import a component directly. Knip scans MDX imports, so a component used only that way still counts as used.
 
