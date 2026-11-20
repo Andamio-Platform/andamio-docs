@@ -24,7 +24,7 @@ Order a plan at [issuer.andamio.io](https://issuer.andamio.io). Know your cohort
 
 | Limit | One is used by |
 |---|---|
-| **Users** | Each account you create for a person |
+| **Participants** | Each person your organization gives an Andamio Access Token, including your Teachers |
 | **Credentials** | Each learner whose evidence a teacher accepts |
 | **Courses** | Each course you create |
 
@@ -114,9 +114,9 @@ Keep the evidence where governance decided. With each submission, send a short t
 </Step>
 <Step>
 
-### Watch your credit balance
+### Watch your plan limits
 
-If a batch of acceptances needs more credentials than your plan has left, the whole batch is refused with `402 QUOTA_EXHAUSTED`. Check what is left with `GET /quota`, and [Roles and actions](/docs/issuer/actions) has the details.
+Each of the three plan limits can run out, and the call that needs it is then refused with `402 QUOTA_EXHAUSTED`: creating an account (Participants), creating a course (Courses), or accepting evidence (Credentials). A batch of acceptances that needs more credentials than are left is refused whole. Check your plan limits on the **Usage** tab at [issuer.andamio.io](https://issuer.andamio.io) or with `GET /quota`, and [Roles and actions](/docs/issuer/actions) has the details.
 
 </Step>
 </Steps>

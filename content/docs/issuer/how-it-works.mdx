@@ -35,14 +35,15 @@ Every credential belongs to a course, which groups the credentials one program i
 
 ## Rules for defining a credential
 
-The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) does not state these rules. Plan for them before you define anything.
+Plan for these rules before you define anything. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) states the rules a request must meet (statement length, a non-empty list, at most 25 per call, no duplicates), and the API refuses a request that breaks one with its own `400` before anything is built, for example "Each item in `slts` must be at most 140 ASCII characters." The other rules below are not checked when you create a credential, and only this page states them.
 
 - **Each statement is at most 140 characters of plain ASCII.** Text with other characters is rejected.
 - **Order matters.** The `credential_hash` is the hash of the list in order. A changed word, a new order, or the same text split differently makes a new credential.
 - **Nothing can be edited on mainnet.** To change a credential, define a new one.
 - **The list cannot be empty.** One statement is enough. An empty string and a repeated statement are accepted, but they certify nothing useful.
 - **One call creates at most 25 credentials.**
-- **Send `[]` for `allowed_student_state_ids`**, and for `prereq_credential_hashes` when the credential has no prerequisites. The reference marks both optional, but omitting either fails with `400` "Missing required field".
+- **One call cannot define the same credential twice.** The request is refused with `400` "`credentials_to_add` has the same credential twice." Two entries are the same credential when their `slts` match in order, whatever their prerequisites.
+- **`allowed_student_state_ids` and `prereq_credential_hashes` can be left out.** A list you leave out is sent as `[]`, and the request builds.
 - **A prerequisite works only within the same course.** A prerequisite that points at another course or another issuer is accepted when the credential is created, and then every learner is refused when they submit evidence.
 
 ## The credential model

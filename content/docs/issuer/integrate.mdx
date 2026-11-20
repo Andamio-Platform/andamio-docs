@@ -46,7 +46,7 @@ A working key returns `200`:
 
 `network_id` is `preprod` or `mainnet`, and it should match the network you expect. `project_id` is the value [social login](#go-live-with-social-login) needs. A `401` means the key is missing or invalid. A `503` means Andamio could not check the key: try again in a minute.
 
-`GET /quota` shows what is left in your plan.
+`GET /quota` shows what is left of your plan limits. The **Usage** tab at [issuer.andamio.io](https://issuer.andamio.io) shows the same.
 
 For preprod, set up three CIP-30 browser wallets, one each for a course owner, a teacher and a learner. They need no ADA. The examples below use the aliases `acme-owner`, `acme-teacher` and `acme-learner`.
 
@@ -133,7 +133,7 @@ POST /courses/{course_id}/credentials/evidence/approve
 { "alias": "acme-teacher", "approvals": ["acme-learner"] }
 ```
 
-Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted uses one Credentials unit from your plan.
+Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit.
 
 The batch is all or nothing. If any learner in it was already assessed or has no submission, the whole batch fails and the error names every such learner.
 
@@ -165,7 +165,7 @@ Errors return an `error` object with a `code` and a `message`. The `code` is sta
 | Code | Meaning |
 |---|---|
 | `400 MISSING_SIGNATURE` | The transaction sent to `/submit` carries no signature. Sign it with the acting wallet |
-| `402 QUOTA_EXHAUSTED` | Your plan has no allocation left for this action |
+| `402 QUOTA_EXHAUSTED` | Your plan's limit for this action is used up |
 | `402 ACCOUNT_DISABLED` | Your Andamio Issuer account is disabled |
 | `403 COURSE_NOT_AUTHORIZED` | Your key does not hold this course |
 | `404 BUILD_NOT_FOUND` on `/submit` | Andamio has no record of building this transaction. Build it again |
