@@ -35,14 +35,14 @@ Every credential belongs to a course, which groups the credentials one program i
 
 ## Rules for defining a credential
 
-Plan for these rules before you define anything. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) states the rules a request must meet (statement length, a non-empty list, at most 25 per call, no duplicates), and the API refuses a request that breaks one with its own `400` before anything is built, for example "Each item in `slts` must be at most 140 ASCII characters." The other rules below are not checked when you create a credential, and only this page states them.
+Plan for these rules before you define anything. The API refuses a request that breaks a rule marked *refused with `400`* before anything is built, with a message such as "Each item in `slts` must be at most 140 ASCII characters." The other rules are not checked when you create a credential, and only this page states them.
 
-- **Each statement is at most 140 characters of plain ASCII.** Text with other characters is rejected.
+- **Each statement is at most 140 characters of plain ASCII.** Refused with `400`.
 - **Order matters.** The `credential_hash` is the hash of the list in order. A changed word, a new order, or the same text split differently makes a new credential.
 - **Nothing can be edited on mainnet.** To change a credential, define a new one.
-- **The list cannot be empty.** One statement is enough. An empty string and a repeated statement are accepted, but they certify nothing useful.
-- **One call creates at most 25 credentials.**
-- **One call cannot define the same credential twice.** The request is refused with `400` "`credentials_to_add` has the same credential twice." Two entries are the same credential when their `slts` match in order, whatever their prerequisites.
+- **The list cannot be empty.** Refused with `400`. One statement is enough. An empty string inside the list and a repeated statement are accepted, but they certify nothing useful.
+- **One call creates at most 25 credentials.** Refused with `400`.
+- **One call cannot define the same credential twice.** Refused with `400`. Two entries are the same credential when their `slts` match in order, whatever their prerequisites.
 - **`allowed_student_state_ids` and `prereq_credential_hashes` can be left out.** A list you leave out is sent as `[]`, and the request builds.
 - **A prerequisite works only within the same course.** A prerequisite that points at another course or another issuer is accepted when the credential is created, and then every learner is refused when they submit evidence.
 
