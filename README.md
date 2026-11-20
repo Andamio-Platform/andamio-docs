@@ -21,7 +21,7 @@ The game is a collaborative learning exercise where Claude presents its understa
 - Develop emergent definitions that reflect shared understanding
 - Iteratively refine documentation through collaborative discussion
 
-Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` and will help you explore concepts like SSOI (Self-Sovereign On-chain Identity), Project Treasury, Access Tokens, and more.
+Claude will help you explore concepts like SSOI (Self-Sovereign On-chain Identity), Project Treasury, Access Tokens, and more.
 
 ### Important: After Playing the Glossary Game
 
@@ -29,7 +29,7 @@ Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` 
 1. **Ensure the changelog is updated**: Claude should automatically update `GLOSSARY_GAME_CHANGELOG.md` with your session
 2. **Commit your changes**: Make sure to commit both the glossary updates and the changelog entry using this format:
    ```bash
-   git add docs/reference/GLOSSARY.md content/docs/glossary.mdx GLOSSARY_GAME_CHANGELOG.md
+   git add content/docs/glossary.mdx GLOSSARY_GAME_CHANGELOG.md
    git commit -m "glossary game: <date> <player-name> (terms: <comma-separated-terms>)"
    ```
    Example:
@@ -37,8 +37,6 @@ Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` 
    git commit -m "glossary game: 2025-09-22 James (terms: SSOI)"
    ```
 3. **Push your changes** so the team benefits from the refined understanding
-
-Internal team glossary: `docs/reference/GLOSSARY.md`
 
 Public glossary: `content/docs/glossary.mdx`
 
@@ -85,6 +83,6 @@ resources:
 The project contains comprehensive documentation for the Andamio protocol:
 
 - **Protocol documentation**: MDX files in `content/docs/(protocol)/protocol/v2/`
-- **Working glossary**: Located at `docs/reference/GLOSSARY.md`
+- **Glossary**: `content/docs/glossary.mdx`
 
 For details on the documentation system architecture, see `CLAUDE.md`.
