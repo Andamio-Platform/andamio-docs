@@ -37,7 +37,7 @@ Andamio sponsors every transaction, so nobody holds ADA or pays a fee. People si
 For developers, [API integration](/docs/issuer/integrate) has the request for each action and the errors you are most likely to meet. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has the full schemas.
 
 - **Build** returns an `unsigned_tx`, plus a `course_id` or `credential_hashes` when the action creates one.
-- **Sign** is a partial signature from the wallet that holds the acting alias, the `alias` field in the request (CIP-30 `signTx` with `partialSign` set to `true`). Raw CIP-30 returns only the witness set, so add it to the transaction before you submit. Most wallet libraries do this for you.
+- **Sign** is a partial signature from the wallet that holds the acting alias. If your wallet returns only a witness set (CIP-30 `signTx` with `partialSign` set to `true`), merge it without re-encoding the transaction body, or `/submit` answers `404 BUILD_NOT_FOUND`. [Sign and submit](/docs/issuer/integrate#sign-and-submit) shows how.
 - **Submit** takes the signed transaction hex as `tx` and returns the `tx_hash`.
 - **Poll** reads the route on each action card below. There is no transaction-status route. `GET /accounts/{alias}/activity` shows every event for an account with its transaction hash, so it works as a poll for any action.
 
@@ -55,10 +55,10 @@ Each card shows the action, the role that signs it, and that action's run throug
 
 A few details change how you build on these:
 
-- **Create a course can name the first teachers.** `POST /courses/create` takes a required `teachers` list of one to 10 aliases. Include the owner's alias if the owner teaches. Use the teachers route to change the list later.
+- **Create a course names the first teachers.** [Create a course](/docs/issuer/integrate#1-create-a-course) has the rules for its `teachers` list. [Name the teachers](/docs/issuer/integrate#2-name-the-teachers) changes the list later.
 - **Accept is accept-only and all or nothing.** If any learner in the batch was already assessed or has no submission, the whole batch fails. The error does not name those learners: find them with `GET /accounts/{alias}/reviews?status=pending` and the Teacher's alias. Each learner accepted counts against your plan's Credentials limit.
 - **Claiming ends enrollment.** A learner who claims a credential is unenrolled from the course.
-- **A teacher can remove a credential definition.** `POST /courses/{course_id}/credentials/remove` takes the hashes to remove, and a teacher signs it. It removes a definition from the course. It does not edit one.
+- **A teacher can remove a credential definition, but not edit one.** [Define a credential](/docs/issuer/integrate#3-define-a-credential) has the request.
 
 ## The three identifiers
 
@@ -70,4 +70,4 @@ A few details change how you build on these:
 
 A credential is identified by the pair `course_id` and `credential_hash`. A hash alone does not name it.
 
-Evidence is free text of up to 140 characters. A hash of the evidence is recommended, and a public URL is fine where the evidence is already public. It is written to the chain as sent, so it is public and permanent. Never put personal data in it.
+The chain holds a short reference to the evidence, never the evidence itself. It is public and permanent, so it must never carry personal data. [Submit evidence](/docs/issuer/integrate#4-submit-evidence) has the length rules for `evidence_info`.

@@ -63,7 +63,7 @@ An alias is 1 to 31 ASCII characters. Andamio builds, sponsors and submits this 
 
 ## Run the six actions
 
-Each of these returns an `unsigned_tx` and runs the [credential loop](/docs/issuer/actions#the-credential-loop). A build answers `200` with the unsigned transaction as hex:
+Each of these returns an `unsigned_tx`. A build answers `200` with the unsigned transaction as hex:
 
 ```json
 { "unsigned_tx": "84a700d90102..." }
@@ -71,13 +71,11 @@ Each of these returns an `unsigned_tx` and runs the [credential loop](/docs/issu
 
 `POST /courses/create` also returns `course_id`, and `POST /courses/{course_id}/credentials/create` also returns `credential_hashes`.
 
-1. The wallet that holds the acting alias, the `alias` in the request body, signs it as a partial signature (CIP-30 `signTx` with `partialSign` set to `true`). [Sign and submit](#sign-and-submit) shows how.
-2. Send the signed transaction hex to `POST /submit` as `tx`. Andamio adds its sponsorship, submits it and returns the `tx_hash`.
-3. Poll the read each action names until the result shows. There is no transaction-status route. `GET /accounts/{alias}/activity` shows every event for an account with its transaction hash, so it works as a poll for any action.
+Then sign, submit and poll as the [credential loop](/docs/issuer/actions#the-credential-loop) describes. [Sign and submit](#sign-and-submit) shows the code.
 
 ### Sign and submit
 
-With Mesh 1.9, a wallet's `signTx` with `partialSign` set to `true` returns the full signed transaction:
+The wallet that holds the acting alias, the `alias` in the request body, signs a partial signature. With Mesh 1.9, a wallet's `signTx` with `partialSign` set to `true` returns the full signed transaction:
 
 ```ts
 import { BrowserWallet } from "@meshsdk/core";
@@ -160,20 +158,20 @@ POST /courses/{course_id}/credentials/{credential_hash}/evidence/submit
 { "alias": "acme-learner", "evidence_info": "<hash of the learner's evidence>" }
 ```
 
-`evidence_info` is up to 140 characters, written to the chain as sent. Send a hash of the evidence, or a public URL if the evidence is already public, and never personal data. Poll `GET /accounts/acme-learner/submissions` until the submission shows with status `pending`. Until it is accepted, the learner can replace it with `.../evidence/update`.
+`evidence_info` is 1 to 140 ASCII characters. Anything else is refused with `400`. It is written to the chain as sent, so it is public and permanent. Send a hash of the evidence, or a public URL if the evidence is already public. Never put personal data in it.
+
+Poll `GET /accounts/acme-learner/submissions` until the submission shows with status `pending`. Until it is accepted, the learner can replace it with `.../evidence/update`.
 
 ### 5. Accept evidence
 
-A teacher signs. Accept takes a batch of learners: `approvals` lists 1 to 30 aliases, each one once.
+A teacher signs. Accepting evidence is the `evidence/approve` route, and an accepted learner shows an `approved_tx`. Accept takes a batch of learners: `approvals` lists 1 to 30 aliases, each one once.
 
 ```http
 POST /courses/{course_id}/credentials/evidence/approve
 { "alias": "acme-teacher", "approvals": ["acme-learner"] }
 ```
 
-Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit.
-
-The batch is all or nothing. If any learner in it was already assessed or has no submission, the whole batch fails. The error does not name those learners: find them with `GET /accounts/{alias}/reviews?status=pending` and the Teacher's alias.
+Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit. A batch succeeds or fails whole. To find the learners that failed it, use `GET /accounts/{alias}/reviews?status=pending` with the teacher's alias.
 
 ### 6. Claim the credential
 

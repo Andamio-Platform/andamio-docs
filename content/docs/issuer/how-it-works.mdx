@@ -62,7 +62,7 @@ The credential is machine-readable. An application can check that someone holds 
 
 ### Proof is public, evidence is private
 
-Anyone can verify that a credential is real, while the work behind it stays with you. This is how a diploma works: the credential is public, the exam papers are not. With each submission, the learner puts a short reference on chain, at most 140 characters. A hash of the evidence is recommended. The evidence itself stays in your own store.
+Anyone can verify that a credential is real, while the work behind it stays with you. This is how a diploma works: the credential is public, the exam papers are not. With each submission, the learner puts a short reference to the evidence on chain. It is public and permanent, so it must never carry personal data. [Submit evidence](/docs/issuer/integrate#4-submit-evidence) has its length rules. The evidence itself stays in your own store.
 
 ### You own what it means
 
@@ -74,4 +74,4 @@ The credential lives with the person who earned it, not in your system, and they
 
 ## Who signs
 
-Andamio builds every transaction and sponsors it, so the people you credential never hold ADA. Each person signs their own actions with a social login or a browser wallet: the learner signs their evidence and their claim, and a teacher signs the accept. [Roles and actions](/docs/issuer/actions) lists who signs each action.
+Andamio builds every transaction and sponsors it, so the people you credential never hold ADA. Each person signs their own actions with a social login or a browser wallet: the course owner creates a course and names the teachers, a teacher defines and removes credentials and accepts evidence, and the learner submits evidence and claims the credential. [Roles and actions](/docs/issuer/actions) lists who signs each action.
