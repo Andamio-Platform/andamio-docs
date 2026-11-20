@@ -34,7 +34,7 @@ Once a person holds an access token, every action they take runs the same four s
 
 Andamio sponsors every transaction, so nobody holds ADA or pays a fee. People sign with a social login or a browser wallet.
 
-For developers, [API integration](/docs/issuer/integrate) has the request for each action and every error. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has the full schemas.
+For developers, [API integration](/docs/issuer/integrate) has the request for each action and the errors you are most likely to meet. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) has the full schemas.
 
 - **Build** returns an `unsigned_tx`, plus a `course_id` or `credential_hashes` when the action creates one.
 - **Sign** is a partial signature from the wallet that holds the acting alias, the `alias` field in the request (CIP-30 `signTx` with `partialSign` set to `true`). Raw CIP-30 returns only the witness set, so add it to the transaction before you submit. Most wallet libraries do this for you.
@@ -56,7 +56,7 @@ Each card shows the action, the role that signs it, and that action's run throug
 A few details change how you build on these:
 
 - **Create a course can name the first teachers.** `POST /courses/create` takes a required `teachers` list of one to 10 aliases. Include the owner's alias if the owner teaches. Use the teachers route to change the list later.
-- **Accept is accept-only and all or nothing.** If any learner in the batch was already assessed or has no submission, the whole batch fails and the error names every such learner. Each learner accepted counts against your plan's Credentials limit.
+- **Accept is accept-only and all or nothing.** If any learner in the batch was already assessed or has no submission, the whole batch fails. The error does not name those learners: find them with `GET /accounts/{alias}/reviews?status=pending` and the Teacher's alias. Each learner accepted counts against your plan's Credentials limit.
 - **Claiming ends enrollment.** A learner who claims a credential is unenrolled from the course.
 - **A teacher can remove a credential definition.** `POST /courses/{course_id}/credentials/remove` takes the hashes to remove, and a teacher signs it. It removes a definition from the course. It does not edit one.
 

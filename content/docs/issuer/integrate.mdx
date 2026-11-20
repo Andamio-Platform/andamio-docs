@@ -63,11 +63,47 @@ An alias is 1 to 31 ASCII characters. Andamio builds, sponsors and submits this 
 
 ## Run the six actions
 
-Each of these returns an `unsigned_tx` and runs the [credential loop](/docs/issuer/actions#the-credential-loop):
+Each of these returns an `unsigned_tx` and runs the [credential loop](/docs/issuer/actions#the-credential-loop). A build answers `200` with the unsigned transaction as hex:
 
-1. The wallet that holds the acting alias, the `alias` in the request body, signs it as a partial signature (CIP-30 `signTx` with `partialSign` set to `true`). Raw CIP-30 returns only the witness set, so add it to the transaction before you submit. Most wallet libraries do this for you.
+```json
+{ "unsigned_tx": "84a700d90102..." }
+```
+
+`POST /courses/create` also returns `course_id`, and `POST /courses/{course_id}/credentials/create` also returns `credential_hashes`.
+
+1. The wallet that holds the acting alias, the `alias` in the request body, signs it as a partial signature (CIP-30 `signTx` with `partialSign` set to `true`). [Sign and submit](#sign-and-submit) shows how.
 2. Send the signed transaction hex to `POST /submit` as `tx`. Andamio adds its sponsorship, submits it and returns the `tx_hash`.
 3. Poll the read each action names until the result shows. There is no transaction-status route. `GET /accounts/{alias}/activity` shows every event for an account with its transaction hash, so it works as a poll for any action.
+
+### Sign and submit
+
+With Mesh 1.9, a wallet's `signTx` with `partialSign` set to `true` returns the full signed transaction:
+
+```ts
+import { BrowserWallet } from "@meshsdk/core";
+
+const wallet = await BrowserWallet.enable(walletName);
+const signedTx = await wallet.signTx(unsignedTx, true);
+```
+
+Raw CIP-30 `signTx` returns only a witness set. Add its signatures to the witnesses the transaction already carries, and keep those. Do not re-encode the transaction body: `POST /submit` finds your build by the hash of the body bytes, so a re-encoded body gets `404 BUILD_NOT_FOUND`. `@meshsdk/core-cst` does this for you:
+
+```ts
+import { addVKeyWitnessSetToTransaction } from "@meshsdk/core-cst";
+
+const api = await window.cardano[walletName].enable();
+const witnessSet = await api.signTx(unsignedTx, true);
+const signedTx = addVKeyWitnessSetToTransaction(unsignedTx, witnessSet);
+```
+
+Then send `signedTx` from your server, where your API key stays:
+
+```http
+POST /submit
+{ "tx": "84a700d90102..." }
+```
+
+It answers `200` with `{ "tx_hash": "..." }`.
 
 ### 1. Create a course
 
@@ -137,7 +173,7 @@ POST /courses/{course_id}/credentials/evidence/approve
 
 Poll `GET /courses/{course_id}/credentials/issuances` until the learner shows an `approved_tx`. Each learner accepted counts against your plan's Credentials limit.
 
-The batch is all or nothing. If any learner in it was already assessed or has no submission, the whole batch fails and the error names every such learner.
+The batch is all or nothing. If any learner in it was already assessed or has no submission, the whole batch fails. The error does not name those learners: find them with `GET /accounts/{alias}/reviews?status=pending` and the Teacher's alias.
 
 ### 6. Claim the credential
 
@@ -158,11 +194,94 @@ In production, most people sign with a social login instead of a browser wallet.
 
 Reads cover courses, credentials, teachers, learners, and per-account views of credentials, submissions, reviews and activity. Results are always limited to the courses your key holds.
 
-Snapshot lists page with `page` and `limit`. Activity feeds page with an opaque `cursor`. `limit` defaults to 25, with a maximum of 100.
+These are every read. **Paged** lists take `page` and `limit`. The one **cursor** feed takes `cursor` and `limit`. [Paging](#paging) shows both.
+
+### Account reads
+
+| Route | Returns | Paging |
+|---|---|---|
+| `GET /accounts/{alias}/availability` | Whether an alias is free | |
+| `GET /addresses/{address}/accounts` | The aliases held at a wallet address | |
+| `GET /accounts/{alias}/courses` | Courses the account owns, teaches or is enrolled in. Filter with `relationship` | Paged |
+| `GET /accounts/{alias}/credentials` | Credentials the account holds, with their `claimed_tx` | Paged |
+| `GET /accounts/{alias}/submissions` | The account's evidence submissions and their status. Filter with `status` | Paged |
+| `GET /accounts/{alias}/reviews` | Submissions to assess in the courses the account teaches. Filter with `status` and `course_id` | Paged |
+| `GET /accounts/{alias}/activity` | Every on-chain event for the account, with its transaction hash. Filter with `role` and `course_id` | Cursor |
+
+### Course reads
+
+| Route | Returns | Paging |
+|---|---|---|
+| `GET /courses` | Your courses, with owner and creation transaction | Paged |
+| `GET /courses/{course_id}` | One course and the credentials it defines | |
+| `GET /courses/{course_id}/teachers` | The course's current Teachers | Paged |
+| `GET /courses/{course_id}/learners` | Enrolled learners. A learner who claims a credential leaves this list and shows in issuances | Paged |
+| `GET /courses/{course_id}/stats/teachers` | For each Teacher: credentials defined, assessments accepted and rejected, and when last active | Paged |
+
+### Credential reads
+
+| Route | Returns | Paging |
+|---|---|---|
+| `GET /courses/{course_id}/credentials/issuances` | Each learner and credential accepted, with `approved_tx`, and `claimed_tx` once claimed. Filter with `claimed` | Paged |
+
+### Other reads
+
+| Route | Returns | Paging |
+|---|---|---|
+| `GET /config` | Your `project_id` and `network_id` | |
+| `GET /quota` | What is left of your plan limits | |
+
+### Paging
+
+A paged list takes `page`, starting at 1, and `limit`, which defaults to 25 with a maximum of 100. It returns the page in `meta.pagination`:
+
+```json
+{
+  "data": [
+    { "alias": "acme-teacher", "added_at": "2026-11-02T10:15:00Z", "added_tx": "<tx hash>" }
+  ],
+  "meta": { "pagination": { "page": 1, "page_size": 25, "total": 1 } }
+}
+```
+
+`page_size` is the page size that applied, and `total` counts the items across every page.
+
+`GET /accounts/{alias}/activity` is the one cursor feed. Its `limit` also defaults to 25, with a maximum of 100. It returns:
+
+```json
+{
+  "data": [
+    {
+      "kind": "evidence_submit",
+      "actor": "acme-learner",
+      "course_id": "<course id>",
+      "credential_hash": "<credential hash>",
+      "submission_author": "acme-learner",
+      "slot": 109283746,
+      "timestamp": "2026-11-20T09:30:00Z",
+      "tx_hash": "<tx hash>"
+    }
+  ],
+  "meta": { "pagination": { "next_cursor": "<cursor>", "has_more": true } }
+}
+```
+
+For the next page, send `next_cursor` back as `cursor`, exactly as you got it. The cursor is opaque, so do not build or change one. `next_cursor` is left out when there is none. On the last page, `has_more` is `false`.
 
 ## Errors
 
 Errors return an `error` object with a `code` and a `message`. The `code` is stable, so match on it, never on the `message`. The `message` tells you what happened and what to do next.
+
+For example, `POST /submit` with a transaction nobody signed answers `400`:
+
+```json
+{
+  "error": {
+    "code": "MISSING_SIGNATURE",
+    "message": "This transaction has no signature. Sign it with the wallet that owns the alias in your build request."
+  }
+}
+```
 
 The tables below are a selection: the codes you are most likely to meet while you run the six actions. The API answers other codes too, and `/issuer/v1` can gain new ones, so your program must handle a code it does not recognize. The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) lists every code each route can answer.
 
@@ -173,7 +292,9 @@ The tables below are a selection: the codes you are most likely to meet while yo
 | `400 BAD_REQUEST` | The request is malformed, or breaks a rule the API checks before it builds, such as the length of a list. Fix the request as the message says |
 | `401 UNAUTHORIZED` | The API key is missing, or not valid on this host. Check the key and the network |
 | `403 FORBIDDEN` | The key is not an Andamio Issuer API key. Use your Andamio Issuer API key |
+| `422 UNPROCESSABLE_ENTITY` | The request breaks a rule that has no code of its own. The message names the rule, such as the limit of 30 Teachers on a course, or a value in `allowed_student_state_ids` that is not in the course. Fix the request as the message says |
 | `500 INTERNAL_SERVER_ERROR` | An unexpected fault at Andamio. Contact [Support](/docs/issuer/support) with the `X-Request-Id` header from the response |
+| `502 BAD_GATEWAY` | Andamio could not fetch the data, or could not build or sponsor the transaction. Your request is fine, and nothing was charged. Try again in a minute. If it keeps failing, contact [Support](/docs/issuer/support) with the `X-Request-Id` header from the response |
 | `503 SERVICE_UNAVAILABLE` | Andamio, or a service it depends on, could not answer. Try again in a minute. A `503` with any other code is not a reason to retry: follow that code's row |
 
 ### Courses
@@ -187,15 +308,14 @@ Today, a course outside your account answers `404 COURSE_NOT_FOUND` on a read an
 
 ### Every build
 
-These answer the six actions when they build. `402 QUOTA_EXHAUSTED` answers every build except claiming and removing a credential. Both `402` codes can also answer `/submit`.
+These answer the six actions when they build, and `POST /accounts/create` too, apart from `404 ALIAS_NOT_FOUND`. `402 QUOTA_EXHAUSTED` answers every build except claiming and removing a credential. Both `402` codes can also answer `/submit`.
 
 | Code | Cause and what to do |
 |---|---|
-| `402 QUOTA_EXHAUSTED` | Your plan's limit for this action is used up |
+| `402 QUOTA_EXHAUSTED` | Your plan's limit for this action is used up. Creating an account needs Participants, creating a course needs Courses, and the other builds need Credentials |
 | `402 ACCOUNT_DISABLED` | Your Andamio Issuer account is disabled, or the key has no account. Contact [Support](/docs/issuer/support) |
 | `404 ALIAS_NOT_FOUND` | No account has this alias. An account you just created answers this on every build until it is on chain, usually about a minute, so keep trying. Otherwise, correct the alias or create the account |
 | `422 TRANSACTION_TOO_LARGE` | The request does not fit in one transaction. Send fewer items |
-| `502 BAD_GATEWAY` | Andamio could not build or sponsor the transaction. Your request is fine, and nothing was charged. Try again in a minute |
 | `503 SPONSORSHIP_UNAVAILABLE` | Sponsorship is not configured on this host. Retrying will not help. Contact [Support](/docs/issuer/support) |
 
 ### Submit
@@ -224,12 +344,13 @@ These answer `POST /submit`. Some of the same codes answer `POST /accounts/creat
 
 ### Teachers
 
+A course can have at most 30 Teachers. A change that would go past that answers `422 UNPROCESSABLE_ENTITY`, as in [Any route](#any-route).
+
 | Code | Cause and what to do |
 |---|---|
 | `409 TEACHER_NOT_IN_COURSE` | An alias in `teachers_to_remove` is not a Teacher of this course. Check `GET /courses/{course_id}/teachers` |
 | `422 OWNER_NOT_ALLOWED` | Only the course owner can change Teachers. Use the course owner's alias |
 | `422 TEACHER_ALREADY_EXISTS` | An alias in `teachers_to_add` is already a Teacher of this course. Drop it, or check `GET /courses/{course_id}/teachers` |
-| `422 UNPROCESSABLE_ENTITY` | A course can have at most 30 Teachers, and this change would go past that. Add fewer |
 | `422 TEACHER_NOT_ALLOWED` | On defining or removing a credential, or accepting evidence, the acting alias is not a Teacher of this course. A Teacher added in the last minute may not count yet. Otherwise, use a Teacher's alias |
 
 ### Accounts
