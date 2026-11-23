@@ -214,7 +214,7 @@ The `/guide-pipeline` skill in this repo coordinates with the app repo's `/ux-re
 
 This repo and its docs site are public. Never name a customer anywhere in it: not on a docs page, not in a component, a commit message, a branch name, or PR or issue text. Describe the customer generically ("an early Issuer customer"). If a customer name already appears, remove it.
 
-The only exception is a customer James has confirmed may be named publicly. An issue or a Product decision that names a customer is not that confirmation.
+The only exception is a customer Product has confirmed may be named publicly. An issue or a Product decision that names a customer is not that confirmation.
 
 # Important Reminders
 

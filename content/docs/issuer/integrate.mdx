@@ -284,6 +284,7 @@ The tables below are a selection: the codes you are most likely to meet while yo
 |---|---|
 | `400 BAD_REQUEST` | The request is malformed, or breaks a rule the API checks before it builds, such as the length of a list. Fix the request as the message says |
 | `401 UNAUTHORIZED` | The API key is missing, or not valid on this host, or the request also sends an `Authorization` header. Check the key and the network, and send only `X-API-Key` |
+| `402 ACCOUNT_DISABLED` | Your Andamio Issuer account is disabled, or the key has no account. Every route answers it except `GET /config`, `GET /addresses/{address}/accounts` and `GET /accounts/{alias}/availability`, so a disabled account sees it on its reads and polls too. Contact [Support](/docs/issuer/support) |
 | `403 FORBIDDEN` | The key is not an Andamio Issuer API key. Use your Andamio Issuer API key |
 | `422 UNPROCESSABLE_ENTITY` | The request breaks a rule that has no code of its own. The message names the rule, such as the limit of 30 Teachers on a course, or a value in `allowed_student_state_ids` that is not in the course. Fix the request as the message says |
 | `500 INTERNAL_SERVER_ERROR` | An unexpected fault at Andamio. Contact [Support](/docs/issuer/support) with the `X-Request-Id` header from the response |
@@ -292,7 +293,7 @@ The tables below are a selection: the codes you are most likely to meet while yo
 
 ### Courses
 
-Today, a course outside your account answers `404 COURSE_NOT_FOUND` on a read and `403 COURSE_NOT_AUTHORIZED` on a write. A course of your own that is not indexed yet answers `404 COURSE_NOT_FOUND` on both.
+Today, a course outside your account answers `404 COURSE_NOT_FOUND` on a read and `403 COURSE_NOT_AUTHORIZED` on a write. A course of your own that is not indexed yet answers `404 COURSE_NOT_FOUND` on both once its `courses/create` transaction is submitted. Before that, a write to it answers `403 COURSE_NOT_AUTHORIZED`.
 
 | Code | Cause and what to do |
 |---|---|
@@ -301,12 +302,11 @@ Today, a course outside your account answers `404 COURSE_NOT_FOUND` on a read an
 
 ### Every build
 
-These answer the six actions when they build, and `POST /accounts/create` too, apart from `404 ALIAS_NOT_FOUND`. `402 QUOTA_EXHAUSTED` answers every build except claiming and removing a credential. Both `402` codes can also answer `/submit`.
+These answer the six actions when they build, and `POST /accounts/create` too, apart from `404 ALIAS_NOT_FOUND`. `402 QUOTA_EXHAUSTED` answers every build except claiming and removing a credential, and can also answer `/submit`. `402 ACCOUNT_DISABLED` is in [Any route](#any-route).
 
 | Code | Cause and what to do |
 |---|---|
 | `402 QUOTA_EXHAUSTED` | Your plan's limit for this action is used up. Creating an account needs Participants, creating a course needs Courses, and the other builds need Credentials |
-| `402 ACCOUNT_DISABLED` | Your Andamio Issuer account is disabled, or the key has no account. Contact [Support](/docs/issuer/support) |
 | `404 ALIAS_NOT_FOUND` | No account has this alias. An account you just created answers this on every build until it is on chain, usually about a minute, so keep trying. Otherwise, correct the alias or create the account |
 | `422 TRANSACTION_TOO_LARGE` | The request does not fit in one transaction. Send fewer items |
 | `503 SPONSORSHIP_UNAVAILABLE` | Sponsorship is not configured on this host. Retrying will not help. Contact [Support](/docs/issuer/support) |
@@ -315,7 +315,7 @@ These answer the six actions when they build, and `POST /accounts/create` too, a
 
 These answer `POST /submit`. Some of the same codes answer `POST /accounts/create` with a different next step: see [Accounts](#accounts).
 
-`/submit` can also answer the two `402` codes: [Every build](#every-build) says what they mean.
+`/submit` can also answer the two `402` codes: `402 QUOTA_EXHAUSTED` is in [Every build](#every-build), `402 ACCOUNT_DISABLED` in [Any route](#any-route).
 
 | Code | Cause and what to do |
 |---|---|
