@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import yaml from 'js-yaml';
+import { load } from 'js-yaml';
 import { UnsafePathError } from './safe-path';
 
 /**
@@ -25,5 +25,5 @@ export async function loadYamlFile<T>(filePath: string): Promise<T> {
   }
 
   const fileContents = fs.readFileSync(fullPath, 'utf8');
-  return yaml.load(fileContents) as T;
+  return load(fileContents) as T;
 }

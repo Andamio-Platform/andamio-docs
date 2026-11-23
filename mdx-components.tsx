@@ -14,7 +14,7 @@ import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Callout } from "fumadocs-ui/components/callout";
 import { FlywheelDiagram } from "@/components/mdx/flywheel-diagram";
 import { LinearDiagram } from "@/components/mdx/linear-diagram";
-import { ImageZoom } from "fumadocs-ui/components/image-zoom";
+import { ImageZoom, type ImageZoomProps } from "fumadocs-ui/components/image-zoom";
 import { ThemedImage } from "@/components/mdx/themed-image";
 import { GuideHeader } from "@/components/mdx/guide-header";
 import { ExploreLinks, StartCards } from "@/components/mdx/start-cards";
@@ -27,7 +27,7 @@ import TransactionStepper from "@/components/protocol/TransactionStepper";
 export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
-    img: (props) => <ImageZoom {...(props as any)} />,
+    img: (props) => <ImageZoom {...(props as ImageZoomProps)} />,
     Mermaid,
     FlywheelDiagram,
     LinearDiagram,
