@@ -27,7 +27,7 @@
  */
 import fs from "fs";
 import path from "path";
-import yaml from "js-yaml";
+import { load } from "js-yaml";
 
 const PARAMS_PATH = path.join("public", "yaml", "deployments", "mainnet-v2", "params.yaml");
 const DOC_PATH = path.join("content", "docs", "(protocol)", "contract-verification.mdx");
@@ -64,7 +64,7 @@ for (const p of [PARAMS_PATH, DOC_PATH]) {
 }
 
 const paramsValues = new Set<string>();
-collectStrings(yaml.load(fs.readFileSync(PARAMS_PATH, "utf8")), paramsValues);
+collectStrings(load(fs.readFileSync(PARAMS_PATH, "utf8")), paramsValues);
 
 const doc = fs.readFileSync(DOC_PATH, "utf8");
 const docHashes = extractAll(HASH_RE, doc);

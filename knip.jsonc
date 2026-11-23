@@ -10,6 +10,8 @@
     "**/*.{ts,tsx,js,mjs,mdx,css}",
     "!.claude/**"
   ],
+  // Loaded by name through FlatCompat in eslint.config.mjs, which knip cannot trace.
+  "ignoreDependencies": ["eslint-config-next"],
   "compilers": {
     "mdx": true
   },

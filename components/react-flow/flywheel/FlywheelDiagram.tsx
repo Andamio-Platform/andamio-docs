@@ -561,7 +561,7 @@ export default function FlywheelDiagram({
       // Fit view after a short delay to ensure nodes are updated
       setTimeout(() => {
         if (reactFlowInstance) {
-          reactFlowInstance.fitView({ padding: 0.2, duration: 800 });
+          reactFlowInstance.fitView({ padding: "8.3%", duration: 800 });
         }
       }, 100);
     }
@@ -571,7 +571,7 @@ export default function FlywheelDiagram({
   const onInit = useCallback((instance: ReactFlowInstance<Node, Edge>) => {
     setReactFlowInstance(instance);
     instance.fitView({
-      padding: 0.05,
+      padding: "2.4%",
       includeHiddenNodes: false,
       minZoom: 0.3,
       maxZoom: 1.5,
@@ -584,7 +584,7 @@ export default function FlywheelDiagram({
       // Use setTimeout to ensure the DOM has updated before fitting view
       setTimeout(() => {
         if (reactFlowInstance) {
-          reactFlowInstance.fitView({ padding: 0.2, duration: 800 });
+          reactFlowInstance.fitView({ padding: "8.3%", duration: 800 });
         }
       }, 50);
       return !prev;
@@ -602,6 +602,7 @@ export default function FlywheelDiagram({
         onInit={onInit}
         nodeTypes={nodeTypes}
         fitView
+        forceColorMode="light"
         nodesDraggable={true}
         nodesConnectable={false}
         elementsSelectable={true}

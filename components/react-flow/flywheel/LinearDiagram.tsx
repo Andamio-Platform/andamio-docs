@@ -207,7 +207,7 @@ export default function LinearDiagram({
       // Fit view after a short delay to ensure nodes are updated
       setTimeout(() => {
         if (reactFlowInstance) {
-          reactFlowInstance.fitView({ padding: 0.2, duration: 800 });
+          reactFlowInstance.fitView({ padding: "8.3%", duration: 800 });
         }
       }, 100);
     }
@@ -217,7 +217,7 @@ export default function LinearDiagram({
   const onInit = useCallback((instance: ReactFlowInstance<Node, Edge>) => {
     setReactFlowInstance(instance);
     instance.fitView({
-      padding: 0.1,
+      padding: "4.5%",
       includeHiddenNodes: false,
       minZoom: 0.3,
       maxZoom: 1.5,
@@ -230,7 +230,7 @@ export default function LinearDiagram({
       // Use setTimeout to ensure the DOM has updated before fitting view
       setTimeout(() => {
         if (reactFlowInstance) {
-          reactFlowInstance.fitView({ padding: 0.2, duration: 800 });
+          reactFlowInstance.fitView({ padding: "8.3%", duration: 800 });
         }
       }, 50);
       return !prev;
@@ -248,6 +248,7 @@ export default function LinearDiagram({
         onInit={onInit}
         nodeTypes={nodeTypes}
         fitView
+        forceColorMode="light"
         nodesDraggable={true}
         nodesConnectable={false}
         elementsSelectable={true}

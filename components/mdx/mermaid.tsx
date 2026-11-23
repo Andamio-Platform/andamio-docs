@@ -23,6 +23,7 @@ export function Mermaid({ chart }: { chart: string }) {
       try {
         mermaid.initialize({
           startOnLoad: false,
+          layout: "dagre",
           securityLevel: "loose",
           fontFamily: "inherit",
           themeCSS: "margin: 1.5rem auto 0;",
