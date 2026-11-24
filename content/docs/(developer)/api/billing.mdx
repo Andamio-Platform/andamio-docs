@@ -16,6 +16,26 @@ The Andamio API uses tiered pricing. Each tier determines your rate limits, mont
 
 Start with Free for development and testing. Upgrade when you need higher limits.
 
+## How Limits Work
+
+Limits belong to your developer account, not to a key. Every key on the account draws on the same counts.
+
+The API checks four limits on every request made with a developer key:
+
+- **Per minute and per second.** Each is a fixed window that starts with your first request after the last window ended. It does not slide.
+- **Daily.** Resets at 00:00 UTC.
+- **Monthly.** Resets on the 1st of the month at 00:00 UTC.
+
+The per-second limit equals the per-minute limit on every tier, so in practice the per-minute limit is the one you reach.
+
+### What Counts
+
+- **Every request made with a developer key counts** once against each limit when it arrives, before the API handles it. A request that then fails, for example with `400`, `404` or `502`, still counts.
+- **A request refused with `401`** (a missing or invalid key) counts against nothing.
+- **A request refused with `429`** does not count against the daily or monthly quota. It does count inside the per-minute and per-second windows, so retrying at once keeps you refused until the window ends.
+- **A request that needs no key,** such as `GET /v2/billing/plans`, counts against nothing.
+- **You are not charged per request.** Your tier is a monthly subscription. A request over a limit is refused, not billed.
+
 ## Quota Headers
 
 This section covers the Andamio API, called with a developer key. Each request that counts against your developer quota returns what is left in its response headers:
@@ -29,7 +49,18 @@ This section covers the Andamio API, called with a developer key. Each request t
 
 No header reports the per-second or per-minute limits.
 
-When you exceed a limit, the API returns `429 Too Many Requests`. A 429 carries none of these headers, and its body is `{ "error": "<message>" }` rather than the error envelope. The message names the limit you hit: per second, per minute, daily or monthly. After a per-second or per-minute 429, back off and retry within the minute. After a daily or monthly 429, wait until the reset time from your last successful response.
+## When You Hit a Limit
+
+The API answers `429 Too Many Requests`. The body is `{ "error": "<message>" }`, where `error` is a string, not the error envelope other errors use. The message names the limit:
+
+| Message | Limit | What to do |
+|---------|-------|------------|
+| `Too many requests (minute limit)` | Per minute | Wait for the minute window to end, up to 60 seconds, then retry |
+| `Too many requests (second limit)` | Per second | Wait a second, then retry |
+| `Daily quota exceeded` | Daily | Wait until the `X-Quota-Reset-Daily` time from your last successful response, or upgrade |
+| `Monthly quota exceeded` | Monthly | Wait until the `X-Quota-Reset-Monthly` time from your last successful response, or upgrade |
+
+A `429` carries no `Retry-After` header and no quota headers. Pace bulk work to stay under your per-minute limit, and never retry a refused request at once.
 
 Andamio Issuer keeps its own quota and returns `402 QUOTA_EXHAUSTED` when it runs out. See [Andamio Issuer API integration](/docs/issuer/integrate).
 

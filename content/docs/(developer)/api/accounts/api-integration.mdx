@@ -137,7 +137,7 @@ Used by merged data endpoints (`/v2/course/*/merged`, `/v2/project/*/merged`, mo
 | 502 | `BAD_GATEWAY` |
 | 503 | `SERVICE_UNAVAILABLE` |
 
-A `429` from your tier's rate limits or request quota does not use this envelope. See [Quota Headers](#quota-headers).
+A `429` from your tier's rate limits or request quota does not use this envelope. See [When You Hit a Limit](/docs/api/billing#when-you-hit-a-limit).
 
 See [Error Handling](/docs/api/core/error-handling) for recovery patterns.
 
@@ -154,7 +154,7 @@ This section covers the Andamio API, called with a developer key. Each request t
 
 No header reports the per-second or per-minute limits.
 
-When you exceed a limit, the API returns `429 Too Many Requests`. A 429 carries none of these headers, and its body is `{ "error": "<message>" }` rather than the error envelope. The message names the limit you hit: per second, per minute, daily or monthly. After a per-second or per-minute 429, back off and retry within the minute. After a daily or monthly 429, wait until the reset time from your last successful response.
+When you go over a limit, the API answers `429` with a body naming the limit. See [When You Hit a Limit](/docs/api/billing#when-you-hit-a-limit) for each message and what to do after it.
 
 Andamio Issuer keeps its own quota and returns `402 QUOTA_EXHAUSTED` when it runs out. See [Andamio Issuer API integration](/docs/issuer/integrate).
 
