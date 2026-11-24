@@ -1,9 +1,7 @@
 ---
 title: How it works
 description: What an Andamio credential is, the rules for defining one, and why it is a building block
-sources:
-  - what-is-delivered/requirements/issuer/api/issuer-hashes.md
-  - what-is-delivered/requirements/vocabulary/credential-identity-vocabulary.md
+verified_at: df90e269
 ---
 
 An Andamio credential behaves differently from a badge because of a few deliberate design decisions. Each one follows from anchoring credentials on a public ledger instead of inside a single company's database.
@@ -31,18 +29,19 @@ The API calls the list `slts`, short for Student Learning Targets, the statement
 }
 ```
 
-Every credential belongs to a course, which groups the credentials one program issues. The response returns a `credential_hash` for each definition. With the course's `course_id`, it identifies the credential.
+Every credential belongs to a course, which groups the credentials one program issues. The response returns `credential_hashes`, one hash for each definition, in order. With the course's `course_id`, it identifies the credential.
 
 ## Rules for defining a credential
 
-The [Issuer API reference](https://api.andamio.io/issuer/v1/docs/index.html) does not state these rules. Plan for them before you define anything.
+Plan for these rules before you define anything. The API refuses a request that breaks a rule marked *refused with `400`* before anything is built, with a message such as "Each item in `slts` must be at most 140 ASCII characters." Rules with no such mark are not checked when you create a credential.
 
-- **Each statement is at most 140 characters of plain ASCII.** Text with other characters is rejected.
+- **Each statement is at most 140 characters of plain ASCII.** Refused with `400`.
 - **Order matters.** The `credential_hash` is the hash of the list in order. A changed word, a new order, or the same text split differently makes a new credential.
 - **Nothing can be edited on mainnet.** To change a credential, define a new one.
-- **The list cannot be empty.** One statement is enough. An empty string and a repeated statement are accepted, but they certify nothing useful.
-- **One call creates at most 25 credentials.**
-- **Send `[]` for `allowed_student_state_ids`**, and for `prereq_credential_hashes` when the credential has no prerequisites. The reference marks both optional, but omitting either fails with `400` "Missing required field".
+- **The list cannot be empty.** Refused with `400`. One statement is enough. An empty string inside the list and a repeated statement are accepted, but they certify nothing useful.
+- **One call creates at most 25 credentials.** Refused with `400`.
+- **One call cannot define the same credential twice.** Refused with `400`. Two entries are the same credential when their `slts` match in order, whatever their prerequisites.
+- **`allowed_student_state_ids` and `prereq_credential_hashes` can be left out.** A list you leave out is sent as `[]`, and the request builds. A value you do send is checked: a prerequisite that is not a 64-character hex hash, or a state ID that is not 56 hex characters, is refused with `400`. A well-formed state ID that is not in the course is refused with `422` when the transaction is built.
 - **A prerequisite works only within the same course.** A prerequisite that points at another course or another issuer is accepted when the credential is created, and then every learner is refused when they submit evidence.
 
 ## The credential model
@@ -61,7 +60,7 @@ The credential is machine-readable. An application can check that someone holds 
 
 ### Proof is public, evidence is private
 
-Anyone can verify that a credential is real, while the work behind it stays with you. This is how a diploma works: the credential is public, the exam papers are not. With each submission, the learner puts a short reference on chain, at most 140 characters. A hash of the evidence is recommended. The evidence itself stays in your own store.
+Anyone can verify that a credential is real, while the work behind it stays with you. This is how a diploma works: the credential is public, the exam papers are not. With each submission, the learner puts a short reference to the evidence on chain. It is public and permanent, so it must never carry personal data. [Submit evidence](/docs/issuer/integrate#4-submit-evidence) has its length rules. The evidence itself stays in your own store.
 
 ### You own what it means
 
@@ -73,4 +72,4 @@ The credential lives with the person who earned it, not in your system, and they
 
 ## Who signs
 
-Andamio builds every transaction and sponsors it, so the people you credential never hold ADA. Each person signs their own actions with a social login or a browser wallet: the learner signs their evidence and their claim, and a teacher signs the accept. [Roles and actions](/docs/issuer/actions) lists who signs each action.
+Andamio builds every transaction and sponsors it, so the people you credential never hold ADA. Each person signs their own actions with a social login or a browser wallet: the course owner creates a course and names the teachers, a teacher defines and removes credentials and accepts evidence, and the learner submits evidence and claims the credential. [Roles and actions](/docs/issuer/actions) lists who signs each action.

@@ -1,15 +1,12 @@
 ---
 title: Before you start
 description: What to have ready before your first credential. Governance takes the most planning.
-sources:
-  - what-we-sell/definition/issuer/andamio-issuer-product.md
-  - what-is-delivered/requirements/issuer/overview.md
-  - what-is-delivered/requirements/issuer/api/quota.md
+verified_at: df90e269
 ---
 
 Getting ready takes three kinds of work. Administration sets up your account. Governance decides what your credentials mean and who grants them. Development builds those decisions into your systems.
 
-Governance takes the most planning. A credential can never change once it is on chain, so its wording has to be final and approved before you create it. Start there.
+Governance takes the most planning. Nothing can be edited on mainnet, so a credential's wording has to be final and approved before you create it. Start there.
 
 ## Administration
 
@@ -24,7 +21,7 @@ Order a plan at [issuer.andamio.io](https://issuer.andamio.io). Know your cohort
 
 | Limit | One is used by |
 |---|---|
-| **Users** | Each account you create for a person |
+| **Participants** | Each person your organization gives an Andamio Access Token, including your Teachers |
 | **Credentials** | Each learner whose evidence a teacher accepts |
 | **Courses** | Each course you create |
 
@@ -109,14 +106,14 @@ Each person signs through social login or a browser wallet. Social login only wo
 
 ### Store evidence and submit its fingerprint
 
-Keep the evidence where governance decided. With each submission, send a short text of up to 140 characters that goes on chain: a hash of the evidence, or a public URL if the evidence is already public. That text is public and permanent, so never put personal data in it.
+Keep the evidence where governance decided. With each submission, send a short reference to it, which goes on chain. It is public and permanent, so it must never carry personal data. [Submit evidence](/docs/issuer/integrate#4-submit-evidence) has its length rules.
 
 </Step>
 <Step>
 
-### Watch your credit balance
+### Watch your plan limits
 
-If a batch of acceptances needs more credentials than your plan has left, the whole batch is refused with `402 QUOTA_EXHAUSTED`. Check what is left with `GET /quota`, and [Roles and actions](/docs/issuer/actions) has the details.
+Each of the three plan limits can run out. A call that needs a limit with nothing left is refused with `402 QUOTA_EXHAUSTED`. Creating an account needs Participants, creating a course needs Courses, and accepting evidence needs Credentials. Once Credentials has nothing left, defining credentials, submitting or updating evidence and changing Teachers are refused too. A batch of acceptances that needs more credentials than are left is refused whole. Check your plan limits on the **Usage** tab at [issuer.andamio.io](https://issuer.andamio.io) or with `GET /quota`. [Errors](/docs/issuer/integrate#every-build) on API integration has the codes.
 
 </Step>
 </Steps>

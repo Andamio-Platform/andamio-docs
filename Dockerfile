@@ -1,4 +1,4 @@
-# docs.andamio.io on Cloud Run (Andamio-Platform/andamio-ops#578). Next.js
+# docs.andamio.io on Cloud Run. Next.js
 # standalone output, served by `server.js` on $PORT (Cloud Run sets it).
 # Builds on the Debian slim node image and runs on distroless, both pinned by
 # digest. The runtime has no shell or package manager and runs as nonroot; its

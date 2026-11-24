@@ -3,46 +3,7 @@
 This is a Next.js application generated with
 [Create Fumadocs](https://github.com/fuma-nama/fumadocs).
 
-## Try the Glossary Game with Claude Code
-
-Want to explore Andamio's terminology and concepts? Clone this repository and try the **Glossary Game** (also known as Concept Validation Game) with Claude Code:
-
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/andamio-dev/andamio-docs.git
-   cd andamio-docs
-   ```
-
-2. **Open Claude Code** in this directory
-3. **Start the game**: Ask Claude to play the Glossary Game with Andamio terminology
-
-The game is a collaborative learning exercise where Claude presents its understanding of Andamio terms and you provide corrections and context. It might help us:
-- Achieve team alignment on terminology and concepts
-- Develop emergent definitions that reflect shared understanding
-- Iteratively refine documentation through collaborative discussion
-
-Claude has access to our comprehensive glossary at `docs/reference/GLOSSARY.md` and will help you explore concepts like SSOI (Self-Sovereign On-chain Identity), Project Treasury, Access Tokens, and more.
-
-### Important: After Playing the Glossary Game
-
-**When you finish a Glossary Game session:**
-1. **Ensure the changelog is updated**: Claude should automatically update `GLOSSARY_GAME_CHANGELOG.md` with your session
-2. **Commit your changes**: Make sure to commit both the glossary updates and the changelog entry using this format:
-   ```bash
-   git add docs/reference/GLOSSARY.md content/docs/glossary.mdx GLOSSARY_GAME_CHANGELOG.md
-   git commit -m "glossary game: <date> <player-name> (terms: <comma-separated-terms>)"
-   ```
-   Example:
-   ```bash
-   git commit -m "glossary game: 2025-09-22 James (terms: SSOI)"
-   ```
-3. **Push your changes** so the team benefits from the refined understanding
-
-Internal team glossary: `docs/reference/GLOSSARY.md`
-
-Public glossary: `content/docs/glossary.mdx`
-
-Session history: `GLOSSARY_GAME_CHANGELOG.md`
+The public glossary is `content/docs/glossary.mdx`.
 
 ## Development
 
@@ -85,6 +46,6 @@ resources:
 The project contains comprehensive documentation for the Andamio protocol:
 
 - **Protocol documentation**: MDX files in `content/docs/(protocol)/protocol/v2/`
-- **Working glossary**: Located at `docs/reference/GLOSSARY.md`
+- **Glossary**: `content/docs/glossary.mdx`
 
 For details on the documentation system architecture, see `CLAUDE.md`.

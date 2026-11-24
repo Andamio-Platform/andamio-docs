@@ -1,6 +1,6 @@
-# Build and deploy to Cloud Run on every push to main (Andamio-Platform/andamio-ops#578).
-# Infrastructure (service, registry, WIF pool, domain mappings) lives in
-# andamio-ops terraform/services/web-sites; this workflow only ships images.
+# Build and deploy to Cloud Run on every push to main.
+# Infrastructure (service, registry, WIF pool, domain mappings) is managed
+# outside this repository; this workflow only ships images.
 name: Deploy to Cloud Run
 
 on:

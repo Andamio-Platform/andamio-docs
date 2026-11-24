@@ -12,7 +12,6 @@ Specialized tasks are organized into skills located in `.claude/skills/`. Each s
 
 | Skill | Description | Folder |
 |-------|-------------|--------|
-| **glossary-game** | Collaborative terminology validation and refinement | `.claude/skills/glossary-game/` |
 | **scribe-walkthrough** | Convert Scribe markdown into polished MDX walkthrough pages | `.claude/skills/scribe-walkthrough/` |
 | **guide-pipeline** | Track guide writing progress, manage blockers, and publish pipeline | `.claude/skills/guide-pipeline/` |
 | **docs-governance** | Position complementary tools/support repos (CLI, SDK, templates, bots, dev repos) so they aid sales/contributions without competing with the products; holds the Phase 2 IA restructure plan | `.claude/skills/docs-governance/` |
@@ -28,7 +27,7 @@ When working on tasks that match a skill's domain, read the skill's `SKILL.md` f
 - `npm run dev` - Start development server with Turbo (http://localhost:3000)
 - `npm run build` - Build the application for production
 - `npm run start` - Start production server
-- `npm run docs-drift` - Detect stale version pins in developer guides vs devkit/CLI source-of-truth tags (see `.claude/skills/audit-docs/`)
+- `npm run docs-drift` - Detect stale version pins in developer guides against the current gateway and CLI tags. Set the optional `DEVKIT_REPO` and `CLI_REPO` env vars to enable each check; without them it warns and skips (see `.claude/skills/audit-docs/`)
 
 ## External API Documentation
 
@@ -97,13 +96,9 @@ Pages can also import a component directly. Knip scans MDX imports, so a compone
 - **Path aliases**: Use `@/*` to import from project root (e.g., `import { Component } from "@/components/..."`)
 - **Content collections**: Auto-generated types available at `content-collections` import path
 
-## Glossary and Terminology
+## Glossary
 
-For collaborative terminology validation and refinement, see the **glossary-game** skill in `.claude/skills/glossary-game/`.
-
-Key files:
-- `docs/reference/GLOSSARY.md` - Team-facing working glossary (can include private sections)
-- `content/docs/glossary.mdx` - Public-facing glossary (core concepts only)
+`content/docs/glossary.mdx` is the public glossary (core concepts only).
 
 ## Andamio Pioneers Session Archival
 
@@ -201,24 +196,6 @@ Add new session to `content/docs/developer-community/pioneers/live-coding/archiv
 - Questions like "how should AI contributions be tracked?" are feature content, not noise
 - The "source of truth" discussion is protocol design, not just UX
 
-## Notion Integration (Soft Launch)
-
-Claude Code now has access to the Andamio Notion workspace via MCP. This enables:
-- Reading/writing to the Dev Sprint Board and Epics
-- Syncing documentation progress with Product and Ecosystem circles
-- Sharing pipeline status with non-technical team members
-
-**Key Notion locations:**
-- [Dev Sprint Board](https://www.notion.so/andamio/06d10f28dd394f2bbcd5a4a5be19c07d) — task tracking
-- [Projects](https://www.notion.so/andamio/65e009324ad34d13ad345a483d9edcb5) — parent page with Epics, Sprints, OKRs
-
-**To soft-start:**
-1. When a guide moves through the pipeline (draft → review → published), consider noting it in Notion
-2. Link documentation work to the relevant Epic
-3. Share pipeline dashboards with Product/Ecosystem circles as needed
-
-**Coming soon (post-launch):** Automatic sync between guide-tracker.json status and Notion.
-
 ## Cross-Repo: Onboarding Guide Pipeline
 
 The `/guide-pipeline` skill in this repo coordinates with the app repo's `/ux-readiness` skill.
@@ -233,13 +210,11 @@ The `/guide-pipeline` skill in this repo coordinates with the app repo's `/ux-re
 
 **Current status:** 1 published (Getting Started), 1 in draft, 8 not started, 9 not yet assessed.
 
-See [Notion: Onboarding Documentation Pipeline](https://www.notion.so/30244d820e1d81468748ee7e6e0511e1) for team-facing overview.
-
 ## Public Repo: No Customer Names
 
 This repo and its docs site are public. Never name a customer anywhere in it: not on a docs page, not in a component, a commit message, a branch name, or PR or issue text. Describe the customer generically ("an early Issuer customer"). If a customer name already appears, remove it.
 
-The only exception is a customer James has confirmed may be named publicly. An issue or a Product decision that names a customer is not that confirmation.
+The only exception is a customer Product has confirmed may be named publicly. An issue or a Product decision that names a customer is not that confirmation.
 
 # Important Reminders
 
@@ -248,4 +223,3 @@ The only exception is a customer James has confirmed may be named publicly. An i
 - ALWAYS prefer editing an existing file to creating a new one
 - NEVER proactively create documentation files (*.md) or README files unless explicitly requested
 - When a task matches a skill's domain, read the skill's `SKILL.md` first for specialized instructions
-- Glossary Game and Concept Game mean the same thing - see `.claude/skills/glossary-game/` for details
