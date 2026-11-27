@@ -19,6 +19,11 @@ RUN npm run build
 FROM gcr.io/distroless/nodejs26-debian13:nonroot@sha256:ffa8a7545403036c94ec76674b5dbac2d425af2d679147cdf3e30180071487b7 AS run
 WORKDIR /app
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 PORT=8080 HOSTNAME=0.0.0.0
+# sharp (libvips), which Next's image optimizer uses, resizes on worker threads.
+# glibc gives each thread its own malloc arena, and fragmented arenas keep freed
+# memory resident until the container hits its memory limit. Two arenas keep
+# memory flat under image-resize load.
+ENV MALLOC_ARENA_MAX=2
 COPY --from=build --chown=nonroot:nonroot /app/public ./public
 COPY --from=build --chown=nonroot:nonroot /app/.next/standalone ./
 COPY --from=build --chown=nonroot:nonroot /app/.next/static ./.next/static
