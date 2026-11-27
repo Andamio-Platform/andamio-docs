@@ -11,6 +11,9 @@ import { createRelativeLink } from "fumadocs-ui/mdx";
 import { getMDXComponents } from "@/mdx-components";
 import type { TOCItemType } from "fumadocs-core/server";
 
+// Every docs page is generated at build time; an unknown slug gets the static 404 instead of an on-demand render.
+export const dynamicParams = false;
+
 // Extended page data interface to include validator properties
 interface ExtendedPageData {
   content: string;
